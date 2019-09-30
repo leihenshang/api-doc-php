@@ -15,7 +15,28 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'uhytOYh89bz0CWcWImv5ZNITwejQKpN0',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
+        'response' => [
+            'class' => 'yii\web\Response',
+            'format' => \yii\web\Response::FORMAT_JSON,
+            'on beforeSend' => function ($event){
+                                    //如果是gii 代码生成器则不进行格式化
+                if (strstr(Yii::$app->request->getPathInfo(), 'gii') === false) {
+                    $response = $event->sender;
+                    $code = isset($response->data['code']) ? $response->data['code'] : 200;
+                    $response->data = [
+                        'Code' => $code,
+                        'msg' => isset($response->data['msg']) ? $response->data['msg'] : '',
+                        'Data' => !$response->data['data'] ? $response->data['message'] :$response->data['data'],
+                    ];
+                }
+
+            }
+        ]
+        ,
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -43,14 +64,15 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
+        
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
+                '<controller>/<action>' => '<controller>/<action>',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
