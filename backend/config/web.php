@@ -16,7 +16,7 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'uhytOYh89bz0CWcWImv5ZNITwejQKpN0',
             'parsers' => [
-                'application/json' => 'yii\web\JsonParser',
+//                'application/json' => 'yii\web\JsonParser',
             ]
         ],
         'response' => [
@@ -30,7 +30,7 @@ $config = [
                     $response->data = [
                         'Code' => $code,
                         'msg' => isset($response->data['msg']) ? $response->data['msg'] : '',
-                        'Data' => !$response->data['data'] ? $response->data['message'] :$response->data['data'],
+                        'Data' => !isset($response->data['data']) ? (isset($response->data['message']) ? $response->data['message']: []) :$response->data['data'],
                     ];
                 }
 
