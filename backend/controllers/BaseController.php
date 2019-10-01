@@ -1,7 +1,7 @@
 <?php
 namespace app\controllers;
 
-use yii\web\Controller;
+use yii\rest\Controller;
 
 class BaseController extends Controller
 {
