@@ -20,7 +20,7 @@ class ProjectController extends BaseController
      */
     public function actionCreate()
     {
-        $project = new Project();
+        $project = new Project(['scenario' => Project::SCENARIO_CREATE]);
         $project->attributes = Yii::$app->request->post();
         $res = $project->createData();
         if (is_string($res)) {
@@ -31,12 +31,58 @@ class ProjectController extends BaseController
     }
 
     /**
-     * 列表
+     * 更新数据
+     * @return array
+     */
+    public function actionUpdate()
+    {
+        $project = new Project(['scenario' => Project::SCENARIO_UPDATE]);
+       $request = Yii::$app->request->post();
+        $res = $project->updateData($request);
+        if (is_string($res)) {
+            return ['msg' => $res];
+        }
+
+        return ['data' => '成功'];
+    }
+
+    /**
+     * 项目列表
      * @return array
      */
     public function actionList()
     {
         $res = Project::findAll(['is_deleted' => 0]);
-        return ['data' => $res ];
+        return ['data' => $res];
     }
+
+    /**
+     * 项目详情
+     * @return array
+     */
+    public function actionDetail()
+    {
+        $id = Yii::$app->request->get('id', null);
+        $res = Project::findOne($id);
+        return ['data' => $res];
+    }
+
+    /**
+     * 删除数据
+     * @return array
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDel()
+    {
+        $project = new Project(['scenario' => Project::SCENARIO_DEL]);
+        $project->attributes = Yii::$app->request->post();
+        $res = $project->del();
+        if (is_string($res)) {
+            return ['msg' => $res];
+        }
+
+        return ['data' => '成功'];
+    }
+
 }

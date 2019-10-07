@@ -8,18 +8,34 @@ namespace app\models;
  * Class Project
  * @package app\models
  * @property string $title 标题
+ * @property integer $id id
+ *
  */
 class Project extends BaseModel
 {
+    const SCENARIO_CREATE = 'create';
+    const SCENARIO_DEL = 'del';
+    const SCENARIO_UPDATE = 'update';
 
     public function rules()
     {
         return [
+            ['id','required'],
+            ['id','number'],
             ['title', 'required'],
             ['title','unique'],
             ['title', 'string', 'length' => [1, 100]],
             ['description', 'string', 'length' => [1, 100]],
         ];
+    }
+
+    public function scenarios()
+    {
+        $scenarios =  parent::scenarios();
+        $scenarios[self::SCENARIO_CREATE] = ['title','description'];
+        $scenarios[self::SCENARIO_DEL] = ['id'];
+        $scenarios[self::SCENARIO_UPDATE] = ['title','description','id'];
+        return $scenarios;
     }
 
     public static function tableName()
@@ -44,5 +60,49 @@ class Project extends BaseModel
         return true;
     }
 
+    /**
+     * 编辑数据
+     * @param array $request
+     * @return bool|mixed
+     */
+    public function updateData($request)
+    {
+        $this->attributes = $request;
+        if(!$this->validate()){
+            return current($this->getFirstErrors());
+        }
+
+        $res = self::findOne($this->id);
+        if(!$res){
+            return '没有找到数据';
+        }
+
+        $res->attributes = $request;
+        if(!$res->save()){
+            return current($this->getFirstErrors());
+        }
+
+        return true;
+    }
+
+    /**
+     * 删除数据
+     * @return bool|mixed
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function del()
+    {
+        if(!$this->validate()){
+            return current($this->getFirstErrors());
+        }
+
+        $res = self::findOne($this->id);
+        if(!$res->delete()){
+            return current($res->getFirstErrors());
+        }
+
+        return true;
+    }
 
 }
