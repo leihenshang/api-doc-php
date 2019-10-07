@@ -7,10 +7,10 @@ namespace app\models;
  * 项目模型
  * Class Project
  * @package app\models
- * @property string $title 名字
  * @property integer $id id
- * @property integer $p_id id
- * @property integer $project_id id
+ * @property integer $group_id 组id
+ * @property string $data 数据
+ * @property string description 备注
  * @property integer is_deleted id
  * @property string create_time id
  *
@@ -20,30 +20,32 @@ class Api extends BaseModel
     const SCENARIO_CREATE = 'create';
     const SCENARIO_DEL = 'del';
     const SCENARIO_UPDATE = 'update';
+    const SCENARIO_LIST = 'list';
+    const SCENARIO_DETAIL = 'detail';
 
     public function rules()
     {
         return [
-            ['id','required'],
-            [['id','p_id','project_id','is_deleted'],'number'],
-            ['title', 'required'],
-            ['title','unique'],
-            ['title', 'string', 'length' => [1, 100]],
+            [['id','data'],'required'],
+            [['id','group_id','project_id','is_deleted'],'number'],
+            ['description','string','length' => [1,500]]
         ];
     }
 
     public function scenarios()
     {
         $scenarios =  parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['title'];
+        $scenarios[self::SCENARIO_CREATE] = ['data','group_id','description'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['title','id'];
+        $scenarios[self::SCENARIO_UPDATE] = ['data','id'];
+        $scenarios[self::SCENARIO_LIST] = [];
+        $scenarios[self::SCENARIO_DETAIL] = ['id'];
         return $scenarios;
     }
 
     public static function tableName()
     {
-        return 'group';
+        return 'api';
     }
 
     /**
@@ -54,6 +56,12 @@ class Api extends BaseModel
     {
         if(!$this->validate()){
             return current($this->getFirstErrors());
+        }
+
+        //验证json数据格式
+        json_decode($this->data);
+        if(json_last_error()){
+            return json_last_error_msg();
         }
 
         if(!$this->save()){
@@ -108,4 +116,30 @@ class Api extends BaseModel
         return true;
     }
 
+    /**
+     * 数据列表
+     * @return Api[]|array
+     */
+    public function dataList()
+    {
+        $res = self::findAll(['is_deleted' => 0]);
+        //解析json数据
+       $res = array_map(function($a){
+           $a->data = json_decode($a->data);
+           return $a;
+       },$res);
+       return $res;
+    }
+
+    /**
+     * api详情
+     * @return Api|null
+     */
+    public function detail()
+    {
+        $res =  self::findOne($this->id);
+        if($res) $res->data = json_decode($res->data);
+
+        return $res;
+    }
 }

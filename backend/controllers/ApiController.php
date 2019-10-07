@@ -7,22 +7,15 @@ use Yii;
 
 class ApiController extends BaseController
 {
-
-    public function actionTest()
-    {
-        $res = Api::find()->where(['id' => '1'])->one();
-        return ['data' => $res];
-    }
-
     /**
      * 创建数据
      * @return array
      */
     public function actionCreate()
     {
-        $group = new Api(['scenario' => Api::SCENARIO_CREATE]);
-        $group->attributes = Yii::$app->request->post();
-        $res = $group->createData();
+        $api = new Api(['scenario' => Api::SCENARIO_CREATE]);
+        $api->attributes = Yii::$app->request->post();
+        $res = $api->createData();
         if (is_string($res)) {
             return ['msg' => $res];
         }
@@ -36,9 +29,9 @@ class ApiController extends BaseController
      */
     public function actionUpdate()
     {
-        $group = new Api(['scenario' => Api::SCENARIO_UPDATE]);
+        $api = new Api(['scenario' => Api::SCENARIO_UPDATE]);
        $request = Yii::$app->request->post();
-        $res = $group->updateData($request);
+        $res = $api->updateData($request);
         if (is_string($res)) {
             return ['msg' => $res];
         }
@@ -52,7 +45,8 @@ class ApiController extends BaseController
      */
     public function actionList()
     {
-        $res = Api::findAll(['is_deleted' => 0]);
+        $res = new Api(['scenario' => Api::SCENARIO_LIST]);
+        $res = $res->dataList();
         return ['data' => $res];
     }
 
@@ -66,14 +60,26 @@ class ApiController extends BaseController
      */
     public function actionDel()
     {
-        $group = new Api(['scenario' => Api::SCENARIO_DEL]);
-        $group->attributes = Yii::$app->request->post();
-        $res = $group->del();
+        $api = new Api(['scenario' => Api::SCENARIO_DEL]);
+        $api->attributes = Yii::$app->request->post();
+        $res = $api->del();
         if (is_string($res)) {
             return ['msg' => $res];
         }
 
         return ['data' => '成功'];
+    }
+
+    public function actionDetail()
+    {
+        $api = new Api(['scenario' => Api::SCENARIO_DETAIL]);
+        $api->attributes = Yii::$app->request->get();
+        $res = $api->detail();
+        if (is_string($res)) {
+            return ['msg' => $res];
+        }
+
+        return ['data' => $res];
     }
 
 }
