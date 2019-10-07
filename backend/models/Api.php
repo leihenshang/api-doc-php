@@ -26,18 +26,18 @@ class Api extends BaseModel
     public function rules()
     {
         return [
-            [['id','data'],'required'],
-            [['id','group_id','project_id','is_deleted'],'number'],
-            ['description','string','length' => [1,500]]
+            [['id', 'data'], 'required'],
+            [['id', 'group_id', 'project_id', 'is_deleted'], 'number'],
+            ['description', 'string', 'length' => [1, 500]]
         ];
     }
 
     public function scenarios()
     {
-        $scenarios =  parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['data','group_id','description'];
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_CREATE] = ['data', 'group_id', 'description'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['data','id'];
+        $scenarios[self::SCENARIO_UPDATE] = ['data', 'id'];
         $scenarios[self::SCENARIO_LIST] = [];
         $scenarios[self::SCENARIO_DETAIL] = ['id'];
         return $scenarios;
@@ -54,17 +54,17 @@ class Api extends BaseModel
      */
     public function createData()
     {
-        if(!$this->validate()){
+        if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
 
         //验证json数据格式
         json_decode($this->data);
-        if(json_last_error()){
+        if (json_last_error()) {
             return json_last_error_msg();
         }
 
-        if(!$this->save()){
+        if (!$this->save()) {
             return current($this->getFirstErrors());
         }
 
@@ -79,17 +79,23 @@ class Api extends BaseModel
     public function updateData($request)
     {
         $this->attributes = $request;
-        if(!$this->validate()){
+        if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
 
         $res = self::findOne($this->id);
-        if(!$res){
+        if (!$res) {
             return '没有找到数据';
         }
 
+        //验证json数据格式
+        json_decode($this->data);
+        if (json_last_error()) {
+            return json_last_error_msg();
+        }
+
         $res->attributes = $request;
-        if(!$res->save()){
+        if (!$res->save()) {
             return current($this->getFirstErrors());
         }
 
@@ -104,12 +110,12 @@ class Api extends BaseModel
      */
     public function del()
     {
-        if(!$this->validate()){
+        if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
 
         $res = self::findOne($this->id);
-        if(!$res->delete()){
+        if (!$res->delete()) {
             return current($res->getFirstErrors());
         }
 
@@ -124,11 +130,11 @@ class Api extends BaseModel
     {
         $res = self::findAll(['is_deleted' => 0]);
         //解析json数据
-       $res = array_map(function($a){
-           $a->data = json_decode($a->data);
-           return $a;
-       },$res);
-       return $res;
+        $res = array_map(function ($a) {
+            $a->data = json_decode($a->data);
+            return $a;
+        }, $res);
+        return $res;
     }
 
     /**
@@ -137,8 +143,8 @@ class Api extends BaseModel
      */
     public function detail()
     {
-        $res =  self::findOne($this->id);
-        if($res) $res->data = json_decode($res->data);
+        $res = self::findOne($this->id);
+        if ($res) $res->data = json_decode($res->data);
 
         return $res;
     }
