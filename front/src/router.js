@@ -15,7 +15,6 @@ Vue.use(VueRouter);
 export default new VueRouter({
   routes: [
     { path: "/project", component: Project },
-    { path: "/toProject", redirect: '/project' },
     { path: "/api", component: Api }
   ]
 });
