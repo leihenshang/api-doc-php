@@ -39,7 +39,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'api',
   props: {
     msg: String
   }
