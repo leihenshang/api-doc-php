@@ -75,35 +75,30 @@
       <div class="right">
         <div class="right-btn">
           <button>+新增项目</button>
-          <button>+导入项目</button>
-          <button>+开启SDK提交项目</button>
+          <!-- <button>+导入项目</button>
+          <button>+开启SDK提交项目</button>-->
         </div>
         <div class="right-content">
           <table>
             <tr>
               <th>项目名称</th>
+              <th>描述</th>
               <th>版本号</th>
               <th>类型</th>
               <th>修改时间</th>
               <th>操作</th>
             </tr>
-
-            <tr @click="jump('detail')">
-              <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
+            <tr v-for="item in projectList" :key="item.id" @click="jump('detail')">
+              <td>{{item.title}}</td>
+              <td>{{item.description}}</td>
+              <td>v{{item.version}}</td>
+              <td>{{item.type}}</td>
+              <td>{{item.create_time}}</td>
+              <td>
+                <button>修改</button>
+                <button>删除</button>
+              </td>
             </tr>
-
-             <tr v-for="item in projectList" :key="item.id">
-              <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
-            </tr>
-           
           </table>
         </div>
       </div>
@@ -122,7 +117,7 @@ export default {
     },
     getProjectList(curr, pageSize) {
       this.$http
-        .get("http://localhost:1000/project/list", {
+        .get(this.apiAddress + "/project/list", {
           params: { page: curr, limit: pageSize }
         })
         .then(response => {
@@ -133,8 +128,8 @@ export default {
         });
     }
   },
-  created(){
-    this.getProjectList(this.currPage,this.pageSize);
+  created() {
+    this.getProjectList(this.currPage, this.pageSize);
   },
   data() {
     return {
