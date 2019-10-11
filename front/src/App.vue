@@ -1,35 +1,41 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-10-11 09:14:00
+ * @LastEditTime: 2019-10-11 09:22:19
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="app">
     <div>
-      <router-link to="/toProject">进入项目首页</router-link>
-      <button @click="jump">Button-跳转到购物车页面</button>
+        <router-link to="/api">test</router-link>
+      <project />
     </div>
-    <div class="content"></div>
+    <div class="content">
+     <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
+import project from "./viewPage/project";
+
 export default {
   name: "app",
-  methods: {
-    jump() {
-      //this.$router.push("/cart")
-      //传递的参数用{{ $route.query.goodsId }}获取
-      this.$router.push({ path: "/project" });
-      //this.$router.go(-2)
-      //后退两步
-    }
+  components: {
+    project
   }
 };
 </script>
 
 <style>
+@import 'static/css/base.css';
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
