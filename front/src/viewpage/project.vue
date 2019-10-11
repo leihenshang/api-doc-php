@@ -95,34 +95,15 @@
               <td>2019.9.28 11:02:02</td>
               <td>修改</td>
             </tr>
-            <tr>
+
+             <tr v-for="item in projectList" :key="item.id">
               <td>测试项目1</td>
               <td>v11</td>
               <td>web</td>
               <td>2019.9.28 11:02:02</td>
               <td>修改</td>
             </tr>
-            <tr>
-              <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
-            </tr>
-            <tr>
-              <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
-            </tr>
-            <tr>
-              <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
-            </tr>
+           
           </table>
         </div>
       </div>
@@ -132,6 +113,8 @@
 </template>
 
 <script>
+const CODE_OK = 200;
+
 export default {
   methods: {
     jump(route) {
@@ -139,19 +122,26 @@ export default {
     },
     getProjectList(curr, pageSize) {
       this.$http
-        .get("http://www.baidu.com", {
+        .get("http://localhost:1000/project/list", {
           params: { page: curr, limit: pageSize }
         })
         .then(response => {
           response = response.body;
           if (response.code === CODE_OK) {
-            // this.articleList = response.data;
+            this.projectList = response.data;
           }
         });
     }
   },
   created(){
-    this.getProjectList(1,10);
+    this.getProjectList(this.currPage,this.pageSize);
+  },
+  data() {
+    return {
+      projectList: {},
+      pageSize: 10,
+      currPage: 1
+    };
   }
 };
 </script>

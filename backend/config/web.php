@@ -25,12 +25,13 @@ $config = [
             'on beforeSend' => function ($event){
                                     //如果是gii 代码生成器则不进行格式化
                 if (strstr(Yii::$app->request->getPathInfo(), 'gii') === false) {
+                    $event->sender->headers->add('Access-Control-Allow-Origin', '*');
                     $response = $event->sender;
                     $code = isset($response->data['code']) ? $response->data['code'] : 200;
                     $response->data = [
-                        'Code' => $code,
+                        'code' => $code,
                         'msg' => isset($response->data['msg']) ? $response->data['msg'] : '',
-                        'Data' => !isset($response->data['data']) ? (isset($response->data['message']) ? $response->data['message']: []) :$response->data['data'],
+                        'data' => !isset($response->data['data']) ? (isset($response->data['message']) ? $response->data['message']: []) :$response->data['data'],
                     ];
                 }
 
