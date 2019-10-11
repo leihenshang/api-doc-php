@@ -1,5 +1,5 @@
 <template>
-  <div class="project">
+  <div class="msg">
     <!-- 头部导航栏开始 -->
     <div class="top">
       <ul>
@@ -10,7 +10,7 @@
           <span>apiDoc开源版本</span>
         </li>
         <li>
-          <span>接口管理</span>
+          <span>消息管理</span>
         </li>
         <li class="t-r">
           <em>😉</em>
@@ -39,33 +39,33 @@
       <div class="left">
         <ul>
           <li>
-             <a href="javascript:void;" @click="jump('project')">
+            <a href="main.html">
               <span>▢</span> 接口管理
-              </a>
-          </li>
-          <li>
-            <a href="#">
-              <!-- <span>▢</span> 数据库管理 -->
             </a>
           </li>
           <li>
             <a href="#">
-              <!-- <span>▢</span> 账户管理 -->
+              <span>▢</span> 数据库管理
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span>▢</span> 账户管理
             </a>
           </li>
           <li class="message">
-               <a href="javascript:void;" @click="jump('msg')">
-              <span>▢</span> 消息管理
+            <a href="#">
+              <span>▢</span> 消息管理2
             </a>
           </li>
           <li>
             <a href="#">
-              <!-- <span>▢</span> 官方网站 -->
+              <span>▢</span> 官方网站
             </a>
           </li>
           <li>
             <a href="#">
-              <!-- <span>▢</span> 用户讨论群 -->
+              <span>▢</span> 用户讨论群
             </a>
           </li>
         </ul>
@@ -74,54 +74,41 @@
       <!-- 右侧内容开始 -->
       <div class="right">
         <div class="right-btn">
-          <button>+新增项目</button>
-          <button>+导入项目</button>
-          <button>+开启SDK提交项目</button>
+          <button>消息列表</button>
+          <button>清空消息</button>
         </div>
         <div class="right-content">
           <table>
             <tr>
-              <th>项目名称</th>
-              <th>版本号</th>
               <th>类型</th>
-              <th>修改时间</th>
-              <th>操作</th>
+              <th>消息</th>
+              <th>时间</th>
             </tr>
 
-            <tr @click="jump('detail')">
-              <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
+            <tr>
+              <td>项目</td>
+              <td>您已经被加入项目：电子社-工信书院，现在你可以参与项目的开发协作工作。</td>
+              <td>2019-08-19 09:44:00</td>
             </tr>
             <tr>
               <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
+              <td>您已经被加入项目：电子社-工信书院，现在你可以参与项目的开发协作工作。</td>
+              <td>2019-08-19 09:44:00</td>
             </tr>
             <tr>
               <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
+              <td>您已经被加入项目：电子社-工信书院，现在你可以参与项目的开发协作工作。</td>
+              <td>2019-08-19 09:44:00</td>
             </tr>
             <tr>
               <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
+              <td>您已经被加入项目：电子社-工信书院，现在你可以参与项目的开发协作工作。</td>
+              <td>2019-08-19 09:44:00</td>
             </tr>
             <tr>
               <td>测试项目1</td>
-              <td>v11</td>
-              <td>web</td>
-              <td>2019.9.28 11:02:02</td>
-              <td>修改</td>
+              <td>您已经被加入项目：电子社-工信书院，现在你可以参与项目的开发协作工作。</td>
+              <td>2019-08-19 09:44:00</td>
             </tr>
           </table>
         </div>
@@ -133,16 +120,11 @@
 
 <script>
 export default {
-  methods: {
-    jump(route) {
-       this.$router.push({path:'/'+route});
-    }
-  }
+  name: "app"
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 .content {
   width: 100%;
   position: relative;
@@ -182,7 +164,6 @@ export default {
 .top .name {
   width: 155px;
   padding-left: 10px;
-  text-align: left;
 }
 
 .top span {
@@ -213,11 +194,12 @@ export default {
   padding: 15px 0;
 }
 
-.left li:first-child {
+.left li:nth-child(4) {
   background-color: #e3f1e5;
+  color: #4caf50;
 }
 
-.left li:first-child a {
+.left li:nth-child(4) a {
   color: #4caf50;
 }
 
@@ -235,7 +217,6 @@ export default {
   display: block;
   font-size: 14px;
   color: black;
-  text-align: left;
 }
 
 .message {
@@ -253,7 +234,6 @@ export default {
 
 .right-btn {
   margin: 10px;
-  text-align: left;
 }
 
 .right-btn button {
@@ -275,7 +255,6 @@ th,
 td {
   border: 0;
   border-collapse: collapse;
-  text-align: left;
 }
 
 .right-content table {

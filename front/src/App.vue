@@ -7,29 +7,20 @@
  -->
 <template>
   <div id="app">
-    <div>
-        <router-link to="/api">test</router-link>
-      <project />
-    </div>
     <div class="content">
-     <router-view></router-view>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import project from "./viewPage/project";
-
 export default {
-  name: "app",
-  components: {
-    project
-  }
+  name: "app"
 };
 </script>
 
 <style>
-@import 'static/css/base.css';
+@import "static/css/base.css";
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
