@@ -39,9 +39,9 @@
       <div class="left">
         <ul>
           <li>
-             <a href="javascript:void;" @click="jump('project')">
+            <a href="javascript:void;" @click="jump('project')">
               <span>▢</span> 接口管理
-              </a>
+            </a>
           </li>
           <li>
             <a href="#">
@@ -54,7 +54,7 @@
             </a>
           </li>
           <li class="message">
-               <a href="javascript:void;" @click="jump('msg')">
+            <a href="javascript:void;" @click="jump('msg')">
               <span>▢</span> 消息管理
             </a>
           </li>
@@ -135,8 +135,23 @@
 export default {
   methods: {
     jump(route) {
-       this.$router.push({path:'/'+route});
+      this.$router.push({ path: "/" + route });
+    },
+    getProjectList(curr, pageSize) {
+      this.$http
+        .get("http://www.baidu.com", {
+          params: { page: curr, limit: pageSize }
+        })
+        .then(response => {
+          response = response.body;
+          if (response.code === CODE_OK) {
+            // this.articleList = response.data;
+          }
+        });
     }
+  },
+  created(){
+    this.getProjectList(1,10);
   }
 };
 </script>
