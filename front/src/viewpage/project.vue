@@ -104,10 +104,14 @@
       </div>
       <!-- 右侧内容结束 -->
     </div>
+    <div class="add-wrapper">
+      <add />
+    </div>
   </div>
 </template>
 
 <script>
+import add from "../components/project/add";
 const CODE_OK = 200;
 
 export default {
@@ -137,6 +141,9 @@ export default {
       pageSize: 10,
       currPage: 1
     };
+  },
+  components: {
+    add
   }
 };
 </script>
@@ -345,4 +352,5 @@ td {
 .top .t-r:hover .user-lay {
   display: block;
 }
+
 </style>
