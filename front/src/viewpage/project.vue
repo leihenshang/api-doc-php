@@ -74,7 +74,7 @@
       <!-- 右侧内容开始 -->
       <div class="right">
         <div class="right-btn">
-          <button>+新增项目</button>
+          <button @click="create">+新增项目</button>
           <!-- <button>+导入项目</button>
           <button>+开启SDK提交项目</button>-->
         </div>
@@ -105,7 +105,7 @@
       <!-- 右侧内容结束 -->
     </div>
     <div class="add-wrapper">
-      <add />
+      <add :is-show="addIsHide"   v-on:hide-box="onClickHide" />
     </div>
   </div>
 </template>
@@ -130,6 +130,11 @@ export default {
             this.projectList = response.data;
           }
         });
+    },
+    create(){
+        this.addIsHide = !this.addIsHide;
+    },onClickHide(val){
+      this.addIsHide = !this.addIsHide;
     }
   },
   created() {
@@ -139,7 +144,8 @@ export default {
     return {
       projectList: {},
       pageSize: 10,
-      currPage: 1
+      currPage: 1,
+      addIsHide:true
     };
   },
   components: {
@@ -150,6 +156,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.isHide {
+  display: none;
+}
+
 .content {
   width: 100%;
   position: relative;
@@ -352,5 +362,4 @@ td {
 .top .t-r:hover .user-lay {
   display: block;
 }
-
 </style>

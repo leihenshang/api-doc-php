@@ -1,5 +1,5 @@
 <template>
-  <div class="add">
+  <div class="add" v-bind:class="{hide : isHide}">
     <h4>添加项目</h4>
     <ul>
       <li>
@@ -23,7 +23,7 @@
       </li>
       <li>
         <button>确定</button>
-        <button>取消</button>
+        <button @click="hideMeBtn">取消</button>
       </li>
     </ul>
   </div>
@@ -31,9 +31,26 @@
 
 <script>
 export default {
-  name: "HelloWorld",
+  name: "add",
   props: {
-    msg: String
+    msg: String,
+    isShow: Boolean
+  },
+  data() {
+    return {
+      isHide: this.isShow
+    };
+  },
+  methods: {
+    hideMeBtn() {
+      this.isHide = !this.isHide;
+      this.$emit('hide-box',this.isHide);
+    }
+  },
+  watch:{
+    isShow:function(val){
+        this.isHide =  val;
+    }
   }
 };
 </script>
@@ -49,5 +66,9 @@ export default {
   left: 50%;
   border: 1px solid black;
   transform: translate(-50%, 50%);
+}
+
+.hide {
+  display: none;
 }
 </style>
