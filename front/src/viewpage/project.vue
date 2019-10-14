@@ -105,7 +105,7 @@
       <!-- 右侧内容结束 -->
     </div>
     <div class="add-wrapper">
-      <add :is-show="addIsHide"   v-on:hide-box="onClickHide" />
+      <add :is-show="addIsHide" v-on:hide-box="onClickHide" />
     </div>
   </div>
 </template>
@@ -131,9 +131,10 @@ export default {
           }
         });
     },
-    create(){
-        this.addIsHide = !this.addIsHide;
-    },onClickHide(val){
+    create() {
+      this.addIsHide = !this.addIsHide;
+    },
+    onClickHide(val) {
       this.addIsHide = !this.addIsHide;
     }
   },
@@ -145,7 +146,7 @@ export default {
       projectList: {},
       pageSize: 10,
       currPage: 1,
-      addIsHide:true
+      addIsHide: true
     };
   },
   components: {
