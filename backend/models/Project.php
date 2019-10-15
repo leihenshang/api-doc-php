@@ -22,7 +22,7 @@ class Project extends BaseModel
         return [
             ['id','required'],
             ['id','number'],
-            ['title', 'required'],
+            [['title','version','type'], 'required'],
             ['title','unique'],
             ['title', 'string', 'length' => [1, 100]],
             ['description', 'string', 'length' => [1, 100]],

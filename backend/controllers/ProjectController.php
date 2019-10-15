@@ -24,7 +24,7 @@ class ProjectController extends BaseController
         $project->attributes = Yii::$app->request->post();
         $res = $project->createData();
         if (is_string($res)) {
-            return ['msg' => $res];
+            return ['code'=>22,'msg' => $res];
         }
 
         return ['data' => '成功'];
