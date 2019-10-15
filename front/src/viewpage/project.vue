@@ -115,6 +115,7 @@ import add from "../components/project/add";
 const CODE_OK = 200;
 
 export default {
+  name: "projectPage",
   methods: {
     jump(route) {
       this.$router.push({ path: "/" + route });
@@ -135,6 +136,9 @@ export default {
       this.addIsHide = !this.addIsHide;
     },
     onClickHide(val) {
+      if (val === "flush") {
+        this.getProjectList(this.currPage, this.pageSize);
+      }
       this.addIsHide = !this.addIsHide;
     }
   },
