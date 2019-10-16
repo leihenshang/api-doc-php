@@ -27,6 +27,7 @@ $config = [
                 if (strstr(Yii::$app->request->getPathInfo(), 'gii') === false) {
                     $event->sender->headers->add('Access-Control-Allow-Origin', '*');
                     $response = $event->sender;
+                    $response->format = \yii\web\Response::FORMAT_JSON;
                     $code = isset($response->data['code']) ? $response->data['code'] : 200;
                     $response->data = [
                         'code' => $code,

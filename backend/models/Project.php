@@ -9,21 +9,22 @@ namespace app\models;
  * @package app\models
  * @property string $title 标题
  * @property integer $id id
- *
  */
 class Project extends BaseModel
 {
     const SCENARIO_CREATE = 'create';
     const SCENARIO_DEL = 'del';
     const SCENARIO_UPDATE = 'update';
+    const SCENARIO_LIST = 'list';
 
     public function rules()
     {
         return [
-            ['id','required'],
-            ['id','number'],
-            [['title','version','type'], 'required'],
-            ['title','unique'],
+            [['ps','cp'],'integer'],
+            ['id', 'required'],
+            ['id', 'number'],
+            [['title', 'version', 'type'], 'required'],
+            ['title', 'unique'],
             ['title', 'string', 'length' => [1, 100]],
             ['description', 'string', 'length' => [1, 100]],
         ];
@@ -31,10 +32,11 @@ class Project extends BaseModel
 
     public function scenarios()
     {
-        $scenarios =  parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['title','description'];
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_CREATE] = ['title', 'description', 'version', 'type'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['title','description','id'];
+        $scenarios[self::SCENARIO_LIST] = ['ps','cp'];
+        $scenarios[self::SCENARIO_UPDATE] = ['title', 'description', 'id'];
         return $scenarios;
     }
 
@@ -49,11 +51,11 @@ class Project extends BaseModel
      */
     public function createData()
     {
-        if(!$this->validate()){
+        if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
 
-        if(!$this->save()){
+        if (!$this->save()) {
             return current($this->getFirstErrors());
         }
 
@@ -68,17 +70,17 @@ class Project extends BaseModel
     public function updateData($request)
     {
         $this->attributes = $request;
-        if(!$this->validate()){
+        if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
 
         $res = self::findOne($this->id);
-        if(!$res){
+        if (!$res) {
             return '没有找到数据';
         }
 
         $res->attributes = $request;
-        if(!$res->save()){
+        if (!$res->save()) {
             return current($this->getFirstErrors());
         }
 
@@ -93,12 +95,12 @@ class Project extends BaseModel
      */
     public function del()
     {
-        if(!$this->validate()){
+        if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
 
         $res = self::findOne($this->id);
-        if(!$res->delete()){
+        if (!$res->delete()) {
             return current($res->getFirstErrors());
         }
 

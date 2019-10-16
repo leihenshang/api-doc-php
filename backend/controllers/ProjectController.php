@@ -52,8 +52,10 @@ class ProjectController extends BaseController
      */
     public function actionList()
     {
-        $res = Project::findAll(['is_deleted' => 0]);
-        return ['data' => $res];
+        $project = new Project(['scenario' => Project::SCENARIO_LIST]);
+        $project->attributes = Yii::$app->request->get();
+        $res = Project::find()->where(['is_deleted' => 0])->limit($project->ps)->offset($project->offset)->orderBy('create_time desc');
+        return ['data' => $res->asArray()->all()];
     }
 
     /**
