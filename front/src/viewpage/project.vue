@@ -88,24 +88,27 @@
               <th>修改时间</th>
               <th>操作</th>
             </tr>
-            <tr v-for="item in projectList" :key="item.id" @click="jump('detail')">
+            <tr v-for="item in projectList" :key="item.id">
               <td>{{item.title}}</td>
               <td>{{item.description}}</td>
               <td>v{{item.version}}</td>
               <td>{{item.type}}</td>
               <td>{{item.create_time}}</td>
               <td>
-                <button>修改</button>
-                <button>删除</button>
+                <button @click="update(item)">修改</button>
+                <button @click="del(item.id)">删除</button>
               </td>
             </tr>
           </table>
+          <div class="page">
+            <span>总共页数:{{itemCount}}</span>
+          </div>
         </div>
       </div>
       <!-- 右侧内容结束 -->
     </div>
     <div class="add-wrapper">
-      <add :is-show="addIsHide" v-on:hide-box="onClickHide" />
+      <add :is-show="addIsHide" :update-data="updateData" v-on:hide-box="onClickHide" />
     </div>
   </div>
 </template>
@@ -128,7 +131,8 @@ export default {
         .then(response => {
           response = response.body;
           if (response.code === CODE_OK) {
-            this.projectList = response.data;
+            this.projectList = response.data.res;
+            this.itemCount = response.data.count;
           }
         });
     },
@@ -140,6 +144,35 @@ export default {
         this.getProjectList(this.currPage, this.pageSize);
       }
       this.addIsHide = !this.addIsHide;
+    },
+    del(id) {
+      this.$http
+        .post(
+          this.apiAddress + "/project/del",
+          {
+            id: id
+          },
+          { emulateJSON: true }
+        )
+        .then(
+          function(res) {
+            let response = res.body;
+            if (response.code === CODE_OK) {
+              alert("成功!" + response.msg);
+              this.getProjectList(this.currPage, this.pageSize);
+            } else {
+              alert("失败!" + response.msg);
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("操作失败!" + response.msg);
+          }
+        );
+    },
+    update(item) {
+      this.updateData = item;
+      this.addIsHide = !this.addIsHide;
     }
   },
   created() {
@@ -150,7 +183,9 @@ export default {
       projectList: {},
       pageSize: 10,
       currPage: 1,
-      addIsHide: true
+      addIsHide: true,
+      updateData: null,
+      itemCount: 0
     };
   },
   components: {

@@ -41,7 +41,7 @@ class Project extends BaseModel
         $scenarios[self::SCENARIO_CREATE] = ['title', 'description', 'version', 'type'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
         $scenarios[self::SCENARIO_LIST] = ['ps','cp'];
-        $scenarios[self::SCENARIO_UPDATE] = ['title', 'description', 'id'];
+        $scenarios[self::SCENARIO_UPDATE] = ['title', 'description','version','type'];
         return $scenarios;
     }
 
@@ -83,7 +83,7 @@ class Project extends BaseModel
         if (!$res) {
             return '没有找到数据';
         }
-
+        $this->scenario = self::SCENARIO_UPDATE;
         $res->attributes = $request;
         if (!$res->save()) {
             return current($this->getFirstErrors());

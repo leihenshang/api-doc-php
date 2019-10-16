@@ -36,7 +36,7 @@ class ProjectController extends BaseController
      */
     public function actionUpdate()
     {
-        $project = new Project(['scenario' => Project::SCENARIO_UPDATE]);
+        $project = new Project(['scenario' => Project::SCENARIO_DEL]);
         $request = Yii::$app->request->post();
         $res = $project->updateData($request);
         if (is_string($res)) {
@@ -55,23 +55,23 @@ class ProjectController extends BaseController
         $project = new Project(['scenario' => Project::SCENARIO_LIST]);
         $project->attributes = Yii::$app->request->get();
         $res = Project::find()->where(['is_deleted' => 0])->limit($project->ps)->offset($project->offset)->orderBy('create_time desc');
-        $res = $res->asArray()->all();
-        $res = array_map(function ($a) {
-            switch ($a['type']) {
-                case Project::TYPE['web']['tag']:
-                    $a['type'] = Project::TYPE['web']['desc'];
-                    break;
-                case Project::TYPE['pc']['tag']:
-                    $a['type'] = Project::TYPE['pc']['desc'];
-                    break;
-                    default:
-                    $a['type'] = '默认';
-                    break;
-            }
-            return $a;
-        }, $res);
+        $resCount = $res->count();
+        /*        $res = array_map(function ($a) {
+                    switch ($a['type']) {
+                        case Project::TYPE['web']['tag']:
+                            $a['typeDesc'] = Project::TYPE['web']['desc'];
+                            break;
+                        case Project::TYPE['pc']['tag']:
+                            $a['typeDesc'] = Project::TYPE['pc']['desc'];
+                            break;
+                            default:
+                            $a['typeDesc'] = '默认';
+                            break;
+                    }
+                    return $a;
+                }, $res);*/
 
-        return ['data' => $res];
+        return ['data' => ['count' => $resCount, 'res' => $res->asArray()->all()]];
     }
 
     /**

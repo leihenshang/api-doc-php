@@ -13,8 +13,8 @@
       <li>
         <span>项目类型</span>
         <select name="1" id="2" v-model.number="type">
-          <option value="1">web</option>
-          <option value="2">pc</option>
+          <option value="web">web</option>
+          <option value="pc">pc</option>
         </select>
       </li>
       <li>
@@ -22,7 +22,7 @@
         <textarea name="desc" cols="50" rows="10" v-model.trim="desc"></textarea>
       </li>
       <li>
-        <button @click="create">确定</button>
+        <button @click=" updateData !== null ? update() : create()">确定</button>
         <button @click="hideMeBtn">取消</button>
       </li>
     </ul>
@@ -36,7 +36,8 @@ export default {
   name: "add",
   props: {
     msg: String,
-    isShow: Boolean
+    isShow: Boolean,
+    updateData: null
   },
   data() {
     return {
@@ -54,7 +55,6 @@ export default {
       this.$emit("hide-box", type);
     },
     create() {
-      //发送 post 请求
       this.$http
         .post(
           this.apiAddress + "/project/create",
@@ -74,12 +74,42 @@ export default {
               this.clear();
               this.hideMeBtn("flush");
             } else {
-              alert("失败!" +response.msg);
+              alert("失败!" + response.msg);
             }
           },
           function(res) {
-             let response = res.body;
-            alert("操作失败!"+ response.msg);
+            let response = res.body;
+            alert("操作失败!" + response.msg);
+          }
+        );
+    },
+    update() {
+      this.$http
+        .post(
+          this.apiAddress + "/project/update",
+          {
+            id: this.updateData.id,
+            title: this.title,
+            description: this.desc,
+            version: this.ver,
+            type: this.type
+          },
+          { emulateJSON: true }
+        )
+        .then(
+          function(res) {
+            let response = res.body;
+            if (response.code === CODE_OK) {
+              alert("成功!" + response.msg);
+              this.clear();
+              this.hideMeBtn("flush");
+            } else {
+              alert("失败!" + response.msg);
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("操作失败!" + response.msg);
           }
         );
     },
@@ -93,6 +123,12 @@ export default {
   watch: {
     isShow: function(val) {
       this.isHide = val;
+    },
+    updateData: function(val) {
+      this.title = val.title;
+      this.ver = val.version;
+      this.type = val.type;
+      this.desc = val.description;
     }
   }
 };
