@@ -17,6 +17,11 @@ class Project extends BaseModel
     const SCENARIO_UPDATE = 'update';
     const SCENARIO_LIST = 'list';
 
+    const TYPE = [
+       'web' => ['tag' => 1,'desc' => 'web'],
+        'pc' => ['tag' => 2,'desc' => 'pc'],
+    ];
+
     public function rules()
     {
         return [

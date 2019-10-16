@@ -123,7 +123,7 @@ export default {
     getProjectList(curr, pageSize) {
       this.$http
         .get(this.apiAddress + "/project/list", {
-          params: { page: curr, limit: pageSize }
+          params: { cp: curr, ps: pageSize }
         })
         .then(response => {
           response = response.body;
