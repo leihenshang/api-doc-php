@@ -100,8 +100,8 @@
               </td>
             </tr>
           </table>
-          <div class="page">
-            <span>总共页数:{{itemCount}}</span>
+          <div class="page-wrapper">
+            <page :curr="currPage" :itemCount="itemCount" :pageSize = "pageSize" />
           </div>
         </div>
       </div>
@@ -115,6 +115,7 @@
 
 <script>
 import add from "../components/project/add";
+import page from "../components/common/page";
 const CODE_OK = 200;
 
 export default {
@@ -181,7 +182,7 @@ export default {
   data() {
     return {
       projectList: {},
-      pageSize: 10,
+      pageSize: 5,
       currPage: 1,
       addIsHide: true,
       updateData: null,
@@ -189,7 +190,8 @@ export default {
     };
   },
   components: {
-    add
+    add,
+    page
   }
 };
 </script>
