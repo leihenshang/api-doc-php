@@ -25,7 +25,8 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "ext-json": "*",
         "elasticsearch/elasticsearch": "^7.3",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "workerman/workerman": "^3.5"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
