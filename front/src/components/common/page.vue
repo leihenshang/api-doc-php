@@ -44,10 +44,16 @@ export default {
   methods:{
       jump(page){
           this.current = page;
+          this.$emit('jump-page',page);
       }
   },
   data:function(){
      return { current:this.curr};
+  },
+  watch:{
+    curr:function(val){
+      this.current = val;
+    }
   }
 };
 </script>

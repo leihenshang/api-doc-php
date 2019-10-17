@@ -101,7 +101,12 @@
             </tr>
           </table>
           <div class="page-wrapper">
-            <page :curr="currPage" :itemCount="itemCount" :pageSize = "pageSize" />
+            <page
+              :curr="currPage"
+              :itemCount="itemCount"
+              :pageSize="pageSize"
+              v-on:jump-page="jumpPage"
+            />
           </div>
         </div>
       </div>
@@ -117,6 +122,7 @@
 import add from "../components/project/add";
 import page from "../components/common/page";
 const CODE_OK = 200;
+const PAGE_SIZE = 5;
 
 export default {
   name: "projectPage",
@@ -142,6 +148,7 @@ export default {
     },
     onClickHide(val) {
       if (val === "flush") {
+        this.currPage = 1;
         this.getProjectList(this.currPage, this.pageSize);
       }
       this.addIsHide = !this.addIsHide;
@@ -174,6 +181,10 @@ export default {
     update(item) {
       this.updateData = item;
       this.addIsHide = !this.addIsHide;
+    },
+    jumpPage(page) {
+      this.currPage = page;
+      this.getProjectList(page, PAGE_SIZE);
     }
   },
   created() {
@@ -325,6 +336,7 @@ export default {
 .right-content {
   border: 1px solid #e5e5e5;
   margin: 10px;
+  min-height: 400px;
 }
 
 .right-content table,
