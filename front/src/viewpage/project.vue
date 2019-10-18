@@ -73,6 +73,7 @@
       <!-- 左侧导航栏结束 -->
       <!-- 右侧内容开始 -->
       <div class="right">
+        <boxShade />
         <div class="right-btn">
           <button @click="create">+新增项目</button>
           <!-- <button>+导入项目</button>
@@ -121,6 +122,7 @@
 <script>
 import add from "../components/project/add";
 import page from "../components/common/page";
+import boxShade from "../components/common/boxShade";
 const CODE_OK = 200;
 const PAGE_SIZE = 5;
 
@@ -202,7 +204,8 @@ export default {
   },
   components: {
     add,
-    page
+    page,
+    boxShade
   }
 };
 </script>
@@ -319,6 +322,24 @@ export default {
   height: 100%;
   left: 241px;
   background-color: #f8f8f8;
+}
+
+.box-shade {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(94, 88, 88, 0.2);
+  position: absolute;
+}
+
+.box-shade span {
+  position: absolute;
+  background-color: #fff;
+  height: 100px;
+  width: 200px;
+  line-height: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .right-btn {
