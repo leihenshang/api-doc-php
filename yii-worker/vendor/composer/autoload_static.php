@@ -20,6 +20,10 @@ class ComposerStaticInit4aa907b755ddde0ea0629eec02337934
         array (
             'cebe\\markdown\\' => 14,
         ),
+        'W' => 
+        array (
+            'Workerman\\' => 10,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -34,6 +38,10 @@ class ComposerStaticInit4aa907b755ddde0ea0629eec02337934
         'cebe\\markdown\\' => 
         array (
             0 => __DIR__ . '/..' . '/cebe/markdown',
+        ),
+        'Workerman\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/workerman',
         ),
     );
 
