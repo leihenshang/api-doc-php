@@ -71,9 +71,12 @@
         </ul>
       </div>
       <!-- 左侧导航栏结束 -->
+
       <!-- 右侧内容开始 -->
       <div class="right">
-        <boxShade />
+        <!-- 遮罩层 -->
+        <boxShade :hide="hideShade" />
+
         <div class="right-btn">
           <button @click="create">+新增项目</button>
           <!-- <button>+导入项目</button>
@@ -101,7 +104,9 @@
               </td>
             </tr>
           </table>
-          <div class="page-wrapper">
+         
+        </div>
+         <div class="page-wrapper">
             <page
               :curr="currPage"
               :itemCount="itemCount"
@@ -109,7 +114,6 @@
               v-on:jump-page="jumpPage"
             />
           </div>
-        </div>
       </div>
       <!-- 右侧内容结束 -->
     </div>
@@ -137,13 +141,21 @@ export default {
         .get(this.apiAddress + "/project/list", {
           params: { cp: curr, ps: pageSize }
         })
-        .then(response => {
-          response = response.body;
-          if (response.code === CODE_OK) {
-            this.projectList = response.data.res;
-            this.itemCount = response.data.count;
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.projectList = response.data.res;
+              this.itemCount = Number(response.data.count);
+              this.hideShade = true;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : '' );
+            this.hideShade = true;
           }
-        });
+        );
     },
     create() {
       this.addIsHide = !this.addIsHide;
@@ -186,6 +198,7 @@ export default {
     },
     jumpPage(page) {
       this.currPage = page;
+      this.hideShade = false;
       this.getProjectList(page, PAGE_SIZE);
     }
   },
@@ -199,7 +212,8 @@ export default {
       currPage: 1,
       addIsHide: true,
       updateData: null,
-      itemCount: 0
+      itemCount: 0,
+      hideShade: true
     };
   },
   components: {

@@ -1,19 +1,30 @@
 <template>
-  <div class="box-shade">
-    <span>等待加载 。。。</span>
+  <div class="box-shade" :class="{hideBox : hideBox }">
+    <span>
+      等待加载
+      <i>。。。</i>
+    </span>
   </div>
 </template>
 
 <script>
 export default {
   name: "boxShade",
-  props: {},
+  props: {
+    hide: { type: Boolean, default: true }
+  },
   computed: {},
   methods: {},
   data: function() {
-    return {};
+    return {
+      hideBox: this.hide
+    };
   },
-  watch: {}
+  watch: {
+    hide: function(val) {
+      this.hideBox = val;
+    }
+  }
 };
 </script>
 
@@ -24,6 +35,7 @@ export default {
   height: 100%;
   background-color: rgba(94, 88, 88, 0.2);
   position: absolute;
+  z-index: 1;
 }
 
 .box-shade span {
@@ -35,5 +47,28 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.box-shade span i {
+  animation: myfirst 2s linear infinite alternate;
+  display: inline-block;
+}
+
+.hideBox {
+  display: none;
+}
+
+@keyframes myfirst {
+  0% {
+    transform: translate(0);
+  }
+
+  50% {
+    transform: translate(50%);
+  }
+
+  100% {
+    transform: translate(100%);
+  }
 }
 </style>
