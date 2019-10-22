@@ -55,7 +55,7 @@
           </li>
           <li class="message">
             <a href="javascript:void;" @click="jump('msg')">
-              <span>▢</span> 消息管理
+              <!-- <span>▢</span> 消息管理 -->
             </a>
           </li>
           <li>
