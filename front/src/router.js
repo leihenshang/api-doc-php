@@ -12,7 +12,7 @@ export default new VueRouter({
     { path: "/project", component: Project },
     { path: "/", component: Project },
     { path: "/api", name: "api", component: Api },
-    { path: "/detail", name: "detail", component: Detail },
+    { path: "/detail/:id", name: "detail", component: Detail, props: true },
     { path: "/msg", name: "msg", component: Msg }
   ]
 });

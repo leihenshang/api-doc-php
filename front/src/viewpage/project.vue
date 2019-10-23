@@ -99,21 +99,21 @@
               <td>{{item.type}}</td>
               <td>{{item.create_time}}</td>
               <td>
+                <button @click="detail(item.id)">详情</button>
                 <button @click="update(item)">修改</button>
                 <button @click="del(item.id)">删除</button>
               </td>
             </tr>
           </table>
-         
         </div>
-         <div class="page-wrapper">
-            <page
-              :curr="currPage"
-              :itemCount="itemCount"
-              :pageSize="pageSize"
-              v-on:jump-page="jumpPage"
-            />
-          </div>
+        <div class="page-wrapper">
+          <page
+            :curr="currPage"
+            :itemCount="itemCount"
+            :pageSize="pageSize"
+            v-on:jump-page="jumpPage"
+          />
+        </div>
       </div>
       <!-- 右侧内容结束 -->
     </div>
@@ -152,7 +152,7 @@ export default {
           },
           function(res) {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : '' );
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
             this.hideShade = true;
           }
         );
@@ -200,6 +200,9 @@ export default {
       this.currPage = page;
       this.hideShade = false;
       this.getProjectList(page, PAGE_SIZE);
+    },
+    detail(id) {
+      this.$router.push("/detail/"+id);
     }
   },
   created() {
