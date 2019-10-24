@@ -34,8 +34,8 @@
               <span>▢</span> 项目概况
             </a>
           </li>
-          <li>
-            <a href="#">
+          <li @click="jump('api')">
+            <a href="javascript:void;">
               <span>▢</span> API接口
             </a>
           </li>
@@ -81,24 +81,24 @@
       <div class="right">
         <div class="right-l">
           <div class="title">
-            <span>测试项目1</span>
+            <span>{{projectData.title}}</span>
           </div>
           <ul>
             <li>
-              <p>测试项目1</p>
-              <p>完成了1个</p>
+              <p>项目类型</p>
+              <p>{{projectData.type}}</p>
             </li>
             <li>
-              <p>测试项目1</p>
-              <p>完成了1个</p>
+              <p>项目版本</p>
+              <p>{{projectData.version}}</p>
             </li>
             <li>
-              <p>测试项目1</p>
-              <p>完成了1个</p>
+                <p>创建时间</p>
+              <p>{{projectData.create_time}}</p>
             </li>
             <li>
-              <p>测试项目1</p>
-              <p>完成了1个</p>
+              <p>项目描述</p>
+              <p>{{projectData.description}}</p>
             </li>
           </ul>
           <ul class="two">
@@ -194,32 +194,32 @@
 </template>
 
 <script>
-
 const CODE_OK = 200;
 export default {
   name: "detail",
-  props:{
+  props: {
     id: String
   },
   created() {
-   this.getDetail();
+    this.getDetail();
   },
   data() {
     return {
-      test:0
+      test: 0,
+      projectData: {}
     };
   },
-  methods:{
-    getDetail(){
-              this.$http
+  methods: {
+    getDetail() {
+      this.$http
         .get(this.apiAddress + "/project/detail", {
-          params: { id : this.$route.params.id }
+          params: { id: this.$route.params.id }
         })
         .then(
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-                alert('获取成功');
+              this.projectData = response.data;
             }
           },
           function(res) {
@@ -227,6 +227,9 @@ export default {
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
+    },
+    jump(name){
+        this.$router.push("/api/"+this.id);
     }
   }
 };

@@ -11,7 +11,7 @@ export default new VueRouter({
   routes: [
     { path: "/project", component: Project },
     { path: "/", component: Project },
-    { path: "/api", name: "api", component: Api },
+    { path: "/api/:id", name: "api", component: Api,props:true },
     { path: "/detail/:id", name: "detail", component: Detail, props: true },
     { path: "/msg", name: "msg", component: Msg }
   ]
