@@ -79,7 +79,14 @@
       <!-- 左侧导航栏结束 -->
       <!-- 右侧内容开始 -->
       <div class="right">
-       
+        <div class="btn-wrapper"></div>
+        <div class="group-wrapper">
+          <group :id="this.id" />
+        </div>
+
+        <div class="api-wrapper">
+          <apiList :id="this.id" />
+        </div>
       </div>
       <!-- 右侧内容结束 -->
     </div>
@@ -87,7 +94,10 @@
 </template>
 
 <script>
-const CODE_OK = 200;
+import group from "../components/api/group";
+import apiList from "../components/api/apiList";
+
+// const CODE_OK = 200;
 export default {
   name: "api",
   props: {
@@ -97,7 +107,11 @@ export default {
   data() {
     return {};
   },
-  methods: {}
+  methods: {},
+  components: {
+    group,
+    apiList
+  }
 };
 </script>
 
@@ -105,7 +119,9 @@ export default {
 <style scoped>
 .content {
   width: 100%;
+  height: auto;
   position: relative;
+  overflow: hidden;
 }
 
 /* <!-- 头部导航栏开始 --> */
@@ -210,12 +226,32 @@ export default {
   background-color: #f8f8f8;
 }
 
-
-
-ul:nth-child(5) {
+/* ul:nth-child(5) {
   margin-top: 20px;
   border-top: 1px solid #e5e5e5;
+} */
+.group-wrapper {
+  width: 340px;
+  height: 100%;
+  border-right: 1px solid #e5e5e5;
+  position: absolute;
+  left: 0;
+  top: 51px;
 }
 
+.api-wrapper {
+  width: 100%;
+  height: 100%;
+  border-right: 1px solid #e5e5e5;
+  position: absolute;
+  left: 340px;
+  top: 51px;
+}
 
+.btn-wrapper {
+  height: 50px;
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+  position: absolute;
+}
 </style>

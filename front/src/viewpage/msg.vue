@@ -194,14 +194,14 @@ export default {
   padding: 15px 0;
 }
 
-.left li:nth-child(4) {
+/* .left li:nth-child(4) {
   background-color: #e3f1e5;
   color: #4caf50;
 }
 
 .left li:nth-child(4) a {
   color: #4caf50;
-}
+} */
 
 .left li:hover {
   background-color: #e3f1e5;

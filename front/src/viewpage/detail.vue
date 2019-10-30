@@ -29,6 +29,11 @@
       <!-- 左侧导航栏开始 -->
       <div class="left">
         <ul>
+            <li>
+            <a href="#">
+              <span>▢</span> 项目列表
+            </a>
+          </li>
           <li>
             <a href="#">
               <span>▢</span> 项目概况
@@ -229,7 +234,7 @@ export default {
         );
     },
     jump(name){
-        this.$router.push("/api/"+this.id);
+        this.$router.push("/"+name+"/"+this.id);
     }
   }
 };
