@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import VueResource from 'vue-resource';
 
-Vue.prototype.apiAddress = 'http://localhost:1000';
+Vue.prototype.apiAddress = 'http://120.27.241.94:50682';
 
 Vue.config.productionTip = false
 
