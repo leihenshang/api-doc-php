@@ -8,6 +8,13 @@
 <template>
   <div class="group">
  我是分组组件
+ <div class="box" >
+
+   <ul v-if="groupList">
+     <li v-for="item in groupList" :key="item.id" ><a href="javascript:void();">{{item.title}}</a> <button>删除</button> </li>
+   </ul>
+
+ </div>
   </div>
 </template>
 
@@ -16,7 +23,8 @@
 export default {
   name: "group",
   props: {
-    id: String
+    id: String,
+    groupList:Array
   },
   created() {},
   data() {

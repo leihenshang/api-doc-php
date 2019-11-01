@@ -79,13 +79,16 @@
       <!-- 左侧导航栏结束 -->
       <!-- 右侧内容开始 -->
       <div class="right">
-        <div class="btn-wrapper"></div>
+        <div class="btn-wrapper">
+          <button>添加分组</button>
+          <button>添加api</button>
+        </div>
         <div class="group-wrapper">
-          <group :id="this.id" />
+          <group :id="this.id" :groupList="groupList" />
         </div>
 
         <div class="api-wrapper">
-          <apiList :id="this.id" />
+          <apiList :id="id" :apiList="apiList" />
         </div>
       </div>
       <!-- 右侧内容结束 -->
@@ -97,17 +100,62 @@
 import group from "../components/api/group";
 import apiList from "../components/api/apiList";
 
-// const CODE_OK = 200;
+const CODE_OK = 200;
 export default {
   name: "api",
   props: {
     id: String
   },
-  created() {},
-  data() {
-    return {};
+  created() {
+    this.getGroup();
+    this.getApi();
   },
-  methods: {},
+  data() {
+    return {
+      groupList: [],
+      apiList: [],
+      curr: 1,
+      pageSize: 10
+    };
+  },
+  methods: {
+    getGroup(curr, pageSize) {
+      this.$http
+        .get(this.apiAddress + "/group/list", {
+          params: { cp: curr, ps: pageSize }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.groupList = response.data;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
+    },
+    getApi(curr, pageSize) {
+      this.$http
+        .get(this.apiAddress + "/api/list", {
+          params: { cp: curr, ps: pageSize }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.apiList = response.data;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
+    }
+  },
   components: {
     group,
     apiList
