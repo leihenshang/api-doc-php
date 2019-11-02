@@ -80,11 +80,10 @@
       <!-- 右侧内容开始 -->
       <div class="right">
         <div class="btn-wrapper">
-          <button>添加分组</button>
           <button>添加api</button>
         </div>
         <div class="group-wrapper">
-          <group :id="this.id" :groupList="groupList" />
+          <group :id="this.id" :groupList="groupList" v-on:add-group="flushGroupList" />
         </div>
 
         <div class="api-wrapper">
@@ -154,6 +153,9 @@ export default {
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
+    },
+    flushGroupList(){
+      this.getGroup(1,100);
     }
   },
   components: {

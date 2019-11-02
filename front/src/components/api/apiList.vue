@@ -22,6 +22,7 @@
         <td>
           <button>编辑</button>
           <button>详情</button>
+          <button>删除</button>
         </td>
       </tr>
     </table>
