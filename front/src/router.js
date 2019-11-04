@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Project from "./viewPage/project";
 import Api from "./viewPage/api";
-import Detail from "./viewPage/detail";
+import Detail from "./viewPage/projectDetail";
 import Msg from "./viewPage/msg";
 
 Vue.use(VueRouter);

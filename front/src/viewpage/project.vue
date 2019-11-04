@@ -2,73 +2,13 @@
   <div class="project">
     <!-- 头部导航栏开始 -->
     <div class="top">
-      <ul>
-        <li class="t-link">
-          <a href="#">(●'◡'●)</a>
-        </li>
-        <li class="name">
-          <span>apiDoc开源版本</span>
-        </li>
-        <li>
-          <span>接口管理</span>
-        </li>
-        <li class="t-r">
-          <em>😉</em>
-          <div class="user-lay" id="user-lay">
-            <ul>
-              <li>
-                <a href="#">用户操作</a>
-              </li>
-              <li>
-                <a href="#">用户操作</a>
-              </li>
-              <li>
-                <a href="#">用户操作</a>
-              </li>
-              <li>
-                <a href="#">用户操作</a>
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
+      <topBar />
     </div>
     <!-- 头部导航栏结束 -->
     <div class="content">
       <!-- 左侧导航栏开始 -->
       <div class="left">
-        <ul>
-          <li>
-            <a href="javascript:void;" @click="jump('project')">
-              <span>▢</span> 接口管理
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <!-- <span>▢</span> 数据库管理 -->
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <!-- <span>▢</span> 账户管理 -->
-            </a>
-          </li>
-          <li class="message">
-            <a href="javascript:void;" @click="jump('msg')">
-              <!-- <span>▢</span> 消息管理 -->
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <!-- <span>▢</span> 官方网站 -->
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <!-- <span>▢</span> 用户讨论群 -->
-            </a>
-          </li>
-        </ul>
+        <leftMenu :menuList="indesideRoute" />
       </div>
       <!-- 左侧导航栏结束 -->
 
@@ -127,6 +67,8 @@
 import add from "../components/project/add";
 import page from "../components/common/page";
 import boxShade from "../components/common/boxShade";
+import TopBar from "../components/common/topBar";
+import LeftMenu from "../components/common/leftMenu";
 const CODE_OK = 200;
 const PAGE_SIZE = 5;
 
@@ -202,7 +144,7 @@ export default {
       this.getProjectList(page, PAGE_SIZE);
     },
     detail(id) {
-      this.$router.push("/detail/"+id);
+      this.$router.push("/detail/" + id);
     }
   },
   created() {
@@ -216,13 +158,16 @@ export default {
       addIsHide: true,
       updateData: null,
       itemCount: 0,
-      hideShade: true
+      hideShade: true,
+      indesideRoute: [{ title: "项目管理", route: "" }]
     };
   },
   components: {
     add,
     page,
-    boxShade
+    boxShade,
+    topBar: TopBar,
+    leftMenu: LeftMenu
   }
 };
 </script>
@@ -239,55 +184,6 @@ export default {
 }
 
 /* <!-- 头部导航栏开始 --> */
-.top {
-  height: 50px;
-  line-height: 50px;
-  border-bottom: 1px solid #e5e5e5;
-  font-size: 14px;
-}
-
-.top ul {
-  overflow: hidden;
-  /* width: 100%; */
-}
-
-.top li {
-  float: left;
-}
-
-.top .t-r {
-  float: right;
-  border-left: 1px solid #e5e5e5;
-}
-
-.top .t-link {
-  padding: 0 15px;
-  border-right: 1px solid #e5e5e5;
-}
-
-.top .t-link a {
-  color: #999;
-}
-
-.top .name {
-  width: 155px;
-  padding-left: 10px;
-  text-align: left;
-}
-
-.top span {
-  color: #999;
-}
-
-.top em {
-  display: block;
-  padding: 0 14px;
-  font-style: normal;
-}
-
-.top .t-r:hover {
-  background-color: #4caf50;
-}
 
 /* <!-- 左侧导航栏开始 --> */
 .left {
@@ -297,39 +193,6 @@ export default {
   position: fixed;
   top: 51px;
   left: 0;
-}
-
-.left li {
-  padding: 15px 0;
-}
-
-.left li:first-child {
-  background-color: #e3f1e5;
-}
-
-.left li:first-child a {
-  color: #4caf50;
-}
-
-.left li:hover {
-  background-color: #e3f1e5;
-}
-
-.left li span {
-  display: inline-block;
-  padding: 0 32px;
-}
-
-.left li a {
-  width: 100%;
-  display: block;
-  font-size: 14px;
-  color: black;
-  text-align: left;
-}
-
-.message {
-  border-bottom: 1px solid #e5e5e5;
 }
 
 /* <!-- 右侧内容开始 --> */
