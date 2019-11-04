@@ -52,7 +52,8 @@ class GroupController extends BaseController
      */
     public function actionList()
     {
-        $res = Group::findAll(['is_deleted' => 0]);
+        $projectId = Yii::$app->request->get('projectId',0);
+        $res = Group::findAll(['is_deleted' => 0,'project_id' => $projectId]);
         return ['data' => $res];
     }
 
