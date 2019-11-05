@@ -20,32 +20,7 @@
       <!-- 左侧导航栏结束 -->
       <!-- 右侧内容开始 -->
       <div class="right">
-        <div class="right-l">
-          <div class="title">
-            <span>{{projectData.title}}</span>
-          </div>
-          <ul>
-            <li>
-              <p>项目类型</p>
-              <p>{{projectData.type}}</p>
-            </li>
-            <li>
-              <p>项目版本</p>
-              <p>{{projectData.version}}</p>
-            </li>
-            <li>
-              <p>创建时间</p>
-              <p>{{projectData.create_time}}</p>
-            </li>
-            <li>
-              <p>项目描述</p>
-              <p>{{projectData.description}}</p>
-            </li>
-          </ul>
-        </div>
-        <div class="right-r">
-          <message />
-        </div>
+        <router-view></router-view>
       </div>
       <!-- 右侧内容结束 -->
     </div>
@@ -53,7 +28,6 @@
 </template>
 
 <script>
-import Message from "../components/detail/message";
 import LeftMenu from "../components/common/leftMenu";
 import TopBar from "../components/common/topBar";
 
@@ -70,8 +44,8 @@ export default {
     return {
       projectData: {},
       indesideRoute: [
-        { title: "项目概况", route: "detail" },
-        { title: "API接口", route: "api" }
+        { title: "项目概况", route: "detail", child: "detailPage" },
+        { title: "API接口", route: "detail", child: "apiPage" }
       ]
     };
   },
@@ -99,7 +73,6 @@ export default {
     }
   },
   components: {
-    message: Message,
     leftMenu: LeftMenu,
     topBar: TopBar
   }
@@ -121,80 +94,5 @@ export default {
   position: fixed;
   top: 51px;
   left: 0;
-}
-
-/* <!-- 右侧内容开始 --> */
-.right {
-  position: fixed;
-  width: 87%;
-  height: 100%;
-  left: 241px;
-  background-color: #f8f8f8;
-}
-
-.right-l {
-  width: 50%;
-  height: 100%;
-  float: left;
-  padding: 5px;
-  box-sizing: border-box;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.right-l .title {
-  height: 130px;
-  border: 1px solid #e5e5e5;
-  line-height: 130px;
-  padding-left: 20px;
-  font-weight: 700;
-  font-size: 2em;
-  color: #4caf50;
-  background-color: #fff;
-}
-
-.right-l ul {
-  width: 100%;
-  display: flex;
-  background-color: #fff;
-}
-
-.right-l ul.two {
-  margin: 20px 0;
-  border-top: 1px solid #e5e5e5;
-}
-
-.right-l ul li {
-  flex: 1;
-  height: 80px;
-  border-right: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.right-l ul li:first-child {
-  border-left: 1px solid #e5e5e5;
-}
-
-.right-l ul li p:first-child {
-  font-size: 18px;
-  margin: 10px 15px;
-}
-
-.right-l ul li p:last-child {
-  font-size: 12px;
-  color: gray;
-  margin: 10px 15px;
-}
-
-ul:nth-child(5) {
-  margin-top: 20px;
-  border-top: 1px solid #e5e5e5;
-}
-
-.right-r {
-  width: 50%;
-  height: 100%;
-  float: left;
-  background-color: #f3f3f3;
 }
 </style>

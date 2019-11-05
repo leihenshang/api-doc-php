@@ -7,7 +7,7 @@
           首页
         </a>
       </li>
-      <li v-for="item in menuList" :key="item.id" @click="jump(item.route)">
+      <li v-for="item in menuList" :key="item.id" @click="jump(item.route,item.child)">
         <a href="javascript:void;">
           <span>▢</span>
           {{item.title}}
@@ -25,9 +25,13 @@ export default {
   },
   computed: {},
   methods: {
-    jump(uri) {
+    jump(uri, child) {
       if (uri) {
-        this.$router.push("/" + uri + "/" + this.$route.params.id);
+        if (child) {
+          this.$router.push("/" + uri + "/" + this.$route.params.id+"/"+child);
+        } else {
+          this.$router.push("/" + uri + "/" + this.$route.params.id);
+        }
       } else {
         this.$router.push("/");
       }
