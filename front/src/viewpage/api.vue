@@ -49,7 +49,7 @@ export default {
     id: String
   },
   created() {
-    this.getGroup();
+    this.getGroup(this.curr,this.pageSize);
     this.getApi();
   },
   data() {
@@ -68,7 +68,7 @@ export default {
     getGroup(curr, pageSize) {
       this.$http
         .get(this.apiAddress + "/group/list", {
-          params: { cp: curr, ps: pageSize }
+          params: { cp: curr, ps: pageSize, projectId: this.$route.params.id }
         })
         .then(
           response => {

@@ -50,7 +50,8 @@ export default {
         .post(
           this.apiAddress + "/group/create",
           {
-            title: this.newGroup
+            title: this.newGroup,
+            project_id:this.$route.params.id
           },
           { emulateJSON: true }
         )
