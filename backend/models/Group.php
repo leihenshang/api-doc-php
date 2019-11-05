@@ -25,6 +25,7 @@ class Group extends BaseModel
     {
         return [
             ['id','required'],
+            ['project_id','required'],
             [['id','p_id','project_id','is_deleted'],'number'],
             ['title', 'required'],
             ['title','unique'],
@@ -35,7 +36,7 @@ class Group extends BaseModel
     public function scenarios()
     {
         $scenarios =  parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['title'];
+        $scenarios[self::SCENARIO_CREATE] = ['title','project_id'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
         $scenarios[self::SCENARIO_UPDATE] = ['title','id'];
         return $scenarios;
