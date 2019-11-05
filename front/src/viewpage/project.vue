@@ -159,7 +159,7 @@ export default {
       updateData: null,
       itemCount: 0,
       hideShade: true,
-      indesideRoute: [{ title: "项目管理", route: "" }]
+      indesideRoute: []
     };
   },
   components: {

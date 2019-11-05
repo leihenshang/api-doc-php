@@ -68,12 +68,10 @@ export default {
   },
   data() {
     return {
-      test: 0,
       projectData: {},
       indesideRoute: [
-        { title: "项目管理", route: "" },
-        { title: "项目概况", route: "" },
-        { title: "API接口", route: "" }
+        { title: "项目概况", route: "detail" },
+        { title: "API接口", route: "api" }
       ]
     };
   },

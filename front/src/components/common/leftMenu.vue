@@ -1,7 +1,13 @@
 <template>
   <div class="left-menu">
     <ul>
-      <li v-for="item in menuList" :key="item.id">
+      <li @click="jump()">
+        <a href="javascript:void;">
+          <span>▢</span>
+          首页
+        </a>
+      </li>
+      <li v-for="item in menuList" :key="item.id" @click="jump(item.route)">
         <a href="javascript:void;">
           <span>▢</span>
           {{item.title}}
@@ -18,7 +24,15 @@ export default {
     menuList: Array
   },
   computed: {},
-  methods: {},
+  methods: {
+    jump(uri) {
+      if (uri) {
+        this.$router.push("/" + uri + "/" + this.$route.params.id);
+      } else {
+        this.$router.push("/");
+      }
+    }
+  },
   data: function() {
     return {};
   }
@@ -32,13 +46,13 @@ export default {
   text-align: left;
 }
 
-.left-menu li:first-child {
+/* .left-menu li:first-child {
   background-color: #e3f1e5;
 }
 
 .left-menu li:first-child a {
   color: #4caf50;
-}
+} */
 
 .left-menu li:hover {
   background-color: #e3f1e5;
