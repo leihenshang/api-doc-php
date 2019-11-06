@@ -10,7 +10,7 @@
     <!-- 右侧内容开始 -->
     <div class="right">
       <div class="btn-wrapper">
-        <button>添加api</button>
+        <button @click="addApi()">添加api</button>
       </div>
       <div class="group-wrapper">
         <group :id="this.id" :groupList="groupList" v-on:add-group="flushGroupList" />
@@ -89,6 +89,9 @@ export default {
     },
     flushGroupList() {
       this.getGroup(1, 100);
+    },
+    addApi(){
+        this.$router.push("/detail/" + this.$route.params.id+"/createApi");
     }
   },
   components: {
