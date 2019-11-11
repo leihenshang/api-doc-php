@@ -16,10 +16,9 @@ export default new VueRouter({
     {
       path: "/detail/:id", name: "detail", component: Detail, props: true,
       children: [
-        { path: 'apiPage', component: ApiPage },
         { path: 'detailPage', component: DetailPage },
+        { path: 'apiPage', component: ApiPage },
         { path: 'createApi', component: CreateApi },
-        { path: '', component: DetailPage }
       ]
     },
     { path: "/msg", name: "msg", component: Msg }

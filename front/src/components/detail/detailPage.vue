@@ -98,9 +98,9 @@ export default {
 
 /* <!-- 右侧内容开始 --> */
 .right {
-  position: fixed;
+  position: absolute;
   width: 87%;
-  height: 100%;
+  height: 500px;
   left: 241px;
   background-color: #f8f8f8;
 }

@@ -9,81 +9,77 @@
   <div class="create-api">
     <div class="box1">
       <div class="btn-group-1">
-        <button @click="returnApiPage">《接口列表</button>
-        <button
-          @click="showDescription(true)"
-          v-bind:class="{ 'btn-group-1-btn-change' : baseInfoShow}"
-        >基础信息</button>
-        <button
-          @click="showDescription()"
-          v-bind:class="{ 'btn-group-1-btn-change' : !baseInfoShow}"
-        >详细说明</button>
+        <button @click="returnApiPage">↩ 接口列表</button>
+        <button @click="box2=0" v-bind:class="{ 'btn-group-1-btn-change' : box2==0}">基础信息</button>
+        <button @click="box2=1" v-bind:class="{ 'btn-group-1-btn-change' : box2==1}">详细说明</button>
         <!-- <button>高级mock</button> -->
       </div>
       <div class="btn-group-2">
         <button>继续添加</button>
-        <button @click="createApi()" >保存</button>
+        <button @click="createApi()">保存</button>
       </div>
     </div>
     <div class="box2">
-      <dl>
-        <dd>
-          <span>分组:</span>
-          <select name id v-model="apiData.group">
-            <option value="1">历史记录</option>
-            <option value="2">订单</option>
-          </select>
-          <!-- <select name="" id="">
+      <div class="box2one" v-show="box2==0">
+        <dl>
+          <dd>
+            <span>分组:</span>
+            <select name id v-model="apiData.group">
+              <option value="1">历史记录</option>
+              <option value="2">订单</option>
+            </select>
+            <!-- <select name="" id="">
               <option value="1">可选（二级菜单）</option>
-          </select>-->
-          <!-- <em>状态:</em>
+            </select>-->
+            <!-- <em>状态:</em>
             <select name="" id="">
               <option value="1">启用</option>
               <option value="2">禁用</option>
-          </select>-->
-          <em>请求协议:</em>
-          <select name id v-model="apiData.protocol">
-            <option disabled value>请选择</option>
-            <option value="HTTP">HTTP</option>
-            <option value="HTTPS">HTTPS</option>
-          </select>
-          <em>请求方式:</em>
-          <select name id v-model="apiData.requestMethod">
-            <option value="POST">POST</option>
-            <option value="GET">GET</option>
-          </select>
-          <em>返回情况:</em>
-          <select name id v-model="apiData.returnDataType">
-            <option value="无返回值（比如增删改查）">无返回值（比如增删改查）</option>
-            <option value="列表">列表</option>
-          </select>
-        </dd>
-        <dd>
-          <span>URL:</span>
-          <input type="text" v-model="apiData.url" />
-        </dd>
-        <dd>
-          <span>名称:</span>
-          <input type="text" v-model="apiData.name" />
-        </dd>
-        <dd>
-          <span>根对象名:</span>
-          <input type="text" v-model="apiData.objectName" />
-        </dd>
-        <dd>
-          <span>方法:</span>
-          <input type="text" v-model="apiData.functionName" />
-        </dd>
-        <dd>
-          <span>接口语言:</span>
-          <select name id v-model="apiData.developmentLanguage">
-            <option value="PHP">PHP</option>
-            <option value=".NET">.NET</option>
-          </select>
-        </dd>
-      </dl>
-      <div class="box2two" v-bind:class="{ box2twoIsShow:descriptionIsShow }">
-        <textarea name id cols="30" rows="10" v-model="description"></textarea>
+            </select>-->
+            <em>请求协议:</em>
+            <select name id v-model="apiData.protocol">
+              <option disabled value>请选择</option>
+              <option value="HTTP">HTTP</option>
+              <option value="HTTPS">HTTPS</option>
+            </select>
+            <em>请求方式:</em>
+            <select name id v-model="apiData.requestMethod">
+              <option value="POST">POST</option>
+              <option value="GET">GET</option>
+            </select>
+            <em>返回情况:</em>
+            <select name id v-model="apiData.returnDataType">
+              <option value="无返回值（比如增删改查）">无返回值（比如增删改查）</option>
+              <option value="列表">列表</option>
+            </select>
+          </dd>
+          <dd>
+            <span>URL:</span>
+            <input type="text" v-model="apiData.url" />
+          </dd>
+          <dd>
+            <span>名称:</span>
+            <input type="text" v-model="apiData.name" />
+          </dd>
+          <dd>
+            <span>根对象名:</span>
+            <input type="text" v-model="apiData.objectName" />
+          </dd>
+          <dd>
+            <span>方法:</span>
+            <input type="text" v-model="apiData.functionName" />
+          </dd>
+          <dd>
+            <span>接口语言:</span>
+            <select name id v-model="apiData.developmentLanguage">
+              <option value="PHP">PHP</option>
+              <option value=".NET">.NET</option>
+            </select>
+          </dd>
+        </dl>
+      </div>
+      <div class="box2two" v-show="box2==1">
+        <textarea name id cols="30" rows="10" v-model="apiData.description"></textarea>
       </div>
     </div>
 
@@ -91,20 +87,20 @@
       <div class="item-head">
         <ul>
           <li>
-            <button>请求头部</button>
+            <button @click="box3=0" :class="{'tab-change-btn-bg' : box3==0}">请求头部</button>
           </li>
           <li>
-            <button>请求参数</button>
+            <button @click="box3=1" :class="{'tab-change-btn-bg' : box3==1}">请求参数</button>
           </li>
           <!-- <li><button>inject</button></li> -->
         </ul>
       </div>
-      <table>
+      <table v-show="box3==0">
         <header>
           <!-- <button>导入头部</button> -->
         </header>
         <tr>
-          <th>参数名</th>
+          <th>请求头名</th>
           <th>说明</th>
           <th>必填</th>
           <th>类型</th>
@@ -128,6 +124,52 @@
             <input type="text" placeholder="参数示例" />
           </td>
           <td></td>
+        </tr>
+      </table>
+      <table v-show="box3==1">
+        <header>
+          <!-- <button>导入头部</button> -->
+        </header>
+        <tr>
+          <th>参数名</th>
+          <th>说明</th>
+          <th>必填</th>
+          <th>类型</th>
+          <th>示例</th>
+          <th>操作</th>
+        </tr>
+        <tr v-for="(item,index) in box3Item" :key="item.id">
+          <td>
+            <input
+              type="text"
+              placeholder="参数名"
+              v-on:input="box3Input(index,$event)"
+              v-model="item.name"
+            />
+          </td>
+          <td>
+            <input type="text" placeholder v-model="item.desc" />
+          </td>
+          <td>
+            <input type="checkbox" name id v-model="item.required" />
+          </td>
+          <td>
+            <select style="width:90%;text-align:center;margin:0 10px;" v-model="item.type">
+              <option value="int">int</option>
+              <option value="array">array</option>
+              <option value="object">object</option>
+              <option value="long">long</option>
+              <option value="string">string</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" placeholder="参数示例" v-model="item.example" />
+          </td>
+          <td>
+            <div v-show="item.name.length >= 1">
+              <button @click="box3delete(index)">×</button>
+            </div>
+          </td>
         </tr>
       </table>
     </div>
@@ -140,47 +182,63 @@
       </header>
       <table>
         <tr>
-          <th>参数名</th>
+          <th>字段名</th>
+          <th>相关类名</th>
           <th>说明</th>
-          <th>必填</th>
+          <th>必含</th>
           <th>类型</th>
-          <th>示例</th>
           <th>操作</th>
         </tr>
-        <tr>
+        <tr v-for="(item,index) in box4Item" :key="item.id">
           <td>
-            <input type="text" placeholder="参数名" />
+            <input
+              type="text"
+              placeholder="字段名"
+              v-model="item.fieldName"
+              v-on:input="box4Input(index,$event)"
+            />
           </td>
           <td>
-            <input type="text" placeholder="参数名" />
+            <input type="text" placeholder v-model="item.objectName" />
           </td>
           <td>
-            <input type="checkbox" name id />
+            <input type="text" placeholder="参数名" v-model="item.decription" />
           </td>
           <td>
-            <input type="text" placeholder="参数名" />
+            <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-            <input type="text" placeholder="参数示例" />
+            <select style="width:90%;text-align:center;margin:0 10px;" v-model="item.type">
+              <option value="int">int</option>
+              <option value="array">array</option>
+              <option value="object">object</option>
+              <option value="long">long</option>
+              <option value="string">string</option>
+            </select>
           </td>
-          <td></td>
+          <td>
+            <div v-show="item.fieldName.length >= 1">
+              <button @click="box4delete(index)">×</button>
+            </div>
+          </td>
         </tr>
       </table>
     </div>
     <div class="box5">
       <div class="res-btn">
         <div class="btn-wrap">
-          <button>成功</button>
-          <button>失败</button>
+          <button @click="box5=0" :class="{'tab-change-btn-bg' : box5==0}">成功</button>
+          <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
         </div>
       </div>
-      <textarea name id></textarea>
+      <textarea name id v-model="apiData.returnDataSuccess" v-show="box5==0" placeholder="成功的返回"></textarea>
+      <textarea name id v-model="apiData.returnDataFailed" v-show="box5==1" placeholder="失败的返回"></textarea>
     </div>
   </div>
 </template>
 
 <script>
-// const CODE_OK = 200;
+const CODE_OK = 200;
 export default {
   name: "createApi",
   props: {
@@ -207,22 +265,36 @@ export default {
         returnDataSuccess: "", //返回数据成功
         returnDataFailed: "" //返回数据失败
       },
-      descriptionIsShow: true,
-      baseInfoShow: true
+      box2: 0,
+      box3: 1,
+      box3Item: [
+        {
+          name: "",
+          desc: "",
+          required: false,
+          type: "string",
+          example: "",
+          handle: true,
+          isAdd: false
+        }
+      ],
+      box4Item: [
+        {
+          fieldName: "",
+          objectName: "",
+          description: "",
+          required: false,
+          type: "string",
+          handle: true,
+          isAdd: false
+        }
+      ],
+      box5: 0
     };
   },
   methods: {
     returnApiPage() {
       this.$router.go(-1);
-    },
-    showDescription(isTrue) {
-      if (isTrue === true) {
-        this.descriptionIsShow = true;
-        this.baseInfoShow = false;
-      } else {
-        this.descriptionIsShow = !this.descriptionIsShow;
-        this.baseInfoShow = true;
-      }
     },
     createApi() {
       this.$http
@@ -247,6 +319,48 @@ export default {
             alert("操作失败!" + !response.msg ? response.msg : "");
           }
         );
+    },
+    box3Input(index, event) {
+      if (event) {
+        // alert(index);
+        let txt = event.target.value;
+        if (txt.length >= 1 && this.box3Item[index].isAdd === false) {
+          this.box3Item.push({
+            name: "",
+            desc: "",
+            required: false,
+            type: "string",
+            example: "",
+            handle: true,
+            isAdd: false
+          });
+          this.box3Item[index].isAdd = true;
+        }
+      }
+    },
+    box4Input(index, event) {
+      if (event) {
+        // alert(index);
+        let txt = event.target.value;
+        if (txt.length >= 1 && this.box4Item[index].isAdd === false) {
+          this.box4Item.push({
+            fieldName: "",
+            objectName: "",
+            description: "",
+            required: false,
+            type: "string",
+            handle: true,
+            isAdd: false
+          });
+          this.box4Item[index].isAdd = true;
+        }
+      }
+    },
+    box3delete(key) {
+      this.box3Item.splice(key, 1);
+    },
+    box4delete(key) {
+      this.box4Item.splice(key, 1);
     }
   }
 };
@@ -366,15 +480,6 @@ select {
   margin-left: 0;
 }
 
-.box2two {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /* z-index: 1; */
-}
-
 .box2two textarea {
   width: 100%;
   height: 100%;
@@ -462,10 +567,6 @@ select {
 
 .item-head ul button {
   border-radius: 3px;
-}
-
-.item-head li:nth-child(odd) button {
-  background-color: #efefef;
 }
 
 .item-head li:nth-child(even) button {
@@ -579,5 +680,10 @@ select {
   display: inline-block;
   position: absolute;
   left: 0;
+}
+
+/* tab切换按钮颜色 */
+.tab-change-btn-bg {
+  background-color: #efefef;
 }
 </style>

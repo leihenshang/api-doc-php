@@ -105,7 +105,7 @@ export default {
 <style scoped>
 /* <!-- 右侧内容开始 --> */
 .right {
-  position: fixed;
+  position: absolute;
   width: 87%;
   height: 100%;
   left: 241px;

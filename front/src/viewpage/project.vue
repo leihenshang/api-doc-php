@@ -144,7 +144,7 @@ export default {
       this.getProjectList(page, PAGE_SIZE);
     },
     detail(id) {
-      this.$router.push("/detail/" + id);
+      this.$router.push("/detail/" + id+"/detailPage");
     }
   },
   created() {
@@ -196,8 +196,8 @@ export default {
 }
 
 /* <!-- 右侧内容开始 --> */
-.right {
-  position: fixed;
+.project .right {
+  position: absolute;
   width: 87%;
   height: 100%;
   left: 241px;

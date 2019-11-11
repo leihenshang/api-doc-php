@@ -2,13 +2,13 @@
   <div class="left-menu">
     <ul>
       <li @click="jump()">
-        <a href="javascript:void;">
+        <a href="javascript:void(0)">
           <span>▢</span>
           首页
         </a>
       </li>
       <li v-for="item in menuList" :key="item.id" @click="jump(item.route,item.child)">
-        <a href="javascript:void;">
+        <a href="javascript:void(0)">
           <span>▢</span>
           {{item.title}}
         </a>
