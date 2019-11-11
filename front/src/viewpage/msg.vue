@@ -35,41 +35,7 @@
     </div>
     <!-- 头部导航栏结束 -->
     <div class="content">
-      <!-- 左侧导航栏开始 -->
-      <div class="left">
-        <ul>
-          <li>
-            <a href="main.html">
-              <span>▢</span> 接口管理
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>▢</span> 数据库管理
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>▢</span> 账户管理
-            </a>
-          </li>
-          <li class="message">
-            <a href="#">
-              <span>▢</span> 消息管理2
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>▢</span> 官方网站
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>▢</span> 用户讨论群
-            </a>
-          </li>
-        </ul>
-      </div>
+  
       <!-- 左侧导航栏结束 -->
       <!-- 右侧内容开始 -->
       <div class="right">
@@ -180,44 +146,6 @@ export default {
   background-color: #4caf50;
 }
 
-/* <!-- 左侧导航栏开始 --> */
-.left {
-  width: 240px;
-  height: 100%;
-  border-right: 1px solid #e5e5e5;
-  position: fixed;
-  top: 51px;
-  left: 0;
-}
-
-.left li {
-  padding: 15px 0;
-}
-
-/* .left li:nth-child(4) {
-  background-color: #e3f1e5;
-  color: #4caf50;
-}
-
-.left li:nth-child(4) a {
-  color: #4caf50;
-} */
-
-.left li:hover {
-  background-color: #e3f1e5;
-}
-
-.left li span {
-  display: inline-block;
-  padding: 0 32px;
-}
-
-.left li a {
-  width: 100%;
-  display: block;
-  font-size: 14px;
-  color: black;
-}
 
 .message {
   border-bottom: 1px solid #e5e5e5;

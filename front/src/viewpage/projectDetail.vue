@@ -83,16 +83,23 @@ export default {
 <style scoped>
 .content {
   width: 100%;
-  position: relative;
+  display: flex;
+  height: 1200px;
 }
 
-/* <!-- 左侧导航栏开始 --> */
 .left {
-  width: 240px;
-  height: 100%;
-  border-right: 1px solid #e5e5e5;
-  position: fixed;
-  top: 51px;
-  left: 0;
+  width: 23%;
 }
+
+
+/* <!-- 右侧内容开始 --> */
+.right {
+  position: absolute;
+  width: 87%;
+  height: auto;
+  left: 241px;
+  background-color: #f8f8f8;
+}
+
+
 </style>

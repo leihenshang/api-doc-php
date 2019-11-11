@@ -185,16 +185,6 @@ export default {
 
 /* <!-- 头部导航栏开始 --> */
 
-/* <!-- 左侧导航栏开始 --> */
-.left {
-  width: 240px;
-  height: 100%;
-  border-right: 1px solid #e5e5e5;
-  position: fixed;
-  top: 51px;
-  left: 0;
-}
-
 /* <!-- 右侧内容开始 --> */
 .project .right {
   position: absolute;

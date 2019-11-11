@@ -8,10 +8,10 @@
 <template>
   <div class="apiPage">
     <!-- 右侧内容开始 -->
-    <div class="right">
-      <div class="btn-wrapper">
-        <button @click="addApi()">添加api</button>
-      </div>
+    <div class="btn-wrapper">
+      <button @click="addApi()">添加api</button>
+    </div>
+    <div class="api-content">
       <div class="group-wrapper">
         <group :id="this.id" :groupList="groupList" v-on:add-group="flushGroupList" />
       </div>
@@ -20,8 +20,8 @@
         <apiList :id="id" :apiList="apiList" />
       </div>
     </div>
-    <!-- 右侧内容结束 -->
   </div>
+  <!-- 右侧内容结束 -->
 </template>
 
 <script>
@@ -90,8 +90,8 @@ export default {
     flushGroupList() {
       this.getGroup(1, 100);
     },
-    addApi(){
-        this.$router.push("/detail/" + this.$route.params.id+"/createApi");
+    addApi() {
+      this.$router.push("/detail/" + this.$route.params.id + "/createApi");
     }
   },
   components: {
@@ -103,35 +103,26 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/* <!-- 右侧内容开始 --> */
-.right {
-  position: absolute;
-  width: 87%;
-  height: 100%;
-  left: 241px;
-  background-color: #f8f8f8;
-}
-
-/* ul:nth-child(5) {
-  margin-top: 20px;
-  border-top: 1px solid #e5e5e5;
-} */
-.group-wrapper {
-  width: 340px;
-  height: 100%;
-  border-right: 1px solid #e5e5e5;
+.api-content {
   position: absolute;
   left: 0;
   top: 51px;
+    width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.group-wrapper {
+  width: 20%;
+  height: 100%;
+  border-right: 1px solid #e5e5e5;
+
 }
 
 .api-wrapper {
-  width: 100%;
+  width: 80%;
   height: 100%;
   border-right: 1px solid #e5e5e5;
-  position: absolute;
-  left: 340px;
-  top: 51px;
 }
 
 .btn-wrapper {

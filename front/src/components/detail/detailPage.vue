@@ -7,34 +7,33 @@
  -->
 <template>
   <div class="detailPage">
-    <div class="right">
-      <div class="right-l">
-        <div class="title">
-          <span>{{projectData.title}}</span>
-        </div>
-        <ul>
-          <li>
-            <p>项目类型</p>
-            <p>{{projectData.type}}</p>
-          </li>
-          <li>
-            <p>项目版本</p>
-            <p>{{projectData.version}}</p>
-          </li>
-          <li>
-            <p>创建时间</p>
-            <p>{{projectData.create_time}}</p>
-          </li>
-          <li>
-            <p>项目描述</p>
-            <p>{{projectData.description}}</p>
-          </li>
-        </ul>
+    <div class="right-l">
+      <div class="title">
+        <span>{{projectData.title}}</span>
       </div>
-      <div class="right-r">
-        <message />
-      </div>
+      <ul>
+        <li>
+          <p>项目类型</p>
+          <p>{{projectData.type}}</p>
+        </li>
+        <li>
+          <p>项目版本</p>
+          <p>{{projectData.version}}</p>
+        </li>
+        <li>
+          <p>创建时间</p>
+          <p>{{projectData.create_time}}</p>
+        </li>
+        <li>
+          <p>项目描述</p>
+          <p>{{projectData.description}}</p>
+        </li>
+      </ul>
+
       <!-- 右侧内容结束 -->
+    </div>
+    <div class="right-r">
+      <message />
     </div>
   </div>
 </template>
@@ -55,7 +54,7 @@ export default {
     return {
       projectData: {},
       indesideRoute: [
-        { title: "项目概况", route: "detail", child: "apiPage" },
+        { title: "项目概况", route: "detail", child: "detailPage" },
         { title: "API接口", route: "detail", child: "apiPage" }
       ]
     };
@@ -84,27 +83,13 @@ export default {
     }
   },
   components: {
-    message: Message,
+    message: Message
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.content {
-  width: 100%;
-  position: relative;
-}
-
-/* <!-- 右侧内容开始 --> */
-.right {
-  position: absolute;
-  width: 87%;
-  height: 500px;
-  left: 241px;
-  background-color: #f8f8f8;
-}
-
 .right-l {
   width: 50%;
   height: 100%;
