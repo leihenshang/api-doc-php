@@ -87,13 +87,13 @@ export default {
   height: 1200px;
 }
 
-.left {
-  width: 23%;
+.detail .left {
+  width:240px;
 }
 
 
 /* <!-- 右侧内容开始 --> */
-.right {
+.detail .right {
   position: absolute;
   width: 87%;
   height: auto;

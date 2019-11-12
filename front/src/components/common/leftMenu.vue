@@ -45,6 +45,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.left-menu {
+  width: auto;
+  height: 100%;
+}
+
 .left-menu li {
   padding: 15px 0;
   text-align: left;
