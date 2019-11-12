@@ -17,7 +17,7 @@
       </div>
 
       <div class="api-wrapper">
-        <apiList :id="id" :apiList="apiList" />
+        <apiList :id="id" />
       </div>
     </div>
   </div>
@@ -36,7 +36,6 @@ export default {
   },
   created() {
     this.getGroup(this.curr, this.pageSize);
-    this.getApi();
   },
   data() {
     return {
@@ -69,24 +68,6 @@ export default {
           }
         );
     },
-    getApi(curr, pageSize) {
-      this.$http
-        .get(this.apiAddress + "/api/list", {
-          params: { cp: curr, ps: pageSize }
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.apiList = response.data;
-            }
-          },
-          function(res) {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
-    },
     flushGroupList() {
       this.getGroup(1, 100);
     },
@@ -107,7 +88,7 @@ export default {
   position: absolute;
   left: 0;
   top: 51px;
-    width: 100%;
+  width: 100%;
   height: 100%;
   display: flex;
 }
@@ -116,7 +97,6 @@ export default {
   width: 20%;
   height: 100%;
   border-right: 1px solid #e5e5e5;
-
 }
 
 .api-wrapper {
