@@ -1,22 +1,15 @@
 <template>
   <div class="project">
-    <!-- 头部导航栏开始 -->
     <div class="top">
       <topBar />
     </div>
-    <!-- 头部导航栏结束 -->
     <div class="content">
-      <!-- 左侧导航栏开始 -->
       <div class="left">
         <leftMenu :menuList="indesideRoute" />
       </div>
-      <!-- 左侧导航栏结束 -->
-
-      <!-- 右侧内容开始 -->
       <div class="right">
         <router-view></router-view>
       </div>
-      <!-- 右侧内容结束 -->
     </div>
   </div>
 </template>
@@ -124,29 +117,9 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .project {
   width: 100%;
   height: 100%;
-}
-
-.content {
-  position: relative;
-}
-
-.project .left {
-  width: 240px;
-  position: fixed;
-  height: 100%;
-}
-
-/* <!-- 右侧内容开始 --> */
-.project .right {
-  position: absolute;
-  height: 100%;
-  width: 87%;
-  left: 241px;
-  background-color: #f8f8f8;
 }
 </style>

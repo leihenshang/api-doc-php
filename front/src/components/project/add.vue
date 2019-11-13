@@ -134,7 +134,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .add {
   width: 500px;
@@ -144,7 +143,7 @@ export default {
   top: 50%;
   left: 50%;
   border: 1px solid black;
-  transform: translate(-50%, 50%);
+  transform: translate(-50%, -50%);
 }
 
 .hide {

@@ -7,22 +7,16 @@
  -->
 <template>
   <div class="detail">
-    <!-- 头部导航栏开始 -->
     <div class="top">
       <topBar />
     </div>
-    <!-- 头部导航栏结束 -->
     <div class="content">
-      <!-- 左侧导航栏开始 -->
       <div class="left">
         <leftMenu :menuList="indesideRoute" />
       </div>
-      <!-- 左侧导航栏结束 -->
-      <!-- 右侧内容开始 -->
       <div class="right">
         <router-view></router-view>
       </div>
-      <!-- 右侧内容结束 -->
     </div>
   </div>
 </template>
@@ -79,26 +73,10 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.content {
+.detail {
   width: 100%;
-  display: flex;
-  height: 1200px;
-}
-
-.detail .left {
-  width:240px;
-}
-
-
-/* <!-- 右侧内容开始 --> */
-.detail .right {
-  position: absolute;
-  width: 87%;
-  height: auto;
-  left: 241px;
-  background-color: #f8f8f8;
+  height: 100%;
 }
 
 
