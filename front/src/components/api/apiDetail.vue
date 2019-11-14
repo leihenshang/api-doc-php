@@ -14,10 +14,6 @@
         <button @click="box2=1" v-bind:class="{ 'btn-group-1-btn-change' : box2==1}">详细说明</button>
         <!-- <button>高级mock</button> -->
       </div>
-      <div class="btn-group-2">
-        <button>继续添加</button>
-        <button @click="createApi()">保存</button>
-      </div>
     </div>
     <div class="box2">
       <div class="box2one" v-show="box2==0">
@@ -25,8 +21,7 @@
           <dd>
             <span>分组:</span>
             <select name id v-model="apiData.group">
-              <option value="1">历史记录</option>
-              <option value="2">订单</option>
+              <option :value="apiData.group">{{apiData.group}}</option>
             </select>
             <!-- <select name="" id="">
               <option value="1">可选（二级菜单）</option>
@@ -37,43 +32,38 @@
               <option value="2">禁用</option>
             </select>-->
             <em>请求协议:</em>
-            <select name id v-model="apiData.protocol">
-              <option disabled value>请选择</option>
-              <option value="HTTP">HTTP</option>
-              <option value="HTTPS">HTTPS</option>
+            <select name id v-model="apiData.protocol" style="pointer-events: none;">
+              <option :value="apiData.protocol">{{apiData.protocol}}</option>
             </select>
             <em>请求方式:</em>
-            <select name id v-model="apiData.requestMethod">
-              <option value="POST">POST</option>
-              <option value="GET">GET</option>
+            <select name id style="pointer-events: none;">
+              <option :value="apiData.requestMethod">{{apiData.requestMethod}}</option>
             </select>
             <em>返回情况:</em>
-            <select name id v-model="apiData.returnDataType">
-              <option value="无返回值（比如增删改查）">无返回值（比如增删改查）</option>
-              <option value="列表">列表</option>
+            <select name id  style="pointer-events: none;">
+              <option :value="apiData.returnDataType">{{apiData.returnDataType}}</option>
             </select>
           </dd>
           <dd>
             <span>URL:</span>
-            <input type="text" v-model="apiData.url" />
+            <input type="text" :value="apiData.url" readonly />
           </dd>
           <dd>
             <span>名称:</span>
-            <input type="text" v-model="apiData.name" />
+            <input type="text" :value="apiData.name" readonly />
           </dd>
           <dd>
             <span>根对象名:</span>
-            <input type="text" v-model="apiData.objectName" />
+            <input type="text" :value="apiData.objectName" readonly />
           </dd>
           <dd>
             <span>方法:</span>
-            <input type="text" v-model="apiData.functionName" />
+            <input type="text" :value="apiData.functionName" readonly />
           </dd>
           <dd>
             <span>接口语言:</span>
-            <select name id v-model="apiData.developmentLanguage">
-              <option value="PHP">PHP</option>
-              <option value=".NET">.NET</option>
+            <select name id :value="apiData.developmentLanguage">
+              <option :value="apiData.developmentLanguage">{{apiData.developmentLanguage}}</option>
             </select>
           </dd>
         </dl>
@@ -138,20 +128,15 @@
           <th>示例</th>
           <th>操作</th>
         </tr>
-        <tr v-for="(item,index) in box3Item" :key="item.id">
+        <tr v-for="item in apiData.requestParams" :key="item.id">
           <td>
-            <input
-              type="text"
-              placeholder="参数名"
-              v-on:input="box3Input(index,$event)"
-              v-model="item.name"
-            />
+            <input type="text" placeholder="参数名" v-model="item.name" readonly/>
           </td>
           <td>
-            <input type="text" placeholder v-model="item.desc" />
+            <input type="text" placeholder v-model="item.desc" readonly/>
           </td>
           <td>
-            <input type="checkbox" name id v-model="item.required" />
+            <input type="checkbox" name id v-model="item.required" readonly/>
           </td>
           <td>
             <select style="width:90%;text-align:center;margin:0 10px;" v-model="item.type">
@@ -163,13 +148,9 @@
             </select>
           </td>
           <td>
-            <input type="text" placeholder="参数示例" v-model="item.example" />
+            <input type="text" placeholder="参数示例" v-model="item.example" readonly/>
           </td>
-          <td>
-            <div v-show="item.name.length >= 1">
-              <button @click="box3delete(index)">×</button>
-            </div>
-          </td>
+          <td></td>
         </tr>
       </table>
     </div>
@@ -189,23 +170,18 @@
           <th>类型</th>
           <th>操作</th>
         </tr>
-        <tr v-for="(item,index) in box4Item" :key="item.id">
+        <tr v-for="item in apiData.returnData" :key="item.id">
           <td>
-            <input
-              type="text"
-              placeholder="字段名"
-              v-model="item.fieldName"
-              v-on:input="box4Input(index,$event)"
-            />
+            <input type="text" placeholder="字段名" v-model="item.fieldName" readonly />
           </td>
           <td>
-            <input type="text" placeholder v-model="item.objectName" />
+            <input type="text" placeholder v-model="item.objectName" readonly />
           </td>
           <td>
-            <input type="text" placeholder="参数名" v-model="item.decription" />
+            <input type="text" placeholder="参数名" v-model="item.decription" readonly />
           </td>
           <td>
-            <input type="checkbox" name id v-model="item.required" />
+            <input type="checkbox" name id v-model="item.required" readonly />
           </td>
           <td>
             <select style="width:90%;text-align:center;margin:0 10px;" v-model="item.type">
@@ -216,11 +192,7 @@
               <option value="string">string</option>
             </select>
           </td>
-          <td>
-            <div v-show="item.fieldName.length >= 1">
-              <button @click="box4delete(index)">×</button>
-            </div>
-          </td>
+          <td></td>
         </tr>
       </table>
     </div>
@@ -243,10 +215,11 @@ export default {
   name: "apiDetail",
   props: {
     id: String,
-    apiList: Array,
-    apiId:String
+    apiId: String
   },
-  created() {},
+  created() {
+    this.getApiDetail();
+  },
   data() {
     return {
       apiData: {
@@ -297,71 +270,23 @@ export default {
     returnApiPage() {
       this.$router.go(-1);
     },
-    createApi() {
+    getApiDetail() {
       this.$http
-        .post(
-          this.apiAddress + "/api/create",
-          {
-            group_id: this.apiData.group,
-            project_id: this.$route.params.id,
-            data: JSON.stringify(this.apiData)
-          },
-          { emulateJSON: true }
-        )
+        .get(this.apiAddress + "/api/detail", {
+          params: { id: this.$route.params.apiId }
+        })
         .then(
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              alert("成功！~");
+              this.apiData = response.data.data;
             }
           },
           function(res) {
             let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
-    },
-    box3Input(index, event) {
-      if (event) {
-        // alert(index);
-        let txt = event.target.value;
-        if (txt.length >= 1 && this.box3Item[index].isAdd === false) {
-          this.box3Item.push({
-            name: "",
-            desc: "",
-            required: false,
-            type: "string",
-            example: "",
-            handle: true,
-            isAdd: false
-          });
-          this.box3Item[index].isAdd = true;
-        }
-      }
-    },
-    box4Input(index, event) {
-      if (event) {
-        // alert(index);
-        let txt = event.target.value;
-        if (txt.length >= 1 && this.box4Item[index].isAdd === false) {
-          this.box4Item.push({
-            fieldName: "",
-            objectName: "",
-            description: "",
-            required: false,
-            type: "string",
-            handle: true,
-            isAdd: false
-          });
-          this.box4Item[index].isAdd = true;
-        }
-      }
-    },
-    box3delete(key) {
-      this.box3Item.splice(key, 1);
-    },
-    box4delete(key) {
-      this.box4Item.splice(key, 1);
     }
   }
 };

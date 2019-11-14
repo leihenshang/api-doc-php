@@ -16,7 +16,7 @@
       </div>
       <div class="btn-group-2">
         <button>继续添加</button>
-        <button @click="createApi()">保存</button>
+        <button @click="updateApi()">保存</button>
       </div>
     </div>
     <div class="box2">
@@ -246,7 +246,9 @@ export default {
     apiList: Array,
     apiId: String
   },
-  created() {},
+  created() {
+    this.getApiDetail();
+  },
   data() {
     return {
       apiData: {
@@ -294,14 +296,35 @@ export default {
     };
   },
   methods: {
+    getApiDetail() {
+      this.$http
+        .get(this.apiAddress + "/api/detail", {
+          params: { id: this.$route.params.apiId }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.apiData = response.data.data;
+              this.box3Item = this.apiData.requestParams;
+              this.box4Item = this.apiData.requestHeader;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
+    },
     returnApiPage() {
       this.$router.go(-1);
     },
-    createApi() {
+    updateApi() {
       this.$http
         .post(
-          this.apiAddress + "/api/create",
+          this.apiAddress + "/api/update",
           {
+            id:this.$route.params.apiId,
             group_id: this.apiData.group,
             project_id: this.$route.params.id,
             data: JSON.stringify(this.apiData)
@@ -323,8 +346,9 @@ export default {
     },
     box3Input(index, event) {
       if (event) {
-        // alert(index);
+      
         let txt = event.target.value;
+        //  alert(this.box3Item[index].isAdd);
         if (txt.length >= 1 && this.box3Item[index].isAdd === false) {
           this.box3Item.push({
             name: "",
@@ -335,6 +359,7 @@ export default {
             handle: true,
             isAdd: false
           });
+           
           this.box3Item[index].isAdd = true;
         }
       }
@@ -356,6 +381,7 @@ export default {
           this.box4Item[index].isAdd = true;
         }
       }
+    }
     },
     box3delete(key) {
       this.box3Item.splice(key, 1);
@@ -363,7 +389,6 @@ export default {
     box4delete(key) {
       this.box4Item.splice(key, 1);
     }
-  }
 };
 </script>
 

@@ -297,6 +297,15 @@ export default {
       this.$router.go(-1);
     },
     createApi() {
+      this.apiData.returnData = this.box4Item.splice(
+        0,
+        this.box4Item.length - 1
+      );
+      this.apiData.requestParams = this.box3Item.splice(
+        0,
+        this.box3Item.length - 1
+      );
+
       this.$http
         .post(
           this.apiAddress + "/api/create",

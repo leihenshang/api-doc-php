@@ -176,7 +176,6 @@ export default {
   transform: translate(-50%, -50%);
 }
 
-
 .project-list {
   width: 100%;
   height: auto;
@@ -236,5 +235,9 @@ td {
 .project-list-content table {
   width: 100%;
   font-size: 14px;
+}
+
+.page-wrapper {
+  margin: 50px 0;
 }
 </style>
