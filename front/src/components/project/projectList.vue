@@ -157,25 +157,6 @@ export default {
   display: none;
 }
 
-.box-shade {
-  width: 100%;
-  height: 100%;
-  background-color: rgba(94, 88, 88, 0.2);
-  position: absolute;
-  z-index: 1;
-}
-
-.box-shade span {
-  position: absolute;
-  background-color: #fff;
-  height: 100px;
-  width: 200px;
-  line-height: 100px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .project-list {
   width: 100%;
   height: auto;

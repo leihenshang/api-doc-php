@@ -35,6 +35,8 @@ export default {
   height: 100%;
   background-color: rgba(94, 88, 88, 0.2);
   position: absolute;
+  top:0;
+  left:0;
   z-index: 1;
 }
 
@@ -46,6 +48,7 @@ export default {
   line-height: 100px;
   top: 50%;
   left: 50%;
+  text-align: center;
   transform: translate(-50%, -50%);
 }
 
