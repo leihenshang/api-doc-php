@@ -26,11 +26,11 @@ export default new VueRouter({
       component: Detail,
       props: true,
       children: [
-        { path: "detailPage", component: DetailPage },
-        { path: "apiPage", component: ApiPage },
-        { path: "createApi", component: CreateApi },
-        { path: "apiDetail/:apiId", component: ApiDetail,props:true },
-        { path: "apiEdit/:apiId", component: ApiEdit,props:true }
+        { path: "detailPage",name:'detailPage', component: DetailPage },
+        { path: "apiPage",name:'apiPage', component: ApiPage },
+        { path: "createApi",name:'createApi', component: CreateApi },
+        { path: "apiDetail/:apiId",name:'apiDetail', component: ApiDetail,props:true },
+        { path: "apiEdit/:apiId",name:'apiEdit', component: ApiEdit,props:true }
       ]
     }
     // { path: "/msg", name: "msg", component: Msg }
