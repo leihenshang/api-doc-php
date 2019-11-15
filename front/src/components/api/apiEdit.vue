@@ -307,7 +307,25 @@ export default {
             if (response.code === CODE_OK) {
               this.apiData = response.data.data;
               this.box3Item = this.apiData.requestParams;
-              this.box4Item = this.apiData.requestHeader;
+              this.box3Item.push({
+                name: "",
+                desc: "",
+                required: false,
+                type: "string",
+                example: "",
+                handle: true,
+                isAdd: false
+              });
+              this.box4Item = this.apiData.returnData;
+              this.box4Item.push({
+                fieldName: "",
+                objectName: "",
+                description: "",
+                required: false,
+                type: "string",
+                handle: true,
+                isAdd: false
+              });
             }
           },
           function(res) {
@@ -320,11 +338,20 @@ export default {
       this.$router.go(-1);
     },
     updateApi() {
+      this.apiData.returnData = this.box4Item.splice(
+        0,
+        this.box4Item.length - 1
+      );
+      this.apiData.requestParams = this.box3Item.splice(
+        0,
+        this.box3Item.length - 1
+      );
+
       this.$http
         .post(
           this.apiAddress + "/api/update",
           {
-            id:this.$route.params.apiId,
+            id: this.$route.params.apiId,
             group_id: this.apiData.group,
             project_id: this.$route.params.id,
             data: JSON.stringify(this.apiData)
@@ -346,10 +373,9 @@ export default {
     },
     box3Input(index, event) {
       if (event) {
-      
         let txt = event.target.value;
         //  alert(this.box3Item[index].isAdd);
-        if (txt.length >= 1 && this.box3Item[index].isAdd === false) {
+        if (txt.length >= 1 && this.box3Item[index].isAdd === false ) {
           this.box3Item.push({
             name: "",
             desc: "",
@@ -359,7 +385,7 @@ export default {
             handle: true,
             isAdd: false
           });
-           
+
           this.box3Item[index].isAdd = true;
         }
       }
@@ -382,13 +408,13 @@ export default {
         }
       }
     }
-    },
-    box3delete(key) {
-      this.box3Item.splice(key, 1);
-    },
-    box4delete(key) {
-      this.box4Item.splice(key, 1);
-    }
+  },
+  box3delete(key) {
+    this.box3Item.splice(key, 1);
+  },
+  box4delete(key) {
+    this.box4Item.splice(key, 1);
+  }
 };
 </script>
 

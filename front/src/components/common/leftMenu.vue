@@ -1,13 +1,13 @@
 <template>
   <div class="left-menu">
     <ul>
-      <li @click="jump()">
+      <li @click="jump()" :class="{'current-click' : this.$route.path === '/' ? true : false }">
         <a href="javascript:void(0)">
           <span>▢</span>
           首页
         </a>
       </li>
-      <li v-for="item in menuList" :key="item.id" @click="jump(item.route,item.child)">
+      <li v-for="item in menuList" :key="item.id" @click="jump(item.route,item.child,$event)" >
         <a href="javascript:void(0)">
           <span>▢</span>
           {{item.title}}
@@ -26,26 +26,35 @@ export default {
   computed: {},
   methods: {
     jump(uri, child) {
+
+      // if(clild === this.$route.)
+
       if (uri) {
         if (child) {
-          this.$router.push("/" + uri + "/" + this.$route.params.id+"/"+child);
+          this.$router.push(
+            "/" + uri + "/" + this.$route.params.id + "/" + child
+          );
         } else {
           this.$router.push("/" + uri + "/" + this.$route.params.id);
         }
       } else {
-        this.$router.push("/");
+        if (this.$route.path !== "/") {
+          this.$router.push("/");
+        }
+        return;
       }
     }
   },
   data: function() {
-    return {};
+    return {
+      menuListData:this.menuList
+    };
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 .left-menu {
   width: auto;
   height: 100%;
@@ -83,4 +92,14 @@ export default {
 .message {
   border-bottom: 1px solid #e5e5e5;
 }
+
+.current-click {
+  background-color: #9bcf9d;
+}
+
+.current-click a {
+  color: #fff!important;
+}
+
+
 </style>

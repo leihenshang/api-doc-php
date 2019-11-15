@@ -1,31 +1,33 @@
 <template>
-  <div class="add" v-bind:class="{hide : isHide}">
-    <h4>添加项目</h4>
-    <ul>
-      <li>
-        <span>项目名称</span>
-        <input type="text" v-model.trim="title" />
-      </li>
-      <li>
-        <span>版本号</span>
-        <input type="text" v-model.trim="ver" />
-      </li>
-      <li>
-        <span>项目类型</span>
-        <select name="1" id="2" v-model.number="type">
-          <option value="web">web</option>
-          <option value="pc">pc</option>
-        </select>
-      </li>
-      <li>
-        <span>项目描述</span>
-        <textarea name="desc" cols="50" rows="10" v-model.trim="desc"></textarea>
-      </li>
-      <li>
+  <div class="add-panel">
+    <div class="add" v-bind:class="{hide : isHide}">
+      <h4>添加项目</h4>
+      <ul>
+        <li>
+          <span>项目名称</span>
+          <input type="text" v-model.trim="title" />
+        </li>
+        <li>
+          <span>版本号</span>
+          <input type="text" v-model.trim="ver" />
+        </li>
+        <li>
+          <span>项目类型</span>
+          <select v-model.number="type">
+            <option value="1">web</option>
+            <option value="2">pc</option>
+          </select>
+        </li>
+        <li>
+          <textarea name="desc" v-model.trim="desc" placeholder="输入描述"></textarea>
+        </li>
+      </ul>
+      <div class="add-btn">
         <button @click=" updateData !== null ? update() : create()">确定</button>
         <button @click="hideMeBtn">取消</button>
-      </li>
-    </ul>
+      </div>
+    </div>
+    <div class="shade" v-bind:class="{hide : isHide}"></div>
   </div>
 </template>
 
@@ -137,16 +139,67 @@ export default {
 <style scoped>
 .add {
   width: 500px;
-  height: 400px;
+  height: auto;
   position: absolute;
   background-color: #fff;
   top: 50%;
   left: 50%;
   border: 1px solid black;
   transform: translate(-50%, -50%);
+  padding: 10px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.add ul span {
+  display: inline-block;
+  min-width: 80px;
+  font-size: 14px;
+}
+
+.add h4 {
+  text-align: center;
+}
+
+.add ul li {
+  margin: 20px 0;
+}
+
+.add ul li textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.add ul li input {
+  padding: 6px;
+  box-sizing: border-box;
+  height: 24px;
+  width: 60%;
+}
+
+.add ul li select {
+  height: 24px;
+  width: 20%;
 }
 
 .hide {
   display: none;
+}
+
+.add-btn button {
+  padding: 4px 14px;
+  margin-right: 10px;
+}
+
+.shade {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  position:absolute;
+  top:0;
+  left:0;
+  background-color: rgba(1,1,1,0.2);
 }
 </style>
