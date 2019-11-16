@@ -221,4 +221,13 @@ td {
 .page-wrapper {
   margin: 50px 0;
 }
+
+.project-list-content button {
+    padding: 4px 14px;
+  margin-right: 2px;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
+}
+
 </style>

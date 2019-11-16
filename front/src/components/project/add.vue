@@ -138,7 +138,7 @@ export default {
 
 <style scoped>
 .add {
-  width: 500px;
+  width: 600px;
   height: auto;
   position: absolute;
   background-color: #fff;
@@ -146,7 +146,7 @@ export default {
   left: 50%;
   border: 1px solid black;
   transform: translate(-50%, -50%);
-  padding: 10px;
+  padding: 20px 15px;
   box-sizing: border-box;
   z-index: 2;
 }
@@ -155,6 +155,9 @@ export default {
   display: inline-block;
   min-width: 80px;
   font-size: 14px;
+  text-align: right;
+  padding-right: 10px;
+  box-sizing: border-box;
 }
 
 .add h4 {
@@ -166,7 +169,7 @@ export default {
 }
 
 .add ul li textarea {
-  width: 100%;
+  width:100%;
   min-height: 120px;
   padding: 6px;
   box-sizing: border-box;
@@ -191,15 +194,18 @@ export default {
 .add-btn button {
   padding: 4px 14px;
   margin-right: 10px;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
 }
 
 .shade {
   width: 100%;
   height: 100%;
   z-index: 1;
-  position:absolute;
-  top:0;
-  left:0;
-  background-color: rgba(1,1,1,0.2);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(1, 1, 1, 0.2);
 }
 </style>
