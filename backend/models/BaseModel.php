@@ -14,11 +14,21 @@ use yii\db\ActiveRecord;
  */
 class BaseModel extends ActiveRecord
 {
-    public $ps = 10;
-    public $cp = 1;
+    const IS_DELETED = ['yes' => 1, 'no' => 0];
+
+    /**
+     * @var int $ps 分页
+     */
+    public  $ps = 10;
+    /**
+     * @var int $cp 当前页
+     */
+    public  $cp = 1;
+
 
     public function getOffset()
     {
         return ($this->cp - 1) * $this->ps;
     }
+
 }

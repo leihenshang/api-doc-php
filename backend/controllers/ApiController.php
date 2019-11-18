@@ -40,13 +40,19 @@ class ApiController extends BaseController
     }
 
     /**
-     * 分组列表
+     * api列表
      * @return array
      */
     public function actionList()
     {
+        $projectId = Yii::$app->request->get('projectId',0);
+        $groupId = Yii::$app->request->get('groupId',0);
+        if(!$projectId){
+            return ['code' => 22,'msg' => '没有projectId'];
+        }
+
         $res = new Api(['scenario' => Api::SCENARIO_LIST]);
-        $res = $res->dataList();
+        $res = $res->dataList($projectId,Yii::$app->request->get('ps',10),Yii::$app->request->get('cp',1),$groupId);
         return ['data' => $res];
     }
 

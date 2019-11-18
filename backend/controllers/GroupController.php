@@ -24,7 +24,7 @@ class GroupController extends BaseController
         $group->attributes = Yii::$app->request->post();
         $res = $group->createData();
         if (is_string($res)) {
-            return ['msg' => $res];
+            return ['msg' => $res,'code' => 22];
         }
 
         return ['data' => '成功'];

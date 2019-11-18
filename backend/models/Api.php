@@ -3,6 +3,9 @@
 
 namespace app\models;
 
+use Throwable;
+use yii\db\StaleObjectException;
+
 /**
  * 项目模型
  * Class Project
@@ -53,7 +56,7 @@ class Api extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['data', 'project_id','group_id', 'description'];
+        $scenarios[self::SCENARIO_CREATE] = ['data', 'project_id', 'group_id', 'description'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
         $scenarios[self::SCENARIO_UPDATE] = ['data', 'id'];
         $scenarios[self::SCENARIO_LIST] = [];
@@ -123,8 +126,8 @@ class Api extends BaseModel
     /**
      * 删除数据
      * @return bool|mixed
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function del()
     {
@@ -142,17 +145,38 @@ class Api extends BaseModel
 
     /**
      * 数据列表
+     * @param int $projectId
+     * @param int $ps
+     * @param int $cp
+     * @param int $groupId
      * @return Api[]|array
      */
-    public function dataList()
+    public function dataList($projectId , $ps, $cp,$groupId = 0)
     {
-        $res = self::findAll(['is_deleted' => 0]);
+        $this->ps = $ps;
+        $this->cp = $cp;
+
+        $res = self::find()
+            ->where(['is_deleted' => self::IS_DELETED['no']])
+            ->andWhere(['project_id' => $projectId])
+            ->limit($this->ps)->offset($this->offset);
+
+        if($groupId){
+                $res->andWhere(['group_id' => $groupId]);
+        }
+
+        $resCount = $res->count();
+        $res = $res->all();
+
         //解析json数据
-        $res = array_map(function ($a) {
-            $a->data = json_decode($a->data);
-            return $a;
-        }, $res);
-        return $res;
+        if ($resCount) {
+            $res = array_map(function ($a) {
+                $a->data = json_decode($a->data);
+                return $a;
+            }, $res);
+        }
+
+        return ['resCount' => $resCount, 'resItem' => $res];
     }
 
     /**
