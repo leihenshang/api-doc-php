@@ -91,6 +91,10 @@ export default {
       this.addIsHide = !this.addIsHide;
     },
     del(id) {
+      if (!confirm("确定删除？")) {
+        return;
+      }
+
       this.$http
         .post(
           this.apiAddress + "/project/del",
@@ -223,11 +227,11 @@ td {
 }
 
 .project-list-content button {
-    padding: 4px 14px;
+  padding: 4px 14px;
   margin-right: 2px;
   background-color: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 3px;
+  font-size: 12px;
 }
-
 </style>

@@ -79,5 +79,10 @@ export default {
   height: 100%;
 }
 
+.detail .right {
+  padding:0 10px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
 
 </style>

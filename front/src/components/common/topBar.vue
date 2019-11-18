@@ -1,46 +1,52 @@
 <template>
   <div class="top-bar">
-      <ul>
-        <li class="t-link">
-          <a href="#">(●'◡'●)</a>
-        </li>
-        <li class="name">
-          <span>apiDoc开源版本</span>
-        </li>
-        <li>
-          <span>API接口>电子社-工信书院>项目概况</span>
-        </li>
-         <li class="t-r">
-          <em>😉</em>
-          <div class="user-lay" id="user-lay">
-            <ul>
-              <li>
-                <a href="#">用户操作</a>
-              </li>
-              <li>
-                <a href="#">用户操作</a>
-              </li>
-              <li>
-                <a href="#">用户操作</a>
-              </li>
-              <li>
-                <a href="#">用户操作</a>
-              </li>
-            </ul>
-          </div>
-        </li>
-        
-      </ul>
+    <ul>
+      <li class="t-link">
+        <a href="#">(●'◡'●)</a>
+      </li>
+      <li class="name">
+        <span>apiDoc开源版本</span>
+      </li>
+      <li>
+        <!-- <span>API接口>电子社-工信书院>项目概况</span> -->
+        <span>{{showTitle}}</span>
+      </li>
+      <li class="t-r">
+        <em>😉</em>
+        <div class="user-lay" id="user-lay">
+          <ul>
+            <li>
+              <a href="#">用户操作</a>
+            </li>
+            <li>
+              <a href="#">用户操作</a>
+            </li>
+            <li>
+              <a href="#">用户操作</a>
+            </li>
+            <li>
+              <a href="#">用户操作</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 export default {
   name: "topBar",
-  props: {
-    menuList: Array
+  props: {},
+  computed: {
+    showTitle: function() {
+      if (this.$route.path === "/") {
+        return "首页";
+      } else {
+        return "其他页面";
+      }
+    }
   },
-  computed: {},
   methods: {},
   data: function() {
     return {};
@@ -99,7 +105,6 @@ export default {
 .top-bar em:hover {
   background-color: #4caf50;
 }
-
 
 .user-lay {
   border: 1px solid #e5e5e5;

@@ -90,10 +90,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.detailPage {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
 .right-l {
   width: 50%;
   height: 100%;
-  float: left;
   padding: 5px;
   box-sizing: border-box;
   border-radius: 3px;
@@ -152,7 +158,6 @@ ul:nth-child(5) {
 .right-r {
   width: 50%;
   height: 100%;
-  float: left;
   background-color: #f3f3f3;
 }
 </style>

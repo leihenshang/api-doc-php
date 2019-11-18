@@ -68,13 +68,20 @@ export default {
 }
 .page ul li {
   border: 1px solid black;
-  width: 40px;
-  height: 35px;
+  width: 50px;
+  height: 32px;
   margin-left: 5px;
   font-size: 15px;
   font-weight: bold;
-  line-height: 35px;
+  line-height: 32px;
   text-align: center;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.page ul li a:hover {
+  background-color: #fff;
+  color: rgb(0, 140, 255);
 }
 
 .page ul li a {

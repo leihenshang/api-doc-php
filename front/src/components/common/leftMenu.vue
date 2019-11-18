@@ -3,8 +3,8 @@
     <ul>
       <li @click="jump()" :class="{'current-click' : this.$route.path === '/' ? true : false }">
         <a href="javascript:void(0)">
-          <span>▢</span>
-          首页
+          <span>◀</span>
+          首页-全部项目
         </a>
       </li>
       <li v-for="item in menuList" :key="item.id" @click="jump(item.route,item.child,$event)" >
@@ -58,6 +58,7 @@ export default {
 .left-menu {
   width: auto;
   height: 100%;
+  border-right: 1px solid #e5e5e5;
 }
 
 .left-menu li {
@@ -73,8 +74,23 @@ export default {
   color: #4caf50;
 } */
 
+.left-menu ul li:first-child {
+  background-color: #5ace5e;
+}
+
+
+.left-menu ul li:first-child a {
+  color: #fff;
+  font-weight: 700;
+}
+
 .left-menu li:hover {
-  background-color: #e3f1e5;
+  background-color: #5864597a;
+  
+}
+
+.left-menu li:hover a {
+color:#fff;
 }
 
 .left-menu li span {

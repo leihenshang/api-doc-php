@@ -6,8 +6,7 @@
  * @LastEditors: your name
  -->
 <template>
-  <div class="apiList">
-    我是apiList组件
+  <div class="api-list">
     <table>
       <tr>
         <th>名称</th>
@@ -16,16 +15,16 @@
         <th>最近更新者</th>
         <th>作者</th>
         <th>更新时间</th>
-        <th>动作</th>
+        <th>操作</th>
       </tr>
       <tr v-for="item in apiList" :key="item.id">
-        <td>{{item.id}}</td>
+        <td><span class="span-dot"></span> {{item.id}}</td>
         <td>{{item.data.requestMethod}}</td>
         <td>{{item.data.url}}</td>
         <td>{{item.id}}</td>
         <td>{{item.id}}</td>
         <td>{{item.update_time}}</td>
-        <td>
+        <td class="api-list-btn">
           <button @click="jumpPage('apiEdit',item.id)">编辑</button>
           <button @click="jumpPage('apiDetail',item.id)">详情</button>
           <button @click="delApi(item.id)">删除</button>
@@ -52,6 +51,10 @@ export default {
   },
   methods: {
     delApi(id) {
+      if (!confirm("确认删除?")) {
+        return;
+      }
+
       this.$http
         .post(
           this.apiAddress + "/api/del",
@@ -106,15 +109,61 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-table,
-td,
-th {
-  border: 1px solid black;
+/* .api-list table,
+.api-list td,
+.api-list th {
+  border: 1px solid #e5e5e5;
+} */
+
+.api-list {
+  background-color: #fff;
+  height: auto;
 }
 
-table {
-  border-collapse: collapse;
+.api-list td,
+.api-list th {
+  padding:8px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
 }
+
+.api-list tr:hover {
+  background-color: #e3f1e5;
+}
+
+.api-list th {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.api-list table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.api-list table button {
+  height: 28px;
+  padding: 0 10px;
+  margin-right: 2px;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.span-dot {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border-radius: 10px;
+  background-color: #4caf50;
+  margin-right:5px;
+}
+
 </style>

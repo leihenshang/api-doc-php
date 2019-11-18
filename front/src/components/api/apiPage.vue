@@ -6,9 +6,9 @@
  * @LastEditors: your name
  -->
 <template>
-  <div class="apiPage">
+  <div class="api-page">
     <div class="btn-wrapper">
-      <button @click="addApi()">添加api</button>
+      <button @click="addApi()">+创建api</button>
     </div>
 
     <div class="api-content">
@@ -83,27 +83,44 @@ export default {
 
 <style scoped>
 .api-page {
-  height: 100%;
+  height: calc(100% - 48px);
 }
 
 .btn-wrapper {
-  height: 50px;
-  border-bottom: 1px solid #e5e5e5;
+  height: 48px;
+  line-height: 48px;
+}
+
+.btn-wrapper button {
+  width: 87px;
+  height: 32px;
+  padding: 0 10px;
+  margin-right: 2px;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
+  font-size: 12px;
 }
 
 .api-content {
+  box-sizing: border-box;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 21px);
+  margin-bottom: 20px;
+
   display: flex;
+  border: 1px solid #e5e5e5;
 }
 
 .group-wrapper {
-  width: 20%;
+  width: 15%;
+  height: auto;
   border-right: 1px solid #e5e5e5;
 }
 
 .api-wrapper {
   flex: 1;
-  border-right: 1px solid #e5e5e5;
+  overflow-y:scroll;
+  padding:10px;
 }
 </style>

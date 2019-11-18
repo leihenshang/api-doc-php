@@ -421,7 +421,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .create-api {
-  padding: 10px;
   background-color: #f8f8f8;
 }
 
