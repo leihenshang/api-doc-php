@@ -67,7 +67,7 @@ export default {
   justify-content: center;
 }
 .page ul li {
-  border: 1px solid black;
+  border: 1px solid #e5e5e5;
   width: 50px;
   height: 32px;
   margin-left: 5px;
@@ -81,14 +81,14 @@ export default {
 
 .page ul li a:hover {
   background-color: #fff;
-  color: rgb(0, 140, 255);
+  color:black;
 }
 
 .page ul li a {
   display: block;
   height: 100%;
   color: white;
-  background-color: gray;
+  background-color: #989899a4;
 }
 
 .page ul li span {
