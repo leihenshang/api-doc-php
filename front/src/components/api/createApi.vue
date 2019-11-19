@@ -25,8 +25,8 @@
           <dd>
             <span>分组:</span>
             <select name id v-model="apiData.group">
-              <option value="1">历史记录</option>
-              <option value="2">订单</option>
+              <option disabled value>请选择</option>
+              <option v-for="item in groupList" :key="item.id" value="item.id">{{item.title}}</option>
             </select>
             <!-- <select name="" id="">
               <option value="1">可选（二级菜单）</option>
@@ -37,20 +37,31 @@
               <option value="2">禁用</option>
             </select>-->
             <em>请求协议:</em>
-            <select name id v-model="apiData.protocol">
+            <select name id v-model="apiData.protocol" v-if="propertyList.http_protocol">
               <option disabled value>请选择</option>
-              <option value="HTTP">HTTP</option>
-              <option value="HTTPS">HTTPS</option>
+              <option
+                v-for="item in propertyList.http_protocol"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
             <em>请求方式:</em>
-            <select name id v-model="apiData.requestMethod">
-              <option value="POST">POST</option>
-              <option value="GET">GET</option>
+            <select name id v-model="apiData.protocol" v-if="propertyList.http_method">
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.http_method"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
             <em>返回情况:</em>
-            <select name id v-model="apiData.returnDataType">
-              <option value="无返回值（比如增删改查）">无返回值（比如增删改查）</option>
-              <option value="列表">列表</option>
+            <select name id v-model="apiData.protocol" v-if="propertyList.http_return">
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.http_return"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.description}}</option>
             </select>
           </dd>
           <dd>
@@ -71,9 +82,13 @@
           </dd>
           <dd>
             <span>接口语言:</span>
-            <select name id v-model="apiData.developmentLanguage">
-              <option value="PHP">PHP</option>
-              <option value=".NET">.NET</option>
+            <select name id v-model="apiData.developmentLanguage" v-if="propertyList.api_language">
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.api_language"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
           </dd>
         </dl>
@@ -208,12 +223,19 @@
             <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-            <select style="width:90%;text-align:center;margin:0 10px;" v-model="item.type">
-              <option value="int">int</option>
-              <option value="array">array</option>
-              <option value="object">object</option>
-              <option value="long">long</option>
-              <option value="string">string</option>
+            <select
+              style="width:90%;text-align:center;margin:0 10px;"
+              name
+              id
+              v-model="apiData.typ"
+              v-if="propertyList.var_type"
+            >
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.var_type"
+                :key="item.id"
+                value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
           </td>
           <td>
@@ -245,9 +267,14 @@ export default {
     id: String,
     apiList: Array
   },
-  created() {},
+  created() {
+    this.getGroup();
+    this.getProperty();
+  },
   data() {
     return {
+      groupList: [],
+      propertyList: [],
       apiData: {
         group: "", //分组
         protocol: "http", //协议
@@ -370,6 +397,42 @@ export default {
     },
     box4delete(key) {
       this.box4Item.splice(key, 1);
+    },
+    getGroup() {
+      this.$http
+        .get(this.apiAddress + "/group/list", {
+          params: { projectId: this.$route.params.id }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.groupList = response.data;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
+    },
+    getProperty() {
+      this.$http
+        .get(this.apiAddress + "/property/list", {
+          params: {}
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.propertyList = response.data;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
     }
   }
 };
