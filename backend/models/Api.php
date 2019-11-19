@@ -12,6 +12,7 @@ use yii\db\StaleObjectException;
  * @package app\models
  * @property integer $id id
  * @property integer $group_id 组id
+ * @property integer $project_id 项目id
  * @property string $data 数据
  * @property string description 备注
  * @property integer is_deleted id
@@ -48,7 +49,15 @@ class Api extends BaseModel
     {
         return [
             [['id', 'data'], 'required'],
+            ['data', function ($attribute, $params) {
+                //格式验证
+               json_decode($this->data,true);
+                if (json_last_error()) {
+                    $this->addError($attribute, json_last_error_msg());
+                }
+            }],
             [['id', 'group_id', 'project_id', 'is_deleted'], 'number'],
+            [['group_id', 'project_id'], 'required', 'on' => self::SCENARIO_CREATE],
             ['description', 'string', 'length' => [1, 500]]
         ];
     }
@@ -79,10 +88,13 @@ class Api extends BaseModel
             return current($this->getFirstErrors());
         }
 
-        //验证json数据格式
-        json_decode($this->data);
-        if (json_last_error()) {
-            return json_last_error_msg();
+        //检查groupId和projectId的存在
+        if(!Group::findOne($this->group_id)){
+            return '组不存在';
+        }
+
+        if(!Project::findOne($this->project_id)){
+            return '项目不存在';
         }
 
         if (!$this->save()) {
@@ -109,10 +121,13 @@ class Api extends BaseModel
             return '没有找到数据';
         }
 
-        //验证json数据格式
-        json_decode($this->data);
-        if (json_last_error()) {
-            return json_last_error_msg();
+        //检查groupId和projectId的存在
+        if(!Group::findOne($this->group_id)){
+            return '组不存在';
+        }
+
+        if(!Project::findOne($this->project_id)){
+            return '项目不存在';
         }
 
         $res->attributes = $request;
@@ -151,7 +166,7 @@ class Api extends BaseModel
      * @param int $groupId
      * @return Api[]|array
      */
-    public function dataList($projectId , $ps, $cp,$groupId = 0)
+    public function dataList($projectId, $ps, $cp, $groupId = 0)
     {
         $this->ps = $ps;
         $this->cp = $cp;
@@ -161,8 +176,8 @@ class Api extends BaseModel
             ->andWhere(['project_id' => $projectId])
             ->limit($this->ps)->offset($this->offset);
 
-        if($groupId){
-                $res->andWhere(['group_id' => $groupId]);
+        if ($groupId) {
+            $res->andWhere(['group_id' => $groupId]);
         }
 
         $resCount = $res->count();
