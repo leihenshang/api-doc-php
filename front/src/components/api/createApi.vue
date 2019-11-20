@@ -74,7 +74,7 @@
           </dd>
           <dd>
             <span>根对象名:</span>
-            <input type="text" v-model="apiData.obejct_name" />
+            <input type="text" v-model="apiData.object_name" />
           </dd>
           <dd>
             <span>方法:</span>
@@ -287,7 +287,7 @@ export default {
         http_return_type: 1, //返回值类型
         url: "", //http请求URL
         api_name: "", //接口名称
-        obejct_name: "", //根对象名
+        object_name: "", //根对象名
         function_name: "", //程序内部方法名
         develop_language: "", //接口开发语言
         http_request_header: [], //请求头

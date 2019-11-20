@@ -1,26 +1,38 @@
 <?php
 
-
 namespace app\models;
 
 use Throwable;
 use yii\db\StaleObjectException;
 
 /**
- * 项目模型
- * Class Project
- * @package app\models
- * @property integer $id id
- * @property integer $group_id 组id
- * @property integer $project_id 项目id
- * @property string $data 数据
- * @property string description 备注
- * @property integer is_deleted id
- * @property string create_time id
+ * This is the model class for table "{{%api}}".
  *
+ * @property string $id
+ * @property string $group_id 组id
+ * @property string $project_id 项目id
+ * @property string $data 数据
+ * @property string $description 备注
+ * @property string $is_deleted 0正常，1删除
+ * @property string $create_time
+ * @property string $update_time
+ * @property int $group_id_second 二级分组
+ * @property string $protocol_type 协议
+ * @property string $http_method_type Http请求类型
+ * @property string $url url
+ * @property string $api_name 名称
+ * @property string $object_name 对象名
+ * @property string $function_name 方法名
+ * @property string $develop_language 开发语言
+ * @property string $http_request_header http头
+ * @property string $http_request_params http请求参数
+ * @property string $http_return_type http请求返回值
+ * @property string $http_return_sample http响应数据样例
+ * @property string $http_return_params http'请求响应参数
  */
 class Api extends BaseModel
 {
+
     const SCENARIO_CREATE = 'create';
     const SCENARIO_DEL = 'del';
     const SCENARIO_UPDATE = 'update';
@@ -45,37 +57,70 @@ class Api extends BaseModel
         'returnDataFailed' => ''//返回数据失败
     ];
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return '{{%api}}';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
             [['id', 'data'], 'required'],
-            ['data', function ($attribute, $params) {
-                //格式验证
-               json_decode($this->data,true);
-                if (json_last_error()) {
-                    $this->addError($attribute, json_last_error_msg());
-                }
-            }],
-            [['id', 'group_id', 'project_id', 'is_deleted'], 'number'],
+            [['group_id', 'project_id', 'group_id_second'], 'integer'],
+            [['data', 'create_time', 'update_time'], 'safe'],
             [['group_id', 'project_id'], 'required', 'on' => self::SCENARIO_CREATE],
-            ['description', 'string', 'length' => [1, 500]]
+            [['description', 'api_name'], 'string', 'max' => 500],
+            [['is_deleted', 'protocol_type', 'http_method_type', 'object_name', 'function_name', 'develop_language'], 'string', 'max' => 100],
+            [['url', 'http_request_header', 'http_request_params', 'http_return_type', 'http_return_sample', 'http_return_params'], 'string', 'max' => 1000],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'group_id' => '组id',
+            'project_id' => '项目id',
+            'data' => '数据',
+            'description' => '备注',
+            'is_deleted' => '0正常，1删除',
+            'create_time' => 'Create Time',
+            'update_time' => 'Update Time',
+            'group_id_second' => '二级分组',
+            'protocol_type' => '协议',
+            'http_method_type' => 'Http请求类型',
+            'url' => 'url',
+            'api_name' => '名称',
+            'object_name' => '对象名',
+            'function_name' => '方法名',
+            'develop_language' => '开发语言',
+            'http_request_header' => 'http头',
+            'http_request_params' => 'http请求参数',
+            'http_return_type' => 'http请求返回值',
+            'http_return_sample' => 'http响应数据样例',
+            'http_return_params' => 'http\'请求响应参数',
         ];
     }
 
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['data', 'project_id', 'group_id', 'description'];
+        $scenarios[self::SCENARIO_CREATE] = ['data', 'project_id', 'group_id', 'description','protocol_type',
+            'http_method_type','url','api_name','object_name','function_name','develop_language','http_request_header','http_request_params','http_return_type','http_return_sample','http_return_params'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
         $scenarios[self::SCENARIO_UPDATE] = ['data', 'id'];
         $scenarios[self::SCENARIO_LIST] = [];
         $scenarios[self::SCENARIO_DETAIL] = ['id'];
         return $scenarios;
-    }
-
-    public static function tableName()
-    {
-        return 'api';
     }
 
     /**
@@ -89,14 +134,37 @@ class Api extends BaseModel
         }
 
         //检查groupId和projectId的存在
-        if(!Group::findOne($this->group_id)){
+        if (!Group::findOne($this->group_id)) {
             return '组不存在';
         }
 
-        if(!Project::findOne($this->project_id)){
+        if (!Project::findOne($this->project_id)) {
             return '项目不存在';
         }
 
+        $tmp =   json_decode($this->data,true);
+        if (json_last_error()) {
+           return '解析数据错误';
+        }
+
+
+        unset($tmp['project_id'],$tmp['group_id']);
+
+        $tmp = array_map(function($a){
+            if(is_array($a)){
+                return json_encode($a,JSON_UNESCAPED_UNICODE);
+            }
+            return $a;
+        },$tmp);
+
+
+//        $tmp['http_return_sample'] = json_encode($tmp['http_return_sample'],JSON_UNESCAPED_UNICODE);
+
+        $this->attributes = $tmp;
+
+
+//        var_dump($this->toArray());
+//        exit;
         if (!$this->save()) {
             return current($this->getFirstErrors());
         }
@@ -122,11 +190,11 @@ class Api extends BaseModel
         }
 
         //检查groupId和projectId的存在
-        if(!Group::findOne($this->group_id)){
+        if (!Group::findOne($this->group_id)) {
             return '组不存在';
         }
 
-        if(!Project::findOne($this->project_id)){
+        if (!Project::findOne($this->project_id)) {
             return '项目不存在';
         }
 
@@ -205,4 +273,5 @@ class Api extends BaseModel
 
         return $res;
     }
+
 }

@@ -28,7 +28,6 @@ class Group extends BaseModel
             ['project_id','required'],
             [['id','p_id','project_id','is_deleted'],'number'],
             ['title', 'required'],
-            ['title','unique'],
             ['title', 'string', 'length' => [1, 100]],
         ];
     }

@@ -12,18 +12,18 @@
         <th>名称</th>
         <th>请求方法</th>
         <th>url</th>
-        <th>最近更新者</th>
-        <th>作者</th>
-        <th>更新时间</th>
+        <th>协议</th>
+        <th>语言</th>
+        <th>创建时间</th>
         <th>操作</th>
       </tr>
-      <tr v-for="item in apiList" :key="item.id">
-        <td><span class="span-dot"></span> {{item.id}}</td>
-        <td>{{item.data.requestMethod}}</td>
-        <td>{{item.data.url}}</td>
-        <td>{{item.id}}</td>
-        <td>{{item.id}}</td>
-        <td>{{item.update_time}}</td>
+      <tr v-for="item in apiList.resItem" :key="item.id">
+        <td><span class="span-dot"></span> {{item.api_name}}</td>
+        <td>{{item.http_method_type}}</td>
+        <td>{{item.url}}</td>
+        <td>{{item.protocol_type}}</td>
+        <td>{{item.develop_language}}</td>
+        <td>{{item.create_time}}</td>
         <td class="api-list-btn">
           <button @click="jumpPage('apiEdit',item.id)">编辑</button>
           <button @click="jumpPage('apiDetail',item.id)">详情</button>
@@ -80,7 +80,7 @@ export default {
     getApi(curr, pageSize) {
       this.$http
         .get(this.apiAddress + "/api/list", {
-          params: { cp: curr, ps: pageSize }
+          params: { cp: curr, ps: pageSize,projectId:this.$route.params.id }
         })
         .then(
           response => {
