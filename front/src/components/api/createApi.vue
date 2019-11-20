@@ -343,7 +343,7 @@ export default {
         .post(
           this.apiAddress + "/api/create",
           {
-            group_id: this.apiData.group,
+            group_id: this.apiData.group_id,
             project_id: this.$route.params.id,
             data: JSON.stringify(this.apiData)
           },
