@@ -150,9 +150,7 @@ class Api extends BaseModel
            return '解析数据错误';
         }
 
-
         unset($tmp['project_id'],$tmp['group_id']);
-
         $tmp = array_map(function($a){
             if(is_array($a)){
                 return json_encode($a,JSON_UNESCAPED_UNICODE);
@@ -160,14 +158,7 @@ class Api extends BaseModel
             return $a;
         },$tmp);
 
-
-//        $tmp['http_return_sample'] = json_encode($tmp['http_return_sample'],JSON_UNESCAPED_UNICODE);
-
         $this->attributes = $tmp;
-
-
-//        var_dump($this->toArray());
-//        exit;
         if (!$this->save()) {
             return current($this->getFirstErrors());
         }
@@ -201,7 +192,20 @@ class Api extends BaseModel
             return '项目不存在';
         }
 
-        $res->attributes = $request;
+        $tmp =   json_decode($this->data,true);
+        if (json_last_error()) {
+            return '解析数据错误';
+        }
+
+        unset($tmp['project_id'],$tmp['group_id'],$tmp['id']);
+        $tmp = array_map(function($a){
+            if(is_array($a)){
+                return json_encode($a,JSON_UNESCAPED_UNICODE);
+            }
+            return $a;
+        },$tmp);
+
+        $res->attributes = $tmp;
         if (!$res->save()) {
             return current($this->getFirstErrors());
         }
