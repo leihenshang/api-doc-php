@@ -14,8 +14,8 @@
         <li>
           <span>项目类型</span>
           <select v-model.number="type">
-            <option value="1">web</option>
-            <option value="2">pc</option>
+            <option value="web">web</option>
+            <option value="pc">pc</option>
           </select>
         </li>
         <li>
