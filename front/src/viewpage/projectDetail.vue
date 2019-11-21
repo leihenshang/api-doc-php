@@ -25,14 +25,13 @@
 import LeftMenu from "../components/common/leftMenu";
 import TopBar from "../components/common/topBar";
 
-const CODE_OK = 200;
+// const CODE_OK = 200;
 export default {
   name: "projectDetail",
   props: {
     id: String
   },
   created() {
-    this.getDetail();
   },
   data() {
     return {
@@ -44,24 +43,6 @@ export default {
     };
   },
   methods: {
-    getDetail() {
-      this.$http
-        .get(this.apiAddress + "/project/detail", {
-          params: { id: this.$route.params.id }
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.projectData = response.data;
-            }
-          },
-          function(res) {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
-    },
     jump(name) {
       this.$router.push("/" + name + "/" + this.id);
     }

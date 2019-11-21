@@ -24,9 +24,9 @@
         <dl>
           <dd>
             <span>分组:</span>
-            <select name id v-model="apiData.group">
-              <option value="1">历史记录</option>
-              <option value="2">订单</option>
+              <select v-model="apiData.group_id">
+              <option disabled value>请选择</option>
+              <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
             </select>
             <!-- <select name="" id="">
               <option value="1">可选（二级菜单）</option>
@@ -37,20 +37,31 @@
               <option value="2">禁用</option>
             </select>-->
             <em>请求协议:</em>
-            <select name id v-model="apiData.protocol">
+             <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol">
               <option disabled value>请选择</option>
-              <option value="HTTP">HTTP</option>
-              <option value="HTTPS">HTTPS</option>
+              <option
+                v-for="item in propertyList.http_protocol"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
             <em>请求方式:</em>
-            <select name id v-model="apiData.requestMethod">
-              <option value="POST">POST</option>
-              <option value="GET">GET</option>
+                <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method">
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.http_method"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
             <em>返回情况:</em>
-            <select name id v-model="apiData.returnDataType">
-              <option value="无返回值（比如增删改查）">无返回值（比如增删改查）</option>
-              <option value="列表">列表</option>
+                   <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return">
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.http_return"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.description}}</option>
             </select>
           </dd>
           <dd>
@@ -59,21 +70,25 @@
           </dd>
           <dd>
             <span>名称:</span>
-            <input type="text" v-model="apiData.name" />
+            <input type="text" v-model="apiData.api_name" />
           </dd>
           <dd>
             <span>根对象名:</span>
-            <input type="text" v-model="apiData.objectName" />
+            <input type="text" v-model="apiData.object_name" />
           </dd>
           <dd>
             <span>方法:</span>
-            <input type="text" v-model="apiData.functionName" />
+            <input type="text" v-model="apiData.function_name" />
           </dd>
           <dd>
             <span>接口语言:</span>
-            <select name id v-model="apiData.developmentLanguage">
-              <option value="PHP">PHP</option>
-              <option value=".NET">.NET</option>
+            <select v-model="apiData.develop_language" v-if="propertyList.api_language">
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.api_language"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
           </dd>
         </dl>
@@ -154,12 +169,17 @@
             <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-            <select style="width:90%;text-align:center;margin:0 10px;" v-model="item.type">
-              <option value="int">int</option>
-              <option value="array">array</option>
-              <option value="object">object</option>
-              <option value="long">long</option>
-              <option value="string">string</option>
+          <select
+              style="width:90%;text-align:center;margin:0 10px;"
+              v-model="item.type"
+              v-if="propertyList.var_type"
+            >
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.var_type"
+                :key="item.id"
+                value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
           </td>
           <td>
@@ -208,12 +228,17 @@
             <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-            <select style="width:90%;text-align:center;margin:0 10px;" v-model="item.type">
-              <option value="int">int</option>
-              <option value="array">array</option>
-              <option value="object">object</option>
-              <option value="long">long</option>
-              <option value="string">string</option>
+       <select
+              style="width:90%;text-align:center;margin:0 10px;"
+              v-model="item.type"
+              v-if="propertyList.var_type"
+            >
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.var_type"
+                :key="item.id"
+                value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
           </td>
           <td>
@@ -231,8 +256,8 @@
           <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
         </div>
       </div>
-      <textarea name id v-model="apiData.returnDataSuccess" v-show="box5==0" placeholder="成功的返回"></textarea>
-      <textarea name id v-model="apiData.returnDataFailed" v-show="box5==1" placeholder="失败的返回"></textarea>
+      <textarea name id v-model="apiData.http_return_sample.returnDataSuccess" v-show="box5==0" placeholder="成功的返回"></textarea>
+      <textarea name id v-model="apiData.http_return_sample.returnDataFailed" v-show="box5==1" placeholder="失败的返回"></textarea>
     </div>
   </div>
 </template>
@@ -248,25 +273,32 @@ export default {
   },
   created() {
     this.getApiDetail();
+    this.getGroup();
+    this.getProperty();
   },
   data() {
     return {
+      groupList: [],
+      propertyList: [],
       apiData: {
-        group: "", //分组
-        protocol: "http", //协议
+            group_id: 0, //分组
+        project_id:0,//项目Id
+        protocol_type: "HTTP", //协议
         description: "", //说明和备注
         requestMethod: "GET", //http请求方法
-        returnDataType: 1, //返回值类型
+        http_return_type: 1, //返回值类型
         url: "", //http请求URL
-        name: "", //接口名称
-        objectName: "", //根对象名
-        functionName: "", //程序内部方法名
-        developmentLanguage: "", //接口开发语言
-        requestHeader: [], //请求头
-        requestParams: [], //请求参数
-        returnData: [], //返回参数
-        returnDataSuccess: "", //返回数据成功
-        returnDataFailed: "" //返回数据失败
+        api_name: "", //接口名称
+        object_name: "", //根对象名
+        function_name: "", //程序内部方法名
+        develop_language: "", //接口开发语言
+        http_request_header: [], //请求头
+        http_request_params: [], //请求参数
+        http_return_params: [], //返回参数
+        http_return_sample:{
+          returnDataSuccess:'',//返回数据成功
+          returnDataFailed:''//返回数据失败
+        }
       },
       box2: 0,
       box3: 1,
@@ -306,7 +338,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.apiData = response.data.data;
-              this.box3Item = this.apiData.requestParams;
+              this.box3Item = this.apiData.http_request_params;
               this.box3Item.push({
                 name: "",
                 desc: "",
@@ -316,7 +348,7 @@ export default {
                 handle: true,
                 isAdd: false
               });
-              this.box4Item = this.apiData.returnData;
+              this.box4Item = this.apiData.http_return_params;
               this.box4Item.push({
                 fieldName: "",
                 objectName: "",
@@ -352,7 +384,7 @@ export default {
           this.apiAddress + "/api/update",
           {
             id: this.$route.params.apiId,
-            group_id: this.apiData.group,
+            group_id: this.apiData.group_id,
             project_id: this.$route.params.id,
             data: JSON.stringify(this.apiData)
           },
@@ -375,7 +407,7 @@ export default {
       if (event) {
         let txt = event.target.value;
         //  alert(this.box3Item[index].isAdd);
-        if (txt.length >= 1 && this.box3Item[index].isAdd === false ) {
+        if (txt.length >= 1 && this.box3Item[index].isAdd === false) {
           this.box3Item.push({
             name: "",
             desc: "",
@@ -407,13 +439,49 @@ export default {
           this.box4Item[index].isAdd = true;
         }
       }
+    },
+    box3delete(key) {
+      this.box3Item.splice(key, 1);
+    },
+    box4delete(key) {
+      this.box4Item.splice(key, 1);
+    },
+    getGroup() {
+      this.$http
+        .get(this.apiAddress + "/group/list", {
+          params: { projectId: this.$route.params.id }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.groupList = response.data;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
+    },
+    getProperty() {
+      this.$http
+        .get(this.apiAddress + "/property/list", {
+          params: {}
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.propertyList = response.data;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
     }
-  },
-  box3delete(key) {
-    this.box3Item.splice(key, 1);
-  },
-  box4delete(key) {
-    this.box4Item.splice(key, 1);
   }
 };
 </script>

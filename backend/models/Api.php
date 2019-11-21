@@ -115,9 +115,12 @@ class Api extends BaseModel
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = ['data', 'project_id', 'group_id', 'description','protocol_type',
-            'http_method_type','url','api_name','object_name','function_name','develop_language','http_request_header','http_request_params','http_return_type','http_return_sample','http_return_params'];
+            'http_method_type','url','api_name','object_name','function_name','develop_language',
+            'http_request_header','http_request_params','http_return_type','http_return_sample','http_return_params'];
+        $scenarios[self::SCENARIO_UPDATE] = ['data','id', 'project_id', 'group_id', 'description','protocol_type',
+            'http_method_type','url','api_name','object_name','function_name','develop_language',
+            'http_request_header','http_request_params','http_return_type','http_return_sample','http_return_params'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['data', 'id'];
         $scenarios[self::SCENARIO_LIST] = [];
         $scenarios[self::SCENARIO_DETAIL] = ['id'];
         return $scenarios;

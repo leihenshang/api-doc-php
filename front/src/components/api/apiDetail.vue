@@ -20,8 +20,9 @@
         <dl>
           <dd>
             <span>分组:</span>
-            <select name id v-model="apiData.group">
+            <select v-model="apiData.group_id">
               <option :value="apiData.group">{{apiData.group}}</option>
+                <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
             </select>
             <!-- <select name="" id="">
               <option value="1">可选（二级菜单）</option>
@@ -32,38 +33,58 @@
               <option value="2">禁用</option>
             </select>-->
             <em>请求协议:</em>
-            <select name id v-model="apiData.protocol" style="pointer-events: none;">
-              <option :value="apiData.protocol">{{apiData.protocol}}</option>
+             <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol">
+                    <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.http_protocol"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
             <em>请求方式:</em>
-            <select name id style="pointer-events: none;">
-              <option :value="apiData.requestMethod">{{apiData.requestMethod}}</option>
+               <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method">
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.http_method"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
             <em>返回情况:</em>
-            <select name id  style="pointer-events: none;">
-              <option :value="apiData.returnDataType">{{apiData.returnDataType}}</option>
+            <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return">
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.http_return"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.description}}</option>
             </select>
           </dd>
-          <dd>
+         <dd>
             <span>URL:</span>
-            <input type="text" :value="apiData.url" readonly />
+            <input type="text" v-model="apiData.url" />
           </dd>
           <dd>
             <span>名称:</span>
-            <input type="text" :value="apiData.name" readonly />
+            <input type="text" v-model="apiData.api_name" />
           </dd>
           <dd>
             <span>根对象名:</span>
-            <input type="text" :value="apiData.objectName" readonly />
+            <input type="text" v-model="apiData.object_name" />
           </dd>
           <dd>
             <span>方法:</span>
-            <input type="text" :value="apiData.functionName" readonly />
+            <input type="text" v-model="apiData.function_name" />
           </dd>
           <dd>
             <span>接口语言:</span>
-            <select name id :value="apiData.developmentLanguage">
-              <option :value="apiData.developmentLanguage">{{apiData.developmentLanguage}}</option>
+                <select v-model="apiData.develop_language" v-if="propertyList.api_language">
+              <option disabled value>请选择</option>
+              <option
+                v-for="item in propertyList.api_language"
+                :key="item.id"
+                :value="item.tag_name"
+              >{{item.tag_name}}</option>
             </select>
           </dd>
         </dl>
@@ -128,7 +149,7 @@
           <th>示例</th>
           <th>操作</th>
         </tr>
-        <tr v-for="item in apiData.requestParams" :key="item.id">
+        <tr v-for="item in apiData.http_request_params" :key="item.id">
           <td>
             <input type="text" placeholder="参数名" v-model="item.name" readonly/>
           </td>
@@ -139,13 +160,7 @@
             <input type="checkbox" name id v-model="item.required" readonly/>
           </td>
           <td>
-            <select style="width:90%;text-align:center;margin:0 10px;" v-model="item.type">
-              <option value="int">int</option>
-              <option value="array">array</option>
-              <option value="object">object</option>
-              <option value="long">long</option>
-              <option value="string">string</option>
-            </select>
+          <span>{{item.type}}</span>
           </td>
           <td>
             <input type="text" placeholder="参数示例" v-model="item.example" readonly/>
@@ -170,7 +185,7 @@
           <th>类型</th>
           <th>操作</th>
         </tr>
-        <tr v-for="item in apiData.returnData" :key="item.id">
+        <tr v-for="item in apiData.http_return_params" :key="item.id">
           <td>
             <input type="text" placeholder="字段名" v-model="item.fieldName" readonly />
           </td>
@@ -184,13 +199,7 @@
             <input type="checkbox" name id v-model="item.required" readonly />
           </td>
           <td>
-            <select style="width:90%;text-align:center;margin:0 10px;" v-model="item.type">
-              <option value="int">int</option>
-              <option value="array">array</option>
-              <option value="object">object</option>
-              <option value="long">long</option>
-              <option value="string">string</option>
-            </select>
+             <span>{{item.type}}</span>
           </td>
           <td></td>
         </tr>
@@ -203,8 +212,8 @@
           <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
         </div>
       </div>
-      <textarea name id v-model="apiData.returnDataSuccess" v-show="box5==0" placeholder="成功的返回"></textarea>
-      <textarea name id v-model="apiData.returnDataFailed" v-show="box5==1" placeholder="失败的返回"></textarea>
+      <textarea name id v-model="apiData.http_return_sample.returnDataSuccess" v-show="box5==0" placeholder="成功的返回" ></textarea>
+      <textarea name id v-model="apiData.http_return_sample.returnDataFailed" v-show="box5==1" placeholder="失败的返回"></textarea>
     </div>
   </div>
 </template>
@@ -219,25 +228,32 @@ export default {
   },
   created() {
     this.getApiDetail();
+    this.getGroup();
+    this.getProperty();
   },
   data() {
     return {
+      groupList:[],
+      propertyList:[],
       apiData: {
-        group: "", //分组
-        protocol: "http", //协议
+    group_id: 0, //分组
+        project_id:0,//项目Id
+        protocol_type: "HTTP", //协议
         description: "", //说明和备注
         requestMethod: "GET", //http请求方法
-        returnDataType: 1, //返回值类型
+        http_return_type: 1, //返回值类型
         url: "", //http请求URL
-        name: "", //接口名称
-        objectName: "", //根对象名
-        functionName: "", //程序内部方法名
-        developmentLanguage: "", //接口开发语言
-        requestHeader: [], //请求头
-        requestParams: [], //请求参数
-        returnData: [], //返回参数
-        returnDataSuccess: "", //返回数据成功
-        returnDataFailed: "" //返回数据失败
+        api_name: "", //接口名称
+        object_name: "", //根对象名
+        function_name: "", //程序内部方法名
+        develop_language: "", //接口开发语言
+        http_request_header: [], //请求头
+        http_request_params: [], //请求参数
+        http_return_params: [], //返回参数
+        http_return_sample:{
+          returnDataSuccess:'',//返回数据成功
+          returnDataFailed:''//返回数据失败
+        }
       },
       box2: 0,
       box3: 1,
@@ -280,6 +296,42 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.apiData = response.data.data;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
+    },
+    getGroup() {
+      this.$http
+        .get(this.apiAddress + "/group/list", {
+          params: { projectId: this.$route.params.id }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.groupList = response.data;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
+    },
+    getProperty() {
+      this.$http
+        .get(this.apiAddress + "/property/list", {
+          params: {}
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.propertyList = response.data;
             }
           },
           function(res) {
