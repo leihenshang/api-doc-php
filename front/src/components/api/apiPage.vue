@@ -22,7 +22,7 @@
       </div>
 
       <div class="api-wrapper">
-        <apiList :id="id" :apiList="apiList" />
+        <apiList :id="id" :apiList="apiList" v-on:api-delete="apiDelete" />
       </div>
     </div>
   </div>
@@ -55,6 +55,9 @@ export default {
     };
   },
   methods: {
+    apiDelete(){
+        this.getApi(this.pageSize,this.curr, this.$route.params.id);
+    },
     //获取分组列表
     getGroup( pageSize,curr, projectId) {
       this.$http

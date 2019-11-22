@@ -330,11 +330,14 @@ export default {
       this.$router.go(-1);
     },
     createApi() {
-      this.apiData.http_return_params = this.box4Item.splice(
+      let data = this.apiData;
+      let box4 = this.box4Item;
+      let box3 = this.box3Item;
+      data.http_return_params = box4.splice(
         0,
         this.box4Item.length - 1
       );
-      this.apiData.http_request_params = this.box3Item.splice(
+      data.http_request_params = box3.splice(
         0,
         this.box3Item.length - 1
       );
@@ -345,7 +348,7 @@ export default {
           {
             group_id: this.apiData.group_id,
             project_id: this.$route.params.id,
-            data: JSON.stringify(this.apiData)
+            data: JSON.stringify(data)
           },
           { emulateJSON: true }
         )
@@ -354,11 +357,13 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               alert("成功！~");
+              return;
             }
           },
           function(res) {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
+            return;
           }
         );
     },

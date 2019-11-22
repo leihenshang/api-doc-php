@@ -67,7 +67,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               alert("成功！~");
-              this.getApi();
+             this.$emit("api-delete");
             }
           },
           function(res) {

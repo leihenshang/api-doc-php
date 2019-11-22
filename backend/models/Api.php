@@ -11,7 +11,6 @@ use yii\db\StaleObjectException;
  * @property string $id
  * @property string $group_id 组id
  * @property string $project_id 项目id
- * @property string $data 数据
  * @property string $description 备注
  * @property string $is_deleted 0正常，1删除
  * @property string $create_time
@@ -38,6 +37,7 @@ class Api extends BaseModel
     const SCENARIO_UPDATE = 'update';
     const SCENARIO_LIST = 'list';
     const SCENARIO_DETAIL = 'detail';
+    const SCENARIO_UPDATE_RAW = 'update_raw';
 
     public static $defaultData = [
         'group' => '',//分组
@@ -56,6 +56,11 @@ class Api extends BaseModel
         'returnDataSuccess' => '', //返回数据成功
         'returnDataFailed' => ''//返回数据失败
     ];
+
+    /**
+     * @var string 数据
+     */
+    public $data;
 
     /**
      * {@inheritdoc}
@@ -114,12 +119,13 @@ class Api extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['data', 'project_id', 'group_id', 'description','protocol_type',
-            'http_method_type','url','api_name','object_name','function_name','develop_language',
-            'http_request_header','http_request_params','http_return_type','http_return_sample','http_return_params'];
-        $scenarios[self::SCENARIO_UPDATE] = ['data','id', 'project_id', 'group_id', 'description','protocol_type',
-            'http_method_type','url','api_name','object_name','function_name','develop_language',
-            'http_request_header','http_request_params','http_return_type','http_return_sample','http_return_params'];
+        $scenarios[self::SCENARIO_CREATE] = ['data', 'project_id', 'group_id', 'description', 'protocol_type',
+            'http_method_type', 'url', 'api_name', 'object_name', 'function_name', 'develop_language',
+            'http_request_header', 'http_request_params', 'http_return_type', 'http_return_sample', 'http_return_params'];
+        $scenarios[self::SCENARIO_UPDATE] = ['data', 'id', 'project_id', 'group_id', 'description', 'protocol_type',
+            'http_method_type', 'url', 'api_name', 'object_name', 'function_name', 'develop_language',
+            'http_request_header', 'http_request_params', 'http_return_type', 'http_return_sample', 'http_return_params'];
+        $scenarios[self::SCENARIO_UPDATE_RAW] = ['id', 'data', 'project_id', 'group_id'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
         $scenarios[self::SCENARIO_LIST] = [];
         $scenarios[self::SCENARIO_DETAIL] = ['id'];
@@ -145,18 +151,18 @@ class Api extends BaseModel
             return '项目不存在';
         }
 
-        $tmp =   json_decode($this->data,true);
+        $tmp = json_decode($this->data, true);
         if (json_last_error()) {
-           return '解析数据错误';
+            return '解析数据错误';
         }
 
-        unset($tmp['project_id'],$tmp['group_id']);
-        $tmp = array_map(function($a){
-            if(is_array($a)){
-                return json_encode($a,JSON_UNESCAPED_UNICODE);
+        unset($tmp['project_id'], $tmp['group_id']);
+        $tmp = array_map(function ($a) {
+            if (is_array($a)) {
+                return json_encode($a, JSON_UNESCAPED_UNICODE);
             }
             return $a;
-        },$tmp);
+        }, $tmp);
 
         $this->attributes = $tmp;
         if (!$this->save()) {
@@ -173,7 +179,41 @@ class Api extends BaseModel
      */
     public function updateData($request)
     {
+
+
+
+        if (!isset($request['data'])) {
+            return '缺少data';
+        }
+
+        $jsonData = json_decode($request['data'], true);
+        if (json_last_error()) {
+            return json_last_error_msg();
+        }
+
+        unset($jsonData['project_id'], $jsonData['id'], $jsonData['groupId'],$jsonData['id']);
+        foreach ($jsonData as $key => $jsonDatum) {
+            if($key === 'http_request_params'){
+                $jsonData[$key] = json_encode($jsonDatum,JSON_UNESCAPED_UNICODE);
+            }
+            if($key === 'http_return_params'){
+                $jsonData[$key] = json_encode($jsonDatum,JSON_UNESCAPED_UNICODE);
+            }
+            if($key === 'http_return_sample'){
+                $jsonData[$key] = json_encode($jsonDatum,JSON_UNESCAPED_UNICODE);
+            }
+            if($key === 'http_request_header'){
+                $jsonData[$key] = json_encode($jsonDatum,JSON_UNESCAPED_UNICODE);
+            }
+        }
+
+        $request = array_merge($request, $jsonData);
         $this->attributes = $request;
+        if (!$this->validate()) {
+            return current($this->getFirstErrors());
+        }
+
+        $this->scenario = self::SCENARIO_UPDATE;
         if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
@@ -192,20 +232,23 @@ class Api extends BaseModel
             return '项目不存在';
         }
 
-        $tmp =   json_decode($this->data,true);
-        if (json_last_error()) {
-            return '解析数据错误';
-        }
+//        $tmp = json_decode($this->data, true);
+//        if (json_last_error()) {
+//            return '解析数据错误';
+//        }
 
-        unset($tmp['project_id'],$tmp['group_id'],$tmp['id']);
-        $tmp = array_map(function($a){
-            if(is_array($a)){
-                return json_encode($a,JSON_UNESCAPED_UNICODE);
-            }
-            return $a;
-        },$tmp);
-
-        $res->attributes = $tmp;
+//        var_dump($tmp);
+////        var_dump($this->toArray());
+//        die;
+//
+//        $tmp = array_map(function ($a) {
+//            if (is_array($a)) {
+//                return json_encode($a, JSON_UNESCAPED_UNICODE);
+//            }
+//            return $a;
+//        }, $tmp);
+//
+        $res->attributes = $request;
         if (!$res->save()) {
             return current($this->getFirstErrors());
         }
@@ -276,8 +319,12 @@ class Api extends BaseModel
     public function detail()
     {
         $res = self::findOne($this->id);
-        if ($res) $res->data = json_decode($res->data);
-
+        if ($res) {
+            $res['http_request_params'] = json_decode($res['http_request_params'], JSON_UNESCAPED_UNICODE);
+            $res['http_return_params'] = json_decode($res['http_return_params'], JSON_UNESCAPED_UNICODE);
+            $res['http_return_sample'] = json_decode($res['http_return_sample'], JSON_UNESCAPED_UNICODE);
+            $res['http_request_header'] = json_decode($res['http_request_header'], JSON_UNESCAPED_UNICODE);
+        }
         return $res;
     }
 

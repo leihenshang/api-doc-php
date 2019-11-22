@@ -24,7 +24,7 @@
         <dl>
           <dd>
             <span>分组:</span>
-              <select v-model="apiData.group_id">
+            <select v-model="apiData.group_id">
               <option disabled value>请选择</option>
               <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
             </select>
@@ -37,7 +37,7 @@
               <option value="2">禁用</option>
             </select>-->
             <em>请求协议:</em>
-             <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol">
+            <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol">
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_protocol"
@@ -46,7 +46,7 @@
               >{{item.tag_name}}</option>
             </select>
             <em>请求方式:</em>
-                <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method">
+            <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method">
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_method"
@@ -55,7 +55,7 @@
               >{{item.tag_name}}</option>
             </select>
             <em>返回情况:</em>
-                   <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return">
+            <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return">
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_return"
@@ -169,7 +169,7 @@
             <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-          <select
+            <select
               style="width:90%;text-align:center;margin:0 10px;"
               v-model="item.type"
               v-if="propertyList.var_type"
@@ -228,7 +228,7 @@
             <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-       <select
+            <select
               style="width:90%;text-align:center;margin:0 10px;"
               v-model="item.type"
               v-if="propertyList.var_type"
@@ -256,8 +256,20 @@
           <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
         </div>
       </div>
-      <textarea name id v-model="apiData.http_return_sample.returnDataSuccess" v-show="box5==0" placeholder="成功的返回"></textarea>
-      <textarea name id v-model="apiData.http_return_sample.returnDataFailed" v-show="box5==1" placeholder="失败的返回"></textarea>
+      <textarea
+        name
+        id
+        v-model="apiData.http_return_sample.returnDataSuccess"
+        v-show="box5==0"
+        placeholder="成功的返回"
+      ></textarea>
+      <textarea
+        name
+        id
+        v-model="apiData.http_return_sample.returnDataFailed"
+        v-show="box5==1"
+        placeholder="失败的返回"
+      ></textarea>
     </div>
   </div>
 </template>
@@ -281,8 +293,8 @@ export default {
       groupList: [],
       propertyList: [],
       apiData: {
-            group_id: 0, //分组
-        project_id:0,//项目Id
+        group_id: 0, //分组
+        project_id: 0, //项目Id
         protocol_type: "HTTP", //协议
         description: "", //说明和备注
         requestMethod: "GET", //http请求方法
@@ -295,9 +307,9 @@ export default {
         http_request_header: [], //请求头
         http_request_params: [], //请求参数
         http_return_params: [], //返回参数
-        http_return_sample:{
-          returnDataSuccess:'',//返回数据成功
-          returnDataFailed:''//返回数据失败
+        http_return_sample: {
+          returnDataSuccess: "", //返回数据成功
+          returnDataFailed: "" //返回数据失败
         }
       },
       box2: 0,
@@ -337,7 +349,7 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              this.apiData = response.data.data;
+              this.apiData = response.data;
               this.box3Item = this.apiData.http_request_params;
               this.box3Item.push({
                 name: "",
@@ -370,13 +382,13 @@ export default {
       this.$router.go(-1);
     },
     updateApi() {
-      this.apiData.returnData = this.box4Item.splice(
-        0,
-        this.box4Item.length - 1
-      );
-      this.apiData.requestParams = this.box3Item.splice(
+      this.apiData.http_request_params = this.box3Item.splice(
         0,
         this.box3Item.length - 1
+      );
+      this.apiData.http_return_params = this.box4Item.splice(
+        0,
+        this.box4Item.length - 1
       );
 
       this.$http

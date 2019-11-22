@@ -295,7 +295,7 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              this.apiData = response.data.data;
+              this.apiData = response.data;
             }
           },
           function(res) {

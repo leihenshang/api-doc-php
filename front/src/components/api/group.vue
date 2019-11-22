@@ -111,7 +111,7 @@ export default {
           }
         );
     },
-    clientBtn(id,event)
+    clientBtn(id)
     {
       this.$emit('change-group',id);
     }
