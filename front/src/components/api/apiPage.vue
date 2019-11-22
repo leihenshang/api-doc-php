@@ -13,11 +13,16 @@
 
     <div class="api-content">
       <div class="group-wrapper">
-        <group :id="this.id" :groupList="groupList" v-on:add-group="flushGroupList" />
+        <group
+          :id="this.id"
+          :groupList="groupList"
+          v-on:add-group="flushGroupList"
+          v-on:change-group="changeGroup"
+        />
       </div>
 
       <div class="api-wrapper">
-        <apiList :id="id" />
+        <apiList :id="id" :apiList="apiList" />
       </div>
     </div>
   </div>
@@ -34,14 +39,15 @@ export default {
     id: String
   },
   created() {
-    this.getGroup(this.curr, this.pageSize);
+    this.getGroup(this.pageSize,this.curr, this.$route.params.id);
+    this.getApi(this.pageSize,this.curr, this.$route.params.id);
   },
   data() {
     return {
       groupList: [],
-      apiList: [],
+      apiList: {},
       curr: 1,
-      pageSize: 10,
+      pageSize: 100,
       indesideRoute: [
         { title: "项目概况", route: "detail" },
         { title: "API接口", route: "api" }
@@ -49,10 +55,11 @@ export default {
     };
   },
   methods: {
-    getGroup(curr, pageSize) {
+    //获取分组列表
+    getGroup( pageSize,curr, projectId) {
       this.$http
         .get(this.apiAddress + "/group/list", {
-          params: { cp: curr, ps: pageSize, projectId: this.$route.params.id }
+          params: { cp: curr, ps: pageSize, projectId }
         })
         .then(
           response => {
@@ -67,8 +74,35 @@ export default {
           }
         );
     },
+    //获取api列表
+    getApi(pageSize, curr, projectId, groupId) {
+      let params = { cp: curr, ps: pageSize, projectId };
+      if (groupId) {
+        params = { cp: curr, ps: pageSize, projectId, groupId };
+      }
+
+      this.$http
+        .get(this.apiAddress + "/api/list", {
+          params: params
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.apiList = response.data;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
+    },
     flushGroupList() {
       this.getGroup(1, 100);
+    },
+    changeGroup(id) {
+      this.getApi(this.pageSize,this.curr, this.$route.params.id,id);
     },
     addApi() {
       this.$router.push("/detail/" + this.$route.params.id + "/createApi");
@@ -120,7 +154,7 @@ export default {
 
 .api-wrapper {
   flex: 1;
-  overflow-y:scroll;
-  padding:10px;
+  overflow-y: scroll;
+  padding: 10px;
 }
 </style>

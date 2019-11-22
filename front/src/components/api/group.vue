@@ -15,8 +15,13 @@
         <input type="text" v-model="newGroup" />
         <button @click="createGroup">新增</button>
       </p>
+       <li>
+        <a href="javascript:;" @click="clientBtn(null)">全部接口</a>
+        <div class="btn-group">
+        </div>
+      </li>
       <li v-for="item in group" :key="item.id">
-        <a href="javascript:void();">{{item.title}}</a>
+        <a href="javascript:;" @click="clientBtn(item.id)">{{item.title}}</a>
         <div class="btn-group">
           <button @click="del(item.id)">删除</button>
           <button>编辑</button>
@@ -105,10 +110,15 @@ export default {
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
+    },
+    clientBtn(id,event)
+    {
+      this.$emit('change-group',id);
     }
   },
   watch: {
     groupList: function(val) {
+    
       this.group = val;
     }
   }
@@ -171,6 +181,7 @@ padding-left:8px;
 .group ul li {
   width: 100%;
   overflow: hidden;
+  display: flex;
   margin: 10px 0;
   height: 32px;
   line-height: 32px;
@@ -185,14 +196,15 @@ padding-left:8px;
 }
 
 .btn-group {
-  float: right;
   overflow: hidden;
-  line-height: 28px;
+  width: 100%;
+  line-height: 32px;
+  text-align: center;
 }
 
 .group ul li a {
   display: inline-block;
-  width: 120px;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -200,5 +212,6 @@ padding-left:8px;
   height: 28px;
   color: rgb(75, 74, 74);
   margin-left: 8px;
+  padding-left: 10px;
 }
 </style>

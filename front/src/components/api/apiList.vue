@@ -39,14 +39,13 @@ const CODE_OK = 200;
 export default {
   name: "apiList",
   props: {
-    id: String
+    id: String,
+    apiList:Object
   },
   created() {
-    this.getApi(1, 100);
   },
   data() {
     return {
-      apiList: []
     };
   },
   methods: {
@@ -74,29 +73,6 @@ export default {
           function(res) {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
-    },
-    getApi(curr, pageSize) {
-      this.$http
-        .get(this.apiAddress + "/api/list", {
-          params: { cp: curr, ps: pageSize,projectId:this.$route.params.id }
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.apiList = response.data;
-              if (this.apiList) {
-                for (let index = 0; index < this.apiList.length; index++) {
-                  // this.apiList[index].data = JSON.parse(this.api[index].data);
-                }
-              }
-            }
-          },
-          function(res) {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
