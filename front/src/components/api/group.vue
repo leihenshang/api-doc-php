@@ -7,6 +7,9 @@
  -->
 <template>
   <div class="group">
+    <div class="add-group-werapper" v-show="showAdd">
+      <addGroup />
+    </div>
     <h4>
       <span>分组</span>
     </h4>
@@ -16,7 +19,7 @@
         <button @click="createGroup">新增</button>
       </p>
       <li>
-        <a href="javascript:;" @click="clientBtn(null)">全部接口</a>
+        <a href="javascript:;" @click="clientBtn(null,null)">全部接口</a>
         <div class="btn-group"></div>
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
@@ -31,6 +34,8 @@
 </template>
 
 <script>
+import addGroup from "./group/addGroup";
+
 const CODE_OK = 200;
 export default {
   name: "group",
@@ -42,7 +47,8 @@ export default {
   data() {
     return {
       newGroup: "",
-      group: []
+      group: [],
+      showAdd:false
     };
   },
   methods: {
@@ -111,11 +117,10 @@ export default {
         );
     },
     clientBtn(id, index) {
+      for (const key in this.group) {
+        this.group[key].isClick = false;
+      }
       if (index !== null) {
-        for (const key in this.group) {
-          this.group[key].isClick = false;
-        }
-
         this.group[index].isClick = true;
       }
 
@@ -126,6 +131,9 @@ export default {
     groupList: function(val) {
       this.group = val;
     }
+  },
+  components: {
+    addGroup
   }
 };
 </script>
