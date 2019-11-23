@@ -39,8 +39,8 @@ export default {
     id: String
   },
   created() {
-    this.getGroup(this.pageSize,this.curr, this.$route.params.id);
-    this.getApi(this.pageSize,this.curr, this.$route.params.id);
+    this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+    this.getApi(this.pageSize, this.curr, this.$route.params.id);
   },
   data() {
     return {
@@ -55,11 +55,11 @@ export default {
     };
   },
   methods: {
-    apiDelete(){
-        this.getApi(this.pageSize,this.curr, this.$route.params.id);
+    apiDelete() {
+      this.getApi(this.pageSize, this.curr, this.$route.params.id);
     },
     //获取分组列表
-    getGroup( pageSize,curr, projectId) {
+    getGroup(pageSize, curr, projectId) {
       this.$http
         .get(this.apiAddress + "/group/list", {
           params: { cp: curr, ps: pageSize, projectId }
@@ -68,7 +68,12 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              this.groupList = response.data;
+              if (response.data) {
+                for (const key in response.data) {
+                  response.data[key].isClick = false;
+                }
+                this.groupList = response.data;
+              }
             }
           },
           function(res) {
@@ -105,7 +110,7 @@ export default {
       this.getGroup(1, 100);
     },
     changeGroup(id) {
-      this.getApi(this.pageSize,this.curr, this.$route.params.id,id);
+      this.getApi(this.pageSize, this.curr, this.$route.params.id, id);
     },
     addApi() {
       this.$router.push("/detail/" + this.$route.params.id + "/createApi");

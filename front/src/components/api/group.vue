@@ -15,13 +15,12 @@
         <input type="text" v-model="newGroup" />
         <button @click="createGroup">新增</button>
       </p>
-       <li>
+      <li>
         <a href="javascript:;" @click="clientBtn(null)">全部接口</a>
-        <div class="btn-group">
-        </div>
+        <div class="btn-group"></div>
       </li>
-      <li v-for="item in group" :key="item.id">
-        <a href="javascript:;" @click="clientBtn(item.id)">{{item.title}}</a>
+      <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
+        <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
         <div class="btn-group">
           <button @click="del(item.id)">删除</button>
           <button>编辑</button>
@@ -69,8 +68,8 @@ export default {
               this.$emit("add-group");
               this.newGroup = "";
               alert("成功！~");
-            }else {
-              alert('创建分组失败:'+response.msg);
+            } else {
+              alert("创建分组失败:" + response.msg);
             }
           },
           function(res) {
@@ -111,14 +110,20 @@ export default {
           }
         );
     },
-    clientBtn(id)
-    {
-      this.$emit('change-group',id);
+    clientBtn(id, index) {
+      if (index !== null) {
+        for (const key in this.group) {
+          this.group[key].isClick = false;
+        }
+
+        this.group[index].isClick = true;
+      }
+
+      this.$emit("change-group", id);
     }
   },
   watch: {
     groupList: function(val) {
-    
       this.group = val;
     }
   }
@@ -127,6 +132,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.li-click {
+  background-color: purple;
+}
+
+.li-click a {
+  color: #fff !important;
+}
+
 .group {
   width: 100%;
   height: 100%;
@@ -141,7 +154,7 @@ export default {
 }
 
 .group ul p {
-padding-left:8px;
+  padding-left: 8px;
   margin: 10px 0 15px;
 }
 
@@ -190,7 +203,6 @@ padding-left:8px;
 .group ul li:hover {
   background-color: #e3f1e5;
 }
-
 .group ul li:hover button {
   display: inline-block;
 }
@@ -213,5 +225,6 @@ padding-left:8px;
   color: rgb(75, 74, 74);
   margin-left: 8px;
   padding-left: 10px;
+  height: 100%;
 }
 </style>
