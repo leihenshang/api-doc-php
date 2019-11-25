@@ -127,7 +127,7 @@ class UserInfo extends BaseModel
     public static function createExpireTime($isTimeStamp = false)
     {
         $time = time() + 3600;
-        if ($isTimeStamp) {
+        if (!$isTimeStamp) {
             return $time;
         } else {
             return date('Y-m-d H:i:s', $time);

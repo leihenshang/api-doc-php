@@ -9,12 +9,14 @@ import ApiDetail from "./components/api/apiDetail";
 import ApiEdit from "./components/api/apiEdit";
 import CreateApi from "./components/api/createApi";
 import DetailPage from "./components/detail/detailPage";
+import Login from "./viewPage/login";
 
 Vue.use(VueRouter);
 
 export default new VueRouter({
   routes: [
     { path: "/project", component: Project },
+    {path:"/login",component:Login},
     {
       path: "/",
       component: Project,
