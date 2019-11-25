@@ -7,7 +7,12 @@
           首页-全部项目
         </a>
       </li>
-      <li v-for="item in menuList" :key="item.id" @click="jump(item.route,item.child,$event)" >
+      <li
+        v-for="(item,index) in menuListData"
+        :key="item.id"
+        @click="jump(item.route,item.child,index)"
+        :class="{'is-click' : item.isClick}"
+      >
         <a href="javascript:void(0)">
           <span>▢</span>
           {{item.title}}
@@ -19,18 +24,20 @@
 
 <script>
 export default {
-  name: "left-menuMenu",
+  name: "left-menu",
   props: {
     menuList: Array
   },
-  computed: {},
   methods: {
-    jump(uri, child) {
-
-      // if(clild === this.$route.)
+    jump(uri, child, index) {
 
       if (uri) {
         if (child) {
+
+  if (this.menuListData[index].isClick === true) {
+        return;
+      }
+
           this.$router.push(
             "/" + uri + "/" + this.$route.params.id + "/" + child
           );
@@ -43,12 +50,42 @@ export default {
         }
         return;
       }
+
+     
+
+      for (const key in this.menuListData) {
+        this.menuListData[key].isClick = false;
+      }
+      this.menuListData[index].isClick = true;
+    },
+    change() {
+      for (const key in this.menuListData) {
+        if (this.$route.name === this.menuListData[key].child) {
+          this.menuListData[key].isClick = true;
+        }
+      }
     }
   },
   data: function() {
     return {
-      menuListData:this.menuList
+      menuListData: this.menuList
     };
+  },
+  created: function() {
+    this.change();
+  },
+  computed: {
+    // menuListDataComputed: function() {
+    //   if (this.menuListData) {
+    //     let tmpData = this.menuListData;
+    //     for (const key in tmpData) {
+    //       tmpData[key].isClick = false;
+    //     }
+    //     return tmpData;
+    //   } else {
+    //     return [];
+    //   }
+    // }
   }
 };
 </script>
@@ -78,7 +115,6 @@ export default {
   background-color: #5ace5e;
 }
 
-
 .left-menu ul li:first-child a {
   color: #fff;
   font-weight: 700;
@@ -86,11 +122,18 @@ export default {
 
 .left-menu li:hover {
   background-color: #5864597a;
-  
+}
+
+.is-click {
+  background-color: black;
+}
+
+.is-click a {
+  color:#fff!important;
 }
 
 .left-menu li:hover a {
-color:#fff;
+  color: #fff;
 }
 
 .left-menu li span {
@@ -114,8 +157,6 @@ color:#fff;
 }
 
 .current-click a {
-  color: #fff!important;
+  color: #fff !important;
 }
-
-
 </style>
