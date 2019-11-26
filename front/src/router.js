@@ -13,10 +13,10 @@ import Login from "./viewPage/login";
 
 Vue.use(VueRouter);
 
-export default new VueRouter({
+const router = new VueRouter({
   routes: [
     { path: "/project", component: Project },
-    {path:"/login",component:Login},
+    {path:"/login",name:'userLogin',component:Login},
     {
       path: "/",
       component: Project,
@@ -37,4 +37,21 @@ export default new VueRouter({
     }
     // { path: "/msg", name: "msg", component: Msg }
   ]
+ 
 });
+
+router.beforeEach((to, from, next) => {
+  if(to.name !== 'userLogin'){
+    console.log(Vue.prototype.userInfo);
+    if(!Vue.prototype.userInfo){
+      // next({name:'userLogin'});
+      next('/login');
+    }else{
+      next();
+    }
+  }else{
+    next();
+  }
+})
+
+export default router;

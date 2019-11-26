@@ -49,7 +49,7 @@
 </template>
 
 <script>
-
+import Vue from "vue";
 const CODE_OK = 200;
 
 export default {
@@ -75,7 +75,9 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              alert("成功！~");
+               alert("成功！~");
+          Vue.prototype.userInfo = response.data;
+          // this.$userInfo = response.data;
                 this.$router.push('/');
               
             }
