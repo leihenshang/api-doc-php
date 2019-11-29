@@ -29,7 +29,7 @@
           <span>apiDoc 0.1</span>
         </div>
         <div class="login-box">
-          <input type="text" name="username" placeholder="请输入用户名" v-model="username"/>
+          <input type="text" name="username" placeholder="请输入用户名" v-model="username" />
           <input type="password" name="pwd" placeholder="请输入密码" v-model="pwd" />
           <button @click="login()">
             <span>登陆</span>
@@ -53,21 +53,21 @@ import Vue from "vue";
 const CODE_OK = 200;
 
 export default {
-    name:"loginPage",
-    data(){
-        return {
-            username:'',
-            pwd:''
-        };
-    },
-    methods:{
-        login:function(){
-     this.$http
+  name: "loginPage",
+  data() {
+    return {
+      username: "",
+      pwd: ""
+    };
+  },
+  methods: {
+    login: function() {
+      this.$http
         .post(
           this.apiAddress + "/user/login",
           {
             name: this.username,
-            pwd: this.pwd,
+            pwd: this.pwd
           },
           { emulateJSON: true }
         )
@@ -75,11 +75,8 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-               alert("成功！~");
-          Vue.prototype.userInfo = response.data;
-          // this.$userInfo = response.data;
-                this.$router.push('/');
-              
+              Vue.prototype.userInfo = response.data;
+              this.$router.push("/");
             }
           },
           function(res) {
@@ -88,8 +85,8 @@ export default {
             return;
           }
         );
-        }
     }
+  }
 };
 </script>
 <style>
