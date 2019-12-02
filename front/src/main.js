@@ -7,6 +7,7 @@ Vue.prototype.apiAddress = "http://120.27.241.94:50682";
 Vue.prototype.globalId = 0;
 Vue.prototype.userInfo = null;
 
+
 Vue.config.productionTip = false;
 
 Vue.use(VueResource);

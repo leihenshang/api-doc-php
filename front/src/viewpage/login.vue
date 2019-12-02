@@ -54,6 +54,10 @@ const CODE_OK = 200;
 
 export default {
   name: "loginPage",
+  created(){
+    this.loginByLocalStorage();
+
+  },
   data() {
     return {
       username: "",
@@ -76,6 +80,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               Vue.prototype.userInfo = response.data;
+              localStorage.setItem("userInfo", JSON.stringify(response.data));
               this.$router.push("/");
             }
           },
@@ -85,6 +90,19 @@ export default {
             return;
           }
         );
+    },
+    loginByLocalStorage:function(){
+       let userInfo1 = JSON.parse(localStorage.getItem("userInfo"));
+      if (userInfo1) {
+        let currDate = new Date();
+        let expireTime = new Date(Date.parse(userInfo1.token_expire_time));
+        if (expireTime > currDate) {
+          Vue.prototype.userInfo = userInfo1;
+          this.$router.push("/");
+        }else {
+          localStorage.removeItem('userInfo');
+        }
+      }
     }
   }
 };

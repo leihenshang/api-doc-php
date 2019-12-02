@@ -17,6 +17,7 @@
 <script>
 import TopBar from "../components/common/topBar";
 import LeftMenu from "../components/common/leftMenu";
+
 const CODE_OK = 200;
 const PAGE_SIZE = 5;
 

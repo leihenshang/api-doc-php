@@ -42,9 +42,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if(to.name !== 'userLogin'){
-    console.log(Vue.prototype.userInfo);
     if(!Vue.prototype.userInfo){
-      // next({name:'userLogin'});
       next('/login');
     }else{
       next();
