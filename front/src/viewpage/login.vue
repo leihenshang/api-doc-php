@@ -97,6 +97,7 @@ export default {
         let currDate = new Date();
         let expireTime = new Date(Date.parse(userInfo1.token_expire_time));
         if (expireTime > currDate) {
+          this.$store.commit('saveUserInfo',userInfo1);
           Vue.prototype.userInfo = userInfo1;
           this.$router.push("/");
         }else {

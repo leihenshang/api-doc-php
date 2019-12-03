@@ -1,11 +1,12 @@
 <template>
   <div class="add-panel">
+    
     <div class="add" v-bind:class="{hide : isHide}">
-      <h4>添加项目</h4>
+      <h4>添加项目{{this.$store.state.count}}</h4>
       <ul>
         <li>
           <span>项目名称</span>
-          <input type="text" v-model.trim="title" />
+          <input type="text" v-model.trim="title" v-focus v-validate="'test'"/>
         </li>
         <li>
           <span>版本号</span>
@@ -169,7 +170,7 @@ export default {
 }
 
 .add ul li textarea {
-  width:100%;
+  width: 100%;
   min-height: 120px;
   padding: 6px;
   box-sizing: border-box;
