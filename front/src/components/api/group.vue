@@ -8,7 +8,7 @@
 <template>
   <div class="group">
     <div class="add-group-werapper" v-show="showAdd">
-      <addGroup />
+      <addGroup :isShow="showAdd" :groupData="groupData" />
     </div>
     <h4>
       <span>分组</span>
@@ -26,7 +26,7 @@
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
         <div class="btn-group">
           <button @click="del(item.id)">删除</button>
-          <button>编辑</button>
+          <button @click="editGroup(item)">编辑</button>
         </div>
       </li>
     </ul>
@@ -48,7 +48,8 @@ export default {
     return {
       newGroup: "",
       group: [],
-      showAdd:false
+      showAdd: false,
+      groupData: {}
     };
   },
   methods: {
@@ -125,6 +126,10 @@ export default {
       }
 
       this.$emit("change-group", id);
+    },
+    editGroup(data) {
+      this.groupData = data;
+      this.showAdd = !this.showAdd;
     }
   },
   watch: {

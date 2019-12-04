@@ -80,6 +80,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               Vue.prototype.userInfo = response.data;
+                 this.$store.commit('saveUserInfo',response.data);
               localStorage.setItem("userInfo", JSON.stringify(response.data));
               this.$router.push("/");
             }

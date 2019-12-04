@@ -1,12 +1,12 @@
 <template>
   <div class="add-group">
     <div class="add-group-box">
-      <p v-show="isAdd">
+      <p v-show="!isEdit">
         <input type="text" v-model="newGroup" />
         <button @click="createGroup">新增</button>
       </p>
-            <p v-show="isEdit">
-        <input type="text" v-model="newGroup" />
+      <p v-show="isEdit">
+        <input type="text" v-model="groupData.title" />
         <button>修改</button>
         <button style="background-color:red;color:white;font-weight:700;">删除</button>
       </p>
@@ -18,20 +18,29 @@
 // const CODE_OK = 200;
 export default {
   name: "add-group",
-  props: {},
+  props: {
+    groupData: Object,
+    isShow: Boolean
+  },
   created() {},
   data() {
     return {
       newGroup: "",
       group: [],
-      isAdd:true,
-      isEdit:false
+      btnChange: false,
+      isEdit: false
     };
   },
   methods: {
     createGroup() {}
   },
-  watch: {}
+  watch: {
+    groupData:function(){
+      if(this.groupData){
+        this.isEdit = !this.isEdit;
+      }
+    }
+  }
 };
 </script>
 
