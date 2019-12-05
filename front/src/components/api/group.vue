@@ -8,7 +8,7 @@
 <template>
   <div class="group">
     <div class="add-group-werapper" v-show="showAdd">
-      <addGroup :isShow="showAdd" :groupData="groupData" />
+      <addGroup :isShow="showAdd" :groupData="groupData" v-on:closeAddGroup="closeAddGroup()" />
     </div>
     <h4>
       <span>分组</span>
@@ -129,6 +129,9 @@ export default {
     },
     editGroup(data) {
       this.groupData = data;
+      this.showAdd = !this.showAdd;
+    },
+    closeAddGroup() {
       this.showAdd = !this.showAdd;
     }
   },
