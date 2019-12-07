@@ -1,28 +1,39 @@
 <template>
   <div class="add-panel">
-    
     <div class="add" v-bind:class="{hide : isHide}">
-      <h4>添加项目{{this.$store.state.count}}</h4>
+      <h4>添加项目</h4>
+      <ValidationObserver>
       <ul>
         <li>
-          <span>项目名称</span>
-          <input type="text" v-model.trim="title" v-focus v-validate="'test'"/>
+          <em>项目名称</em>
+          <validation-provider rules="required" v-slot="{ errors }">
+            <input type="text" v-model.trim="title" name="title" v-focus />
+            <span>{{ errors[0] }}</span>
+          </validation-provider>
         </li>
         <li>
-          <span>版本号</span>
-          <input type="text" v-model.trim="ver" />
+          <em>版本号</em>
+          <validation-provider rules="required" v-slot="{ errors }">
+            <input type="text" v-model.trim="ver" />
+            <span>{{ errors[0] }}</span>
+          </validation-provider>
         </li>
         <li>
-          <span>项目类型</span>
-          <select v-model.number="type">
-            <option value="web">web</option>
-            <option value="pc">pc</option>
-          </select>
+          <em>项目类型</em>
+          <validation-provider rules="required" v-slot="{ errors }">
+            <select v-model="type">
+               <option></option>
+              <option value="web">web</option>
+              <option value="pc">pc</option>
+            </select>
+            <span>{{ errors[0] }}</span>
+          </validation-provider>
         </li>
         <li>
           <textarea name="desc" v-model.trim="desc" placeholder="输入描述"></textarea>
         </li>
       </ul>
+      </ValidationObserver>
       <div class="add-btn">
         <button @click=" updateData !== null ? update() : create()">确定</button>
         <button @click="hideMeBtn">取消</button>
@@ -33,6 +44,14 @@
 </template>
 
 <script>
+import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
+import { required } from "vee-validate/dist/rules";
+
+extend("required", {
+  ...required,
+  message: "This field is required"
+});
+
 const CODE_OK = 200;
 
 export default {
@@ -58,6 +77,9 @@ export default {
       this.$emit("hide-box", type);
     },
     create() {
+
+      // console.log(errors);
+      // return ;
       this.$http
         .post(
           this.apiAddress + "/project/create",
@@ -133,6 +155,10 @@ export default {
       this.type = val.type;
       this.desc = val.description;
     }
+  },
+  components: {
+    ValidationProvider,
+    ValidationObserver
   }
 };
 </script>
@@ -152,13 +178,18 @@ export default {
   z-index: 2;
 }
 
-.add ul span {
+.add ul em {
   display: inline-block;
   min-width: 80px;
   font-size: 14px;
   text-align: right;
   padding-right: 10px;
   box-sizing: border-box;
+  font-style: normal;
+}
+
+.add ul span {
+  color: red;
 }
 
 .add h4 {
