@@ -2,37 +2,37 @@
   <div class="add-panel">
     <div class="add" v-bind:class="{hide : isHide}">
       <h4>添加项目</h4>
-      <ValidationObserver>
-      <ul>
-        <li>
-          <em>项目名称</em>
-          <validation-provider rules="required" v-slot="{ errors }">
-            <input type="text" v-model.trim="title" name="title" v-focus />
-            <span>{{ errors[0] }}</span>
-          </validation-provider>
-        </li>
-        <li>
-          <em>版本号</em>
-          <validation-provider rules="required" v-slot="{ errors }">
-            <input type="text" v-model.trim="ver" />
-            <span>{{ errors[0] }}</span>
-          </validation-provider>
-        </li>
-        <li>
-          <em>项目类型</em>
-          <validation-provider rules="required" v-slot="{ errors }">
-            <select v-model="type">
-               <option></option>
-              <option value="web">web</option>
-              <option value="pc">pc</option>
-            </select>
-            <span>{{ errors[0] }}</span>
-          </validation-provider>
-        </li>
-        <li>
-          <textarea name="desc" v-model.trim="desc" placeholder="输入描述"></textarea>
-        </li>
-      </ul>
+      <ValidationObserver ref="form" vid="form">
+        <ul>
+          <li>
+            <em>项目名称</em>
+            <validation-provider rules="required" v-slot="{ errors }" vid="title">
+              <input type="text" v-model.trim="title" name="title" v-focus />
+              <span>{{ errors[0] }}</span>
+            </validation-provider>
+          </li>
+          <li>
+            <em>版本号</em>
+            <validation-provider rules="required" v-slot="{ errors }">
+              <input type="text" v-model.trim="ver" />
+              <span>{{ errors[0] }}</span>
+            </validation-provider>
+          </li>
+          <li>
+            <em>项目类型</em>
+            <validation-provider rules="required" v-slot="{ errors }">
+              <select v-model="type">
+                <option></option>
+                <option value="web">web</option>
+                <option value="pc">pc</option>
+              </select>
+              <span>{{ errors[0] }}</span>
+            </validation-provider>
+          </li>
+          <li>
+            <textarea name="desc" v-model.trim="desc" placeholder="输入描述"></textarea>
+          </li>
+        </ul>
       </ValidationObserver>
       <div class="add-btn">
         <button @click=" updateData !== null ? update() : create()">确定</button>
@@ -77,36 +77,38 @@ export default {
       this.$emit("hide-box", type);
     },
     create() {
-
-      // console.log(errors);
-      // return ;
-      this.$http
-        .post(
-          this.apiAddress + "/project/create",
-          {
-            title: this.title,
-            description: this.desc,
-            version: this.ver,
-            type: this.type
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          function(res) {
-            let response = res.body;
-            if (response.code === CODE_OK) {
-              alert("成功!" + response.msg);
-              this.clear();
-              this.hideMeBtn("flush");
-            } else {
-              alert("失败!" + response.msg);
+      this.$refs.form.validate().then(res => {
+        if (!res) {
+          return;
+        }
+        this.$http
+          .post(
+            this.apiAddress + "/project/create",
+            {
+              title: this.title,
+              description: this.desc,
+              version: this.ver,
+              type: this.type
+            },
+            { emulateJSON: true }
+          )
+          .then(
+            function(res) {
+              let response = res.body;
+              if (response.code === CODE_OK) {
+                alert("成功!" + response.msg);
+                this.clear();
+                this.hideMeBtn("flush");
+              } else {
+                alert("失败!" + response.msg);
+              }
+            },
+            function(res) {
+              let response = res.body;
+              alert("操作失败!" + response.msg);
             }
-          },
-          function(res) {
-            let response = res.body;
-            alert("操作失败!" + response.msg);
-          }
-        );
+          );
+      });
     },
     update() {
       this.$http
