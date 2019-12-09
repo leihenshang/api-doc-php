@@ -6,21 +6,21 @@
         <ul>
           <li>
             <em>项目名称</em>
-            <validation-provider rules="required" v-slot="{ errors }" vid="title">
+            <validation-provider rules="required" v-slot="{ errors }" vid="title" name="title">
               <input type="text" v-model.trim="title" name="title" v-focus />
               <span>{{ errors[0] }}</span>
             </validation-provider>
           </li>
           <li>
             <em>版本号</em>
-            <validation-provider rules="required" v-slot="{ errors }" vid="version">
+            <validation-provider rules="required" v-slot="{ errors }" vid="version" name="version">
               <input type="text" v-model.trim="ver" />
               <span>{{ errors[0] }}</span>
             </validation-provider>
           </li>
           <li>
             <em>项目类型</em>
-            <validation-provider rules="required" v-slot="{ errors }" vid="type">
+            <validation-provider rules="required|oneOf:web,pc" v-slot="{ errors }" vid="type" name= "type">
               <select v-model="type">
                 <option></option>
                 <option value="web">web</option>
@@ -30,7 +30,10 @@
             </validation-provider>
           </li>
           <li>
+                <validation-provider rules="min:10" v-slot="{ errors }" vid="description" name= "description">
             <textarea name="desc" v-model.trim="desc" placeholder="输入描述"></textarea>
+              <span>{{ errors[0] }}</span>
+            </validation-provider>
           </li>
         </ul>
       </ValidationObserver>
@@ -44,15 +47,6 @@
 </template>
 
 <script>
-import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
-import { required } from "vee-validate/dist/rules";
-
-extend("required", {
-  ...required,
-  message: "This field is required",
-  computesRequired: true
-});
-
 const CODE_OK = 200;
 
 export default {
@@ -78,8 +72,6 @@ export default {
       this.$emit("hide-box", type);
     },
     create() {
-      console.log(this.$refs.form.errors);
-
       this.$refs.form.validate().then(res => {
         if (!res) {
           return;
@@ -160,10 +152,6 @@ export default {
       this.type = val.type;
       this.desc = val.description;
     }
-  },
-  components: {
-    ValidationProvider,
-    ValidationObserver
   }
 };
 </script>

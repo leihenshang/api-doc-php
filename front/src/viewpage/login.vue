@@ -29,12 +29,25 @@
           <span>apiDoc 0.1</span>
         </div>
         <div class="login-box">
-          <input type="text" name="username" placeholder="请输入用户名" v-model="username" />
-          <input type="password" name="pwd" placeholder="请输入密码" v-model="pwd" />
-          <button @click="login()">
-            <span>登陆</span>
-            <em>》</em>
-          </button>
+          <ValidationObserver ref="form" vid="form">
+            <validation-provider
+              rules="required"
+              v-slot="{ errors }"
+              vid="username"
+              name="username"
+            >
+              <input type="text" name="username" placeholder="请输入用户名" v-model="username" />
+              <span>{{ errors[0] }}</span>
+            </validation-provider>
+            <validation-provider rules="required" v-slot="{ errors }" vid="pwd" name="pwd">
+              <input type="password" name="pwd" placeholder="请输入密码" v-model="pwd" />
+              <span>{{ errors[0] }}</span>
+            </validation-provider>
+            <button @click="login()">
+              <span class="login-text" >登陆</span>
+              <em>〉</em>
+            </button>
+          </ValidationObserver>
         </div>
         <div class="remember">
           <input type="checkbox" name="remember" id="remember" />
@@ -54,9 +67,8 @@ const CODE_OK = 200;
 
 export default {
   name: "loginPage",
-  created(){
+  created() {
     this.loginByLocalStorage();
-
   },
   data() {
     return {
@@ -66,43 +78,49 @@ export default {
   },
   methods: {
     login: function() {
-      this.$http
-        .post(
-          this.apiAddress + "/user/login",
-          {
-            name: this.username,
-            pwd: this.pwd
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              Vue.prototype.userInfo = response.data;
-                 this.$store.commit('saveUserInfo',response.data);
-              localStorage.setItem("userInfo", JSON.stringify(response.data));
-              this.$router.push("/");
+      this.$refs.form.validate().then(res => {
+        if (!res) {
+          return;
+        }
+
+        this.$http
+          .post(
+            this.apiAddress + "/user/login",
+            {
+              name: this.username,
+              pwd: this.pwd
+            },
+            { emulateJSON: true }
+          )
+          .then(
+            response => {
+              response = response.body;
+              if (response.code === CODE_OK) {
+                Vue.prototype.userInfo = response.data;
+                this.$store.commit("saveUserInfo", response.data);
+                localStorage.setItem("userInfo", JSON.stringify(response.data));
+                this.$router.push("/");
+              }
+            },
+            function(res) {
+              let response = res.body;
+              alert("操作失败!" + !response.msg ? response.msg : "");
+              return;
             }
-          },
-          function(res) {
-            let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
-            return;
-          }
-        );
+          );
+      });
     },
-    loginByLocalStorage:function(){
-       let userInfo1 = JSON.parse(localStorage.getItem("userInfo"));
+    loginByLocalStorage: function() {
+      let userInfo1 = JSON.parse(localStorage.getItem("userInfo"));
       if (userInfo1) {
         let currDate = new Date();
         let expireTime = new Date(Date.parse(userInfo1.token_expire_time));
         if (expireTime > currDate) {
-          this.$store.commit('saveUserInfo',userInfo1);
+          this.$store.commit("saveUserInfo", userInfo1);
           Vue.prototype.userInfo = userInfo1;
           this.$router.push("/");
-        }else {
-          localStorage.removeItem('userInfo');
+        } else {
+          localStorage.removeItem("userInfo");
         }
       }
     }
@@ -110,6 +128,14 @@ export default {
 };
 </script>
 <style>
+.login-box span {
+  color: red;
+}
+
+span.login-text  {
+  color: white;
+}
+
 .login-page a {
   text-decoration: none;
 }
@@ -157,7 +183,7 @@ export default {
   color: #ffffff;
 }
 
-.login-page-top span {
+.login-page-top em:first-child {
   float: right;
   display: block;
   margin-right: 1%;
