@@ -13,14 +13,14 @@
           </li>
           <li>
             <em>版本号</em>
-            <validation-provider rules="required" v-slot="{ errors }">
+            <validation-provider rules="required" v-slot="{ errors }" vid="version">
               <input type="text" v-model.trim="ver" />
               <span>{{ errors[0] }}</span>
             </validation-provider>
           </li>
           <li>
             <em>项目类型</em>
-            <validation-provider rules="required" v-slot="{ errors }">
+            <validation-provider rules="required" v-slot="{ errors }" vid="type">
               <select v-model="type">
                 <option></option>
                 <option value="web">web</option>
@@ -49,7 +49,8 @@ import { required } from "vee-validate/dist/rules";
 
 extend("required", {
   ...required,
-  message: "This field is required"
+  message: "This field is required",
+  computesRequired: true
 });
 
 const CODE_OK = 200;
@@ -77,6 +78,8 @@ export default {
       this.$emit("hide-box", type);
     },
     create() {
+      console.log(this.$refs.form.errors);
+
       this.$refs.form.validate().then(res => {
         if (!res) {
           return;
@@ -167,17 +170,19 @@ export default {
 
 <style scoped>
 .add {
-  width: 600px;
+  width: 700px;
   height: auto;
   position: absolute;
   background-color: #fff;
   top: 50%;
   left: 50%;
-  border: 1px solid black;
+  border: 1px solid rgb(207, 207, 207);
   transform: translate(-50%, -50%);
-  padding: 20px 15px;
+  padding: 40px 25px;
   box-sizing: border-box;
   z-index: 2;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .add ul em {
