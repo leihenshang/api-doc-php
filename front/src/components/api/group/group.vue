@@ -14,10 +14,10 @@
       <span>分组</span>
     </h4>
     <ul v-if="groupList">
-      <p>
+      <!-- <p>
         <input type="text" v-model="newGroup" />
         <button @click="createGroup">新增</button>
-      </p>
+      </p>-->
       <li>
         <a href="javascript:;" @click="clientBtn(null,null)">全部接口</a>
         <div class="btn-group"></div>
@@ -34,14 +34,15 @@
 </template>
 
 <script>
-import addGroup from "./group/addGroup";
+import addGroup from "./addGroup";
 
 const CODE_OK = 200;
 export default {
   name: "group",
   props: {
     id: String,
-    groupList: Array
+    groupList: Array,
+    showCreateGroup: Boolean
   },
   created() {},
   data() {
@@ -133,11 +134,15 @@ export default {
     },
     closeAddGroup() {
       this.showAdd = !this.showAdd;
+      this.$emit("close-add-group", this.showAdd);
     }
   },
   watch: {
     groupList: function(val) {
       this.group = val;
+    },
+    showCreateGroup: function(val) {
+      this.showAdd = val;
     }
   },
   components: {

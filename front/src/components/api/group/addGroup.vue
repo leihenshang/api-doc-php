@@ -82,7 +82,7 @@ export default {
 
 <style scoped>
 .add-group-box {
-  border: 1px solid black;
+  border: 1px solid rgb(175, 172, 172);
   width: 600px;
   height: 300px;
   text-align: center;
@@ -99,7 +99,9 @@ export default {
 }
 
 .add-group-box input {
+  padding-left:5px;
   height: 26px;
+  width: 300px;
   border-radius: 3px;
   margin-right: 5px;
   outline: none;

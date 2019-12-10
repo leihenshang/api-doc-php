@@ -9,6 +9,7 @@
   <div class="api-page">
     <div class="btn-wrapper">
       <button @click="addApi()">+创建api</button>
+      <button @click="showCreateGroup = !showCreateGroup">+新建分组</button>
     </div>
 
     <div class="api-content">
@@ -18,6 +19,8 @@
           :groupList="groupList"
           v-on:add-group="flushGroupList"
           v-on:change-group="changeGroup"
+          v-on:close-add-group="closeAddGroup"
+          :showCreateGroup="showCreateGroup"
         />
       </div>
 
@@ -29,7 +32,7 @@
 </template>
 
 <script>
-import group from "./group";
+import group from "./group/group";
 import apiList from "./apiList";
 
 const CODE_OK = 200;
@@ -51,10 +54,14 @@ export default {
       indesideRoute: [
         { title: "项目概况", route: "detail" },
         { title: "API接口", route: "api" }
-      ]
+      ],
+      showCreateGroup: false
     };
   },
   methods: {
+    closeAddGroup(val){
+      this.showCreateGroup = val;
+    },
     apiDelete() {
       this.getApi(this.pageSize, this.curr, this.$route.params.id);
     },
