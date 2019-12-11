@@ -121,11 +121,11 @@ export default {
 }
 
 .left-menu li:hover {
-  background-color: #5864597a;
+  background-color: #3baf88c4;
 }
 
 .is-click {
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.479);
 }
 
 .is-click a {

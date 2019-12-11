@@ -20,7 +20,7 @@
         <dl>
           <dd>
             <span>分组:</span>
-            <select v-model="apiData.group_id">
+            <select v-model="apiData.group_id" disabled >
               <option :value="apiData.group">{{apiData.group}}</option>
                 <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
             </select>
@@ -33,7 +33,7 @@
               <option value="2">禁用</option>
             </select>-->
             <em>请求协议:</em>
-             <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol">
+             <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol" disabled>
                     <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_protocol"
@@ -42,7 +42,7 @@
               >{{item.tag_name}}</option>
             </select>
             <em>请求方式:</em>
-               <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method">
+               <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method" disabled>
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_method"
@@ -51,7 +51,7 @@
               >{{item.tag_name}}</option>
             </select>
             <em>返回情况:</em>
-            <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return">
+            <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return" disabled>
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_return"
@@ -78,7 +78,7 @@
           </dd>
           <dd>
             <span>接口语言:</span>
-                <select v-model="apiData.develop_language" v-if="propertyList.api_language">
+                <select v-model="apiData.develop_language" v-if="propertyList.api_language" disabled>
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.api_language"
@@ -107,9 +107,9 @@
         </ul>
       </div>
       <table v-show="box3==0">
-        <header>
-          <!-- <button>导入头部</button> -->
-        </header>
+        <!-- <header>
+          <button>导入头部</button>
+        </header> -->
         <tr>
           <th>请求头名</th>
           <th>说明</th>
@@ -138,9 +138,9 @@
         </tr>
       </table>
       <table v-show="box3==1">
-        <header>
-          <!-- <button>导入头部</button> -->
-        </header>
+        <!-- <header>
+          <button>导入头部</button>
+        </header> -->
         <tr>
           <th>参数名</th>
           <th>说明</th>
@@ -358,7 +358,7 @@ export default {
 }
 
 button {
-  background-color: #fff;
+  background-color: #efefef;
   border: 1px solid #dddddd;
   width: 90px;
   height: 30px;
@@ -661,6 +661,8 @@ select {
 
 /* tab切换按钮颜色 */
 .tab-change-btn-bg {
-  background-color: #efefef;
+  /* background-color: #efefef; */
+  background-color: #fff;
+
 }
 </style>

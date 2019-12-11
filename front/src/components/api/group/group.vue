@@ -17,7 +17,6 @@
     <ul v-if="groupList">
       <li>
         <a href="javascript:;" @click="clientBtn(null,null)">全部接口</a>
-        <div class="btn-group"></div>
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
@@ -125,7 +124,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .li-click {
-  background-color: purple;
+  background-color: rgba(128, 0, 128, 0.39);
 }
 
 .li-click a {
@@ -168,6 +167,10 @@ export default {
   margin: 10px 0;
   height: 32px;
   line-height: 32px;
+}
+
+.group ul li:first-child {
+  border-bottom: 1px solid rgb(228, 219, 219);
 }
 
 .group ul li:hover {
