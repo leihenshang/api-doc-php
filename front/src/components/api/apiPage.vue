@@ -9,7 +9,7 @@
   <div class="api-page">
     <div class="btn-wrapper">
       <button @click="addApi()">+创建api</button>
-      <button @click="showCreateGroup = !showCreateGroup">+新建分组</button>
+      <button @click="showCreateGroup = true">+新建分组</button>
     </div>
 
     <div class="api-content">
@@ -114,7 +114,7 @@ export default {
         );
     },
     flushGroupList() {
-      this.getGroup(1, 100);
+      this.getGroup(1, 100,this.$route.params.id);
     },
     changeGroup(id) {
       this.getApi(this.pageSize, this.curr, this.$route.params.id, id);

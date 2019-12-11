@@ -1,23 +1,20 @@
-<!--
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-10 18:12:37
- * @LastEditTime: 2019-10-10 18:12:37
- * @LastEditors: your name
- -->
+
 <template>
   <div class="group">
     <div class="add-group-werapper" v-show="showAdd">
-      <addGroup :isShow="showAdd" :groupData="groupData" v-on:closeAddGroup="closeAddGroup()" />
+      <addGroup
+        :isShow="showAdd"
+        :isAdd="showCreateGroup"
+        :isEdit="isEdit"
+        :groupData="groupData"
+        v-on:closeAddGroup="closeAddGroup()"
+        v-on:add-group="addGroup()"
+      />
     </div>
     <h4>
       <span>分组</span>
     </h4>
     <ul v-if="groupList">
-      <!-- <p>
-        <input type="text" v-model="newGroup" />
-        <button @click="createGroup">新增</button>
-      </p>-->
       <li>
         <a href="javascript:;" @click="clientBtn(null,null)">全部接口</a>
         <div class="btn-group"></div>
@@ -42,7 +39,8 @@ export default {
   props: {
     id: String,
     groupList: Array,
-    showCreateGroup: Boolean
+    showCreateGroup: Boolean,
+    showIsEdit: Boolean
   },
   created() {},
   data() {
@@ -50,42 +48,11 @@ export default {
       newGroup: "",
       group: [],
       showAdd: false,
-      groupData: {}
+      groupData: {},
+      isEdit: false
     };
   },
   methods: {
-    createGroup() {
-      if (this.newGroup.length < 1) {
-        alert("组名长度不能低于1个");
-        return;
-      }
-
-      this.$http
-        .post(
-          this.apiAddress + "/group/create",
-          {
-            title: this.newGroup,
-            project_id: this.$route.params.id
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.$emit("add-group");
-              this.newGroup = "";
-              alert("成功！~");
-            } else {
-              alert("创建分组失败:" + response.msg);
-            }
-          },
-          function(res) {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
-    },
     del(id) {
       if (!confirm("确定删除?")) {
         return;
@@ -131,10 +98,14 @@ export default {
     editGroup(data) {
       this.groupData = data;
       this.showAdd = !this.showAdd;
+      this.isEdit = true;
     },
     closeAddGroup() {
       this.showAdd = !this.showAdd;
       this.$emit("close-add-group", this.showAdd);
+    },
+    addGroup() {
+      this.$emit("add-group");
     }
   },
   watch: {
@@ -172,29 +143,6 @@ export default {
 
 .group h4 {
   font-size: 14px;
-}
-
-.group ul p {
-  padding-left: 8px;
-  margin: 10px 0 15px;
-}
-
-.group ul p input {
-  height: 26px;
-  border-radius: 3px;
-  margin-right: 5px;
-  outline: none;
-  border: 1px solid #d3d1d1;
-}
-
-.group ul p button {
-  height: 28px;
-  padding: 0 10px;
-  margin-right: 2px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 3px;
-  font-size: 12px;
 }
 
 .group ul li button {
