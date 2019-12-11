@@ -62,19 +62,19 @@
           </dd>
          <dd>
             <span>URL:</span>
-            <input type="text" v-model="apiData.url" />
+            <input type="text" v-model="apiData.url" readonly />
           </dd>
           <dd>
             <span>名称:</span>
-            <input type="text" v-model="apiData.api_name" />
+            <input type="text" v-model="apiData.api_name" readonly />
           </dd>
           <dd>
             <span>根对象名:</span>
-            <input type="text" v-model="apiData.object_name" />
+            <input type="text" v-model="apiData.object_name" readonly />
           </dd>
           <dd>
             <span>方法:</span>
-            <input type="text" v-model="apiData.function_name" />
+            <input type="text" v-model="apiData.function_name" readonly />
           </dd>
           <dd>
             <span>接口语言:</span>

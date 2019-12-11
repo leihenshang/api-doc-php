@@ -143,6 +143,7 @@ export default {
 
 .group h4 {
   font-size: 14px;
+  padding: 5px 0 0 15px;
 }
 
 .group ul li button {
@@ -178,7 +179,7 @@ export default {
 
 .btn-group {
   overflow: hidden;
-  width: 100%;
+  width: 120px;
   line-height: 32px;
   text-align: center;
 }
