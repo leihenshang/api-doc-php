@@ -29,6 +29,9 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
+
 export default {
   name: "topBar",
   created() {},
@@ -49,6 +52,7 @@ export default {
   methods: {
     loginOut() {
       localStorage.removeItem("userInfo");
+      Vue.prototype.userInfo = null;
       this.$router.push("/login");
     }
   },
