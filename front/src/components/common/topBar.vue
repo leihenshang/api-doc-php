@@ -12,20 +12,14 @@
         <span>{{showTitle}}</span>
       </li>
       <li class="t-r">
-        <em>😉</em>
+        <em>hello, {{nickName}}</em>
         <div class="user-lay" id="user-lay">
           <ul>
             <li>
-              <a href="#">用户操作</a>
+              <a href="#" @click="loginOut()">退出登陆</a>
             </li>
             <li>
-              <a href="#">用户操作</a>
-            </li>
-            <li>
-              <a href="#">用户操作</a>
-            </li>
-            <li>
-              <a href="#">用户操作</a>
+              <a href="#">个人中心</a>
             </li>
           </ul>
         </div>
@@ -37,17 +31,27 @@
 <script>
 export default {
   name: "topBar",
+  created() {},
   props: {},
   computed: {
     showTitle: function() {
       if (this.$route.path === "/") {
         return "首页";
       } else {
-        return "其他页面";
+        return "项目详情";
       }
+    },
+    nickName: function() {
+      //  console.log(this.$store.state.userInfo);
+      return this.$store.state.userInfo.nick_name;
     }
   },
-  methods: {},
+  methods: {
+    loginOut() {
+      localStorage.removeItem("userInfo");
+      this.$router.push("/login");
+    }
+  },
   data: function() {
     return {};
   }
@@ -78,6 +82,10 @@ export default {
   border-left: 1px solid #e5e5e5;
 }
 
+.top-bar .t-r span {
+  font-size: 14px;
+}
+
 .top-bar .t-link {
   padding: 0 15px;
   border-right: 1px solid #e5e5e5;
@@ -103,6 +111,7 @@ export default {
 }
 
 .top-bar em:hover {
+  color: white;
   background-color: #4caf50;
 }
 
