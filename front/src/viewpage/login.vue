@@ -19,7 +19,7 @@
           <a href="#">用户讨论群</a>
         </li>
         <li class="li-r">
-          <a href="#">注册</a>
+          <a href="javascript:void(0)" @click="jumpRegister()">注册</a>
         </li>
       </ul>
     </div>
@@ -44,7 +44,7 @@
               <span>{{ errors[0] }}</span>
             </validation-provider>
             <button @click="login()">
-              <span class="login-text" >登陆</span>
+              <span class="login-text">登陆</span>
               <em>〉</em>
             </button>
           </ValidationObserver>
@@ -123,6 +123,9 @@ export default {
           localStorage.removeItem("userInfo");
         }
       }
+    },
+    jumpRegister() {
+      this.$router.push("/register");
     }
   }
 };
@@ -132,7 +135,7 @@ export default {
   color: red;
 }
 
-span.login-text  {
+span.login-text {
   color: white;
 }
 

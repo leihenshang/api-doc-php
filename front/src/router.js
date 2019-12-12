@@ -10,11 +10,13 @@ import ApiEdit from "./components/api/apiEdit";
 import CreateApi from "./components/api/createApi";
 import DetailPage from "./components/detail/detailPage";
 import Login from "./viewPage/login";
+import Register from "./viewPage/register";
 
 Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
+    { path: "/register", component: Register , name:'register' },
     { path: "/project", component: Project },
     {path:"/login",name:'userLogin',component:Login},
     {
@@ -41,6 +43,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  // let router =  ['userLogin','register'];
   if(to.name !== 'userLogin'){
     if(!Vue.prototype.userInfo){
       next('/login');
