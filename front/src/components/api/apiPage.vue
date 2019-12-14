@@ -59,7 +59,7 @@ export default {
     };
   },
   methods: {
-    closeAddGroup(val){
+    closeAddGroup(val) {
       this.showCreateGroup = val;
     },
     apiDelete() {
@@ -69,7 +69,12 @@ export default {
     getGroup(pageSize, curr, projectId) {
       this.$http
         .get(this.apiAddress + "/group/list", {
-          params: { cp: curr, ps: pageSize, projectId }
+          params: {
+            cp: curr,
+            ps: pageSize,
+            projectId,
+            token: this.$store.state.userInfo.token
+          }
         })
         .then(
           response => {
@@ -91,9 +96,20 @@ export default {
     },
     //获取api列表
     getApi(pageSize, curr, projectId, groupId) {
-      let params = { cp: curr, ps: pageSize, projectId };
+      let params = {
+        cp: curr,
+        ps: pageSize,
+        projectId,
+        token: this.$store.state.userInfo.token
+      };
       if (groupId) {
-        params = { cp: curr, ps: pageSize, projectId, groupId };
+        params = {
+          cp: curr,
+          ps: pageSize,
+          projectId,
+          groupId,
+          token: this.$store.state.userInfo.token
+        };
       }
 
       this.$http
@@ -114,7 +130,7 @@ export default {
         );
     },
     flushGroupList() {
-      this.getGroup(1, 100,this.$route.params.id);
+      this.getGroup(1, 100, this.$route.params.id);
     },
     changeGroup(id) {
       this.getApi(this.pageSize, this.curr, this.$route.params.id, id);

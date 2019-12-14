@@ -348,7 +348,8 @@ export default {
           {
             group_id: this.apiData.group_id,
             project_id: this.$route.params.id,
-            data: JSON.stringify(data)
+            data: JSON.stringify(data),
+            token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
         )
@@ -412,7 +413,8 @@ export default {
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
-          params: { projectId: this.$route.params.id }
+          params: { projectId: this.$route.params.id,
+            token: this.$store.state.userInfo.token }
         })
         .then(
           response => {

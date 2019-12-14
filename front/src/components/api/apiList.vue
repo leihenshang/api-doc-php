@@ -18,7 +18,10 @@
         <th>操作</th>
       </tr>
       <tr v-for="item in apiList.resItem" :key="item.id">
-        <td><span class="span-dot"></span> {{item.api_name}}</td>
+        <td>
+          <span class="span-dot"></span>
+          {{item.api_name}}
+        </td>
         <td>{{item.http_method_type}}</td>
         <td>{{item.url}}</td>
         <td>{{item.protocol_type}}</td>
@@ -40,13 +43,11 @@ export default {
   name: "apiList",
   props: {
     id: String,
-    apiList:Object
+    apiList: Object
   },
-  created() {
-  },
+  created() {},
   data() {
-    return {
-    };
+    return {};
   },
   methods: {
     delApi(id) {
@@ -58,7 +59,8 @@ export default {
         .post(
           this.apiAddress + "/api/del",
           {
-            id: id
+            id: id,
+            token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
         )
@@ -67,7 +69,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               alert("成功！~");
-             this.$emit("api-delete");
+              this.$emit("api-delete");
             }
           },
           function(res) {
@@ -99,13 +101,13 @@ export default {
 
 .api-list td,
 .api-list th {
-  padding:8px 8px;
+  padding: 8px 8px;
   font-size: 12px;
   font-weight: 700;
   color: #666;
   white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .api-list tr:hover {
@@ -139,7 +141,6 @@ text-overflow: ellipsis;
   display: inline-block;
   border-radius: 10px;
   background-color: #4caf50;
-  margin-right:5px;
+  margin-right: 5px;
 }
-
 </style>

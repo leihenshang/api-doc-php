@@ -66,7 +66,8 @@ export default {
         .post(
           this.apiAddress + "/group/del",
           {
-            id: id
+            id: id,
+            token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
         )

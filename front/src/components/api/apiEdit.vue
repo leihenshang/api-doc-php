@@ -343,7 +343,8 @@ export default {
     getApiDetail() {
       this.$http
         .get(this.apiAddress + "/api/detail", {
-          params: { id: this.$route.params.apiId }
+          params: { id: this.$route.params.apiId,
+            token: this.$store.state.userInfo.token }
         })
         .then(
           response => {
@@ -398,7 +399,8 @@ export default {
             id: this.$route.params.apiId,
             group_id: this.apiData.group_id,
             project_id: this.$route.params.id,
-            data: JSON.stringify(this.apiData)
+            data: JSON.stringify(this.apiData),
+            token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
         )
@@ -461,7 +463,8 @@ export default {
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
-          params: { projectId: this.$route.params.id }
+          params: { projectId: this.$route.params.id,
+            token: this.$store.state.userInfo.token }
         })
         .then(
           response => {

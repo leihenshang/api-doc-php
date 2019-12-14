@@ -27,6 +27,8 @@ $config = [
                 if (strstr(Yii::$app->request->getPathInfo(), 'gii') === false) {
                     $event->sender->headers->add('Access-Control-Allow-Origin', '*');
                     $response = $event->sender;
+                    //设置响应状态码为200
+                    $response->statusCode = 200;
                     $response->format = \yii\web\Response::FORMAT_JSON;
                     $code = isset($response->data['code']) ? $response->data['code'] : 200;
                     $response->data = [

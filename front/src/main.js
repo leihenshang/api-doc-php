@@ -6,6 +6,7 @@ import VueResource from "vue-resource";
 import "./validate.js";
 
 Vue.prototype.apiAddress = "http://120.27.241.94:50682";
+// Vue.prototype.apiAddress = "http://localhost:1000";
 Vue.prototype.globalId = 0;
 Vue.prototype.userInfo = null;
 
@@ -24,7 +25,8 @@ Vue.directive("focus", {
 const store = new Vuex.Store({
   state: {
     count: 0,
-    userInfo: {}
+    userInfo: {},
+    project: {}
   },
   mutations: {
     increment(state) {
@@ -32,6 +34,9 @@ const store = new Vuex.Store({
     },
     saveUserInfo(state, user) {
       state.userInfo = user;
+    },
+    saveProject(state, project) {
+      state.project = project;
     }
   }
 });

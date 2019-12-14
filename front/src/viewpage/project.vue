@@ -30,7 +30,11 @@ export default {
     getProjectList(curr, pageSize) {
       this.$http
         .get(this.apiAddress + "/project/list", {
-          params: { cp: curr, ps: pageSize }
+          params: {
+            cp: curr,
+            ps: pageSize,
+            token: this.$store.state.userInfo.token
+          }
         })
         .then(
           response => {
@@ -63,7 +67,8 @@ export default {
         .post(
           this.apiAddress + "/project/del",
           {
-            id: id
+            id: id,
+            token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
         )
@@ -97,7 +102,6 @@ export default {
     }
   },
   created() {
-    this.getProjectList(this.currPage, this.pageSize);
   },
   data() {
     return {

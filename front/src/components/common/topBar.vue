@@ -29,8 +29,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
+import Vue from "vue";
 
 export default {
   name: "topBar",
@@ -41,7 +40,11 @@ export default {
       if (this.$route.path === "/") {
         return "首页";
       } else {
-        return "项目详情";
+        if (this.$store.state.project.title) {
+          return "首页>项目详情-" + this.$store.state.project.title;
+        }
+
+        return '';
       }
     },
     nickName: function() {

@@ -83,7 +83,8 @@ export default {
               title: this.title,
               description: this.desc,
               version: this.ver,
-              type: this.type
+              type: this.type,
+            token: this.$store.state.userInfo.token
             },
             { emulateJSON: true }
           )
@@ -114,7 +115,8 @@ export default {
             title: this.title,
             description: this.desc,
             version: this.ver,
-            type: this.type
+            type: this.type,
+            token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
         )

@@ -30,6 +30,16 @@
         </li>
       </ul>
 
+      <ul>
+        <li>
+          <p>api接口</p>
+          <p>{{projectData.type}}</p>
+        </li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+
       <!-- 右侧内容结束 -->
     </div>
     <div class="right-r">
@@ -63,13 +73,17 @@ export default {
     getDetail() {
       this.$http
         .get(this.apiAddress + "/project/detail", {
-          params: { id: this.$route.params.id }
+          params: {
+            id: this.$route.params.id,
+            token: this.$store.state.userInfo.token
+          }
         })
         .then(
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
               this.projectData = response.data;
+              this.$store.commit("saveProject", response.data);
             }
           },
           function(res) {
@@ -90,7 +104,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 .detailPage {
   display: flex;
   width: 100%;

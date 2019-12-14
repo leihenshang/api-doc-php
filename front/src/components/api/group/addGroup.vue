@@ -54,7 +54,8 @@ export default {
           this.apiAddress + "/group/create",
           {
             title: this.newGroup,
-            project_id: this.$route.params.id
+            project_id: this.$route.params.id,
+            token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
         )
@@ -86,7 +87,8 @@ export default {
           this.apiAddress + "/group/update",
           {
             title: this.groupData.title,
-            id: this.groupData.id
+            id: this.groupData.id,
+            token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
         )
