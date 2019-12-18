@@ -634,11 +634,11 @@ select {
 
 .box5 textarea {
   width: 100%;
-  min-height: 120px;
+  min-height: 240px;
   outline: none;
   border: 1px solid #ddd;
   padding: 5px;
-  resize: none;
+  resize: vertical;
   box-sizing: border-box;
 }
 

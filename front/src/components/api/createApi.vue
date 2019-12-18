@@ -19,246 +19,327 @@
         <button @click="createApi()">保存</button>
       </div>
     </div>
-    <div class="box2">
-      <div class="box2one" v-show="box2==0">
-        <dl>
-          <dd>
-            <span>分组:</span>
-            <select v-model="apiData.group_id">
-              <option disabled value>请选择</option>
-              <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
-            </select>
-            <!-- <select name="" id="">
+    <ValidationObserver ref="form" vid="form">
+      <div class="box2">
+        <div class="box2one" v-show="box2==0">
+          <dl>
+            <dd>
+              <span>分组:</span>
+              <validation-provider
+                rules="required|min_value:1"
+                v-slot="{ errors }"
+                vid="group_id"
+                name="group_id"
+              >
+                <select v-model="apiData.group_id">
+                  <option disabled>请选择</option>
+                  <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
+                </select>
+              </validation-provider>
+              <!-- <select name="" id="">
               <option value="1">可选（二级菜单）</option>
-            </select>-->
-            <!-- <em>状态:</em>
+              </select>-->
+              <!-- <em>状态:</em>
             <select name="" id="">
               <option value="1">启用</option>
               <option value="2">禁用</option>
-            </select>-->
-            <em>请求协议:</em>
-            <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol">
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.http_protocol"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
-            <em>请求方式:</em>
-            <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method">
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.http_method"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
-            <em>返回情况:</em>
-            <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return">
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.http_return"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.description}}</option>
-            </select>
-          </dd>
-          <dd>
-            <span>URL:</span>
-            <input type="text" v-model="apiData.url" />
-          </dd>
-          <dd>
-            <span>名称:</span>
-            <input type="text" v-model="apiData.api_name" />
-          </dd>
-          <dd>
-            <span>根对象名:</span>
-            <input type="text" v-model="apiData.object_name" />
-          </dd>
-          <dd>
-            <span>方法:</span>
-            <input type="text" v-model="apiData.function_name" />
-          </dd>
-          <dd>
-            <span>接口语言:</span>
-            <select v-model="apiData.develop_language" v-if="propertyList.api_language">
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.api_language"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
-          </dd>
-        </dl>
-      </div>
-      <div class="box2two" v-show="box2==1">
-        <textarea name id cols="30" rows="10" v-model="apiData.description"></textarea>
-      </div>
-    </div>
-
-    <div class="box3">
-      <div class="item-head">
-        <ul>
-          <li>
-            <button @click="box3=0" :class="{'tab-change-btn-bg' : box3==0}">请求头部</button>
-          </li>
-          <li>
-            <button @click="box3=1" :class="{'tab-change-btn-bg' : box3==1}">请求参数</button>
-          </li>
-          <!-- <li><button>inject</button></li> -->
-        </ul>
-      </div>
-      <table v-show="box3==0">
-        <header>
-          <!-- <button>导入头部</button> -->
-        </header>
-        <tr>
-          <th>请求头名</th>
-          <th>说明</th>
-          <th>必填</th>
-          <th>类型</th>
-          <th>示例</th>
-          <th>操作</th>
-        </tr>
-        <tr>
-          <td>
-            <input type="text" placeholder="参数名" />
-          </td>
-          <td>
-            <input type="text" placeholder="参数名" />
-          </td>
-          <td>
-            <input type="checkbox" name id />
-          </td>
-          <td>
-            <input type="text" placeholder="参数名" />
-          </td>
-          <td>
-            <input type="text" placeholder="参数示例" />
-          </td>
-          <td></td>
-        </tr>
-      </table>
-      <table v-show="box3==1">
-        <header>
-          <!-- <button>导入头部</button> -->
-        </header>
-        <tr>
-          <th>参数名</th>
-          <th>说明</th>
-          <th>必填</th>
-          <th>类型</th>
-          <th>示例</th>
-          <th>操作</th>
-        </tr>
-        <tr v-for="(item,index) in box3Item" :key="item.id">
-          <td>
-            <input
-              type="text"
-              placeholder="参数名"
-              v-on:input="box3Input(index,$event)"
-              v-model="item.name"
-            />
-          </td>
-          <td>
-            <input type="text" placeholder v-model="item.desc" />
-          </td>
-          <td>
-            <input type="checkbox" name id v-model="item.required" />
-          </td>
-          <td>
-            <select
-              style="width:90%;text-align:center;margin:0 10px;"
-              v-model="item.type"
-              v-if="propertyList.var_type"
-            >
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.var_type"
-                :key="item.id"
-                value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
-          </td>
-          <td>
-            <input type="text" placeholder="参数示例" v-model="item.example" />
-          </td>
-          <td>
-            <div v-show="item.name.length >= 1">
-              <button @click="box3delete(index)">×</button>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <div class="box4">
-      <header>
-        <span>返回参数</span>
-      </header>
-      <header>
-        <span>导入json</span>
-      </header>
-      <table>
-        <tr>
-          <th>字段名</th>
-          <th>相关类名</th>
-          <th>说明</th>
-          <th>必含</th>
-          <th>类型</th>
-          <th>操作</th>
-        </tr>
-        <tr v-for="(item,index) in box4Item" :key="item.id">
-          <td>
-            <input
-              type="text"
-              placeholder="字段名"
-              v-model="item.fieldName"
-              v-on:input="box4Input(index,$event)"
-            />
-          </td>
-          <td>
-            <input type="text" placeholder v-model="item.objectName" />
-          </td>
-          <td>
-            <input type="text" placeholder="参数名" v-model="item.decription" />
-          </td>
-          <td>
-            <input type="checkbox" name id v-model="item.required" />
-          </td>
-          <td>
-            <select
-              style="width:90%;text-align:center;margin:0 10px;"
-              v-model="item.type"
-              v-if="propertyList.var_type"
-            >
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.var_type"
-                :key="item.id"
-                value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
-          </td>
-          <td>
-            <div v-show="item.fieldName.length >= 1">
-              <button @click="box4delete(index)">×</button>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <div class="box5">
-      <div class="res-btn">
-        <div class="btn-wrap">
-          <button @click="box5=0" :class="{'tab-change-btn-bg' : box5==0}">成功</button>
-          <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
+              </select>-->
+              <em>请求协议:</em>
+              <validation-provider
+                rules="required"
+                v-slot="{ errors }"
+                vid="protocol_type"
+                name="protocol_type"
+              >
+                <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol">
+                  <option disabled value>请选择</option>
+                  <option
+                    v-for="item in propertyList.http_protocol"
+                    :key="item.id"
+                    :value="item.tag_name"
+                  >{{item.tag_name}}</option>
+                </select>
+              </validation-provider>
+              <em>请求方式:</em>
+              <validation-provider
+                rules="required"
+                v-slot="{ errors }"
+                vid="http_method_type"
+                name="http_method_type"
+              >
+                <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method">
+                  <option disabled value>请选择</option>
+                  <option
+                    v-for="item in propertyList.http_method"
+                    :key="item.id"
+                    :value="item.tag_name"
+                  >{{item.tag_name}}</option>
+                </select>
+              </validation-provider>
+              <em>返回情况:</em>
+              <validation-provider
+                rules="required"
+                v-slot="{ errors }"
+                vid="http_return_type"
+                name="http_return_type"
+              >
+                <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return">
+                  <option disabled value>请选择</option>
+                  <option
+                    v-for="item in propertyList.http_return"
+                    :key="item.id"
+                    :value="item.tag_name"
+                  >{{item.description}}</option>
+                </select>
+              </validation-provider>
+            </dd>
+            <dd>
+              <span>URL:</span>
+              <validation-provider
+                rules="required"
+                v-slot="{ errors }"
+                vid="url"
+                name="url"
+                tag="div"
+              >
+                <input type="text" v-model="apiData.url" />
+              </validation-provider>
+            </dd>
+            <dd>
+              <span>名称:</span>
+              <validation-provider
+                rules="required"
+                v-slot="{ errors }"
+                vid="api_name"
+                name="api_name"
+                tag="div"
+              >
+                <input type="text" v-model="apiData.api_name" />
+              </validation-provider>
+            </dd>
+            <dd>
+              <span>根对象名:</span>
+              <validation-provider
+                rules="required"
+                v-slot="{ errors }"
+                vid="object_name"
+                name="object_name"
+                tag="div"
+              >
+                <input type="text" v-model="apiData.object_name" />
+              </validation-provider>
+            </dd>
+            <dd>
+              <span>方法:</span>
+              <validation-provider
+                rules="required"
+                v-slot="{ errors }"
+                vid="function_name"
+                name="function_name"
+                tag="div"
+              >
+                <input type="text" v-model="apiData.function_name" />
+              </validation-provider>
+            </dd>
+            <dd>
+              <span>接口语言:</span>
+              <validation-provider
+                rules="required"
+                v-slot="{ errors }"
+                vid="api_language"
+                name="api_language"
+              >
+                <select v-model="apiData.develop_language" v-if="propertyList.api_language">
+                  <option disabled value>请选择</option>
+                  <option
+                    v-for="item in propertyList.api_language"
+                    :key="item.id"
+                    :value="item.tag_name"
+                  >{{item.tag_name}}</option>
+                </select>
+              </validation-provider>
+            </dd>
+          </dl>
+        </div>
+        <div class="box2two" v-show="box2==1">
+          <textarea name id cols="30" rows="10" v-model="apiData.description"></textarea>
         </div>
       </div>
-      <textarea name id v-model="apiData.http_return_sample.returnDataSuccess" v-show="box5==0" placeholder="成功的返回"></textarea>
-      <textarea name id v-model="apiData.http_return_sample.returnDataFailed" v-show="box5==1" placeholder="失败的返回"></textarea>
-    </div>
+
+      <div class="box3">
+        <div class="item-head">
+          <ul>
+            <li>
+              <button @click="box3=0" :class="{'tab-change-btn-bg' : box3==0}">请求头部</button>
+            </li>
+            <li>
+              <button @click="box3=1" :class="{'tab-change-btn-bg' : box3==1}">请求参数</button>
+            </li>
+            <!-- <li><button>inject</button></li> -->
+          </ul>
+        </div>
+        <table v-show="box3==0">
+          <header>
+            <!-- <button>导入头部</button> -->
+          </header>
+          <tr>
+            <th>请求头名</th>
+            <th>说明</th>
+            <th>必填</th>
+            <th>类型</th>
+            <th>示例</th>
+            <th>操作</th>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" placeholder="参数名" />
+            </td>
+            <td>
+              <input type="text" placeholder="参数名" />
+            </td>
+            <td>
+              <input type="checkbox" name id />
+            </td>
+            <td>
+              <input type="text" placeholder="参数名" />
+            </td>
+            <td>
+              <input type="text" placeholder="参数示例" />
+            </td>
+            <td></td>
+          </tr>
+        </table>
+        <table v-show="box3==1">
+          <header>
+            <!-- <button>导入头部</button> -->
+          </header>
+          <tr>
+            <th>参数名</th>
+            <th>说明</th>
+            <th>必填</th>
+            <th>类型</th>
+            <th>示例</th>
+            <th>操作</th>
+          </tr>
+          <tr v-for="(item,index) in box3Item" :key="item.id">
+            <td>
+              <input
+                type="text"
+                placeholder="参数名"
+                v-on:input="box3Input(index,$event)"
+                v-model="item.name"
+              />
+            </td>
+            <td>
+              <input type="text" placeholder v-model="item.desc" />
+            </td>
+            <td>
+              <input type="checkbox" name id v-model="item.required" />
+            </td>
+            <td>
+              <select
+                style="width:90%;text-align:center;margin:0 10px;"
+                v-model="item.type"
+                v-if="propertyList.var_type"
+              >
+                <option disabled value>请选择</option>
+                <option
+                  v-for="item in propertyList.var_type"
+                  :key="item.id"
+                  value="item.tag_name"
+                >{{item.tag_name}}</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" placeholder="参数示例" v-model="item.example" />
+            </td>
+            <td>
+              <div v-show="item.name.length >= 1">
+                <button @click="box3delete(index)">×</button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="box4">
+        <header>
+          <span>返回参数</span>
+        </header>
+        <header>
+          <span>导入json</span>
+        </header>
+        <table>
+          <tr>
+            <th>字段名</th>
+            <th>相关类名</th>
+            <th>说明</th>
+            <th>必含</th>
+            <th>类型</th>
+            <th>操作</th>
+          </tr>
+          <tr v-for="(item,index) in box4Item" :key="item.id">
+            <td>
+              <input
+                type="text"
+                placeholder="字段名"
+                v-model="item.fieldName"
+                v-on:input="box4Input(index,$event)"
+              />
+            </td>
+            <td>
+              <input type="text" placeholder v-model="item.objectName" />
+            </td>
+            <td>
+              <input type="text" placeholder="参数名" v-model="item.decription" />
+            </td>
+            <td>
+              <input type="checkbox" name id v-model="item.required" />
+            </td>
+            <td>
+              <select
+                style="width:90%;text-align:center;margin:0 10px;"
+                v-model="item.type"
+                v-if="propertyList.var_type"
+              >
+                <option disabled value>请选择</option>
+                <option
+                  v-for="item in propertyList.var_type"
+                  :key="item.id"
+                  value="item.tag_name"
+                >{{item.tag_name}}</option>
+              </select>
+            </td>
+            <td>
+              <div v-show="item.fieldName.length >= 1">
+                <button @click="box4delete(index)">×</button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="box5">
+        <div class="res-btn">
+          <div class="btn-wrap">
+            <button @click="box5=0" :class="{'tab-change-btn-bg' : box5==0}">成功</button>
+            <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
+          </div>
+        </div>
+        <textarea
+          name
+          id
+          v-model="apiData.http_return_sample.returnDataSuccess"
+          v-show="box5==0"
+          placeholder="成功的返回"
+        ></textarea>
+        <textarea
+          name
+          id
+          v-model="apiData.http_return_sample.returnDataFailed"
+          v-show="box5==1"
+          placeholder="失败的返回"
+        ></textarea>
+      </div>
+    </ValidationObserver>
   </div>
 </template>
 
@@ -280,7 +361,7 @@ export default {
       propertyList: [],
       apiData: {
         group_id: 0, //分组
-        project_id:0,//项目Id
+        project_id: 0, //项目Id
         protocol_type: "HTTP", //协议
         description: "", //说明和备注
         requestMethod: "GET", //http请求方法
@@ -293,9 +374,9 @@ export default {
         http_request_header: [], //请求头
         http_request_params: [], //请求参数
         http_return_params: [], //返回参数
-        http_return_sample:{
-          returnDataSuccess:'',//返回数据成功
-          returnDataFailed:''//返回数据失败
+        http_return_sample: {
+          returnDataSuccess: "", //返回数据成功
+          returnDataFailed: "" //返回数据失败
         }
       },
       box2: 0,
@@ -330,43 +411,44 @@ export default {
       this.$router.go(-1);
     },
     createApi() {
-      let data = this.apiData;
-      let box4 = this.box4Item;
-      let box3 = this.box3Item;
-      data.http_return_params = box4.splice(
-        0,
-        this.box4Item.length - 1
-      );
-      data.http_request_params = box3.splice(
-        0,
-        this.box3Item.length - 1
-      );
+      this.$refs.form.validate().then(res => {
+        if (!res) {
+          alert(JSON.stringify(this.$refs.form.errors));
+          return;
+        }
 
-      this.$http
-        .post(
-          this.apiAddress + "/api/create",
-          {
-            group_id: this.apiData.group_id,
-            project_id: this.$route.params.id,
-            data: JSON.stringify(data),
-            token: this.$store.state.userInfo.token
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              alert("成功！~");
+        let data = this.apiData;
+        let box4 = this.box4Item;
+        let box3 = this.box3Item;
+        data.http_return_params = box4.splice(0, this.box4Item.length - 1);
+        data.http_request_params = box3.splice(0, this.box3Item.length - 1);
+
+        this.$http
+          .post(
+            this.apiAddress + "/api/create",
+            {
+              group_id: this.apiData.group_id,
+              project_id: this.$route.params.id,
+              data: JSON.stringify(data),
+              token: this.$store.state.userInfo.token
+            },
+            { emulateJSON: true }
+          )
+          .then(
+            response => {
+              response = response.body;
+              if (response.code === CODE_OK) {
+                alert("成功！~");
+                return;
+              }
+            },
+            function(res) {
+              let response = res.body;
+              alert("操作失败!" + !response.msg ? response.msg : "");
               return;
             }
-          },
-          function(res) {
-            let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
-            return;
-          }
-        );
+          );
+      });
     },
     box3Input(index, event) {
       if (event) {
@@ -413,8 +495,10 @@ export default {
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
-          params: { projectId: this.$route.params.id,
-            token: this.$store.state.userInfo.token }
+          params: {
+            projectId: this.$route.params.id,
+            token: this.$store.state.userInfo.token
+          }
         })
         .then(
           response => {
@@ -769,5 +853,10 @@ select {
 /* tab切换按钮颜色 */
 .tab-change-btn-bg {
   background-color: #efefef;
+}
+
+dl dd div {
+  display: inline-block;
+  width: 88%;
 }
 </style>

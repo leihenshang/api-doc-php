@@ -66,6 +66,7 @@ export default {
               this.$emit("add-group");
               this.newGroup = "";
               alert("成功！~");
+                 this.$emit("closeAddGroup");
             } else {
               alert("创建分组失败:" + response.msg);
             }
