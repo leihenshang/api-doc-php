@@ -180,7 +180,7 @@
         </div>
         <table v-show="box3==0">
           <header>
-            <!-- <button>导入头部</button> -->
+            <button>导入头部</button>
           </header>
           <tr>
             <th>请求头名</th>
@@ -209,9 +209,11 @@
             <td></td>
           </tr>
         </table>
+
+        <!-- 请求参数开始 -->
         <table v-show="box3==1">
           <header>
-            <!-- <button>导入头部</button> -->
+            <button>导入参数</button>
           </header>
           <tr>
             <th>参数名</th>
@@ -246,7 +248,7 @@
                 <option
                   v-for="item in propertyList.var_type"
                   :key="item.id"
-                  value="item.tag_name"
+                  :value="item.tag_name"
                 >{{item.tag_name}}</option>
               </select>
             </td>
@@ -260,6 +262,7 @@
             </td>
           </tr>
         </table>
+        <!-- 请求参数结束 -->
       </div>
       <div class="box4">
         <header>
@@ -418,8 +421,8 @@ export default {
         }
 
         let data = this.apiData;
-        let box4 = this.box4Item;
-        let box3 = this.box3Item;
+        let box4 = JSON.parse(JSON.stringify(this.box4Item));
+        let box3 = JSON.parse(JSON.stringify(this.box3Item));
         data.http_return_params = box4.splice(0, this.box4Item.length - 1);
         data.http_request_params = box3.splice(0, this.box3Item.length - 1);
 
@@ -452,7 +455,6 @@ export default {
     },
     box3Input(index, event) {
       if (event) {
-        // alert(index);
         let txt = event.target.value;
         if (txt.length >= 1 && this.box3Item[index].isAdd === false) {
           this.box3Item.push({
@@ -492,6 +494,7 @@ export default {
     box4delete(key) {
       this.box4Item.splice(key, 1);
     },
+    //获取分组信息
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
@@ -513,6 +516,7 @@ export default {
           }
         );
     },
+    //获取闯将api的默认属性
     getProperty() {
       this.$http
         .get(this.apiAddress + "/property/list", {
@@ -535,7 +539,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .create-api {
   background-color: #f8f8f8;
