@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\behaviors\UserVerify;
 use app\models\Project;
+use app\models\User;
+use app\models\UserProject;
 use Yii;
 
 class ProjectController extends BaseController
@@ -113,6 +115,26 @@ class ProjectController extends BaseController
         }
 
         return ['data' => '成功'];
+    }
+
+    /**
+     * 为项目添加用户
+     * @return array
+     */
+    public function actionAddUser()
+    {
+        $params = Yii::$app->request->post();
+        $userProject  = new UserProject(['scenario' => UserProject::SCENARIO_CREATE]);
+        $userProject->attributes = $params;
+        if(!$userProject->validate()){
+            return $this->failed(current($userProject->getFirstErrors()));
+        }
+
+        if(!$userProject->save(false)){
+            return $this->failed(current($userProject->getFirstErrors()));
+        }
+
+        return $this->success();
     }
 
 }

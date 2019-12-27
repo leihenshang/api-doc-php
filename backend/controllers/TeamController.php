@@ -36,7 +36,7 @@ class TeamController extends BaseController
             return ['msg' => $res];
         }
 
-        return self::success();
+        return $this->success();
     }
 
     /**
@@ -49,7 +49,7 @@ class TeamController extends BaseController
         $request = Yii::$app->request->post();
         $team -> attributes = $request;
         if(!$team->validate()){
-            return self::failed(current($team->getFirstErrors()));
+            return $this->failed(current($team->getFirstErrors()));
         }
         $res = $team->updateData($request);
         if (is_string($res)) {
@@ -88,15 +88,15 @@ class TeamController extends BaseController
         $team = new Team(['scenario' => Team::SCENARIO_DELETE]);
         $team->attributes = Yii::$app->request->post();
         if (!$team->validate()) {
-            return self::failed(current($team->getFirstErrors()));
+            return $this->failed(current($team->getFirstErrors()));
         }
 
         $res = $team->del();
         if (is_string($res)) {
-            return self::failed($res);
+            return $this->failed($res);
         }
 
-        return self::success();
+        return $this->success();
     }
 
     /**

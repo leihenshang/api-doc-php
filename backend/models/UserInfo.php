@@ -27,6 +27,13 @@ class UserInfo extends BaseModel
     const SCENARIO_LOGIN = 'login';
     //1正常2禁用3锁定
     const USER_STATE = ['normal' => 1, 'disabled' => 2, 'lock' => 3];
+    //1普通用户2管理员
+    const USER_TYPE = ['normal' => 1, 'admin' => 2];
+
+    /**
+     * @var string $keyword 关键字
+     */
+    public $keyword;
 
     /**
      * {@inheritdoc}
@@ -47,13 +54,15 @@ class UserInfo extends BaseModel
             [['create_time', 'last_login_time', 'token_expire_time'], 'safe'],
             [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 100],
             [['mobile_number'], 'string', 'max' => 11],
+            ['keyword','string','max' => 50]
         ];
     }
 
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios['login'] = ['name', 'pwd'];
+        $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
+        $scenarios[self::SCENARIO_QUERY] = ['keyword'];
         return $scenarios;
     }
 
@@ -79,6 +88,13 @@ class UserInfo extends BaseModel
             'token' => '访问token',
             'token_expire_time' => 'token过期时间',
         ];
+    }
+
+    public function fields()
+    {
+        $fields =  parent::fields();
+        unset($fields['pwd']);
+        return $fields;
     }
 
     /**
