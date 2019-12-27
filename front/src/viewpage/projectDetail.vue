@@ -38,7 +38,8 @@ export default {
       projectData: {},
       indesideRoute: [
         { title: "项目概况", route: "detail", child: "detailPage" },
-        { title: "API接口", route: "detail", child: "apiPage" }
+        { title: "API接口", route: "detail", child: "apiPage" },
+        { title: "项目用户管理", route: "detail", child: "user" }
       ]
     };
   },

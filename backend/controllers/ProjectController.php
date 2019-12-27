@@ -119,6 +119,35 @@ class ProjectController extends BaseController
     }
 
     /**
+     * 获取项目用户列表
+     * @return array
+     */
+    public function actionProjectUser()
+    {
+        $id = Yii::$app->request->get('id', null);
+        if (!$id) {
+            return $this->failed('获取id参数失败');
+        }
+
+        $res = UserProject::find()->alias('a')->leftJoin('user_info b', 'a.user_id = b.id')
+            ->select('b.*,a.id relation_id')
+            ->where([
+                'a.project_id' => $id,
+                'a.is_deleted' => UserProject::IS_DELETED['no']
+            ])->asArray()->all();
+
+        $res = array_map(function ($a) {
+            if (isset($a['pwd'])) {
+                $a['pwd'] = null;
+            }
+            return $a;
+        }, $res);
+
+        return $this->success($res);
+
+    }
+
+    /**
      * 为项目添加用户
      * @return array
      */
@@ -138,7 +167,7 @@ class ProjectController extends BaseController
             'is_deleted' => UserProject::IS_DELETED['no']
         ])->one();
 
-        if($res){
+        if ($res) {
             return $this->failed('请勿重复添加');
         }
 

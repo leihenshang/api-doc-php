@@ -11,6 +11,7 @@ import CreateApi from "./components/api/createApi";
 import DetailPage from "./components/detail/detailPage";
 import Login from "./viewPage/login";
 import Register from "./viewPage/register";
+import User from "./components/user/user";
 
 Vue.use(VueRouter);
 
@@ -34,7 +35,8 @@ const router = new VueRouter({
         { path: "apiPage",name:'apiPage', component: ApiPage },
         { path: "createApi",name:'createApi', component: CreateApi },
         { path: "apiDetail/:apiId",name:'apiDetail', component: ApiDetail,props:true },
-        { path: "apiEdit/:apiId",name:'apiEdit', component: ApiEdit,props:true }
+        { path: "apiEdit/:apiId",name:'apiEdit', component: ApiEdit,props:true },
+        { path: "user",name:'user', component: User,props:true }
       ]
     }
     // { path: "/msg", name: "msg", component: Msg }
