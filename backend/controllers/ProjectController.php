@@ -4,9 +4,10 @@ namespace app\controllers;
 
 use app\behaviors\UserVerify;
 use app\models\Project;
-use app\models\User;
 use app\models\UserProject;
+use Throwable;
 use Yii;
+use yii\db\StaleObjectException;
 
 class ProjectController extends BaseController
 {
@@ -15,7 +16,7 @@ class ProjectController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
-            'actions' => ['*'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
+//            'actions' => ['*'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
         ];
         return $behaviors;
@@ -102,8 +103,8 @@ class ProjectController extends BaseController
     /**
      * 删除数据
      * @return array
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function actionDel()
     {
@@ -124,17 +125,48 @@ class ProjectController extends BaseController
     public function actionAddUser()
     {
         $params = Yii::$app->request->post();
-        $userProject  = new UserProject(['scenario' => UserProject::SCENARIO_CREATE]);
+        $userProject = new UserProject(['scenario' => UserProject::SCENARIO_CREATE]);
         $userProject->attributes = $params;
-        if(!$userProject->validate()){
+        if (!$userProject->validate()) {
             return $this->failed(current($userProject->getFirstErrors()));
         }
 
-        if(!$userProject->save(false)){
+        //检查重复添加
+        $res = UserProject::find()->where([
+            'user_id' => $userProject->user_id,
+            'project_id' => $userProject->project_id,
+            'is_deleted' => UserProject::IS_DELETED['no']
+        ])->one();
+
+        if($res){
+            return $this->failed('请勿重复添加');
+        }
+
+        if (!$userProject->save(false)) {
             return $this->failed(current($userProject->getFirstErrors()));
         }
 
         return $this->success();
+    }
+
+    /**
+     * 删除项目用户
+     * @return array
+     */
+    public function actionDelUser()
+    {
+        $params = Yii::$app->request->post('ids', null);
+        $ids = explode(',', $params);
+        if (!$ids) {
+            return $this->failed('失败');
+        }
+
+        $res = UserProject::updateAll(['is_deleted' => UserProject::IS_DELETED['yes']], ['Id' => $ids]);
+        if ($res) {
+            return $this->success();
+        }
+
+        return $this->failed('更新失败');
     }
 
 }
