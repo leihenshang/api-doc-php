@@ -100,6 +100,11 @@ export default {
                 this.$store.commit("saveUserInfo", response.data);
                 localStorage.setItem("userInfo", JSON.stringify(response.data));
                 this.$router.push("/");
+              } else {
+                alert('登录错误！'+response.msg);
+                localStorage.removeItem("userInfo");
+                Vue.prototype.userInfo = null;
+                this.$router.push("/login");
               }
             },
             function(res) {
