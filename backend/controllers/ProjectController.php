@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\behaviors\UserVerify;
 use app\models\Project;
+use app\models\UserInfo;
 use app\models\UserProject;
 use Throwable;
 use Yii;
@@ -16,7 +17,7 @@ class ProjectController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
-//            'actions' => ['*'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
+            'actions' => ['*'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
         ];
         return $behaviors;
@@ -69,6 +70,24 @@ class ProjectController extends BaseController
     {
         $project = new Project(['scenario' => Project::SCENARIO_LIST]);
         $project->attributes = Yii::$app->request->get();
+
+        //如果用户不是管理员
+        //1.获取用户可以使用的项目id
+        //2.然后查询项目表返回项目
+        if ($this->userInfo->type !== UserInfo::USER_TYPE['admin']) {
+            $res = UserProject::find()->alias('a')
+                ->select('b.*')
+                ->innerJoin('project b', 'a.project_id = b.id')
+                ->where([
+                    'b.is_deleted' => UserInfo::IS_DELETED['no'],
+                    'a.is_deleted' => UserInfo::IS_DELETED['no'],
+                    'a.user_id' => $this->userInfo->id
+                ]);
+            $resCount = $res->count();
+            return $this->success(['count' => $resCount, 'res' => $res->asArray()->all()]);
+        }
+
+
         $res = Project::find()->where(['is_deleted' => 0])->limit($project->ps)->offset($project->offset)->orderBy('create_time desc');
         $resCount = $res->count();
         /*        $res = array_map(function ($a) {
@@ -108,6 +127,10 @@ class ProjectController extends BaseController
      */
     public function actionDel()
     {
+        if($this->userInfo->type !== UserInfo::USER_TYPE['admin']){
+            return $this->failed('非管理员不能执行删除');
+        }
+
         $project = new Project(['scenario' => Project::SCENARIO_DEL]);
         $project->attributes = Yii::$app->request->post();
         $res = $project->del();

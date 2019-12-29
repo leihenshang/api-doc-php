@@ -8,7 +8,7 @@
         </a>
       </li>
       <li
-        v-for="(item,index) in menuListData"
+        v-for="(item,index) in menuListDataComputed"
         :key="item.id"
         @click="jump(item.route,item.child,index)"
         :class="{'is-click' : item.isClick}"
@@ -30,13 +30,11 @@ export default {
   },
   methods: {
     jump(uri, child, index) {
-
       if (uri) {
         if (child) {
-
-  if (this.menuListData[index].isClick === true) {
-        return;
-      }
+          if (this.menuListData[index].isClick === true) {
+            return;
+          }
 
           this.$router.push(
             "/" + uri + "/" + this.$route.params.id + "/" + child
@@ -50,8 +48,6 @@ export default {
         }
         return;
       }
-
-     
 
       for (const key in this.menuListData) {
         this.menuListData[key].isClick = false;
@@ -75,17 +71,25 @@ export default {
     this.change();
   },
   computed: {
-    // menuListDataComputed: function() {
-    //   if (this.menuListData) {
-    //     let tmpData = this.menuListData;
-    //     for (const key in tmpData) {
-    //       tmpData[key].isClick = false;
-    //     }
-    //     return tmpData;
-    //   } else {
-    //     return [];
-    //   }
-    // }
+    menuListDataComputed: function() {
+      if (this.menuListData) {
+        let tmpData = [];
+
+        for (const key in this.menuListData) {
+          if (
+            this.$store.state.userInfo.type !== 2 &&
+            this.menuListData[key].child === "user"
+          ) {
+            continue;
+          }
+
+          tmpData.push(this.menuListData[key]);
+        }
+        return tmpData;
+      } else {
+        return [];
+      }
+    }
   }
 };
 </script>
@@ -129,7 +133,7 @@ export default {
 }
 
 .is-click a {
-  color:#fff!important;
+  color: #fff !important;
 }
 
 .left-menu li:hover a {
