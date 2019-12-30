@@ -25,8 +25,9 @@ class UserInfo extends BaseModel
 {
 
     const SCENARIO_LOGIN = 'login';
+    const SCENARIO_REGISTER = 'register';
     //1正常2禁用3锁定
-    const USER_STATE = ['normal' => 1, 'disabled' => 2, 'lock' => 3];
+    const USER_STATE = ['normal' => 1, 'disabled' => 2, 'lock' => 3, 'not_activated' => 4];
     //1普通用户2管理员
     const USER_TYPE = ['normal' => 1, 'admin' => 2];
 
@@ -34,6 +35,11 @@ class UserInfo extends BaseModel
      * @var string $keyword 关键字
      */
     public $keyword;
+
+    /**
+     * @var string $re_pwd 密码重复
+     */
+    public $re_pwd;
 
     /**
      * {@inheritdoc}
@@ -53,8 +59,10 @@ class UserInfo extends BaseModel
             [['is_deleted', 'type', 'state'], 'integer'],
             [['create_time', 'last_login_time', 'token_expire_time'], 'safe'],
             [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 100],
+            ['email', 'mail'],
+            ['re_pwd', 'required', 'on' => self::SCENARIO_REGISTER],
             [['mobile_number'], 'string', 'max' => 11],
-            ['keyword','string','max' => 50]
+            ['keyword', 'string', 'max' => 50]
         ];
     }
 
@@ -63,6 +71,7 @@ class UserInfo extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
         $scenarios[self::SCENARIO_QUERY] = ['keyword'];
+        $scenarios[self::SCENARIO_REGISTER] = ['nick_name', 'pwd', 'email'];
         return $scenarios;
     }
 
@@ -181,5 +190,24 @@ class UserInfo extends BaseModel
         }
 
         return $userInfo;
+    }
+
+    /**
+     * 用户注册
+     *
+     * @return mixed
+     */
+    public function reg()
+    {
+        if ($this->pwd !== $this->re_pwd) {
+            return '两次输入的密码不一致!~';
+        }
+
+        $this->state = self::USER_STATE['not_activated'];
+        if(!$this->save()){
+            return '用户保存失败!'.current($this->getFirstErrors());
+        }
+
+        return true;
     }
 }

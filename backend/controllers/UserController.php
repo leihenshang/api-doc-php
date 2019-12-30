@@ -7,7 +7,11 @@ use Yii;
 
 class UserController extends BaseController
 {
-
+    /**
+     * 用户登陆
+     *
+     * @return array
+     */
     public function actionLogin()
     {
         $params = Yii::$app->request->post();
@@ -47,6 +51,33 @@ class UserController extends BaseController
 
         $res = $res->all();
         return $this->success($res);
+    }
+
+    /**
+     * 用户注册
+     *
+     * @return array
+     */
+    public function actionReg()
+    {
+        /**
+         * 1.昵称
+         * 2.密码
+         * 3.邮箱
+         */
+        $params = Yii::$app->request->post();
+        $user = new UserInfo(['scenario' => UserInfo::SCENARIO_REGISTER]);
+        $user->attributes = $params;
+        if (!$user->validate()) {
+            return $this->failed(current($user->getFirstErrors()));
+        }
+
+        $userInfo = $user->reg();
+        if (is_string($userInfo)) {
+            return $this->failed($userInfo);
+        }
+
+        return $this->success($userInfo);
     }
 
     /**
