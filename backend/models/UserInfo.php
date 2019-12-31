@@ -216,4 +216,6 @@ class UserInfo extends BaseModel
 
         return true;
     }
+
+
 }
