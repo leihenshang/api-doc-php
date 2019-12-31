@@ -81,6 +81,23 @@ class UserController extends BaseController
     }
 
     /**
+     * 检查昵称是否重复
+     * @param $nickname
+     * @return array
+     */
+    public function actionCheckNicknameRepeat($nickname=null)
+    {
+        if(!$nickname) {
+            return $this->failed('昵称不能为空');
+        }
+        $res = UserInfo::findOne(['nick_name' => $nickname]);
+        if($res){
+            return $this->success(['nick_name' => $res->nick_name]);
+        }
+        return $this->success([]);
+    }
+
+    /**
      * 设置http请求方法
      * @return array
      */
@@ -88,6 +105,7 @@ class UserController extends BaseController
     {
         $verbs = parent::verbs();
         $verbs['login'] = ['post'];
+        $verbs['reg'] = ['post'];
         return $verbs;
     }
 

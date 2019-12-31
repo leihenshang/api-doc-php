@@ -59,8 +59,8 @@ class UserInfo extends BaseModel
             [['is_deleted', 'type', 'state'], 'integer'],
             [['create_time', 'last_login_time', 'token_expire_time'], 'safe'],
             [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 100],
-            ['email', 'mail'],
-            ['re_pwd', 'required', 'on' => self::SCENARIO_REGISTER],
+            ['email', 'email'],
+            [['re_pwd','nick_name','email'], 'required', 'on' => self::SCENARIO_REGISTER],
             [['mobile_number'], 'string', 'max' => 11],
             ['keyword', 'string', 'max' => 50]
         ];
@@ -71,7 +71,7 @@ class UserInfo extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
         $scenarios[self::SCENARIO_QUERY] = ['keyword'];
-        $scenarios[self::SCENARIO_REGISTER] = ['nick_name', 'pwd', 'email'];
+        $scenarios[self::SCENARIO_REGISTER] = ['nick_name','re_pwd', 'pwd', 'email'];
         return $scenarios;
     }
 
@@ -201,6 +201,12 @@ class UserInfo extends BaseModel
     {
         if ($this->pwd !== $this->re_pwd) {
             return '两次输入的密码不一致!~';
+        }
+
+        //检查昵称唯一性
+        $res = self::findOne(['nick_name' => $this->nick_name]);
+        if($res){
+            return '昵称重复';
         }
 
         $this->state = self::USER_STATE['not_activated'];
