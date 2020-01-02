@@ -38,15 +38,15 @@ class UserController extends BaseController
         $params = Yii::$app->request->get();
         $user = new UserInfo(['scenario' => UserInfo::SCENARIO_QUERY]);
         $user->attributes = $params;
-        if(!$user->validate()){
+        if (!$user->validate()) {
             return $this->failed();
         }
 
         $res = UserInfo::find();
-        $whereArr = ['type' => UserInfo::USER_TYPE['normal'],'state' => UserInfo::USER_STATE['normal'],'is_deleted' => UserInfo::IS_DELETED['no']];
+        $whereArr = ['type' => UserInfo::USER_TYPE['normal'], 'state' => UserInfo::USER_STATE['normal'], 'is_deleted' => UserInfo::IS_DELETED['no']];
         $res->where($whereArr);
-        if($user->keyword){
-            $res->andWhere(['or',['like','nick_name', $user->keyword.'%',false], ['email' => $user->keyword], ['mobile_number' => $user->keyword]]);
+        if ($user->keyword) {
+            $res->andWhere(['or', ['like', 'nick_name', $user->keyword . '%', false], ['email' => $user->keyword], ['mobile_number' => $user->keyword]]);
         }
 
         $res = $res->all();
@@ -86,14 +86,14 @@ class UserController extends BaseController
      * @param $nickname
      * @return array
      */
-    public function actionCheckNicknameRepeat($nickname=null)
+    public function actionCheckRepeat($keyword = null)
     {
-        if(!$nickname) {
-            return $this->failed('昵称不能为空');
+        if (!$keyword) {
+            return $this->failed('检查的值不能为空');
         }
-        $res = UserInfo::findOne(['nick_name' => $nickname]);
-        if($res){
-            return $this->success(['nick_name' => $res->nick_name]);
+        $res = UserInfo::findOne(['or', ['name' => $keyword], ['email' => $keyword], ['nick_name' => $keyword]]);
+        if ($res) {
+            return $this->success(['name' => $res->name, 'email' => $res->email, 'nick_name' => $res->nick_name]);
         }
         return $this->success([]);
     }
@@ -109,6 +109,4 @@ class UserController extends BaseController
         $verbs['reg'] = ['post'];
         return $verbs;
     }
-
-
 }

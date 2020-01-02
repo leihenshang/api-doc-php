@@ -67,7 +67,7 @@ class UserInfo extends BaseModel
             [['create_time', 'last_login_time', 'token_expire_time'], 'safe'],
             [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 100],
             ['email', 'email'],
-            [['re_pwd', 'nick_name', 'email', 'code'], 'required', 'on' => self::SCENARIO_REGISTER],
+            [['re_pwd', 'name', 'email', 'code'], 'required', 'on' => self::SCENARIO_REGISTER],
             [['mobile_number'], 'string', 'max' => 11],
             [['keyword', 'code'], 'string', 'max' => 50],
 
@@ -79,7 +79,7 @@ class UserInfo extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
         $scenarios[self::SCENARIO_QUERY] = ['keyword'];
-        $scenarios[self::SCENARIO_REGISTER] = ['nick_name', 're_pwd', 'pwd', 'email', 'code'];
+        $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'email', 'code'];
         return $scenarios;
     }
 
@@ -218,16 +218,16 @@ class UserInfo extends BaseModel
             ['>', 'expire_time', date('Y-m-d H:i:s', time())],
             ['is_deleted' => Message::IS_DELETED['no']],
             ['is_used' => Message::IS_USED['no']],
-            ['receive_source' => $this->email ]
+            ['receive_source' => $this->email]
         ])->one();
         if (!$code) {
             return '验证码错误';
         }
 
         //检查昵称唯一性
-        $res = self::findOne(['nick_name' => $this->nick_name]);
+        $res = self::findOne(['name' => $this->name, 'email' => $this->email]);
         if ($res) {
-            return '昵称重复';
+            return '用户名或邮箱重复';
         }
 
         //修改状态
@@ -253,6 +253,4 @@ class UserInfo extends BaseModel
             return $e->getMessage();
         }
     }
-
-
 }
