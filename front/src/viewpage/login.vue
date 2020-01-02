@@ -129,6 +129,7 @@ export default {
         }
       }
     },
+    //跳转注册页
     jumpRegister() {
       this.$router.push("/register");
     }
