@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use yii\db\Exception;
+
 /**
  * This is the model class for table "{{%user_info}}".
  *
@@ -42,6 +44,11 @@ class UserInfo extends BaseModel
     public $re_pwd;
 
     /**
+     * @var string $code 验证码
+     */
+    public $code;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -60,9 +67,10 @@ class UserInfo extends BaseModel
             [['create_time', 'last_login_time', 'token_expire_time'], 'safe'],
             [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 100],
             ['email', 'email'],
-            [['re_pwd','nick_name','email'], 'required', 'on' => self::SCENARIO_REGISTER],
+            [['re_pwd', 'nick_name', 'email', 'code'], 'required', 'on' => self::SCENARIO_REGISTER],
             [['mobile_number'], 'string', 'max' => 11],
-            ['keyword', 'string', 'max' => 50]
+            [['keyword', 'code'], 'string', 'max' => 50],
+
         ];
     }
 
@@ -71,7 +79,7 @@ class UserInfo extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
         $scenarios[self::SCENARIO_QUERY] = ['keyword'];
-        $scenarios[self::SCENARIO_REGISTER] = ['nick_name','re_pwd', 'pwd', 'email'];
+        $scenarios[self::SCENARIO_REGISTER] = ['nick_name', 're_pwd', 'pwd', 'email', 'code'];
         return $scenarios;
     }
 
@@ -101,7 +109,7 @@ class UserInfo extends BaseModel
 
     public function fields()
     {
-        $fields =  parent::fields();
+        $fields = parent::fields();
         unset($fields['pwd']);
         return $fields;
     }
@@ -203,18 +211,47 @@ class UserInfo extends BaseModel
             return '两次输入的密码不一致!~';
         }
 
+        //检查验证码
+        $code = Message::find()->where([
+            'and',
+            ['code' => $this->code],
+            ['>', 'expire_time', date('Y-m-d H:i:s', time())],
+            ['is_deleted' => Message::IS_DELETED['no']],
+            ['is_used' => Message::IS_USED['no']],
+            ['receive_source' => $this->email ]
+        ])->one();
+        if (!$code) {
+            return '验证码错误';
+        }
+
         //检查昵称唯一性
         $res = self::findOne(['nick_name' => $this->nick_name]);
-        if($res){
+        if ($res) {
             return '昵称重复';
         }
 
-        $this->state = self::USER_STATE['not_activated'];
-        if(!$this->save()){
-            return '用户保存失败!'.current($this->getFirstErrors());
-        }
+        //修改状态
+        $this->state = self::USER_STATE['normal'];
 
-        return true;
+        //设置code已使用
+        $code->is_used = Message::IS_USED['yes'];
+        $code->used_time = date('Y-m-d H:i:s', time());
+
+        $trans = self::getDb()->beginTransaction();
+        try {
+            if (!$this->save()) {
+                throw new Exception('用户保存失败!' . current($this->getFirstErrors()));
+            }
+
+            if (!$code->save()) {
+                throw new Exception('验证码状态保存失败!' . current($code->getFirstErrors()));
+            }
+            $trans->commit();
+            return true;
+        } catch (Exception $e) {
+            $trans->rollBack();
+            return $e->getMessage();
+        }
     }
 
 

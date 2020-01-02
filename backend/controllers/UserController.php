@@ -64,6 +64,7 @@ class UserController extends BaseController
          * 1.昵称
          * 2.密码
          * 3.邮箱
+         * 4.验证码
          */
         $params = Yii::$app->request->post();
         $user = new UserInfo(['scenario' => UserInfo::SCENARIO_REGISTER]);
