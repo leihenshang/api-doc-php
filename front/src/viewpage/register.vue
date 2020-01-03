@@ -24,35 +24,88 @@
     </div>
     <div class="middle">
       <h4>用户注册</h4>
-      <ul>
-        <li>
-          <span>昵称</span>
-          <input type="text" name="name" v-model="userInfo.name" />
-        </li>
-        <li>
-          <span>邮箱</span>
-          <input type="email" name="email" v-model="userInfo.email" />
-          <button @click="sendCode()">发送验证码</button>
-        </li>
-        <li>
-          <span>验证码</span>
-          <input type="text" name="code" v-model="userInfo.code" />
-        </li>
-        <li>
-          <span>密码</span>
-          <input type="password" name="pwd" v-model="userInfo.pwd" />
-        </li>
-        <li>
-          <span>重复密码</span>
-          <input type="password" name="re_pwd" v-model="userInfo.re_pwd" />
-        </li>
+      <ValidationObserver ref="form" vid="form" tag="div">
+        <ul>
+          <li>
+            <span>用户名</span>
+            <validation-provider
+              rules="required"
+              v-slot="{ errors }"
+              vid="name"
+              name="name"
+              tag="i"
+            >
+              <input type="text" name="name" v-model="userInfo.name" placeholder="请输入昵称" />
+              <em>{{ errors[0] }}</em>
+            </validation-provider>
+          </li>
+          <li>
+            <span>邮箱</span>
+            <validation-provider
+              rules="required|email"
+              v-slot="{ errors }"
+              vid="email"
+              name="email"
+              tag="i"
+            >
+              <input type="email" name="email" v-model="userInfo.email" placeholder="请输入邮箱" />
+              <button @click="sendCode()">发送验证码</button>
+              <em>{{ errors[0] }}</em>
+            </validation-provider>
+          </li>
+          <li>
+            <span>验证码</span>
+            <validation-provider
+              rules="required"
+              v-slot="{ errors }"
+              vid="code"
+              name="code"
+              tag="i"
+            >
+              <input
+                type="text"
+                name="code"
+                v-model="userInfo.code"
+                placeholder="请输入验证码"
+                autocomplete="off"
+              />
+              <em>{{ errors[0] }}</em>
+            </validation-provider>
+          </li>
+          <li>
+            <span>密码</span>
+            <validation-provider rules="required" v-slot="{ errors }" vid="pwd" name="pwd" tag="i">
+              <input
+                type="password"
+                name="pwd"
+                v-model="userInfo.pwd"
+                placeholder="请输入密码"
+                autocomplete="off"
+              />
+              <em>{{ errors[0] }}</em>
+            </validation-provider>
+          </li>
+          <li>
+            <span>重复密码</span>
+            <validation-provider
+              rules="required"
+              v-slot="{ errors }"
+              vid="re_pwd"
+              name="re_pwd"
+              tag="i"
+            >
+              <input type="password" name="re_pwd" v-model="userInfo.re_pwd" placeholder="请重复一次密码" />
+              <em>{{ errors[0] }}</em>
+            </validation-provider>
+          </li>
 
-        <li>
-          <span></span>
-          <button @click="register()">提交注册</button>
-          <button>取消</button>
-        </li>
-      </ul>
+          <li>
+            <span></span>
+            <button @click="register()">提交注册</button>
+            <button>取消</button>
+          </li>
+        </ul>
+      </ValidationObserver>
     </div>
     <div class="bottom">
       <p>该开源网站由api doc提供技术支持，开源协议遵循MIT，如需获取最新的api doc开源版以及相关资讯，请点击这里</p>
@@ -113,30 +166,36 @@ export default {
     },
     //用户注册
     register() {
-      this.$http
-        .post(
-          this.apiAddress + "/user/reg",
-          {
-            ...this.userInfo
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              alert("成功！~");
-              this.userInfo = this.userInfoDefault;
+      //执行验证
+      this.$refs.form.validate().then(res => {
+        if (!res) {
+          return;
+        }
+        this.$http
+          .post(
+            this.apiAddress + "/user/reg",
+            {
+              ...this.userInfo
+            },
+            { emulateJSON: true }
+          )
+          .then(
+            response => {
+              response = response.body;
+              if (response.code === CODE_OK) {
+                alert("成功！~");
+                this.userInfo = this.userInfoDefault;
                 this.$router.push("/login");
-            } else {
-              alert("注册失败:" + response.msg);
+              } else {
+                alert("注册失败:" + response.msg);
+              }
+            },
+            response => {
+              response = response.body;
+              alert("操作失败!" + !response.msg ? response.msg : "");
             }
-          },
-          response => {
-            response = response.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
+          );
+      });
     }
   }
 };
@@ -150,7 +209,7 @@ export default {
   top: 50%;
   transform: translate(-50%, -50%);
   width: 750px;
-  padding: 50px;
+  padding: 30px;
   border-radius: 10px;
   box-sizing: border-box;
 }
@@ -185,5 +244,9 @@ export default {
 .middle button {
   height: 30px;
   width: 80px;
+}
+
+.middle em {
+  color: red;
 }
 </style>
