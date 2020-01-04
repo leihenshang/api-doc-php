@@ -1,81 +1,81 @@
 <template>
   <div class="user">
-    <div class="user-left">
-      <div class="user-left-top">
-        <div class="text-box">
-          <input type="text" v-model="keyword" />
-          <button @click="getUserList(keyword)">搜索</button>
-        </div>
-      </div>
-      <div class="user-left-bottom">
-        <table>
-          <th>
-            <span>头像</span>
-          </th>
-          <th>
-            <span>昵称</span>
-          </th>
-          <th>
-            <span>创建时间</span>
-          </th>
-          <th>
-            <span>类型</span>
-          </th>
-          <th>
-            <span>状态</span>
-          </th>
-          <th>
-            <span>手机</span>
-          </th>
-          <th>
-            <span>昵称</span>
-          </th>
-          <th>
-            <span>最后登录ip</span>
-          </th>
-          <th>
-            <span>最后登录时间</span>
-          </th>
-          <th>
-            <span>用户操作</span>
-          </th>
-
-          <tr v-for="user in userList" :key="user.id">
-            <td>
-              <span>{{user.cover}}</span>
-            </td>
-            <td>
-              <span>{{user.name}}</span>
-            </td>
-            <td>
-              <span>{{user.create_time}}</span>
-            </td>
-            <td>
-              <span>{{user.type}}</span>
-            </td>
-            <td>
-              <span>{{user.state}}</span>
-            </td>
-            <td>
-              <span>{{user.mobile_number}}</span>
-            </td>
-            <td>
-              <span>{{user.nick_name}}</span>
-            </td>
-            <td>
-              <span>{{user.last_login_ip}}</span>
-            </td>
-            <td>
-              <span>{{user.last_login_time}}</span>
-            </td>
-            <td>
-              <button @click="addProjectUser(user.id)">添加</button>
-            </td>
-          </tr>
-        </table>
-      </div>
+    <div class="text-box">
+      <input type="text" v-model="keyword" />
+      <button @click="userList = [];keyword=''">重置</button>
+      <button @click="getUserList(keyword)">搜索用户</button>
     </div>
-    <div class="user-right">
+    <div class="all-user common-table" v-show="userList[0]">
+      <h4>搜索到的用户列表：</h4>
+      <table>
+        <th>
+          <span>头像</span>
+        </th>
+        <th>
+          <span>昵称</span>
+        </th>
+        <th>
+          <span>创建时间</span>
+        </th>
+        <th>
+          <span>类型</span>
+        </th>
+        <th>
+          <span>状态</span>
+        </th>
+        <th>
+          <span>手机</span>
+        </th>
+        <th>
+          <span>昵称</span>
+        </th>
+        <th>
+          <span>最后登录ip</span>
+        </th>
+        <th>
+          <span>最后登录时间</span>
+        </th>
+        <th>
+          <span>用户操作</span>
+        </th>
+
+        <tr v-for="user in userList" :key="user.id">
+          <td>
+            <span>{{user.cover}}</span>
+          </td>
+          <td>
+            <span>{{user.name}}</span>
+          </td>
+          <td>
+            <span>{{user.create_time}}</span>
+          </td>
+          <td>
+            <span>{{user.type}}</span>
+          </td>
+          <td>
+            <span>{{user.state}}</span>
+          </td>
+          <td>
+            <span>{{user.mobile_number}}</span>
+          </td>
+          <td>
+            <span>{{user.nick_name}}</span>
+          </td>
+          <td>
+            <span>{{user.last_login_ip}}</span>
+          </td>
+          <td>
+            <span>{{user.last_login_time}}</span>
+          </td>
+          <td>
+            <button @click="addProjectUser(user.id)">添加</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <hr />
+    <h4>项目组成员：</h4>
+    <div class="common-table">
       <table>
         <th>
           <span>头像</span>
@@ -145,6 +145,8 @@
   </div>
 </template>
 <script>
+import "../../static/css/table.css";
+
 const CODE_OK = 200;
 
 export default {
@@ -157,7 +159,6 @@ export default {
     };
   },
   created() {
-    this.getUserList();
     this.getProjectUserList();
   },
   methods: {
@@ -220,7 +221,8 @@ export default {
         .get(this.apiAddress + "/user/list", {
           params: {
             keyword,
-            token: this.$store.state.userInfo.token
+            token: this.$store.state.userInfo.token,
+            project_id: this.$route.params.id
           }
         })
         .then(
@@ -263,28 +265,29 @@ export default {
 </script>
 <style scoped>
 .user {
-  display: flex;
   height: 100%;
 }
 
-.user-left,
-.user-right {
-  flex: 1;
+.user hr {
+  margin: 20px 0;
+  color: rgba(214, 211, 211, 0.424);
 }
 
-.user-left {
-  border-right: 1px solid rgb(212, 211, 211);
+.text-box {
+  margin: 20px 0;
+  /* border:1px solid black; */
 }
 
-.user-left-top {
-  border-bottom: 1px solid rgb(212, 211, 211);
+.text-box input {
+  height: 30px;
+  width: 15%;
+  margin: 0 5px;
+  padding: 0 5px;
 }
 
-.user table,
-tr,
-td,
-th {
-  border: 1px solid black;
-  border-collapse: collapse;
+.text-box button {
+  height: 35px;
+  width: 100px;
+  font-size: 14px;
 }
 </style>

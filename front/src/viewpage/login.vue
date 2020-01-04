@@ -77,7 +77,8 @@ export default {
     };
   },
   methods: {
-    login: function() {
+    //用户登录
+    login() {
       this.$refs.form.validate().then(res => {
         if (!res) {
           return;
@@ -101,7 +102,7 @@ export default {
                 localStorage.setItem("userInfo", JSON.stringify(response.data));
                 this.$router.push("/");
               } else {
-                alert('登录错误！'+response.msg);
+                alert("登录错误！" + response.msg);
                 localStorage.removeItem("userInfo");
                 Vue.prototype.userInfo = null;
                 this.$router.push("/login");
@@ -115,7 +116,8 @@ export default {
           );
       });
     },
-    loginByLocalStorage: function() {
+    //通过localStorage登录
+    loginByLocalStorage() {
       let userInfo1 = JSON.parse(localStorage.getItem("userInfo"));
       if (userInfo1) {
         let currDate = new Date();

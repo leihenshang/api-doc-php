@@ -44,7 +44,7 @@ export default {
           return "首页>项目详情-" + this.$store.state.project.title;
         }
 
-        return '';
+        return "";
       }
     },
     nickName: function() {
@@ -53,9 +53,11 @@ export default {
     }
   },
   methods: {
+    //退出登录
     loginOut() {
       localStorage.removeItem("userInfo");
       Vue.prototype.userInfo = null;
+      this.$store.commit("saveUserInfo", {});
       this.$router.push("/login");
     }
   },

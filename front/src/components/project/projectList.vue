@@ -59,6 +59,7 @@ export default {
     jump(route) {
       this.$router.push({ path: "/" + route });
     },
+    //获取项目列表
     getProjectList(curr, pageSize) {
       this.$http
         .get(this.apiAddress + "/project/list", {

@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\UserInfo;
 use Yii;
+use yii\db\Query;
 
 class UserController extends BaseController
 {
@@ -42,13 +43,35 @@ class UserController extends BaseController
             return $this->failed();
         }
 
-        $res = UserInfo::find();
-        $whereArr = ['type' => UserInfo::USER_TYPE['normal'], 'state' => UserInfo::USER_STATE['normal'], 'is_deleted' => UserInfo::IS_DELETED['no']];
+
+        $projectId = $params['project_id'] ?: null;
+
+//        if(isset($params['project_id']) && !empty($params['project_id'])){
+//            $projectId = $params['project_id'];
+//        }
+
+        $res = UserInfo::find()->alias('a')->select('a.*');
+        $whereArr = ['a.type' => UserInfo::USER_TYPE['normal'], 'a.state' => UserInfo::USER_STATE['normal'], 'a.is_deleted' => UserInfo::IS_DELETED['no']];
         $res->where($whereArr);
         if ($user->keyword) {
-            $res->andWhere(['or', ['like', 'nick_name', $user->keyword . '%', false], ['email' => $user->keyword], ['mobile_number' => $user->keyword]]);
+            $res->andWhere(['or', ['like', 'a.nick_name', $user->keyword . '%', false], ['a.email' => $user->keyword], ['a.mobile_number' => $user->keyword]]);
         }
 
+        //传入了项目id
+        if ($projectId) {
+
+            $query = (new Query())->select('user_id')
+                ->where([
+                'and',
+                ['b.is_deleted' => UserInfo::IS_DELETED['no']],
+                ['b.project_id' => $projectId]
+            ])->from('user_project b');
+
+            $res
+                ->andWhere(['and',
+                    ['not in', 'a.id' , $query]
+                ]);
+        }
         $res = $res->all();
         return $this->success($res);
     }

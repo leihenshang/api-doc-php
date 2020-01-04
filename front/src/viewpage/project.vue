@@ -27,31 +27,6 @@ export default {
     jump(route) {
       this.$router.push({ path: "/" + route });
     },
-    getProjectList(curr, pageSize) {
-      this.$http
-        .get(this.apiAddress + "/project/list", {
-          params: {
-            cp: curr,
-            ps: pageSize,
-            token: this.$store.state.userInfo.token
-          }
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.projectList = response.data.res;
-              this.itemCount = Number(response.data.count);
-              this.hideShade = true;
-            }
-          },
-          function(res) {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
-            this.hideShade = true;
-          }
-        );
-    },
     create() {
       this.addIsHide = !this.addIsHide;
     },
@@ -101,8 +76,7 @@ export default {
       this.$router.push("/detail/" + id + "/detailPage");
     }
   },
-  created() {
-  },
+  created() {},
   data() {
     return {
       projectList: {},

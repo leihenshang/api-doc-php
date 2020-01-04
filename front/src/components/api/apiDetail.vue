@@ -20,9 +20,9 @@
         <dl>
           <dd>
             <span>分组:</span>
-            <select v-model="apiData.group_id" disabled >
+            <select v-model="apiData.group_id" disabled>
               <option :value="apiData.group">{{apiData.group}}</option>
-                <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
+              <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
             </select>
             <!-- <select name="" id="">
               <option value="1">可选（二级菜单）</option>
@@ -33,8 +33,14 @@
               <option value="2">禁用</option>
             </select>-->
             <em>请求协议:</em>
-             <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol" disabled>
-                    <option disabled value>请选择</option>
+            <select
+              name
+              id
+              v-model="apiData.protocol_type"
+              v-if="propertyList.http_protocol"
+              disabled
+            >
+              <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_protocol"
                 :key="item.id"
@@ -42,7 +48,13 @@
               >{{item.tag_name}}</option>
             </select>
             <em>请求方式:</em>
-               <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method" disabled>
+            <select
+              name
+              id
+              v-model="apiData.http_method_type"
+              v-if="propertyList.http_method"
+              disabled
+            >
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_method"
@@ -51,7 +63,13 @@
               >{{item.tag_name}}</option>
             </select>
             <em>返回情况:</em>
-            <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return" disabled>
+            <select
+              name
+              id
+              v-model="apiData.http_return_type"
+              v-if="propertyList.http_return"
+              disabled
+            >
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_return"
@@ -60,7 +78,7 @@
               >{{item.description}}</option>
             </select>
           </dd>
-         <dd>
+          <dd>
             <span>URL:</span>
             <input type="text" v-model="apiData.url" readonly />
           </dd>
@@ -78,7 +96,7 @@
           </dd>
           <dd>
             <span>接口语言:</span>
-                <select v-model="apiData.develop_language" v-if="propertyList.api_language" disabled>
+            <select v-model="apiData.develop_language" v-if="propertyList.api_language" disabled>
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.api_language"
@@ -109,13 +127,10 @@
       <table v-show="box3==0">
         <!-- <header>
           <button>导入头部</button>
-        </header> -->
+        </header>-->
         <tr>
           <th>请求头名</th>
-          <th>说明</th>
-          <th>必填</th>
-          <th>类型</th>
-          <th>示例</th>
+          <th>值</th>
           <th>操作</th>
         </tr>
         <tr>
@@ -125,22 +140,13 @@
           <td>
             <input type="text" placeholder="参数名" />
           </td>
-          <td>
-            <input type="checkbox" name id />
-          </td>
-          <td>
-            <input type="text" placeholder="参数名" />
-          </td>
-          <td>
-            <input type="text" placeholder="参数示例" />
-          </td>
           <td></td>
         </tr>
       </table>
       <table v-show="box3==1">
         <!-- <header>
           <button>导入头部</button>
-        </header> -->
+        </header>-->
         <tr>
           <th>参数名</th>
           <th>说明</th>
@@ -151,19 +157,19 @@
         </tr>
         <tr v-for="item in apiData.http_request_params" :key="item.id">
           <td>
-            <input type="text" placeholder="参数名" v-model="item.name" readonly/>
+            <input type="text" placeholder="参数名" v-model="item.name" readonly />
           </td>
           <td>
-            <input type="text" placeholder v-model="item.desc" readonly/>
+            <input type="text" placeholder v-model="item.desc" readonly />
           </td>
           <td>
-            <input type="checkbox" name id v-model="item.required" readonly/>
+            <input type="checkbox" name id v-model="item.required" readonly />
           </td>
           <td>
-          <span>{{item.type}}</span>
+            <span>{{item.type}}</span>
           </td>
           <td>
-            <input type="text" placeholder="参数示例" v-model="item.example" readonly/>
+            <input type="text" placeholder="参数示例" v-model="item.example" readonly />
           </td>
           <td></td>
         </tr>
@@ -199,7 +205,7 @@
             <input type="checkbox" name id v-model="item.required" readonly />
           </td>
           <td>
-             <span>{{item.type}}</span>
+            <span>{{item.type}}</span>
           </td>
           <td></td>
         </tr>
@@ -212,8 +218,20 @@
           <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
         </div>
       </div>
-      <textarea name id v-model="apiData.http_return_sample.returnDataSuccess" v-show="box5==0" placeholder="成功的返回" ></textarea>
-      <textarea name id v-model="apiData.http_return_sample.returnDataFailed" v-show="box5==1" placeholder="失败的返回"></textarea>
+      <textarea
+        name
+        id
+        v-model="apiData.http_return_sample.returnDataSuccess"
+        v-show="box5==0"
+        placeholder="成功的返回"
+      ></textarea>
+      <textarea
+        name
+        id
+        v-model="apiData.http_return_sample.returnDataFailed"
+        v-show="box5==1"
+        placeholder="失败的返回"
+      ></textarea>
     </div>
   </div>
 </template>
@@ -233,11 +251,11 @@ export default {
   },
   data() {
     return {
-      groupList:[],
-      propertyList:[],
+      groupList: [],
+      propertyList: [],
       apiData: {
-    group_id: 0, //分组
-        project_id:0,//项目Id
+        group_id: 0, //分组
+        project_id: 0, //项目Id
         protocol_type: "HTTP", //协议
         description: "", //说明和备注
         requestMethod: "GET", //http请求方法
@@ -250,9 +268,9 @@ export default {
         http_request_header: [], //请求头
         http_request_params: [], //请求参数
         http_return_params: [], //返回参数
-        http_return_sample:{
-          returnDataSuccess:'',//返回数据成功
-          returnDataFailed:''//返回数据失败
+        http_return_sample: {
+          returnDataSuccess: "", //返回数据成功
+          returnDataFailed: "" //返回数据失败
         }
       },
       box2: 0,
@@ -289,10 +307,10 @@ export default {
     getApiDetail() {
       this.$http
         .get(this.apiAddress + "/api/detail", {
-          params: { 
+          params: {
             id: this.$route.params.apiId,
-            token:this.$store.state.userInfo.token
-             }
+            token: this.$store.state.userInfo.token
+          }
         })
         .then(
           response => {
@@ -310,8 +328,10 @@ export default {
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
-          params: { projectId: this.$route.params.id,
-            token: this.$store.state.userInfo.token }
+          params: {
+            projectId: this.$route.params.id,
+            token: this.$store.state.userInfo.token
+          }
         })
         .then(
           response => {
@@ -667,6 +687,5 @@ select {
 .tab-change-btn-bg {
   /* background-color: #efefef; */
   background-color: #fff;
-
 }
 </style>

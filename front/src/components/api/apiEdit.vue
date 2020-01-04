@@ -111,15 +111,12 @@
         </ul>
       </div>
       <table v-show="box3==0">
-        <header>
-          <!-- <button>导入头部</button> -->
-        </header>
+       <!-- <header>
+          <button>导入头部</button>
+        </header>-->
         <tr>
           <th>请求头名</th>
-          <th>说明</th>
-          <th>必填</th>
-          <th>类型</th>
-          <th>示例</th>
+          <th>值</th>
           <th>操作</th>
         </tr>
         <tr>
@@ -128,15 +125,6 @@
           </td>
           <td>
             <input type="text" placeholder="参数名" />
-          </td>
-          <td>
-            <input type="checkbox" name id />
-          </td>
-          <td>
-            <input type="text" placeholder="参数名" />
-          </td>
-          <td>
-            <input type="text" placeholder="参数示例" />
           </td>
           <td></td>
         </tr>

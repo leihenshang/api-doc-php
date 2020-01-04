@@ -17,9 +17,9 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
-    { path: "/register", component: Register, name: 'register' },
+    { path: "/register", component: Register, name: "register" },
     { path: "/project", component: Project },
-    { path: "/login", name: 'userLogin', component: Login },
+    { path: "/login", name: "userLogin", component: Login },
     {
       path: "/",
       component: Project,
@@ -31,35 +31,43 @@ const router = new VueRouter({
       component: Detail,
       props: true,
       children: [
-        { path: "detailPage", name: 'detailPage', component: DetailPage },
-        { path: "apiPage", name: 'apiPage', component: ApiPage },
-        { path: "createApi", name: 'createApi', component: CreateApi },
-        { path: "apiDetail/:apiId", name: 'apiDetail', component: ApiDetail, props: true },
-        { path: "apiEdit/:apiId", name: 'apiEdit', component: ApiEdit, props: true },
-        { path: "user", name: 'user', component: User, props: true }
+        { path: "detailPage", name: "detailPage", component: DetailPage },
+        { path: "apiPage", name: "apiPage", component: ApiPage },
+        { path: "createApi", name: "createApi", component: CreateApi },
+        {
+          path: "apiDetail/:apiId",
+          name: "apiDetail",
+          component: ApiDetail,
+          props: true
+        },
+        {
+          path: "apiEdit/:apiId",
+          name: "apiEdit",
+          component: ApiEdit,
+          props: true
+        },
+        { path: "user", name: "user", component: User, props: true }
       ]
     }
     // { path: "/msg", name: "msg", component: Msg }
   ]
-
 });
 
 router.beforeEach((to, from, next) => {
-
-  if (to.name !== 'register') {
-    let routerArr = ['userLogin', 'register'];
+  if (to.name !== "register") {
+    let routerArr = ["userLogin", "register"];
     if (routerArr.indexOf(to.name) === 0) {
       next();
     } else {
       if (!Vue.prototype.userInfo) {
-        next('/login');
+        next("/login");
       } else {
         next();
       }
     }
+  } else {
+    next();
   }
-  
-  next();
 });
 
 export default router;
