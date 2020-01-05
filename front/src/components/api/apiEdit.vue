@@ -111,7 +111,7 @@
         </ul>
       </div>
       <table v-show="box3==0">
-       <!-- <header>
+        <!-- <header>
           <button>导入头部</button>
         </header>-->
         <tr>
@@ -119,14 +119,14 @@
           <th>值</th>
           <th>操作</th>
         </tr>
-        <tr>
+        <tr v-for="item in apiData.http_request_header" :key="item.id">
           <td>
-            <input type="text" placeholder="参数名" />
+            <input type="text" placeholder="参数名" v-model="item.name" />
           </td>
           <td>
-            <input type="text" placeholder="参数名" />
+            <input type="text" placeholder="值" v-model="item.content" />
           </td>
-          <td></td>
+          <td> <button>删除</button> </td>
         </tr>
       </table>
       <table v-show="box3==1">
@@ -302,6 +302,14 @@ export default {
       },
       box2: 0,
       box3: 1,
+      box3HeaderItem: [
+        {
+          name: "",
+          content: "",
+          handle: true,
+          isAdd: false
+        }
+      ],
       box3Item: [
         {
           name: "",
@@ -331,8 +339,10 @@ export default {
     getApiDetail() {
       this.$http
         .get(this.apiAddress + "/api/detail", {
-          params: { id: this.$route.params.apiId,
-            token: this.$store.state.userInfo.token }
+          params: {
+            id: this.$route.params.apiId,
+            token: this.$store.state.userInfo.token
+          }
         })
         .then(
           response => {
@@ -451,8 +461,10 @@ export default {
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
-          params: { projectId: this.$route.params.id,
-            token: this.$store.state.userInfo.token }
+          params: {
+            projectId: this.$route.params.id,
+            token: this.$store.state.userInfo.token
+          }
         })
         .then(
           response => {

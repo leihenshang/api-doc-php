@@ -1,10 +1,3 @@
-<!--
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-10 18:12:37
- * @LastEditTime: 2019-10-10 18:12:37
- * @LastEditors: your name
- -->
 <template>
   <div class="create-api">
     <div class="box1">
@@ -30,6 +23,7 @@
                 v-slot="{ errors }"
                 vid="group_id"
                 name="group_id"
+                tag="em"
               >
                 <select v-model="apiData.group_id">
                   <option disabled>请选择</option>
@@ -50,6 +44,7 @@
                 v-slot="{ errors }"
                 vid="protocol_type"
                 name="protocol_type"
+                tag="em"
               >
                 <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol">
                   <option disabled value>请选择</option>
@@ -66,6 +61,7 @@
                 v-slot="{ errors }"
                 vid="http_method_type"
                 name="http_method_type"
+                tag="em"
               >
                 <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method">
                   <option disabled value>请选择</option>
@@ -82,6 +78,7 @@
                 v-slot="{ errors }"
                 vid="http_return_type"
                 name="http_return_type"
+                tag="em"
               >
                 <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return">
                   <option disabled value>请选择</option>
@@ -179,32 +176,22 @@
           </ul>
         </div>
         <table v-show="box3==0">
-          <header>
-            <button>导入头部</button>
-          </header>
           <tr>
             <th>请求头名</th>
-            <th>说明</th>
-            <th>必填</th>
-            <th>类型</th>
-            <th>示例</th>
+            <th>值</th>
             <th>操作</th>
           </tr>
-          <tr>
+          <tr v-for="(item,index) in box3HeaderItem" :key="item.id">
             <td>
-              <input type="text" placeholder="参数名" />
+              <input
+                type="text"
+                placeholder="参数名"
+                v-model="item.name"
+                v-on:input="box3HeaderInput(index,$event)"
+              />
             </td>
             <td>
-              <input type="text" placeholder="参数名" />
-            </td>
-            <td>
-              <input type="checkbox" name id />
-            </td>
-            <td>
-              <input type="text" placeholder="参数名" />
-            </td>
-            <td>
-              <input type="text" placeholder="参数示例" />
+              <input type="text" placeholder="值" v-model="item.content" />
             </td>
             <td></td>
           </tr>
@@ -384,6 +371,14 @@ export default {
       },
       box2: 0,
       box3: 1,
+      box3HeaderItem: [
+        {
+          name: "",
+          content: "",
+          handle: true,
+          isAdd: false
+        }
+      ],
       box3Item: [
         {
           name: "",
@@ -410,10 +405,13 @@ export default {
     };
   },
   methods: {
+    //返回api页面
     returnApiPage() {
       this.$router.go(-1);
     },
+    //创建api
     createApi() {
+      //数据验证
       this.$refs.form.validate().then(res => {
         if (!res) {
           alert(JSON.stringify(this.$refs.form.errors));
@@ -423,8 +421,13 @@ export default {
         let data = this.apiData;
         let box4 = JSON.parse(JSON.stringify(this.box4Item));
         let box3 = JSON.parse(JSON.stringify(this.box3Item));
+        let box3Header = JSON.parse(JSON.stringify(this.box3HeaderItem));
         data.http_return_params = box4.splice(0, this.box4Item.length - 1);
         data.http_request_params = box3.splice(0, this.box3Item.length - 1);
+        data.http_request_header = box3Header.splice(
+          0,
+          this.box3HeaderItem.length - 1
+        );
 
         this.$http
           .post(
@@ -443,6 +446,9 @@ export default {
               if (response.code === CODE_OK) {
                 alert("成功！~");
                 return;
+              } else {
+                alert("失败!" + response.msg);
+                return;
               }
             },
             function(res) {
@@ -453,6 +459,7 @@ export default {
           );
       });
     },
+    //检测box3输入
     box3Input(index, event) {
       if (event) {
         let txt = event.target.value;
@@ -470,6 +477,22 @@ export default {
         }
       }
     },
+    //检测box3 header输入
+    box3HeaderInput(index, event) {
+      if (event) {
+        let txt = event.target.value;
+        if (txt.length >= 1 && this.box3HeaderItem[index].isAdd === false) {
+          this.box3HeaderItem.push({
+            name: "",
+            content: "",
+            handle: true,
+            isAdd: false
+          });
+          this.box3HeaderItem[index].isAdd = true;
+        }
+      }
+    },
+    //检查box4输入
     box4Input(index, event) {
       if (event) {
         // alert(index);
@@ -488,9 +511,11 @@ export default {
         }
       }
     },
+    //box3删除
     box3delete(key) {
       this.box3Item.splice(key, 1);
     },
+    //box4删除
     box4delete(key) {
       this.box4Item.splice(key, 1);
     },
@@ -516,7 +541,7 @@ export default {
           }
         );
     },
-    //获取闯将api的默认属性
+    //获取创建api的默认属性
     getProperty() {
       this.$http
         .get(this.apiAddress + "/property/list", {
@@ -600,6 +625,7 @@ button {
   border: 1px solid #dddddd;
   padding: 0 10px;
   position: relative;
+  background-color: #fff;
 }
 
 .box2 em {
@@ -615,7 +641,7 @@ button {
   font-weight: 700;
   display: inline-block;
   text-align: left;
-  width: 5%;
+  width: 4%;
 }
 
 .box2 dl dd {

@@ -121,32 +121,23 @@
           <li>
             <button @click="box3=1" :class="{'tab-change-btn-bg' : box3==1}">请求参数</button>
           </li>
-          <!-- <li><button>inject</button></li> -->
         </ul>
       </div>
       <table v-show="box3==0">
-        <!-- <header>
-          <button>导入头部</button>
-        </header>-->
         <tr>
           <th>请求头名</th>
           <th>值</th>
-          <th>操作</th>
         </tr>
-        <tr>
+        <tr v-for="item in apiData.http_request_header" :key="item.id">
           <td>
-            <input type="text" placeholder="参数名" />
+            <input type="text" placeholder="参数名" v-model="item.name" />
           </td>
           <td>
-            <input type="text" placeholder="参数名" />
+            <input type="text" placeholder="值" v-model="item.content" />
           </td>
-          <td></td>
         </tr>
       </table>
       <table v-show="box3==1">
-        <!-- <header>
-          <button>导入头部</button>
-        </header>-->
         <tr>
           <th>参数名</th>
           <th>说明</th>
@@ -175,7 +166,7 @@
         </tr>
       </table>
     </div>
-    <div class="box4">
+    <div class="box4" v-show="apiData.http_return_params[0]">
       <header>
         <span>返回参数</span>
       </header>
@@ -275,6 +266,14 @@ export default {
       },
       box2: 0,
       box3: 1,
+      box3HeaderItem: [
+        {
+          name: "",
+          content: "",
+          handle: true,
+          isAdd: false
+        }
+      ],
       box3Item: [
         {
           name: "",
@@ -304,6 +303,7 @@ export default {
     returnApiPage() {
       this.$router.go(-1);
     },
+    //获取api详情
     getApiDetail() {
       this.$http
         .get(this.apiAddress + "/api/detail", {
@@ -649,7 +649,7 @@ select {
 }
 
 .box5 {
-  margin-top: 10px;
+  margin-top: 40px;
 }
 
 .box5 textarea {
