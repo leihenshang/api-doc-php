@@ -1,60 +1,64 @@
 <template>
   <div class="message">
-  <ul>
-            <li>
-              <p>项目动态</p>
-              <p></p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-            <li>
-              <p>2019-09-17 17:52:32</p>
-              <p>XXX 添加项目文档分组:'test'</p>
-            </li>
-          </ul>
+    <ul>
+      <li>
+        <p>项目动态</p>
+        <p></p>
+      </li>
+      <li v-for="item in operationLog" :key="item.id">
+        <p>{{item.create_time}}</p>
+        <p> 用户:{{item.nick_name}}, {{item.content}}</p>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
+const CODE_OK = 200;
+
 export default {
-  name: 'message',
-  props: {
+  name: "message",
+  created() {
+    this.getOperationLog();
+  },
+  props: {},
+  data() {
+    return {
+      operationLog: [],
+      ps: 20,
+      cp: 1
+    };
+  },
+  methods: {
+    //获取操作日志
+    getOperationLog() {
+      this.$http
+        .get(this.apiAddress + "/operation-log/list", {
+          params: {
+            object_id: this.$route.params.id,
+            token: this.$store.state.userInfo.token,
+            type: 1,
+            ps: this.ps,
+            cp: this.cp
+          }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.operationLog = response.data;
+            } else {
+              alert("获取数据失败");
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
+    }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
