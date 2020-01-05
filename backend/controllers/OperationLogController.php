@@ -3,10 +3,12 @@
 namespace app\controllers;
 
 use app\behaviors\UserVerify;
-use app\models\Group;
-use Yii;
+use app\models\OperationLog;
+use app\models\Project;
+use app\models\UserProject;
+use yii\db\ActiveRecord;
 
-class GroupController extends BaseController
+class OperationLogController extends BaseController
 {
 
     public function behaviors()
@@ -20,73 +22,35 @@ class GroupController extends BaseController
         return $behaviors;
     }
 
-    public function actionTest()
-    {
-        $res = Group::find()->where(['id' => '1'])->one();
-        return ['data' => $res];
-    }
-
     /**
-     * 创建数据
-     * @return array
+     * 获取操作日志列表
+     * @param int|null $object_id
+     * @param int $type
+     * @param int $ps
+     * @param int $cp
+     * @return OperationLog[]|Project[]|UserProject[]|array|ActiveRecord[]
      */
-    public function actionCreate()
+    public function actionList(int $object_id = null, int $type = 0, int $ps = 10, int $cp = 1)
     {
-        $group = new Group(['scenario' => Group::SCENARIO_CREATE]);
-        $group->attributes = Yii::$app->request->post();
-        $res = $group->createData();
-        if (is_string($res)) {
-            return ['msg' => $res,'code' => 22];
+        if (!$object_id) {
+            return $this->failed('对象id不能为空');
+        }
+        if (!$type || !in_array($type, array_column(OperationLog::OBJECT_TYPE, 0))) {
+            return $this->failed('查询类型为空或错误');
         }
 
-        return ['data' => '成功'];
-    }
+        $offset = ($cp - 1) * $ps;
 
-    /**
-     * 更新数据
-     * @return array
-     */
-    public function actionUpdate()
-    {
-        $group = new Group(['scenario' => Group::SCENARIO_UPDATE]);
-       $request = Yii::$app->request->post();
-        $res = $group->updateData($request);
-        if (is_string($res)) {
-            return ['msg' => $res];
-        }
+        $res =  OperationLog::find()->alias('a')
+            ->select('a.*,b.nick_name')
+            ->leftJoin('user_info b','a.user_id = b.id')
+            ->where([
+            'a.is_deleted' => OperationLog::IS_DELETED['no'],
+            'a.object_id' => $object_id,
+            'a.type' => $type
+        ])->limit($ps)->offset($offset)->orderBy('a.id DESC')->asArray()->all();
 
-        return ['data' => '成功'];
-    }
-
-    /**
-     * 分组列表
-     * @return array
-     */
-    public function actionList()
-    {
-        $projectId = Yii::$app->request->get('projectId',0);
-        $res = Group::findAll(['is_deleted' => 0,'project_id' => $projectId]);
-        return ['data' => $res];
-    }
-
-
-
-    /**
-     * 删除数据
-     * @return array
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     */
-    public function actionDel()
-    {
-        $group = new Group(['scenario' => Group::SCENARIO_DEL]);
-        $group->attributes = Yii::$app->request->post();
-        $res = $group->del();
-        if (is_string($res)) {
-            return ['msg' => $res];
-        }
-
-        return ['data' => '成功'];
+        return $this->success($res);
     }
 
 }

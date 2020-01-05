@@ -6,7 +6,6 @@
 namespace app\behaviors;
 
 use app\models\UserInfo;
-use app\models\UserInfo as User;
 use Yii;
 use yii\base\Behavior;
 use yii\base\ErrorException;
@@ -42,11 +41,13 @@ class UserVerify extends Behavior
 
     //=================验证用户是否登陆==============
     /**
-     * @var User $userInfo 用户信息
+     * @var UserInfo $userInfo 用户信息
      */
     public $userInfo = null;
     //需要进行验证的action数组
     public $actions = [];
+
+
     //排除验证的action数组
     public $excludeAction = [];
     //验证的结果，未验证成功为false,验证成功为true
@@ -62,7 +63,6 @@ class UserVerify extends Behavior
     public $frontUserType = [601];
     //后台用户类型
     public $backendUserType = [600];
-
 
     public function events()
     {
@@ -207,6 +207,7 @@ class UserVerify extends Behavior
         }
 
         $this->userInfo = $userInfo;
+        UserInfo::$staticUserInfo = $userInfo;
 
         //检查过期时间，如果过期时间还剩余5分钟则续期1小时
         $expireTime = strtotime($userInfo->token_expire_time);

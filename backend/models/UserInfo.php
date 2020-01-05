@@ -33,6 +33,9 @@ class UserInfo extends BaseModel
     //1普通用户2管理员
     const USER_TYPE = ['normal' => 1, 'admin' => 2];
 
+
+    public static $staticUserInfo;
+
     /**
      * @var string $keyword 关键字
      */

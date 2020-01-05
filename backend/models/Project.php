@@ -64,6 +64,10 @@ class Project extends BaseModel
             return current($this->getFirstErrors());
         }
 
+        //记录操作日志
+        OperationLog::createLog(UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['create'][0],'项目:'.$this->title,OperationLog::OBJECT_TYPE['project'][0]);
+
+
         return true;
     }
 
@@ -89,6 +93,9 @@ class Project extends BaseModel
             return current($this->getFirstErrors());
         }
 
+        //记录操作日志
+        OperationLog::createLog(UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['update'][0],'项目:'.$request['title'],OperationLog::OBJECT_TYPE['project'][0]);
+
         return true;
     }
 
@@ -108,6 +115,9 @@ class Project extends BaseModel
         if (!$res->delete()) {
             return current($res->getFirstErrors());
         }
+
+        //记录操作日志
+        OperationLog::createLog(UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['delete'][0],'项目:'.$res->title,OperationLog::OBJECT_TYPE['project'][0]);
 
         return true;
     }
