@@ -193,7 +193,9 @@
             <td>
               <input type="text" placeholder="值" v-model="item.content" />
             </td>
-            <td></td>
+            <td>
+              <button @click="box3HeaderDelete(index)">删除</button>
+            </td>
           </tr>
         </table>
 
@@ -514,6 +516,10 @@ export default {
     //box3删除
     box3delete(key) {
       this.box3Item.splice(key, 1);
+    },
+    //box3header删除
+    box3HeaderDelete(key) {
+      this.box3HeaderItem.splice(key, 1);
     },
     //box4删除
     box4delete(key) {

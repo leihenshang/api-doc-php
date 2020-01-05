@@ -119,14 +119,16 @@
           <th>值</th>
           <th>操作</th>
         </tr>
-        <tr v-for="item in apiData.http_request_header" :key="item.id">
+        <tr v-for="(item,index) in apiData.http_request_header" :key="item.id">
           <td>
             <input type="text" placeholder="参数名" v-model="item.name" />
           </td>
           <td>
             <input type="text" placeholder="值" v-model="item.content" />
           </td>
-          <td> <button>删除</button> </td>
+          <td>
+            <button @click="box3HeaderDelete(index)">删除</button>
+          </td>
         </tr>
       </table>
       <table v-show="box3==1">
@@ -336,6 +338,7 @@ export default {
     };
   },
   methods: {
+    //获取api详情
     getApiDetail() {
       this.$http
         .get(this.apiAddress + "/api/detail", {
@@ -359,6 +362,15 @@ export default {
                 handle: true,
                 isAdd: false
               });
+
+              this.box3HeaderItem = this.apiData.http_request_header;
+              this.box3HeaderItem.push({
+                name: "",
+                content: "",
+                handle: true,
+                isAdd: false
+              });
+
               this.box4Item = this.apiData.http_return_params;
               this.box4Item.push({
                 fieldName: "",
@@ -380,6 +392,7 @@ export default {
     returnApiPage() {
       this.$router.go(-1);
     },
+    //更新api
     updateApi() {
       this.apiData.http_request_params = this.box3Item.splice(
         0,
@@ -388,6 +401,10 @@ export default {
       this.apiData.http_return_params = this.box4Item.splice(
         0,
         this.box4Item.length - 1
+      );
+      this.apiData.http_request_hader = this.box3HeaderItem.splice(
+        0,
+        this.box3HeaderItem.length - 1
       );
 
       this.$http
@@ -454,6 +471,10 @@ export default {
     },
     box3delete(key) {
       this.box3Item.splice(key, 1);
+    },
+    //box3header删除
+    box3HeaderDelete(key) {
+      this.box3HeaderItem.splice(key, 1);
     },
     box4delete(key) {
       this.box4Item.splice(key, 1);
