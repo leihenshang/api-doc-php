@@ -13,6 +13,7 @@ namespace app\models;
  * @property string $action 动作
  * @property string $content 操作内容
  * @property int $type 1项目2分组3api4用户
+ * @property int $project_id 项目id
  */
 class OperationLog extends BaseModel
 {
@@ -45,9 +46,9 @@ class OperationLog extends BaseModel
     public function rules()
     {
         return [
-            [['is_deleted', 'user_id', 'object_id','type'], 'integer'],
+            [['is_deleted', 'user_id', 'object_id','type','project_id'], 'integer'],
             [['create_time'], 'safe'],
-            [['action'], 'required'],
+            [['action','project_id'], 'required'],
             [['action'], 'string', 'max' => 100],
             [['content'], 'string', 'max' => 500],
         ];
@@ -56,7 +57,7 @@ class OperationLog extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['user_id', 'object_id', 'action', 'content','type'];
+        $scenarios[self::SCENARIO_CREATE] = ['user_id', 'object_id', 'action', 'content','type','project_id'];
         return $scenarios;
     }
 
@@ -78,6 +79,7 @@ class OperationLog extends BaseModel
 
     /**
      * 保存操作日志
+     * @param int $project_id
      * @param int $userId
      * @param int $objectId
      * @param string $action
@@ -85,9 +87,10 @@ class OperationLog extends BaseModel
      * @param int $type 类型
      * @return bool|mixed
      */
-    public static function createLog(int $userId = 0, int $objectId = 0, string $action = 'unknown', string $content = '默认操作',int $type = 0)
+    public static function createLog(int $projectId, int $userId = 0, int $objectId = 0, string $action = 'unknown', string $content = '默认操作',int $type = 0)
     {
         $arr = [
+            'project_id' => $projectId,
             'user_id' => $userId,
             'object_id' => $objectId,
             'action' => $action,

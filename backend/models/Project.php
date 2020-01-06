@@ -65,7 +65,7 @@ class Project extends BaseModel
         }
 
         //记录操作日志
-        OperationLog::createLog(UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['create'][0],'项目:'.$this->title,OperationLog::OBJECT_TYPE['project'][0]);
+        OperationLog::createLog($this->id,UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['create'][0],'项目:'.$this->title,OperationLog::OBJECT_TYPE['project'][0]);
 
 
         return true;
@@ -94,7 +94,7 @@ class Project extends BaseModel
         }
 
         //记录操作日志
-        OperationLog::createLog(UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['update'][0],'项目:'.$request['title'],OperationLog::OBJECT_TYPE['project'][0]);
+        OperationLog::createLog($this->id,UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['update'][0],'项目:'.$request['title'],OperationLog::OBJECT_TYPE['project'][0]);
 
         return true;
     }
@@ -117,7 +117,7 @@ class Project extends BaseModel
         }
 
         //记录操作日志
-        OperationLog::createLog(UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['delete'][0],'项目:'.$res->title,OperationLog::OBJECT_TYPE['project'][0]);
+        OperationLog::createLog($this->id,UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['delete'][0],'项目:'.$res->title,OperationLog::OBJECT_TYPE['project'][0]);
 
         return true;
     }

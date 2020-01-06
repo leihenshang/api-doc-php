@@ -37,7 +37,7 @@ export default {
           params: {
             object_id: this.$route.params.id,
             token: this.$store.state.userInfo.token,
-            type: 1,
+            type: '1,2,3,4',
             ps: this.ps,
             cp: this.cp
           }

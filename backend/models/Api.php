@@ -40,21 +40,21 @@ class Api extends BaseModel
     const SCENARIO_UPDATE_RAW = 'update_raw';
 
     public static $defaultData = [
-        'group' => '',//分组
-        'protocol' => 'http',//协议
-        'description' => '',//说明和备注
+        'group' => '', //分组
+        'protocol' => 'http', //协议
+        'description' => '', //说明和备注
         'requestMethod' => 'GET', //http请求方法
         'returnDataType' => 1,  //返回值类型
         'url' => '/test/test/test/st', //http请求URL
         'name' => '', //接口名称
-        'objectName' => '',//根对象名
-        'functionName' => '',//程序内部方法名
-        'developmentLanguage' => '',//接口开发语言
+        'objectName' => '', //根对象名
+        'functionName' => '', //程序内部方法名
+        'developmentLanguage' => '', //接口开发语言
         'requestHeader' => [], //请求头
         'requestParams' => [], //请求参数
         'returnData' => [], //返回参数
         'returnDataSuccess' => '', //返回数据成功
-        'returnDataFailed' => ''//返回数据失败
+        'returnDataFailed' => '' //返回数据失败
     ];
 
     /**
@@ -119,12 +119,16 @@ class Api extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['data', 'project_id', 'group_id', 'description', 'protocol_type',
+        $scenarios[self::SCENARIO_CREATE] = [
+            'data', 'project_id', 'group_id', 'description', 'protocol_type',
             'http_method_type', 'url', 'api_name', 'object_name', 'function_name', 'develop_language',
-            'http_request_header', 'http_request_params', 'http_return_type', 'http_return_sample', 'http_return_params'];
-        $scenarios[self::SCENARIO_UPDATE] = ['data', 'id', 'project_id', 'group_id', 'description', 'protocol_type',
+            'http_request_header', 'http_request_params', 'http_return_type', 'http_return_sample', 'http_return_params'
+        ];
+        $scenarios[self::SCENARIO_UPDATE] = [
+            'data', 'id', 'project_id', 'group_id', 'description', 'protocol_type',
             'http_method_type', 'url', 'api_name', 'object_name', 'function_name', 'develop_language',
-            'http_request_header', 'http_request_params', 'http_return_type', 'http_return_sample', 'http_return_params'];
+            'http_request_header', 'http_request_params', 'http_return_type', 'http_return_sample', 'http_return_params'
+        ];
         $scenarios[self::SCENARIO_UPDATE_RAW] = ['id', 'data', 'project_id', 'group_id'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
         $scenarios[self::SCENARIO_LIST] = [];
@@ -169,6 +173,10 @@ class Api extends BaseModel
             return current($this->getFirstErrors());
         }
 
+        //记录操作日志
+        OperationLog::createLog($this->project_id, UserInfo::$staticUserInfo->id, $this->id, OperationLog::ACTION['create'][0], '接口:' . $this->api_name, OperationLog::OBJECT_TYPE['api'][0]);
+
+
         return true;
     }
 
@@ -191,19 +199,19 @@ class Api extends BaseModel
             return json_last_error_msg();
         }
 
-        unset($jsonData['project_id'], $jsonData['id'], $jsonData['groupId'],$jsonData['id']);
+        unset($jsonData['project_id'], $jsonData['id'], $jsonData['groupId'], $jsonData['id']);
         foreach ($jsonData as $key => $jsonDatum) {
-            if($key === 'http_request_params'){
-                $jsonData[$key] = json_encode($jsonDatum,JSON_UNESCAPED_UNICODE);
+            if ($key === 'http_request_params') {
+                $jsonData[$key] = json_encode($jsonDatum, JSON_UNESCAPED_UNICODE);
             }
-            if($key === 'http_return_params'){
-                $jsonData[$key] = json_encode($jsonDatum,JSON_UNESCAPED_UNICODE);
+            if ($key === 'http_return_params') {
+                $jsonData[$key] = json_encode($jsonDatum, JSON_UNESCAPED_UNICODE);
             }
-            if($key === 'http_return_sample'){
-                $jsonData[$key] = json_encode($jsonDatum,JSON_UNESCAPED_UNICODE);
+            if ($key === 'http_return_sample') {
+                $jsonData[$key] = json_encode($jsonDatum, JSON_UNESCAPED_UNICODE);
             }
-            if($key === 'http_request_header'){
-                $jsonData[$key] = json_encode($jsonDatum,JSON_UNESCAPED_UNICODE);
+            if ($key === 'http_request_header') {
+                $jsonData[$key] = json_encode($jsonDatum, JSON_UNESCAPED_UNICODE);
             }
         }
 
@@ -232,26 +240,29 @@ class Api extends BaseModel
             return '项目不存在';
         }
 
-//        $tmp = json_decode($this->data, true);
-//        if (json_last_error()) {
-//            return '解析数据错误';
-//        }
+        //        $tmp = json_decode($this->data, true);
+        //        if (json_last_error()) {
+        //            return '解析数据错误';
+        //        }
 
-//        var_dump($tmp);
-////        var_dump($this->toArray());
-//        die;
-//
-//        $tmp = array_map(function ($a) {
-//            if (is_array($a)) {
-//                return json_encode($a, JSON_UNESCAPED_UNICODE);
-//            }
-//            return $a;
-//        }, $tmp);
-//
+        //        var_dump($tmp);
+        ////        var_dump($this->toArray());
+        //        die;
+        //
+        //        $tmp = array_map(function ($a) {
+        //            if (is_array($a)) {
+        //                return json_encode($a, JSON_UNESCAPED_UNICODE);
+        //            }
+        //            return $a;
+        //        }, $tmp);
+        //
         $res->attributes = $request;
         if (!$res->save()) {
             return current($this->getFirstErrors());
         }
+
+        //记录操作日志
+        OperationLog::createLog($res->project_id,UserInfo::$staticUserInfo->id, $res->id, OperationLog::ACTION['update'][0], '接口:' . $this->api_name, OperationLog::OBJECT_TYPE['api'][0]);
 
         return true;
     }
@@ -272,6 +283,9 @@ class Api extends BaseModel
         if (!$res->delete()) {
             return current($res->getFirstErrors());
         }
+
+         //记录操作日志
+         OperationLog::createLog($res->project_id,UserInfo::$staticUserInfo->id, $res->id, OperationLog::ACTION['delete'][0], '接口:' . $res->api_name, OperationLog::OBJECT_TYPE['api'][0]);
 
         return true;
     }
@@ -327,5 +341,4 @@ class Api extends BaseModel
         }
         return $res;
     }
-
 }

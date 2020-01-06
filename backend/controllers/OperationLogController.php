@@ -25,18 +25,23 @@ class OperationLogController extends BaseController
     /**
      * 获取操作日志列表
      * @param int|null $object_id
-     * @param int $type
+     * @param string $type
      * @param int $ps
      * @param int $cp
      * @return OperationLog[]|Project[]|UserProject[]|array|ActiveRecord[]
      */
-    public function actionList(int $object_id = null, int $type = 0, int $ps = 10, int $cp = 1)
+    public function actionList(int $object_id = null, string $type = '', int $ps = 10, int $cp = 1)
     {
         if (!$object_id) {
             return $this->failed('对象id不能为空');
         }
-        if (!$type || !in_array($type, array_column(OperationLog::OBJECT_TYPE, 0))) {
-            return $this->failed('查询类型为空或错误');
+        if (!$type) {
+            return $this->failed('查询类型不能为空');
+        }
+
+        $typeArr = explode(',',$type);
+        if(!$typeArr){
+            return $this->failed('查询类型解析错误');
         }
 
         $offset = ($cp - 1) * $ps;
@@ -46,8 +51,8 @@ class OperationLogController extends BaseController
             ->leftJoin('user_info b','a.user_id = b.id')
             ->where([
             'a.is_deleted' => OperationLog::IS_DELETED['no'],
-            'a.object_id' => $object_id,
-            'a.type' => $type
+            'a.project_id' => $object_id,
+            'a.type' => $typeArr
         ])->limit($ps)->offset($offset)->orderBy('a.id DESC')->asArray()->all();
 
         return $this->success($res);
