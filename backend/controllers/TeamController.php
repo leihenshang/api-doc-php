@@ -33,7 +33,7 @@ class TeamController extends BaseController
         $team->attributes = Yii::$app->request->post();
         $res = $team->createData();
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return $this->success();
@@ -53,7 +53,7 @@ class TeamController extends BaseController
         }
         $res = $team->updateData($request);
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => '成功'];
@@ -109,7 +109,7 @@ class TeamController extends BaseController
         $api->attributes = Yii::$app->request->get();
         $res = $api->detail();
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => $res];

@@ -297,7 +297,7 @@
                 <option
                   v-for="item in propertyList.var_type"
                   :key="item.id"
-                  value="item.tag_name"
+                  :value="item.tag_name"
                 >{{item.tag_name}}</option>
               </select>
             </td>

@@ -15,7 +15,6 @@
         <!-- <button>高级mock</button> -->
       </div>
       <div class="btn-group-2">
-        <button>继续添加</button>
         <button @click="updateApi()">保存</button>
       </div>
     </div>

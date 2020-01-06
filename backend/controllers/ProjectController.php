@@ -56,7 +56,7 @@ class ProjectController extends BaseController
         $request = Yii::$app->request->post();
         $res = $project->updateData($request);
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => '成功'];
@@ -135,7 +135,7 @@ class ProjectController extends BaseController
         $project->attributes = Yii::$app->request->post();
         $res = $project->del();
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => '成功'];

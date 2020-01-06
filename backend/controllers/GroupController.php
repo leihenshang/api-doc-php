@@ -52,7 +52,7 @@ class GroupController extends BaseController
        $request = Yii::$app->request->post();
         $res = $group->updateData($request);
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => '成功'];
@@ -83,7 +83,7 @@ class GroupController extends BaseController
         $group->attributes = Yii::$app->request->post();
         $res = $group->del();
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => '成功'];

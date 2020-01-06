@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\behaviors\UserVerify;
 use app\models\Api;
 use Yii;
+use yii\base\InvalidConfigException;
 
 class ApiController extends BaseController
 {
@@ -30,7 +31,7 @@ class ApiController extends BaseController
         $api->attributes = Yii::$app->request->post();
         $res = $api->createData();
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => '成功'];
@@ -46,7 +47,7 @@ class ApiController extends BaseController
        $request = Yii::$app->request->post();
         $res = $api->updateData($request);
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => '成功'];
@@ -83,19 +84,24 @@ class ApiController extends BaseController
         $api->attributes = Yii::$app->request->post();
         $res = $api->del();
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => '成功'];
     }
 
+    /**
+     * 接口详情
+     * @return (array|string|int)[]|(app\models\Api|null)[] 
+     * @throws InvalidConfigException 
+     */
     public function actionDetail()
     {
         $api = new Api(['scenario' => Api::SCENARIO_DETAIL]);
         $api->attributes = Yii::$app->request->get();
         $res = $api->detail();
         if (is_string($res)) {
-            return ['msg' => $res];
+            return $this->failed($res);
         }
 
         return ['data' => $res];
