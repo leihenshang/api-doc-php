@@ -108,9 +108,7 @@
       <header>
         <span>返回参数</span>
       </header>
-      <header>
-        <span>导入json</span>
-      </header>
+
       <table>
         <tr>
           <th>字段名</th>
@@ -130,7 +128,8 @@
             <input type="text" placeholder="参数名" v-model="item.decription" readonly />
           </td>
           <td>
-            <input type="checkbox" name id v-model="item.required" readonly />
+            <em v-if="item.required">是</em>
+            <em v-else>否</em>
           </td>
           <td>
             <span>{{item.type}}</span>
@@ -306,11 +305,11 @@ export default {
   computed: {
     groupName() {
       let groupName = "unknown";
-     for(let item of this.groupList){
-       if(item.id == this.apiData.group_id){
-         groupName = item.title;
-       }
-     }
+      for (let item of this.groupList) {
+        if (item.id == this.apiData.group_id) {
+          groupName = item.title;
+        }
+      }
 
       return groupName;
     }
@@ -378,8 +377,9 @@ button {
 /* 第二行开始 */
 .box2 {
   border: 1px solid #dddddd;
-  padding: 0 10px;
+  padding: 10px 10px 30px 10px;
   position: relative;
+  background-color: #fff;
 }
 
 .box2 em {
@@ -434,9 +434,9 @@ select {
 .box2two textarea {
   width: 100%;
   height: 100%;
-  border:1px solid gray;
+  border: 1px solid gray;
   box-sizing: border-box;
-  padding:5px;
+  padding: 5px;
   resize: none;
 }
 

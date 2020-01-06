@@ -581,8 +581,9 @@ button {
 /* 第二行开始 */
 .box2 {
   border: 1px solid #dddddd;
-  padding: 0 10px;
+  padding: 10px 10px 30px 10px;
   position: relative;
+  background-color: #fff;
 }
 
 .box2 em {
