@@ -144,7 +144,6 @@
           <th>必填</th>
           <th>类型</th>
           <th>示例</th>
-          <th>操作</th>
         </tr>
         <tr v-for="item in apiData.http_request_params" :key="item.id">
           <td>
@@ -162,7 +161,6 @@
           <td>
             <input type="text" placeholder="参数示例" v-model="item.example" readonly />
           </td>
-          <td></td>
         </tr>
       </table>
     </div>
@@ -180,7 +178,6 @@
           <th>说明</th>
           <th>必含</th>
           <th>类型</th>
-          <th>操作</th>
         </tr>
         <tr v-for="item in apiData.http_return_params" :key="item.id">
           <td>
@@ -198,7 +195,6 @@
           <td>
             <span>{{item.type}}</span>
           </td>
-          <td></td>
         </tr>
       </table>
     </div>

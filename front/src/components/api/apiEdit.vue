@@ -168,7 +168,7 @@
               <option
                 v-for="item in propertyList.var_type"
                 :key="item.id"
-                value="item.tag_name"
+                :value="item.tag_name"
               >{{item.tag_name}}</option>
             </select>
           </td>
@@ -394,15 +394,15 @@ export default {
     },
     //更新api
     updateApi() {
-      this.apiData.http_request_params = this.box3Item.splice(
+      this.apiData.http_request_params = this.box3Item.slice(
         0,
         this.box3Item.length - 1
       );
-      this.apiData.http_return_params = this.box4Item.splice(
+      this.apiData.http_return_params = this.box4Item.slice(
         0,
         this.box4Item.length - 1
       );
-      this.apiData.http_request_hader = this.box3HeaderItem.splice(
+      this.apiData.http_request_hader = this.box3HeaderItem.slice(
         0,
         this.box3HeaderItem.length - 1
       );
