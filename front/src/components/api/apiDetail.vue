@@ -1,10 +1,3 @@
-<!--
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-10 18:12:37
- * @LastEditTime: 2019-10-10 18:12:37
- * @LastEditors: your name
- -->
 <template>
   <div class="create-api">
     <div class="box1">
@@ -12,71 +5,28 @@
         <button @click="returnApiPage">↩ 接口列表</button>
         <button @click="box2=0" v-bind:class="{ 'btn-group-1-btn-change' : box2==0}">基础信息</button>
         <button @click="box2=1" v-bind:class="{ 'btn-group-1-btn-change' : box2==1}">详细说明</button>
-        <!-- <button>高级mock</button> -->
       </div>
     </div>
     <div class="box2">
       <div class="box2one" v-show="box2==0">
         <dl>
           <dd>
-            <span>分组:</span>
-            <select v-model="apiData.group_id" disabled>
-              <option :value="apiData.group">{{apiData.group}}</option>
-              <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
-            </select>
-            <!-- <select name="" id="">
-              <option value="1">可选（二级菜单）</option>
-            </select>-->
-            <!-- <em>状态:</em>
-            <select name="" id="">
-              <option value="1">启用</option>
-              <option value="2">禁用</option>
-            </select>-->
-            <em>请求协议:</em>
-            <select
-              name
-              id
-              v-model="apiData.protocol_type"
-              v-if="propertyList.http_protocol"
-              disabled
-            >
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.http_protocol"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
-            <em>请求方式:</em>
-            <select
-              name
-              id
-              v-model="apiData.http_method_type"
-              v-if="propertyList.http_method"
-              disabled
-            >
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.http_method"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
-            <em>返回情况:</em>
-            <select
-              name
-              id
-              v-model="apiData.http_return_type"
-              v-if="propertyList.http_return"
-              disabled
-            >
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.http_return"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.description}}</option>
-            </select>
+            <em>
+              分组:
+              <i>{{groupName}}</i>
+            </em>
+            <em>
+              请求协议:
+              <i>{{apiData.protocol_type}}</i>
+            </em>
+            <em>
+              请求方式:
+              <i>{{apiData.http_method_type}}</i>
+            </em>
+            <em>
+              接口语言:
+              <i>{{apiData.develop_language}}</i>
+            </em>
           </dd>
           <dd>
             <span>URL:</span>
@@ -93,17 +43,6 @@
           <dd>
             <span>方法:</span>
             <input type="text" v-model="apiData.function_name" readonly />
-          </dd>
-          <dd>
-            <span>接口语言:</span>
-            <select v-model="apiData.develop_language" v-if="propertyList.api_language" disabled>
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.api_language"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
           </dd>
         </dl>
       </div>
@@ -153,7 +92,8 @@
             <input type="text" placeholder v-model="item.desc" readonly />
           </td>
           <td>
-            <input type="checkbox" name id v-model="item.required" readonly />
+            <em v-if="item.required" style="font-style:normal;">是</em>
+            <em v-else style="font-style:normal;">否</em>
           </td>
           <td>
             <span>{{item.type}}</span>
@@ -321,6 +261,7 @@ export default {
           }
         );
     },
+    //获取分组
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
@@ -342,6 +283,7 @@ export default {
           }
         );
     },
+    //获取公共属性
     getProperty() {
       this.$http
         .get(this.apiAddress + "/property/list", {
@@ -359,6 +301,18 @@ export default {
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
+    }
+  },
+  computed: {
+    groupName() {
+      let groupName = "unknown";
+     for(let item of this.groupList){
+       if(item.id == this.apiData.group_id){
+         groupName = item.title;
+       }
+     }
+
+      return groupName;
     }
   }
 };
@@ -480,6 +434,10 @@ select {
 .box2two textarea {
   width: 100%;
   height: 100%;
+  border:1px solid gray;
+  box-sizing: border-box;
+  padding:5px;
+  resize: none;
 }
 
 .box2twoIsShow {
@@ -683,5 +641,15 @@ select {
 .tab-change-btn-bg {
   /* background-color: #efefef; */
   background-color: #fff;
+}
+
+em i {
+  font-style: normal;
+  border: 1px solid rgb(64, 165, 110);
+  background-color: #4caf50;
+  color: white;
+  padding: 4px 5px;
+  margin-left: 5px;
+  border-radius: 4px;
 }
 </style>
