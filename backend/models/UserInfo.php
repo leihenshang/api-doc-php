@@ -136,6 +136,8 @@ class UserInfo extends BaseModel
         }
 
         //生成token以及设置过期时间
+        $userInfo->last_login_ip = \Yii::$app->request->getUserIP();
+        $userInfo->last_login_time = date('Y-m-d H:i:s', time());
         $userInfo->token = self::createToken();
         $userInfo->token_expire_time = date('Y-m-d H:i:s', self::createExpireTime());
         if (!$userInfo->save()) {
