@@ -29,7 +29,7 @@ class UserInfo extends BaseModel
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_REGISTER = 'register';
     //1正常2禁用3锁定
-    const USER_STATE = ['normal' => 1, 'disabled' => 2, 'lock' => 3, 'not_activated' => 4];
+    const USER_STATE = ['normal' => 1, 'disabled' => 2, 'not_activated' => 3];
     //1普通用户2管理员
     const USER_TYPE = ['normal' => 1, 'admin' => 2];
 

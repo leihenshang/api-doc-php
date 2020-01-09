@@ -30,6 +30,7 @@ export default {
     create() {
       this.addIsHide = !this.addIsHide;
     },
+    //点击隐藏
     onClickHide(val) {
       if (val === "flush") {
         this.currPage = 1;
@@ -37,6 +38,7 @@ export default {
       }
       this.addIsHide = !this.addIsHide;
     },
+    //删除项目
     del(id) {
       this.$http
         .post(
@@ -67,6 +69,7 @@ export default {
       this.updateData = item;
       this.addIsHide = !this.addIsHide;
     },
+    //跳页
     jumpPage(page) {
       this.currPage = page;
       this.hideShade = false;
@@ -86,7 +89,9 @@ export default {
       updateData: null,
       itemCount: 0,
       hideShade: true,
-      indesideRoute: []
+      indesideRoute: [
+         { title: "用户管理", route: "userManagement" ,clild:""}
+      ]
     };
   },
   components: {

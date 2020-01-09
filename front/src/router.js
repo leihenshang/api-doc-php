@@ -12,6 +12,7 @@ import DetailPage from "./components/detail/detailPage";
 import Login from "./viewPage/login";
 import Register from "./viewPage/register";
 import User from "./components/user/user";
+import UserManagement from "./components/user/userManagement";
 
 Vue.use(VueRouter);
 
@@ -23,7 +24,10 @@ const router = new VueRouter({
     {
       path: "/",
       component: Project,
-      children: [{ path: "", component: ProjectList }]
+      children: [
+        { path: "", component: ProjectList },
+        { path: "userManagement",name: "userManagement", component: UserManagement },
+      ]
     },
     {
       path: "/detail/:id",

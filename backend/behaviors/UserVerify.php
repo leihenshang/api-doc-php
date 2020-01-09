@@ -208,12 +208,14 @@ class UserVerify extends Behavior
 
         $this->userInfo = $userInfo;
         UserInfo::$staticUserInfo = $userInfo;
+        if ($this->userInfo) {
+            //检查过期时间，如果过期时间还剩余5分钟则续期1小时
+            $expireTime = strtotime($userInfo->token_expire_time);
+            if ($expireTime < 5 * 60) {
+                $userInfo->token_expire_time = date('Y-m-d H:i:s', $expireTime + 60 * 60);
+                $userInfo->save(false);
+            }
 
-        //检查过期时间，如果过期时间还剩余5分钟则续期1小时
-        $expireTime = strtotime($userInfo->token_expire_time);
-        if ($expireTime < 5 * 60) {
-            $userInfo->token_expire_time = date('Y-m-d H:i:s', $expireTime + 60 * 60);
-            $userInfo->save(false);
         }
 
         return true;

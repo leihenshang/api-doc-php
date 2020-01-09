@@ -29,6 +29,7 @@ export default {
     menuList: Array
   },
   methods: {
+    //跳转
     jump(uri, child, index) {
       if (uri) {
         if (child) {
@@ -40,7 +41,11 @@ export default {
             "/" + uri + "/" + this.$route.params.id + "/" + child
           );
         } else {
-          this.$router.push("/" + uri + "/" + this.$route.params.id);
+          if (this.$route.params.id) {
+            this.$router.push("/" + uri + "/" + this.$route.params.id);
+          } else {
+            this.$router.push("/" + uri);
+          }
         }
       } else {
         if (this.$route.path !== "/") {
