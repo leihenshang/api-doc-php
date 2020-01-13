@@ -31,15 +31,15 @@ export default {
   props: {
     id: String
   },
-  created() {
-  },
+  created() {},
   data() {
     return {
       projectData: {},
       indesideRoute: [
         { title: "项目概况", route: "detail", child: "detailPage" },
         { title: "API接口", route: "detail", child: "apiPage" },
-        { title: "项目用户管理", route: "detail", child: "user" }
+        { title: "项目用户管理", route: "detail", child: "user" },
+        { title: "项目文档", route: "detail", child: "projectDoc" }
       ]
     };
   },
@@ -62,9 +62,8 @@ export default {
 }
 
 .detail .right {
-  padding:0 10px;
+  padding: 0 10px;
   box-sizing: border-box;
   overflow-x: hidden;
 }
-
 </style>

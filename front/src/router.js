@@ -13,6 +13,7 @@ import Login from "./viewPage/login";
 import Register from "./viewPage/register";
 import User from "./components/user/user";
 import UserManagement from "./components/user/userManagement";
+import DocPage from "./components/doc/docPage";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,7 @@ const router = new VueRouter({
       children: [
         { path: "", component: ProjectList },
         { path: "userManagement",name: "userManagement", component: UserManagement },
+        { path: "commonDoc",name: "commonDoc", component: DocPage, props: true },
       ]
     },
     {
@@ -50,7 +52,8 @@ const router = new VueRouter({
           component: ApiEdit,
           props: true
         },
-        { path: "user", name: "user", component: User, props: true }
+        { path: "user", name: "user", component: User, props: true },
+        { path: "projectDoc",name: "projectDoc", component: DocPage, props: true },
       ]
     }
     // { path: "/msg", name: "msg", component: Msg }

@@ -90,7 +90,8 @@ export default {
       itemCount: 0,
       hideShade: true,
       indesideRoute: [
-         { title: "用户管理", route: "userManagement" ,clild:""}
+         { title: "用户管理", route: "userManagement" ,clild:""},
+         { title: "通用文档", route: "commonDoc" ,clild:""},
       ]
     };
   },
