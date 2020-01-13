@@ -68,9 +68,9 @@
             <span>{{user.last_login_time}}</span>
           </td>
           <td>
-            <button @click="addProjectUser(user.id)">删除</button>
-            <button @click="addProjectUser(user.id)" v-if="user.state == 1">禁用</button>
-            <button @click="addProjectUser(user.id)" v-if="user.state == 2">启用</button>
+            <button @click="delUser(user.id)">删除</button>
+            <button @click="enableOrdisabledUser(user.id,2)" v-if="user.state == 1">禁用</button>
+            <button @click="enableOrdisabledUser(user.id,1)" v-if="user.state == 2">启用</button>
           </td>
         </tr>
       </table>
@@ -81,6 +81,7 @@
 import "../../static/css/table.css";
 
 const CODE_OK = 200;
+const IS_DELETED = 1;
 
 export default {
   name: "userManagement",
@@ -112,6 +113,7 @@ export default {
       }
       return str;
     },
+    //匹配用户状态
     userState(val) {
       let str;
       switch (val) {
@@ -132,12 +134,17 @@ export default {
       return str;
     },
     //删除项目用户
-    delProjectUser(id) {
+    delUser(id) {
+      if (!window.confirm("确认删除用户?")) {
+        return;
+      }
+
       this.$http
         .post(
-          this.apiAddress + "/project/del-user",
+          this.apiAddress + "/user/update-status",
           {
-            ids: id,
+            is_deleted: IS_DELETED,
+            userId: id,
             token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
@@ -146,7 +153,7 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              this.getProjectUserList();
+              this.getUserList();
               alert("成功！~");
             }
           },
@@ -156,14 +163,23 @@ export default {
           }
         );
     },
-    //增加项目用户
-    addProjectUser(userId) {
+    //启用/禁用用户
+    enableOrdisabledUser(id,state) {
+      if (!window.confirm("确认修改用户状态?")) {
+        return;
+      }
+
+      if([2,1].indexOf(state) === -1){
+         alert('参数错误');
+         return
+      }
+
       this.$http
         .post(
-          this.apiAddress + "/project/add-user",
+          this.apiAddress + "/user/update-status",
           {
-            user_id: userId,
-            project_id: this.$route.params.id,
+            state: state,
+            userId: id,
             token: this.$store.state.userInfo.token
           },
           { emulateJSON: true }
@@ -172,10 +188,8 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              this.getProjectUserList();
+              this.getUserList();
               alert("成功！~");
-            } else {
-              alert("操作失败!" + !response.msg ? response.msg : "");
             }
           },
           function(res) {
@@ -206,31 +220,8 @@ export default {
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
-    },
-    //获取项目用户列表
-    getProjectUserList() {
-      this.$http
-        .get(this.apiAddress + "/project/project-user", {
-          params: {
-            id: this.$route.params.id,
-            token: this.$store.state.userInfo.token
-          }
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.projectUser = response.data;
-            }
-          },
-          function(res) {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
     }
-  },
-  computed: {}
+  }
 };
 </script>
 <style scoped>

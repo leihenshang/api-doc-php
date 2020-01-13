@@ -15,7 +15,7 @@ class UserController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
-            'actions' => ['list'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
+            'actions' => ['list', 'update-status'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
         ];
         return $behaviors;
@@ -78,7 +78,8 @@ class UserController extends BaseController
                     ['b.project_id' => $projectId]
                 ])->from('user_project b');
 
-            $res->andWhere(['and',
+            $res->andWhere([
+                'and',
                 ['not in', 'a.id', $query]
             ]);
         }
@@ -133,16 +134,21 @@ class UserController extends BaseController
     }
 
     /**
-     * 更新用户状态
+     * 更新用户状态字段
      * @return array
      */
     public function actionUpdateStatus()
     {
-        $userId = Yii::$app->request->get('userId', null);
-        $sate = Yii::$app->request->get('state', null);
-        $is_deleted = Yii::$app->request->get('is_deleted', null);
+        $userId = Yii::$app->request->post('userId', null);
+        $sate = Yii::$app->request->post('state', null);
+        $is_deleted = Yii::$app->request->post('is_deleted', null);
         if (!$userId || !is_numeric($userId)) {
             return $this->failed('userId不能为空或userId错误');
+        }
+
+        //不能更改自己
+        if ($this->userInfo->id == $userId) {
+            return $this->failed('不能对自己进行操作');
         }
 
         if (!$is_deleted && !$sate) {
@@ -159,16 +165,15 @@ class UserController extends BaseController
         }
 
         if (is_numeric($sate)) {
-            $arr['sate'] = $sate;
+            $arr['state'] = $sate;
         }
 
         $res = UserInfo::updateAll($arr, ['id' => $userId]);
-        if($res){
-            return $this->success([],'更新完成');
+        if ($res) {
+            return $this->success([], '更新完成');
         }
 
         return $this->failed('更新失败');
-
     }
 
     /**
