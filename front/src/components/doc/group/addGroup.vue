@@ -30,7 +30,7 @@ export default {
     groupData: Object,
     isShow: Boolean,
     showIsEdit: Boolean,
-    isAdd:Boolean
+    isAdd: Boolean
   },
   created() {},
   data() {
@@ -43,7 +43,8 @@ export default {
     };
   },
   methods: {
-     createGroup() {
+    //创建分组
+    createGroup() {
       if (this.newGroup.length < 1) {
         alert("组名长度不能低于1个");
         return;
@@ -54,8 +55,9 @@ export default {
           this.apiAddress + "/group/create",
           {
             title: this.newGroup,
-            project_id: this.$route.params.id,
-            token: this.$store.state.userInfo.token
+            project_id: 0,
+            token: this.$store.state.userInfo.token,
+            type: 3
           },
           { emulateJSON: true }
         )
@@ -66,7 +68,7 @@ export default {
               this.$emit("add-group");
               this.newGroup = "";
               alert("成功！~");
-                 this.$emit("closeAddGroup");
+              this.$emit("closeAddGroup");
             } else {
               alert("创建分组失败:" + response.msg);
             }

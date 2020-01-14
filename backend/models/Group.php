@@ -13,6 +13,7 @@ namespace app\models;
  * @property integer $project_id id
  * @property integer is_deleted id
  * @property string create_time id
+ * @property integer type 1common,2project,3doc,0undefined
  *
  */
 class Group extends BaseModel
@@ -26,7 +27,7 @@ class Group extends BaseModel
         return [
             ['id','required'],
             ['project_id','required'],
-            [['id','p_id','project_id','is_deleted'],'number'],
+            [['id','p_id','project_id','is_deleted','type'],'number'],
             ['title', 'required'],
             ['title', 'string', 'length' => [1, 100]],
         ];
@@ -35,7 +36,7 @@ class Group extends BaseModel
     public function scenarios()
     {
         $scenarios =  parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['title','project_id'];
+        $scenarios[self::SCENARIO_CREATE] = ['title','project_id','type'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
         $scenarios[self::SCENARIO_UPDATE] = ['title','id'];
         return $scenarios;

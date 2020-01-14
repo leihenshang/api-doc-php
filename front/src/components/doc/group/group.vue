@@ -52,6 +52,7 @@ export default {
     };
   },
   methods: {
+    //删除分组
     del(id) {
       if (!confirm("确定删除?")) {
         return;
@@ -85,6 +86,7 @@ export default {
           }
         );
     },
+    //点击分组
     clientBtn(id, index) {
       for (const key in this.group) {
         this.group[key].isClick = false;

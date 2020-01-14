@@ -5,7 +5,7 @@
       <button @click="showCreateGroup = true">+新建分组</button>
     </div>
 
-    <div class="api-content">
+    <div class="doc-content">
       <div class="group-wrapper">
         <group
           :id="this.id"
@@ -17,11 +17,15 @@
         />
       </div>
     </div>
+    <div class="doc-wrapper">
+      <docList />
+    </div>
   </div>
 </template>
 
 <script>
 import group from "./group/group";
+import docList from "./docList";
 
 const CODE_OK = 200;
 const GROUP_TYPE_DOC = 3;
@@ -34,6 +38,7 @@ export default {
   created() {
     this.getGroup(this.pageSize, this.curr, this.$route.params.id);
   },
+  //默认数据
   data() {
     return {
       groupList: [],
@@ -51,8 +56,13 @@ export default {
     closeAddGroup(val) {
       this.showCreateGroup = val;
     },
+    //获取文档
+    getDoc(size,curr,id){
+
+    },
+    //删除api
     apiDelete() {
-      this.getApi(this.pageSize, this.curr, this.$route.params.id);
+      this.getDoc(this.pageSize, this.curr, this.$route.params.id);
     },
     //获取分组列表
     getGroup(pageSize, curr, projectId) {
@@ -88,14 +98,15 @@ export default {
       this.getGroup(1, 100, this.$route.params.id);
     },
     changeGroup(id) {
-      this.getApi(this.pageSize, this.curr, this.$route.params.id, id);
+      this.getDoc(this.pageSize, this.curr, this.$route.params.id, id);
     },
     addApi() {
       this.$router.push("/detail/" + this.$route.params.id + "/createApi");
     }
   },
   components: {
-    group
+    group,
+    docList
   }
 };
 </script>
@@ -121,7 +132,7 @@ export default {
   font-size: 12px;
 }
 
-.api-content {
+.doc-content {
   box-sizing: border-box;
   width: 100%;
   height: calc(100% - 21px);
@@ -137,7 +148,7 @@ export default {
   border-right: 1px solid #e5e5e5;
 }
 
-.api-wrapper {
+.doc-wrapper {
   flex: 1;
   overflow-y: scroll;
   padding: 10px;
