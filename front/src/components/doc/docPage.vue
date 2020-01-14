@@ -24,6 +24,8 @@
 import group from "./group/group";
 
 const CODE_OK = 200;
+const GROUP_TYPE_DOC = 3;
+
 export default {
   name: "docPage",
   props: {
@@ -31,7 +33,6 @@ export default {
   },
   created() {
     this.getGroup(this.pageSize, this.curr, this.$route.params.id);
-    this.getApi(this.pageSize, this.curr, this.$route.params.id);
   },
   data() {
     return {
@@ -59,8 +60,9 @@ export default {
         .get(this.apiAddress + "/group/list", {
           params: {
             cp: curr,
+            type: GROUP_TYPE_DOC,
             ps: pageSize,
-            projectId,
+            projectId: projectId ? projectId : 0,
             token: this.$store.state.userInfo.token
           }
         })
@@ -74,41 +76,6 @@ export default {
                 }
                 this.groupList = response.data;
               }
-            }
-          },
-          function(res) {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
-    },
-    //获取api列表
-    getApi(pageSize, curr, projectId, groupId) {
-      let params = {
-        cp: curr,
-        ps: pageSize,
-        projectId,
-        token: this.$store.state.userInfo.token
-      };
-      if (groupId) {
-        params = {
-          cp: curr,
-          ps: pageSize,
-          projectId,
-          groupId,
-          token: this.$store.state.userInfo.token
-        };
-      }
-
-      this.$http
-        .get(this.apiAddress + "/api/list", {
-          params: params
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.apiList = response.data;
             }
           },
           function(res) {

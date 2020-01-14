@@ -4,7 +4,9 @@ namespace app\controllers;
 
 use app\behaviors\UserVerify;
 use app\models\Group;
+use Throwable;
 use Yii;
+use yii\db\StaleObjectException;
 
 class GroupController extends BaseController
 {
@@ -36,7 +38,7 @@ class GroupController extends BaseController
         $group->attributes = Yii::$app->request->post();
         $res = $group->createData();
         if (is_string($res)) {
-            return ['msg' => $res,'code' => 22];
+            return ['msg' => $res, 'code' => 22];
         }
 
         return ['data' => '成功'];
@@ -49,7 +51,7 @@ class GroupController extends BaseController
     public function actionUpdate()
     {
         $group = new Group(['scenario' => Group::SCENARIO_UPDATE]);
-       $request = Yii::$app->request->post();
+        $request = Yii::$app->request->post();
         $res = $group->updateData($request);
         if (is_string($res)) {
             return $this->failed($res);
@@ -64,18 +66,35 @@ class GroupController extends BaseController
      */
     public function actionList()
     {
-        $projectId = Yii::$app->request->get('projectId',0);
-        $res = Group::findAll(['is_deleted' => 0,'project_id' => $projectId]);
-        return ['data' => $res];
-    }
+        $projectId = Yii::$app->request->get('projectId', 0);
+        $type = Yii::$app->request->get('type', 0);
 
+        if (!is_numeric($projectId)) {
+            return $this->failed('projectId错误');
+        }
+
+        if (!is_numeric($type)) {
+            return $this->failed('type错误');
+        }
+
+        $where = ['is_deleted' => 0];
+        if ($type) {
+            $where['type'] = $type;
+        }
+
+        $where['project_id'] = $projectId;
+
+
+        $res = Group::findAll($where);
+        return $this->success($res);
+    }
 
 
     /**
      * 删除数据
      * @return array
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function actionDel()
     {
