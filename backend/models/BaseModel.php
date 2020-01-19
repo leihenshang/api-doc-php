@@ -21,6 +21,7 @@ class BaseModel extends ActiveRecord
     const SCENARIO_DELETE = 'delete';
     const SCENARIO_UPDATE = 'update';
     const SCENARIO_QUERY = 'query';
+    const SCENARIO_DETAIL = 'detail';
 
 
     /**
