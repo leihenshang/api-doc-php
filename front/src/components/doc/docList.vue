@@ -1,29 +1,23 @@
 <template>
-  <div class="doc-list">
+  <div class="doc-list common-table">
     <table>
       <tr>
         <th>名称</th>
-        <th>请求方法</th>
-        <th>url</th>
-        <th>协议</th>
-        <th>语言</th>
+        <th>创建者</th>
         <th>创建时间</th>
         <th>操作</th>
       </tr>
-      <tr v-for="item in apiList.resItem" :key="item.id">
+      <tr v-for="item in docList" :key="item.id">
         <td>
           <span class="span-dot"></span>
-          {{item.api_name}}
+          {{item.title}}
         </td>
-        <td>{{item.http_method_type}}</td>
-        <td>{{item.url}}</td>
-        <td>{{item.protocol_type}}</td>
-        <td>{{item.develop_language}}</td>
+          <td>{{item.user_id}}</td>
         <td>{{item.create_time}}</td>
         <td class="api-list-btn">
           <button @click="jumpPage('apiEdit',item.id)">编辑</button>
           <button @click="jumpPage('apiDetail',item.id)">详情</button>
-          <button @click="delApi(item.id)">删除</button>
+          <button @click="delDoc(item.id)">删除</button>
         </td>
       </tr>
     </table>
@@ -36,21 +30,21 @@ export default {
   name: "docList",
   props: {
     id: String,
-    apiList: Object
+    docList: Array
   },
   created() {},
   data() {
     return {};
   },
   methods: {
-    delApi(id) {
+    delDoc(id) {
       if (!confirm("确认删除?")) {
         return;
       }
 
       this.$http
         .post(
-          this.apiAddress + "/api/del",
+          this.apiAddress + "/doc/delete",
           {
             id: id,
             token: this.$store.state.userInfo.token
@@ -62,7 +56,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               alert("成功！~");
-              this.$emit("api-delete");
+              this.$emit("doc-delete");
             }
           },
           function(res) {

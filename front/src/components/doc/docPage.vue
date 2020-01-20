@@ -16,9 +16,9 @@
           :showCreateGroup="showCreateGroup"
         />
       </div>
-    </div>
-    <div class="doc-wrapper">
-      <docList />
+      <div class="doc-wrapper">
+        <docList :docList = 'docData.data' v-on:doc-delete='docDelete' />
+      </div>
     </div>
   </div>
 </template>
@@ -42,14 +42,15 @@ export default {
   data() {
     return {
       groupList: [],
-      apiList: {},
+      docData: {},
       curr: 1,
       pageSize: 100,
       indesideRoute: [
         { title: "项目概况", route: "detail" },
         { title: "API接口", route: "api" }
       ],
-      showCreateGroup: false
+      showCreateGroup: false,
+      groupId:0
     };
   },
   methods: {
@@ -57,12 +58,37 @@ export default {
       this.showCreateGroup = val;
     },
     //获取文档
-    getDoc(size,curr,id){
+    getDoc(size, curr, id) {
+      if (!id) {
+        alert("id不能为空");
+      }
 
+      this.$http
+        .get(this.apiAddress + "/doc/list", {
+          params: {
+            groupId: id,
+            token: this.$store.state.userInfo.token
+          }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.docData = response.data;
+            } else {
+              alert("获取数据失败");
+              return;
+            }
+          },
+          function(res) {
+            let response = res.body;
+            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          }
+        );
     },
     //删除api
-    apiDelete() {
-      this.getDoc(this.pageSize, this.curr, this.$route.params.id);
+    docDelete() {
+      this.getDoc(this.pageSize, this.curr, this.groupId);
     },
     //获取分组列表
     getGroup(pageSize, curr, projectId) {
@@ -98,7 +124,8 @@ export default {
       this.getGroup(1, 100, this.$route.params.id);
     },
     changeGroup(id) {
-      this.getDoc(this.pageSize, this.curr, this.$route.params.id, id);
+      this.groupId = id;
+      this.getDoc(this.pageSize, this.curr, id);
     },
     addApi() {
       this.$router.push("/detail/" + this.$route.params.id + "/createApi");
@@ -112,7 +139,7 @@ export default {
 </script>
 
 <style scoped>
-.api-page {
+.doc-page {
   height: calc(100% - 48px);
 }
 
