@@ -1,7 +1,7 @@
 <template>
   <div class="doc-page">
     <div class="btn-wrapper">
-      <button @click="addApi()">+创建文档</button>
+      <button @click="addDoc()">+创建文档</button>
       <button @click="showCreateGroup = true">+新建分组</button>
     </div>
 
@@ -127,8 +127,8 @@ export default {
       this.groupId = id;
       this.getDoc(this.pageSize, this.curr, id);
     },
-    addApi() {
-      this.$router.push("/detail/" + this.$route.params.id + "/createApi");
+    addDoc() {
+      this.$router.push("/docCreate");
     }
   },
   components: {

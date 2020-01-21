@@ -12,11 +12,11 @@
           <span class="span-dot"></span>
           {{item.title}}
         </td>
-          <td>{{item.user_id}}</td>
+        <td>{{item.user_id}}</td>
         <td>{{item.create_time}}</td>
-        <td class="api-list-btn">
-          <button @click="jumpPage('apiEdit',item.id)">编辑</button>
-          <button @click="jumpPage('apiDetail',item.id)">详情</button>
+        <td class="doc-list-btn">
+          <button @click="jumpPage('docEdit',item.id)">编辑</button>
+          <button @click="jumpPage('docDetail',item.id)">详情</button>
           <button @click="delDoc(item.id)">删除</button>
         </td>
       </tr>
@@ -65,10 +65,8 @@ export default {
           }
         );
     },
-    jumpPage(name, id) {
-      this.$router.push(
-        "/detail/" + this.$route.params.id + "/" + name + "/" + id
-      );
+    jumpPage(name) {
+      this.$router.push("/" + name);
     }
   }
 };

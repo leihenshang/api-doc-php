@@ -14,6 +14,9 @@ import Register from "./viewPage/register";
 import User from "./components/user/user";
 import UserManagement from "./components/user/userManagement";
 import DocPage from "./components/doc/docPage";
+import DocCreate from "./components/doc/docCreate";
+import DocEdit from "./components/doc/docEdit";
+import DocDetail from "./components/doc/docDetail";
 
 Vue.use(VueRouter);
 
@@ -27,8 +30,20 @@ const router = new VueRouter({
       component: Project,
       children: [
         { path: "", component: ProjectList },
-        { path: "userManagement",name: "userManagement", component: UserManagement },
-        { path: "commonDoc",name: "commonDoc", component: DocPage, props: true },
+        {
+          path: "userManagement",
+          name: "userManagement",
+          component: UserManagement
+        },
+        {
+          path: "commonDoc",
+          name: "commonDoc",
+          component: DocPage,
+          props: true
+        },
+        { path: "docCreate", name: "docCreate", component: DocCreate },
+        { path: "docEdit", name: "docEdit", component: DocEdit },
+        { path: "docDetail", name: "docDetail", component: DocDetail },
       ]
     },
     {
@@ -53,7 +68,12 @@ const router = new VueRouter({
           props: true
         },
         { path: "user", name: "user", component: User, props: true },
-        { path: "projectDoc",name: "projectDoc", component: DocPage, props: true },
+        {
+          path: "projectDoc",
+          name: "projectDoc",
+          component: DocPage,
+          props: true
+        }
       ]
     }
     // { path: "/msg", name: "msg", component: Msg }
