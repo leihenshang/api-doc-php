@@ -5,7 +5,10 @@
 </template>
 <script>
 export default {
-  name: "docDetail"
+  name: "docDetail",
+  props:{
+    docId:Number
+  }
 };
 </script>
 <style scoped>

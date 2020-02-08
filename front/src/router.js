@@ -43,7 +43,7 @@ const router = new VueRouter({
         },
         { path: "docCreate", name: "docCreate", component: DocCreate },
         { path: "docEdit", name: "docEdit", component: DocEdit },
-        { path: "docDetail", name: "docDetail", component: DocDetail },
+        { path: "docDetail/:docId", name: "docDetail", component: DocDetail,props:true },
       ]
     },
     {

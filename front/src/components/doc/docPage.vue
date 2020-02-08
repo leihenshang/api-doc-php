@@ -61,6 +61,7 @@ export default {
     getDoc(size, curr, id) {
       if (!id) {
         alert("id不能为空");
+        return;
       }
 
       this.$http

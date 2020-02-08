@@ -155,7 +155,7 @@ class Doc extends BaseModel
 
         $data = ['total' => 0, 'data' => []];
         $data['total'] = self::find()->where($where)->count();
-        $data['data'] = self::find()->where($where)->offset(($cp - 1) * $ps)->orderBy('id DESC')->limit($ps)->all();
+        $data['data'] = self::find()->select('id,title,create_time,view_count,like_count,user_id')->where($where)->offset(($cp - 1) * $ps)->orderBy('id DESC')->limit($ps)->all();
         return $data;
     }
 }

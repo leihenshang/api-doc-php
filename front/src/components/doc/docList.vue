@@ -65,8 +65,8 @@ export default {
           }
         );
     },
-    jumpPage(name) {
-      this.$router.push("/" + name);
+    jumpPage(name, docId) {
+      this.$router.push({ name, params: { docId: docId } });
     }
   }
 };
