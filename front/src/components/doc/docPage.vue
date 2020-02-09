@@ -17,7 +17,7 @@
         />
       </div>
       <div class="doc-wrapper">
-        <docList :docList = 'docData.data' v-on:doc-delete='docDelete' />
+        <docList :docList="docData.data" v-on:doc-delete="docDelete" />
       </div>
     </div>
   </div>
@@ -50,7 +50,7 @@ export default {
         { title: "API接口", route: "api" }
       ],
       showCreateGroup: false,
-      groupId:0
+      groupId: 0
     };
   },
   methods: {
@@ -60,8 +60,7 @@ export default {
     //获取文档
     getDoc(size, curr, id) {
       if (!id) {
-        alert("id不能为空");
-        return;
+        id = 0;
       }
 
       this.$http
@@ -76,9 +75,6 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.docData = response.data;
-            } else {
-              alert("获取数据失败");
-              return;
             }
           },
           function(res) {

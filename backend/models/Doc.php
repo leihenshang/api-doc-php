@@ -130,9 +130,18 @@ class Doc extends BaseModel
         return '更新失败';
     }
 
+    /**
+     * 文档详情
+     * @return Doc|string
+     */
     public function detail()
     {
-        $res = self::findOne(['id' => $this->id, 'is_deleted' => self::IS_DELETED['no']]);
+        $res = self::find()->alias('a')
+            ->select('a.*,b.nick_name')
+            ->leftJoin('user_info b', 'a.user_id = b.id')
+            ->where(['a.id' => $this->id, 'a.is_deleted' => self::IS_DELETED['no']])
+            ->asArray()
+            ->one();
         if (!$res) {
             return '没有找到数据';
         }
@@ -140,22 +149,41 @@ class Doc extends BaseModel
         return $res;
     }
 
-    public function dataList(int $groupId = 0, int $ps = 10, int $cp = 1)
+    /**
+     * 文档列表
+     * @param int $groupId
+     * @param int $ps
+     * @param int $cp
+     * @param string $field
+     * @return array|string
+     */
+    public function dataList(int $groupId = 0, int $ps = 10, int $cp = 1, string $field = 'id,title,create_time,view_count,like_count,user_id')
     {
-        $group = Group::findOne(['id' => $groupId, 'is_deleted' => self::IS_DELETED['no']]);
-        if (!$group) {
-            return '没有找到分组';
+        $group = null;
+        if ($groupId) {
+            $group = Group::findOne(['id' => $groupId, 'is_deleted' => self::IS_DELETED['no']]);
+            if (!$group) {
+                return '没有找到分组';
+            }
         }
 
-        $where = [
-            'group_id' => $groupId,
-            'is_deleted' => self::IS_DELETED['no'],
-            'state' => self::STATE['normal']
-        ];
+        if ($group) {
+            $where = [
+                'group_id' => $groupId,
+                'is_deleted' => self::IS_DELETED['no'],
+                'state' => self::STATE['normal']
+            ];
+        } else {
+            $where = [
+                'is_deleted' => self::IS_DELETED['no'],
+                'state' => self::STATE['normal']
+            ];
+
+        }
 
         $data = ['total' => 0, 'data' => []];
         $data['total'] = self::find()->where($where)->count();
-        $data['data'] = self::find()->select('id,title,create_time,view_count,like_count,user_id')->where($where)->offset(($cp - 1) * $ps)->orderBy('id DESC')->limit($ps)->all();
+        $data['data'] = self::find()->select($field)->where($where)->offset(($cp - 1) * $ps)->orderBy('id DESC')->limit($ps)->all();
         return $data;
     }
 }
