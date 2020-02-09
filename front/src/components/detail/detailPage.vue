@@ -86,7 +86,7 @@ export default {
               this.$store.commit("saveProject", response.data);
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }

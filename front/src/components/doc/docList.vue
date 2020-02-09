@@ -43,14 +43,9 @@ export default {
       }
 
       this.$http
-        .post(
-          this.apiAddress + "/doc/delete",
-          {
-            id: id,
-            token: this.$store.state.userInfo.token
-          },
-          { emulateJSON: true }
-        )
+        .post(this.apiAddress + "/doc/delete", {
+          id: id
+        })
         .then(
           response => {
             response = response.body;
@@ -59,7 +54,7 @@ export default {
               this.$emit("doc-delete");
             }
           },
-          function(res) {
+          res => {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }

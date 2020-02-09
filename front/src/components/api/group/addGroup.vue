@@ -71,7 +71,7 @@ export default {
               alert("创建分组失败:" + response.msg);
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -103,7 +103,7 @@ export default {
               alert("修改失败:" + response.msg);
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("获操作失败!" + !response.msg ? response.msg : "");
           }

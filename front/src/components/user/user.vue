@@ -181,7 +181,7 @@ export default {
               alert("成功！~");
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }
@@ -209,7 +209,7 @@ export default {
               alert("操作失败!" + !response.msg ? response.msg : "");
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }
@@ -232,7 +232,7 @@ export default {
               this.userList = response.data;
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -254,7 +254,7 @@ export default {
               this.projectUser = response.data;
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }

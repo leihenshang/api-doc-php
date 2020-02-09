@@ -72,7 +72,7 @@ export default {
               this.$emit("api-delete");
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }

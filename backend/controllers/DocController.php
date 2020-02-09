@@ -28,7 +28,7 @@ class DocController extends BaseController
      */
     public function actionCreate()
     {
-        $doc = new Doc(['scenario' => Team::SCENARIO_CREATE]);
+        $doc = new Doc(['scenario' => Doc::SCENARIO_CREATE]);
         $doc->attributes = Yii::$app->request->post();
         $doc->user_id = $this->userInfo->id;
         $res = $doc->createData();

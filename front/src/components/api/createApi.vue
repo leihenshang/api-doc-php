@@ -453,7 +453,7 @@ export default {
                 return;
               }
             },
-            function(res) {
+           res =>  {
               let response = res.body;
               alert("操作失败!" + !response.msg ? response.msg : "");
               return;
@@ -541,7 +541,7 @@ export default {
               this.groupList = response.data;
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -560,7 +560,7 @@ export default {
               this.propertyList = response.data;
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }

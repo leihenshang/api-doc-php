@@ -50,7 +50,7 @@ export default {
           { emulateJSON: true }
         )
         .then(
-          function(res) {
+         res =>  {
             let response = res.body;
             if (response.code === CODE_OK) {
               alert("成功!" + response.msg);
@@ -59,7 +59,7 @@ export default {
               alert("失败!" + response.msg);
             }
           },
-          function(res) {
+         res =>  {
             let response = res.body;
             alert("操作失败!" + response.msg);
           }
