@@ -37,6 +37,7 @@ export default {
   },
   created() {
     this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+    this.getDoc(10,1,0);
   },
   //默认数据
   data() {
@@ -95,8 +96,7 @@ export default {
             cp: curr,
             type: GROUP_TYPE_DOC,
             ps: pageSize,
-            projectId: projectId ? projectId : 0,
-            token: this.$store.state.userInfo.token
+            projectId: projectId ? projectId : 0
           }
         })
         .then(

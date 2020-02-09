@@ -20,7 +20,12 @@
           </li>
           <li>
             <em>项目类型</em>
-            <validation-provider rules="required|oneOf:web,pc" v-slot="{ errors }" vid="type" name= "type">
+            <validation-provider
+              rules="required|oneOf:web,pc"
+              v-slot="{ errors }"
+              vid="type"
+              name="type"
+            >
               <select v-model="type">
                 <option></option>
                 <option value="web">web</option>
@@ -30,8 +35,13 @@
             </validation-provider>
           </li>
           <li>
-                <validation-provider rules="min:10" v-slot="{ errors }" vid="description" name= "description">
-            <textarea name="desc" v-model.trim="desc" placeholder="输入描述"></textarea>
+            <validation-provider
+              rules="min:10"
+              v-slot="{ errors }"
+              vid="description"
+              name="description"
+            >
+              <textarea name="desc" v-model.trim="desc" placeholder="输入描述"></textarea>
               <span>{{ errors[0] }}</span>
             </validation-provider>
           </li>
@@ -77,17 +87,12 @@ export default {
           return;
         }
         this.$http
-          .post(
-            this.apiAddress + "/project/create",
-            {
-              title: this.title,
-              description: this.desc,
-              version: this.ver,
-              type: this.type,
-            token: this.$store.state.userInfo.token
-            },
-            { emulateJSON: true }
-          )
+          .post(this.apiAddress + "/project/create", {
+            title: this.title,
+            description: this.desc,
+            version: this.ver,
+            type: this.type
+          })
           .then(
             function(res) {
               let response = res.body;

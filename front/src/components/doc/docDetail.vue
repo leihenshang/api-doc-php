@@ -33,7 +33,7 @@ export default {
         .get(this.apiAddress + "/doc/detail", {
           params: {
             id: this.docId,
-            token: this.$store.state.userInfo.token
+            // token: this.$store.state.userInfo.token
           }
         })
         .then(
@@ -63,6 +63,7 @@ export default {
   height: 100%;
   box-shadow: 6px 6px 5px #888888;
   border: 1px solid rgb(202, 202, 202);
+  min-height: 800px;
 }
 
 .doc-detail .title {
@@ -77,7 +78,7 @@ export default {
 }
 
 .doc-detail .info {
-  padding-left:20px;
+  padding-left: 20px;
 }
 
 .doc-detail .content {
