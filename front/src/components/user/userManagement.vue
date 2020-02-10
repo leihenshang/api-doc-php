@@ -2,7 +2,7 @@
   <div class="user">
     <div class="text-box">
       <input type="text" v-model="keyword" />
-      <button @click="userList = [];keyword=''">重置</button>
+      <button @click="getUserList();keyword=''">重置</button>
       <button @click="getUserList(keyword)">搜索用户</button>
     </div>
     <div class="all-user common-table" v-show="userList[0]">
@@ -12,7 +12,7 @@
           <span>头像</span>
         </th>
         <th>
-          <span>昵称</span>
+          <span>用户名</span>
         </th>
         <th>
           <span>创建时间</span>
@@ -157,21 +157,21 @@ export default {
               alert("成功！~");
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
     //启用/禁用用户
-    enableOrdisabledUser(id,state) {
+    enableOrdisabledUser(id, state) {
       if (!window.confirm("确认修改用户状态?")) {
         return;
       }
 
-      if([2,1].indexOf(state) === -1){
-         alert('参数错误');
-         return
+      if ([2, 1].indexOf(state) === -1) {
+        alert("参数错误");
+        return;
       }
 
       this.$http
@@ -192,7 +192,7 @@ export default {
               alert("成功！~");
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }
@@ -215,7 +215,7 @@ export default {
               this.userList = response.data;
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
