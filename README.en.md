@@ -14,3 +14,6 @@ API documentation, exercise items, used to record API documentation, facilitate 
 #### Instructions
 1. Enter the front folder, execute NPM install, and execute NPM run serve
 2. Go to the backend folder, perform composer install, and perform PHP yii serve --port=1000
+
+#### database init
+- database/mysql.sql 
