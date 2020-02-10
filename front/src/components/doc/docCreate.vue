@@ -57,11 +57,12 @@ export default {
               if (response.data) {
                 this.groupList = response.data;
               }
+            } else {
+              alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
             }
           },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            alert("获取数据-操作失败!");
           }
         );
     },
@@ -94,7 +95,7 @@ export default {
               }
             }
           },
-          res => {
+          () => {
             alert("创建文档失败");
           }
         );

@@ -32,7 +32,7 @@ export default {
       this.$http
         .get(this.apiAddress + "/doc/detail", {
           params: {
-            id: this.docId,
+            id: this.docId
             // token: this.$store.state.userInfo.token
           }
         })
@@ -43,9 +43,8 @@ export default {
               this.doc = response.data;
             }
           },
-          res => {
-            let response = res.body;
-            alert("获取数据失败:" + !response.msg ? response.msg : "");
+          () => {
+            alert("获取数据失败");
           }
         );
     }
