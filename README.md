@@ -17,3 +17,8 @@ api文档，练习项目,用于记录api文档，方便前后台协作.
 
 #### 数据库初始化
 - database/mysql.sql 
+
+
+#### 鸣谢列表
+- 感谢 `JetBrains` 提供的免费IDE支持！
+- 相关: [JetBrains](https://www.jetbrains.com/?from=apiDoc)

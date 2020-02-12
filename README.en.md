@@ -17,3 +17,8 @@ API documentation, exercise items, used to record API documentation, facilitate 
 
 #### database init
 - database/mysql.sql 
+
+
+#### Thanks list
+- thanks to `JetBrains` for the free IDE support!
+- about: [JetBrains](https://www.jetbrains.com/?from=apiDoc)
