@@ -39,21 +39,23 @@ const router = new VueRouter({
           path: "commonDoc",
           name: "commonDoc",
           component: DocPage,
-          props: true
+          props: true,
+          children: [
+            {
+              path: "docDetail/:docId",
+              name: "docDetail",
+              component: DocDetail,
+              props: true
+            },
+            {
+              path: "docEdit/:docId",
+              name: "docEdit",
+              component: DocEdit,
+              props: true
+            }
+          ]
         },
-        { path: "docCreate", name: "docCreate", component: DocCreate },
-        {
-          path: "docEdit/:docId",
-          name: "docEdit",
-          component: DocEdit,
-          props: true
-        },
-        {
-          path: "docDetail/:docId",
-          name: "docDetail",
-          component: DocDetail,
-          props: true
-        }
+        { path: "docCreate", name: "docCreate", component: DocCreate }
       ]
     },
     {
@@ -63,20 +65,27 @@ const router = new VueRouter({
       props: true,
       children: [
         { path: "detailPage", name: "detailPage", component: DetailPage },
-        { path: "apiPage", name: "apiPage", component: ApiPage },
+        {
+          path: "apiPage",
+          name: "apiPage",
+          component: ApiPage,
+          children: [
+            {
+              path: "apiDetail/:apiId",
+              name: "apiDetail",
+              component: ApiDetail,
+              props: true
+            },
+            {
+              path: "apiEdit/:apiId",
+              name: "apiEdit",
+              component: ApiEdit,
+              props: true
+            }
+          ]
+        },
         { path: "createApi", name: "createApi", component: CreateApi },
-        {
-          path: "apiDetail/:apiId",
-          name: "apiDetail",
-          component: ApiDetail,
-          props: true
-        },
-        {
-          path: "apiEdit/:apiId",
-          name: "apiEdit",
-          component: ApiEdit,
-          props: true
-        },
+
         { path: "user", name: "user", component: User, props: true },
         {
           path: "projectDoc",

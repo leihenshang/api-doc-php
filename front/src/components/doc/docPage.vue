@@ -17,7 +17,7 @@
         />
       </div>
       <div class="doc-wrapper">
-        <docList :docList="docData.data" v-on:doc-delete="docDelete" />
+        <docList :docList="docData.data" v-on:doc-delete="docDelete" ref="docList" />
       </div>
     </div>
   </div>
@@ -121,6 +121,7 @@ export default {
       this.getGroup(1, 100, this.$route.params.id);
     },
     changeGroup(id) {
+      this.$refs.docList.hideMe = false;
       this.groupId = id;
       this.getDoc(this.pageSize, this.curr, id);
     },

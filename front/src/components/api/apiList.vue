@@ -7,7 +7,7 @@
  -->
 <template>
   <div class="api-list">
-    <table>
+    <table v-show="!hideMe">
       <tr>
         <th>名称</th>
         <th>请求方法</th>
@@ -34,6 +34,12 @@
         </td>
       </tr>
     </table>
+    <div class="container" v-show="hideMe">
+      <div class="container-btn">
+        <button @click="hideMe = !hideMe">返回</button>
+      </div>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -47,7 +53,9 @@ export default {
   },
   created() {},
   data() {
-    return {};
+    return {
+      hideMe: false
+    };
   },
   methods: {
     delApi(id) {
@@ -72,15 +80,16 @@ export default {
               this.$emit("api-delete");
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
     jumpPage(name, id) {
+      this.hideMe = true;
       this.$router.push(
-        "/detail/" + this.$route.params.id + "/" + name + "/" + id
+        "/detail/" + this.$route.params.id + "/apiPage/" + name + "/" + id
       );
     }
   }

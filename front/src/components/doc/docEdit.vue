@@ -166,7 +166,7 @@
     }
 
     .doc-wrapper div {
-        margin: 20px 0;
+        margin: 20px auto;
     }
 
     .doc-wrapper button {

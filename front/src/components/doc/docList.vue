@@ -1,6 +1,6 @@
 <template>
   <div class="doc-list common-table">
-    <table>
+    <table v-show="!hideMe">
       <tr>
         <th>名称</th>
         <th>创建者</th>
@@ -21,6 +21,13 @@
         </td>
       </tr>
     </table>
+
+    <div class="container" v-show="hideMe">
+      <div class="container-btn">
+        <button @click="hideMe = !hideMe">返回</button>
+      </div>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -34,7 +41,9 @@ export default {
   },
   created() {},
   data() {
-    return {};
+    return {
+      hideMe: false
+    };
   },
   methods: {
     delDoc(id) {
@@ -61,6 +70,7 @@ export default {
         );
     },
     jumpPage(name, docId) {
+      this.hideMe = true;
       this.$router.push({ name, params: { docId: docId } });
     }
   }
@@ -122,5 +132,16 @@ export default {
   border-radius: 10px;
   background-color: #4caf50;
   margin-right: 5px;
+}
+
+.container button {
+  height: 30px;
+  width: 120px;
+}
+
+.container-btn {
+  width: 75%;
+  margin: 0 auto;
+  text-align: right;
 }
 </style>
