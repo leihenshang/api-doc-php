@@ -5,7 +5,6 @@ import ProjectList from "./components/project/projectList";
 import Detail from "./viewPage/projectDetail";
 // import Msg from "./viewPage/msg";
 import ApiPage from "./components/api/apiPage";
-import ApiDetail from "./components/api/apiDetail";
 import ApiEdit from "./components/api/apiEdit";
 import CreateApi from "./components/api/createApi";
 import DetailPage from "./components/detail/detailPage";
@@ -70,12 +69,6 @@ const router = new VueRouter({
           name: "apiPage",
           component: ApiPage,
           children: [
-            {
-              path: "apiDetail/:apiId",
-              name: "apiDetail",
-              component: ApiDetail,
-              props: true
-            },
             {
               path: "apiEdit/:apiId",
               name: "apiEdit",

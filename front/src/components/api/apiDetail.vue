@@ -167,8 +167,7 @@ const CODE_OK = 200;
 export default {
   name: "apiDetail",
   props: {
-    id: String,
-    apiId: String
+    apiId: Number
   },
   created() {
     this.getApiDetail();
@@ -236,15 +235,14 @@ export default {
   },
   methods: {
     returnApiPage() {
-      this.$router.go(-1);
+      this.$emit("childHideMe");
     },
     //获取api详情
     getApiDetail() {
       this.$http
         .get(this.apiAddress + "/api/detail", {
           params: {
-            id: this.$route.params.apiId,
-            token: this.$store.state.userInfo.token
+            id: this.apiId
           }
         })
         .then(
@@ -252,6 +250,8 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.apiData = response.data;
+            }else {
+              alert('failed:' + response.msg);
             }
           },
          res =>  {
@@ -274,6 +274,8 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.groupList = response.data;
+            }else {
+              alert('failed:' + response.msg);
             }
           },
          res =>  {
@@ -293,6 +295,8 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.propertyList = response.data;
+            }else {
+              alert('failed:' + response.msg);
             }
           },
          res =>  {

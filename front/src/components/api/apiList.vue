@@ -1,10 +1,3 @@
-<!--
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-10 18:12:37
- * @LastEditTime: 2019-10-10 18:12:37
- * @LastEditors: your name
- -->
 <template>
   <div class="api-list">
     <table v-show="!hideMe">
@@ -28,23 +21,29 @@
         <td>{{item.develop_language}}</td>
         <td>{{item.create_time}}</td>
         <td class="api-list-btn">
-          <button @click="jumpPage('apiEdit',item.id)">编辑</button>
-          <button @click="jumpPage('apiDetail',item.id)">详情</button>
+          <button @click="jumpPage('edit',item.id)">编辑</button>
+          <button @click="jumpPage('detail',item.id)">详情</button>
           <button @click="delApi(item.id)">删除</button>
         </td>
       </tr>
     </table>
     <div class="container" v-show="hideMe">
-      <div class="container-btn">
-        <button @click="hideMe = !hideMe">返回</button>
+      <div class="container-detail" v-if="currContainer == 'detail'">
+        <apiDetail :apiId="apiId" v-on:childHideMe="childHideMe()" />
       </div>
-      <router-view></router-view>
+      <div class="container-edit" v-if="currContainer == 'edit'">
+        <apiEdit :apiId="apiId" v-on:childHideMe="childHideMe()" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import apiDetail from "./apiDetail";
+import apiEdit from "./apiEdit";
+
 const CODE_OK = 200;
+
 export default {
   name: "apiList",
   props: {
@@ -54,7 +53,9 @@ export default {
   created() {},
   data() {
     return {
-      hideMe: false
+      apiId: 0,
+      hideMe: false,
+      currContainer: ""
     };
   },
   methods: {
@@ -87,22 +88,27 @@ export default {
         );
     },
     jumpPage(name, id) {
+      this.apiId = parseInt(id);
       this.hideMe = true;
-      this.$router.push(
-        "/detail/" + this.$route.params.id + "/apiPage/" + name + "/" + id
-      );
+      this.currContainer = name;
+    },
+    childHideMe() {
+      this.hideMe = false;
     }
+  },
+  computed: {
+    getapiId() {
+      return this.$route.params.apiId;
+    }
+  },
+  components: {
+    apiDetail,
+    apiEdit
   }
 };
 </script>
 
 <style scoped>
-/* .api-list table,
-.api-list td,
-.api-list th {
-  border: 1px solid #e5e5e5;
-} */
-
 .api-list {
   background-color: #fff;
   height: auto;

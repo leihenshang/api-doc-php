@@ -1,10 +1,3 @@
-<!--
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-10 18:12:37
- * @LastEditTime: 2019-10-10 18:12:37
- * @LastEditors: your name
- -->
 <template>
   <div class="create-api">
     <div class="box1">
@@ -268,9 +261,7 @@ const CODE_OK = 200;
 export default {
   name: "apiEdit",
   props: {
-    id: String,
-    apiList: Array,
-    apiId: String
+    apiId: Number
   },
   created() {
     this.getApiDetail();
@@ -342,7 +333,7 @@ export default {
       this.$http
         .get(this.apiAddress + "/api/detail", {
           params: {
-            id: this.$route.params.apiId,
+            id: this.apiId,
             token: this.$store.state.userInfo.token
           }
         })
@@ -382,14 +373,15 @@ export default {
               });
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
+    //返回api列表页面
     returnApiPage() {
-      this.$router.go(-1);
+      this.$emit("childHideMe");
     },
     //更新api
     updateApi() {
@@ -425,7 +417,7 @@ export default {
               alert("成功！~");
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }
@@ -493,7 +485,7 @@ export default {
               this.groupList = response.data;
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -511,7 +503,7 @@ export default {
               this.propertyList = response.data;
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
