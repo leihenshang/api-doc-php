@@ -62,7 +62,12 @@ const router = new VueRouter({
       component: Detail,
       props: true,
       children: [
-        { path: "detailPage", name: "detailPage", component: DetailPage },
+        {
+          path: "detailPage",
+          name: "detailPage",
+          component: DetailPage,
+          props: true
+        },
         {
           path: "apiPage",
           name: "apiPage",

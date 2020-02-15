@@ -31,9 +31,9 @@
       </ul>
 
       <ul>
-        <li>
+        <li @click="jump()" class="api-detail">
           <p>api接口</p>
-          <p>{{projectData.type}}</p>
+          <p>点击查看详情</p>
         </li>
         <li></li>
         <li></li>
@@ -70,6 +70,7 @@ export default {
     };
   },
   methods: {
+    //获取项目详情
     getDetail() {
       this.$http
         .get(this.apiAddress + "/project/detail", {
@@ -84,16 +85,18 @@ export default {
             if (response.code === CODE_OK) {
               this.projectData = response.data;
               this.$store.commit("saveProject", response.data);
+            } else {
+              alert("failed:" + response.msg);
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
-    jump(name) {
-      this.$router.push("/" + name + "/" + this.id);
+    jump() {
+      this.$router.push({ name: "apiPage", params: { id: this.id } });
     }
   },
   components: {
@@ -102,7 +105,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .detailPage {
   display: flex;
@@ -172,5 +174,13 @@ ul:nth-child(5) {
   width: 50%;
   height: 100%;
   background-color: #f3f3f3;
+}
+
+.api-detail {
+  background-color: #5ace5e6e;
+}
+
+.api-detail:hover {
+  background-color: #5ace5e;
 }
 </style>
