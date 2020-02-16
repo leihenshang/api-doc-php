@@ -29,9 +29,9 @@ class UserInfo extends BaseModel
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_REGISTER = 'register';
     //1正常2禁用3锁定
-    const USER_STATE = ['normal' => 1, 'disabled' => 2, 'not_activated' => 3];
+    const USER_STATE = ['normal' => [1,'正常'], 'disabled' => [2, '禁用'], 'not_activated' => [3, '未激活']];
     //1普通用户2管理员
-    const USER_TYPE = ['normal' => 1, 'admin' => 2];
+    const USER_TYPE = ['normal' => [1, '普通用户'], 'admin' => [2, '管理员']];
 
 
     public static $staticUserInfo;
@@ -128,7 +128,7 @@ class UserInfo extends BaseModel
         $userInfo = self::findOne([
             'name' => $username,
             'pwd' => $userPassword,
-            'state' => self::USER_STATE['normal'],
+            'state' => self::USER_STATE['normal'][0],
             'is_deleted' => self::IS_DELETED['no']
         ]);
         if (!$userInfo) {
@@ -236,7 +236,7 @@ class UserInfo extends BaseModel
         }
 
         //修改状态
-        $this->state = self::USER_STATE['normal'];
+        $this->state = self::USER_STATE['normal'][0];
 
         //设置code已使用
         $code->is_used = Message::IS_USED['yes'];

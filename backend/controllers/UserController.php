@@ -3,8 +3,10 @@
 namespace app\controllers;
 
 use app\behaviors\UserVerify;
+use app\models\User;
 use app\models\UserInfo;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\db\Query;
 
 class UserController extends BaseController
@@ -15,7 +17,7 @@ class UserController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
-            'actions' => ['list', 'update-status'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
+            'actions' => ['list', 'update-status', 'get-user-info'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
         ];
         return $behaviors;
@@ -58,10 +60,10 @@ class UserController extends BaseController
 
         $projectId = $params['project_id'] ?? null;
         $res = UserInfo::find()->alias('a')->select('a.*');
-        if (UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type == UserInfo::USER_TYPE['admin']) {
+        if (UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type == UserInfo::USER_TYPE['admin'][0]) {
             $whereArr = ['a.is_deleted' => UserInfo::IS_DELETED['no']];
         } else {
-            $whereArr = ['a.type' => UserInfo::USER_TYPE['normal'], 'a.state' => UserInfo::USER_STATE['normal'], 'a.is_deleted' => UserInfo::IS_DELETED['no']];
+            $whereArr = ['a.type' => UserInfo::USER_TYPE['normal'][0], 'a.state' => UserInfo::USER_STATE['normal'][0], 'a.is_deleted' => UserInfo::IS_DELETED['no']];
         }
 
         $res->where($whereArr);
@@ -174,6 +176,34 @@ class UserController extends BaseController
         }
 
         return $this->failed('更新失败');
+    }
+
+    /**
+     * 获取用户信息
+     * @return (array|string|int)[] 
+     * @throws InvalidConfigException 
+     */
+    public function actionGetUserInfo()
+    {
+        $userId = $this->userInfo->id;
+        $res = UserInfo::findOne($userId);
+        if ($res) {
+            $res = $res->toArray();
+            $res['state_text'] = 0;
+            $res['type_text'] = 0;
+            foreach (UserInfo::USER_TYPE as  $value) {
+                if ($res['type'] == $value[0]) {
+                    $res['type_text'] = $value[1];
+                }
+            }
+
+            foreach (UserInfo::USER_STATE as  $value) {
+                if ($res['state'] == $value[0]) {
+                    $res['state_text'] = $value[1];
+                }
+            }
+        }
+        return $this->success($res);
     }
 
     /**

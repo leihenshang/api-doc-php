@@ -1,14 +1,19 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+
+//页面
 import Project from "./viewPage/project";
-import ProjectList from "./components/project/projectList";
 import Detail from "./viewPage/projectDetail";
 // import Msg from "./viewPage/msg";
+import Login from "./viewPage/login";
+import Register from "./viewPage/register";
+import UserCenter from "./viewPage/userCenter";
+
+// 组件
+import ProjectList from "./components/project/projectList";
 import ApiPage from "./components/api/apiPage";
 import CreateApi from "./components/api/createApi";
 import DetailPage from "./components/detail/detailPage";
-import Login from "./viewPage/login";
-import Register from "./viewPage/register";
 import User from "./components/user/user";
 import UserManagement from "./components/user/userManagement";
 import DocPage from "./components/doc/docPage";
@@ -83,6 +88,11 @@ const router = new VueRouter({
           props: true
         }
       ]
+    },
+    {
+      path: "/userCenter",
+      component: UserCenter,
+      name: "userCenter"
     }
     // { path: "/msg", name: "msg", component: Msg }
   ]

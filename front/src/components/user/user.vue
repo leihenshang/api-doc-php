@@ -5,148 +5,88 @@
       <button @click="userList = [];keyword=''">重置</button>
       <button @click="getUserList(keyword)">搜索用户</button>
     </div>
-    <div class="all-user common-table" v-show="userList[0]">
-      <h4>搜索到的用户列表：</h4>
-      <table>
-        <th>
-          <span>头像</span>
-        </th>
-        <th>
-          <span>昵称</span>
-        </th>
-        <th>
-          <span>创建时间</span>
-        </th>
-        <th>
-          <span>类型</span>
-        </th>
-        <th>
-          <span>状态</span>
-        </th>
-        <th>
-          <span>手机</span>
-        </th>
-        <th>
-          <span>昵称</span>
-        </th>
-        <th>
-          <span>最后登录ip</span>
-        </th>
-        <th>
-          <span>最后登录时间</span>
-        </th>
-        <th>
-          <span>用户操作</span>
-        </th>
-
-        <tr v-for="user in userList" :key="user.id">
-          <td>
-            <span>{{user.cover}}</span>
-          </td>
-          <td>
-            <span>{{user.name}}</span>
-          </td>
-          <td>
-            <span>{{user.create_time}}</span>
-          </td>
-          <td>
-            <span>{{user.type}}</span>
-          </td>
-          <td>
-            <span>{{user.state}}</span>
-          </td>
-          <td>
-            <span>{{user.mobile_number}}</span>
-          </td>
-          <td>
-            <span>{{user.nick_name}}</span>
-          </td>
-          <td>
-            <span>{{user.last_login_ip}}</span>
-          </td>
-          <td>
-            <span>{{user.last_login_time}}</span>
-          </td>
-          <td>
-            <button @click="addProjectUser(user.id)">添加</button>
-          </td>
-        </tr>
-      </table>
+    <h4>搜索到的用户列表：</h4>
+    <div class="all-user" v-show="userList">
+      <div class="user-tab" v-for="user in userList" :key="user.id">
+        <div class="user-tab-info">
+          <div class="avatar">
+            <img src="../../assets/logo.png" alt width="100" />
+          </div>
+          <div class="info">
+            <table border="1">
+              <tr>
+                <td>用户名</td>
+                <td>{{user.name}}</td>
+                <td>状态</td>
+                <td>{{user.state}}</td>
+              </tr>
+              <tr>
+                <td>昵称</td>
+                <td>{{user.nick_name}}</td>
+                <td>类型</td>
+                <td>{{user.type}}</td>
+              </tr>
+              <tr>
+                <td>邮箱</td>
+                <td colspan="3">{{user.email}}</td>
+              </tr>
+              <tr>
+                <td>最后登录ip</td>
+                <td>{{user.last_login_ip}}</td>
+                <td>最后登录时间</td>
+                <td>{{user.last_login_time}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="btn">
+          <button @click="addProjectUser(user.id)">添加</button>
+        </div>
+      </div>
     </div>
     <hr />
     <h4>项目组成员：</h4>
-    <div class="common-table">
-      <table>
-        <th>
-          <span>头像</span>
-        </th>
-        <th>
-          <span>昵称</span>
-        </th>
-        <th>
-          <span>创建时间</span>
-        </th>
-        <th>
-          <span>类型</span>
-        </th>
-        <th>
-          <span>状态</span>
-        </th>
-        <th>
-          <span>手机</span>
-        </th>
-        <th>
-          <span>昵称</span>
-        </th>
-        <th>
-          <span>最后登录ip</span>
-        </th>
-        <th>
-          <span>最后登录时间</span>
-        </th>
-        <th>
-          <span>用户操作</span>
-        </th>
-
-        <tr v-for="user in projectUser" :key="user.id">
-          <td>
-            <span>{{user.cover}}</span>
-          </td>
-          <td>
-            <span>{{user.name}}</span>
-          </td>
-          <td>
-            <span>{{user.create_time}}</span>
-          </td>
-          <td>
-            <span>{{user.type}}</span>
-          </td>
-          <td>
-            <span>{{user.state}}</span>
-          </td>
-          <td>
-            <span>{{user.mobile_number}}</span>
-          </td>
-          <td>
-            <span>{{user.nick_name}}</span>
-          </td>
-          <td>
-            <span>{{user.last_login_ip}}</span>
-          </td>
-          <td>
-            <span>{{user.last_login_time}}</span>
-          </td>
-          <td>
-            <button @click="delProjectUser(user.relation_id)">删除</button>
-          </td>
-        </tr>
-      </table>
+    <div class="all-user" v-show="projectUser">
+      <div class="user-tab" v-for="user in projectUser" :key="user.id">
+        <div class="user-tab-info">
+          <div class="avatar">
+            <img src="../../assets/logo.png" alt width="100" />
+          </div>
+          <div class="info">
+            <table border="1">
+              <tr>
+                <td>用户名</td>
+                <td>{{user.name}}</td>
+                <td>状态</td>
+                <td>{{user.state}}</td>
+              </tr>
+              <tr>
+                <td>昵称</td>
+                <td>{{user.nick_name}}</td>
+                <td>类型</td>
+                <td>{{user.type}}</td>
+              </tr>
+              <tr>
+                <td>邮箱</td>
+                <td colspan="3">{{user.email}}</td>
+              </tr>
+              <tr>
+                <td>最后登录ip</td>
+                <td>{{user.last_login_ip}}</td>
+                <td>最后登录时间</td>
+                <td>{{user.last_login_time}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="btn">
+          <button @click="delProjectUser(user.relation_id)">删除</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import "../../static/css/table.css";
-
 const CODE_OK = 200;
 
 export default {
@@ -181,7 +121,7 @@ export default {
               alert("成功！~");
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }
@@ -209,7 +149,7 @@ export default {
               alert("操作失败!" + !response.msg ? response.msg : "");
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("操作失败!" + !response.msg ? response.msg : "");
           }
@@ -232,7 +172,7 @@ export default {
               this.userList = response.data;
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -254,7 +194,7 @@ export default {
               this.projectUser = response.data;
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -264,6 +204,62 @@ export default {
 };
 </script>
 <style scoped>
+.user-tab {
+  border: 1px solid gray;
+  width: 600px;
+  display: inline-block;
+  margin: 20px 30px;
+}
+
+.user-tab-info {
+  border-bottom: 1px solid gray;
+  display: flex;
+  padding: 2px;
+}
+
+.avatar {
+  flex: 0.5;
+  position: relative;
+}
+
+.avatar img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.info {
+  flex: 2;
+}
+
+.btn {
+  text-align: right;
+}
+
+.btn button {
+  width: 80px;
+  height: 30px;
+  margin: 3px 3px 3px;
+}
+
+.user-tab table {
+  width: 100%;
+}
+
+.user-tab table,
+.user-tab tr,
+.user-tab td,
+.user-tab th {
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.user {
+  height: 100%;
+}
+
 .user {
   height: 100%;
 }

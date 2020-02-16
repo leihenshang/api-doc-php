@@ -18,8 +18,8 @@
             <li>
               <a href="#" @click="loginOut()">退出登陆</a>
             </li>
-            <li>
-              <a href="#">个人中心</a>
+            <li @click="goToUserCenter()">
+              <a href="javascript:void(0)">个人中心</a>
             </li>
           </ul>
         </div>
@@ -48,7 +48,6 @@ export default {
       }
     },
     nickName: function() {
-      //  console.log(this.$store.state.userInfo);
       return this.$store.state.userInfo.nick_name;
     }
   },
@@ -59,6 +58,10 @@ export default {
       Vue.prototype.userInfo = null;
       this.$store.commit("saveUserInfo", {});
       this.$router.push("/login");
+    },
+    //到个人中心
+    goToUserCenter() {
+      this.$router.push({ name: "userCenter" });
     }
   },
   data: function() {
@@ -67,7 +70,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 /* <!-- 头部导航栏开始 --> */
 .top-bar {
