@@ -16,15 +16,15 @@
           <li class="nick-name-li">
             <em>昵称：</em>
             <p v-if="editNickName === false">{{userInfo.nick_name}}</p>
-            <input v-else type="text" v-model="newNickName" />
+            <input v-else type="text" v-model="newNickname" />
             <button
               v-if=" editNickName === false "
-              @click="editNickName = !editNickName; newNickName = userInfo.nick_name "
+              @click="editNickName = !editNickName; newNickname = userInfo.nick_name "
             >修改昵称</button>
             <button v-if=" editNickName === true " @click="updateNickName()">确定</button>
             <button
               v-if=" editNickName === true "
-              @click=" editNickName = !editNickName; newNickName = '' "
+              @click=" editNickName = !editNickName; newNickname = '' "
             >取消</button>
           </li>
           <li>
@@ -57,19 +57,19 @@
       <ul>
         <li>
           <em>旧密码:</em>
-          <input type="password"  v-model="password.old" placeholder="输入旧密码" autocomplete="off" />
+          <input type="password" v-model="password.old" placeholder="输入旧密码" autocomplete="off" />
         </li>
         <li>
           <em>新密码:</em>
-          <input type="password" v-model="password.newFirst"  placeholder="输入旧密码" />
+          <input type="password" v-model="password.newFirst" placeholder="输入旧密码" />
         </li>
         <li>
           <em>新密码:</em>
-          <input type="password" v-model="password.newSecond"  placeholder="输入旧密码" />
+          <input type="password" v-model="password.newSecond" placeholder="输入旧密码" />
         </li>
         <li>
           <em></em>
-          <button>确定</button>
+          <button @click="updatePwd()">确定</button>
           <button @click="password.update = false">取消</button>
         </li>
       </ul>
@@ -87,7 +87,7 @@ export default {
     return {
       userInfo: {},
       editNickName: false,
-      newNickName: "",
+      newNickname: "",
       password: {
         old: "",
         newFirst: "",
@@ -122,12 +122,84 @@ export default {
     //更新昵称
     updateNickName() {
       //验证名字是否一样
-      if (this.newNickName === this.userInfo.nick_name) {
+      if (this.newNickname === this.userInfo.nick_name) {
         alert("昵称没有修改");
         return;
       }
 
+      this.$http
+        .post(
+          this.apiAddress + "/user/update-nickname",
+          {
+            nickname: this.newNickname
+          },
+          { emulateJSON: true }
+        )
+        .then(
+          res => {
+            let response = res.body;
+            if (response.code !== CODE_OK) {
+              alert("failed:" + response.msg);
+              return;
+            } else {
+              this.getUserInfo();
+              this.userInfo.nick_name = this.newNickname;
+              this.$store.commit("saveUserInfo", this.userInfo);
+            }
+          },
+          res => {
+            alert("请求发生错误");
+          }
+        );
+
       this.editNickName = !this.editNickName;
+    },
+    //更新密码
+    updatePwd() {
+      if (
+        this.password.old == "" ||
+        this.password.newFirst == "" ||
+        this.password.newSecond == ""
+      ) {
+        alert("密码不能为空");
+        return;
+      }
+
+      if (this.password.newFirst !== this.password.newSecond) {
+        alert("新密码重复数据不一致");
+        return;
+      }
+      if (this.password.newFirst === this.password.old) {
+        alert("新旧密码不能相同");
+        return;
+      }
+
+      this.$http
+        .post(
+          this.apiAddress + "/user/update-pwd",
+          {
+            oldPwd: this.password.old,
+            newPwd: this.password.newFirst,
+            rePwd: this.password.newSecond
+          },
+          { emulateJSON: true }
+        )
+        .then(
+          res => {
+            let response = res.body;
+            if (response.code !== CODE_OK) {
+              alert("failed:" + response.msg);
+              return;
+            } else {
+              alert("success");
+              this.getUserInfo();
+              this.password.update = !this.password.update;
+            }
+          },
+          res => {
+            alert("请求发生错误");
+          }
+        );
     }
   },
   computed: {}
@@ -185,6 +257,10 @@ export default {
   height: 20px;
 }
 
+.nick-name-li button {
+  float: right;
+}
+
 .info ul em {
   width: 100px;
   display: inline-block;
@@ -200,7 +276,7 @@ export default {
 
 .btn {
   margin: 20px 0;
-  width: 40%;
+  width: 350px;
   margin: 0 auto;
   text-align: right;
 }

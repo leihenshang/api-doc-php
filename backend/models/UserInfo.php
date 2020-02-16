@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 
 /**
@@ -28,8 +29,9 @@ class UserInfo extends BaseModel
 
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_REGISTER = 'register';
+    const SCENARIO_UPDATE_PWD = 'updatePwd';
     //1正常2禁用3锁定
-    const USER_STATE = ['normal' => [1,'正常'], 'disabled' => [2, '禁用'], 'not_activated' => [3, '未激活']];
+    const USER_STATE = ['normal' => [1, '正常'], 'disabled' => [2, '禁用'], 'not_activated' => [3, '未激活']];
     //1普通用户2管理员
     const USER_TYPE = ['normal' => [1, '普通用户'], 'admin' => [2, '管理员']];
 
@@ -71,6 +73,7 @@ class UserInfo extends BaseModel
             [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 100],
             ['email', 'email'],
             [['re_pwd', 'name', 'email', 'code'], 'required', 'on' => self::SCENARIO_REGISTER],
+            ['re_pwd', 'required', 'on' => self::SCENARIO_UPDATE_PWD],
             [['mobile_number'], 'string', 'max' => 11],
             [['keyword', 'code'], 'string', 'max' => 50],
 
@@ -83,6 +86,7 @@ class UserInfo extends BaseModel
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
         $scenarios[self::SCENARIO_QUERY] = ['keyword'];
         $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'email', 'code'];
+        $scenarios[self::SCENARIO_UPDATE_PWD] = ['re_pwd', 'pwd'];
         return $scenarios;
     }
 
@@ -257,5 +261,16 @@ class UserInfo extends BaseModel
             $trans->rollBack();
             return $e->getMessage();
         }
+    }
+
+    /**
+     * 检查昵称/邮箱/名字是否重复
+     * @param string $keyword 
+     * @return UserInfo|null 
+     * @throws InvalidConfigException 
+     */
+    public static function checkReplayNickname(string $keyword)
+    {
+        return  self::find()->where(['or', ['name' => $keyword], ['email' => $keyword], ['nick_name' => $keyword]])->one();
     }
 }

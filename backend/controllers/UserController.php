@@ -5,9 +5,14 @@ namespace app\controllers;
 use app\behaviors\UserVerify;
 use app\models\User;
 use app\models\UserInfo;
+use Throwable;
 use Yii;
+use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
+use yii\base\NotSupportedException;
+use yii\db\Exception;
 use yii\db\Query;
+use yii\db\StaleObjectException;
 
 class UserController extends BaseController
 {
@@ -17,7 +22,7 @@ class UserController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
-            'actions' => ['list', 'update-status', 'get-user-info'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
+            'actions' => ['list', 'update-status', 'get-user-info', 'update-nickname', 'update-pwd'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
         ];
         return $behaviors;
@@ -128,7 +133,7 @@ class UserController extends BaseController
         if (!$keyword) {
             return $this->failed('检查的值不能为空');
         }
-        $res = UserInfo::findOne(['or', ['name' => $keyword], ['email' => $keyword], ['nick_name' => $keyword]]);
+        $res = UserInfo::checkReplayNickname($keyword);
         if ($res) {
             return $this->success(['name' => $res->name, 'email' => $res->email, 'nick_name' => $res->nick_name]);
         }
@@ -176,6 +181,81 @@ class UserController extends BaseController
         }
 
         return $this->failed('更新失败');
+    }
+
+    /**
+     * 更新用户昵称
+     * @return (array|string|int)[]|mixed 
+     * @throws InvalidConfigException 
+     * @throws NotSupportedException 
+     * @throws Exception 
+     * @throws Throwable 
+     * @throws Throwable 
+     */
+    public function actionUpdateNickname()
+    {
+        $nickname = Yii::$app->request->post('nickname', null);
+        if (!$nickname) {
+            return $this->failed('失败');
+        }
+
+
+        //检查昵称是否重复
+        if (UserInfo::checkReplayNickname($nickname)) {
+            return $this->failed('昵称重复');
+        }
+
+        $res = UserInfo::updateAll(['nick_name' => $nickname], ['id' => $this->userInfo->id]);
+        if ($res) {
+            return $this->success([], '更新完成');
+        }
+
+        return $this->failed('更新失败');
+    }
+
+    /**
+     * 更改用户密码
+     * @return (array|string|int)[]|mixed 
+     * @throws InvalidConfigException 
+     * @throws InvalidArgumentException 
+     * @throws NotSupportedException 
+     * @throws Exception 
+     * @throws StaleObjectException 
+     */
+    public function actionUpdatePwd()
+    {
+        $pwdSecond = Yii::$app->request->post('rePwd', '');
+        if (!$pwdSecond) {
+            return $this->failed('第二次新密码没有获取到');
+        }
+
+        $user = new UserInfo(['scenario' => UserInfo::SCENARIO_UPDATE_PWD]);
+        $user->pwd = Yii::$app->request->post('oldPwd', '');
+        $user->re_pwd = Yii::$app->request->post('newPwd', '');
+        if (!$user->validate()) {
+            return $this->failed(current($user->getFirstErrors()));
+        }
+
+        if ($user->re_pwd !== $pwdSecond) {
+            return $this->failed('两次新密码输入不一致');
+        }
+
+        if ($user->pwd === $pwdSecond) {
+            return $this->failed('密码没有更改');
+        }
+
+        //查找用户信息
+        $res = UserInfo::findOne(['id' => $this->userInfo->id, 'pwd' => $user->pwd, 'is_deleted' => UserInfo::IS_DELETED['no']]);
+        if (!$res) {
+            return $this->failed('获取用户信息失败,可能是密码错误');
+        }
+
+        $res->pwd = $user->re_pwd;
+        if (!$res->save()) {
+            return $this->failed(current($user->getFirstErrors()));
+        }
+
+        return $this->success();
     }
 
     /**

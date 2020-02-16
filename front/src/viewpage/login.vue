@@ -108,7 +108,7 @@ export default {
                 this.$router.push("/login");
               }
             },
-           res =>  {
+            res => {
               let response = res.body;
               alert("操作失败!" + !response.msg ? response.msg : "");
               return;
