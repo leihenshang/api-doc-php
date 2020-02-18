@@ -402,7 +402,7 @@ export default {
         .post(
           this.apiAddress + "/api/update",
           {
-            id: this.$route.params.apiId,
+            id: this.apiId,
             group_id: this.apiData.group_id,
             project_id: this.$route.params.id,
             data: JSON.stringify(this.apiData),

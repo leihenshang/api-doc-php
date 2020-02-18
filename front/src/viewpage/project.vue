@@ -76,7 +76,7 @@ export default {
       this.getProjectList(page, PAGE_SIZE);
     },
     detail(id) {
-      this.$router.push("/detail/" + id + "/detailPage");
+      this.$router.push("/detail/" + id);
     }
   },
   created() {},

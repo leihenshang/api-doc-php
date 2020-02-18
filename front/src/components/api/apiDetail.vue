@@ -47,7 +47,7 @@
         </dl>
       </div>
       <div class="box2two" v-show="box2==1">
-        <textarea name id cols="30" rows="10" v-model="apiData.description"></textarea>
+        <div class="description">{{apiData.description}}</div>
       </div>
     </div>
 
@@ -381,9 +381,13 @@ button {
 /* 第二行开始 */
 .box2 {
   border: 1px solid #dddddd;
-  padding: 10px 10px 30px 10px;
+  padding: 10px 10px 10px 10px;
   position: relative;
   background-color: #fff;
+}
+
+.box2one {
+  padding-bottom: 20px;
 }
 
 .box2 em {
@@ -435,13 +439,14 @@ select {
   margin-left: 0;
 }
 
-.box2two textarea {
+.box2two .description {
   width: 100%;
-  height: 100%;
-  border: 1px solid gray;
+  height: 150px;
+  border: 1px solid rgb(233, 227, 227);
+  border-radius: 4px;
   box-sizing: border-box;
-  padding: 5px;
-  resize: none;
+  padding: 8px;
+  font-size: 14px;
 }
 
 .box2twoIsShow {

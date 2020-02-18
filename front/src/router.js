@@ -68,7 +68,7 @@ const router = new VueRouter({
       props: true,
       children: [
         {
-          path: "detailPage",
+          path: "",
           name: "detailPage",
           component: DetailPage,
           props: true

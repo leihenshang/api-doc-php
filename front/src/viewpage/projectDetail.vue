@@ -36,18 +36,14 @@ export default {
     return {
       projectData: {},
       indesideRoute: [
-        { title: "项目概况", route: "detail", child: "detailPage" },
+        { title: "项目概况", route: "detail", child: "" },
         { title: "API接口", route: "detail", child: "apiPage" },
         { title: "项目用户管理", route: "detail", child: "user" },
         { title: "项目文档", route: "detail", child: "projectDoc" }
       ]
     };
   },
-  methods: {
-    jump(name) {
-      this.$router.push("/" + name + "/" + this.id);
-    }
-  },
+  methods: {},
   components: {
     leftMenu: LeftMenu,
     topBar: TopBar

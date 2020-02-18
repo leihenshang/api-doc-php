@@ -110,15 +110,17 @@ export default {
 .left-menu li {
   padding: 15px 0;
   text-align: left;
+  border-top: 1px dashed black;
 }
 
-/* .left-menu li:first-child {
-  background-color: #e3f1e5;
+.left-menu li:last-child {
+  border-bottom: 1px dashed black;
 }
 
-.left-menu li:first-child a {
-  color: #4caf50;
-} */
+.left-menu li:first-child {
+  margin-bottom: 10px;
+  border: none;
+}
 
 .left-menu ul li:first-child {
   background-color: #5ace5e;

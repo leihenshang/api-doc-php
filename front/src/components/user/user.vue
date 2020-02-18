@@ -204,6 +204,10 @@ export default {
 };
 </script>
 <style scoped>
+.user {
+  font-size: 14px;
+}
+
 .user-tab {
   border: 1px solid gray;
   width: 600px;
@@ -254,6 +258,9 @@ export default {
   border: 1px solid black;
   border-collapse: collapse;
   text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .user {

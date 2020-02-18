@@ -195,11 +195,15 @@ export default {
 };
 </script>
 <style scoped>
+.user {
+  font-size: 14px;
+}
+
 .user-tab {
   border: 1px solid gray;
   width: 600px;
-  display:inline-block;
-  margin:20px 30px;
+  display: inline-block;
+  margin: 20px 30px;
 }
 
 .user-tab-info {
@@ -245,6 +249,9 @@ export default {
   border: 1px solid black;
   border-collapse: collapse;
   text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .user {
@@ -270,6 +277,6 @@ export default {
 }
 
 .all-user {
-float: left;
+  float: left;
 }
 </style>

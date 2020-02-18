@@ -114,7 +114,7 @@ export default {
             alert("failed:" + response.msg);
           }
         },
-        res => {
+        () => {
           alert("获取数据失败");
         }
       );
@@ -147,7 +147,7 @@ export default {
               this.$store.commit("saveUserInfo", this.userInfo);
             }
           },
-          res => {
+          () => {
             alert("请求发生错误");
           }
         );
@@ -196,7 +196,7 @@ export default {
               this.password.update = !this.password.update;
             }
           },
-          res => {
+          () => {
             alert("请求发生错误");
           }
         );
