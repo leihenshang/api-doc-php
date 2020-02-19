@@ -5,7 +5,7 @@
     </div>
     <div class="content">
       <div class="left">
-        <leftMenu :menuList="indesideRoute" />
+        <leftMenu :menuList="insideRoute" />
       </div>
       <div class="right">
         <router-view></router-view>
@@ -23,12 +23,36 @@ const PAGE_SIZE = 5;
 
 export default {
   name: "projectPage",
+  created() {
+    console.log(this.$router.currentRoute);
+  },
+  mounted(){
+    this.routeChange();
+  }
+  ,
+  data() {
+    return {
+      projectList: {},
+      pageSize: 5,
+      currPage: 1,
+      addIsHide: true,
+      updateData: null,
+      itemCount: 0,
+      hideShade: true,
+      insideRoute: []
+    };
+  },
+  components: {
+    topBar: TopBar,
+    leftMenu: LeftMenu
+  },
   methods: {
     jump(route) {
       this.$router.push({ path: "/" + route });
     },
     create() {
       this.addIsHide = !this.addIsHide;
+      this.routeChange();
     },
     //点击隐藏
     onClickHide(val) {
@@ -50,7 +74,7 @@ export default {
           { emulateJSON: true }
         )
         .then(
-         res =>  {
+          res => {
             let response = res.body;
             if (response.code === CODE_OK) {
               alert("成功!" + response.msg);
@@ -59,7 +83,7 @@ export default {
               alert("失败!" + response.msg);
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("操作失败!" + response.msg);
           }
@@ -77,27 +101,17 @@ export default {
     },
     detail(id) {
       this.$router.push("/detail/" + id);
+    },
+    routeChange() {
+      console.log("路由改变了:", this.$router.currentRoute);
+      this.insideRoute = [
+        { title: "用户管理1", route: "userManagement", clild: "" },
+        { title: "通用文档1", route: "commonDoc", clild: "" }
+      ];
     }
   },
-  created() {},
-  data() {
-    return {
-      projectList: {},
-      pageSize: 5,
-      currPage: 1,
-      addIsHide: true,
-      updateData: null,
-      itemCount: 0,
-      hideShade: true,
-      indesideRoute: [
-         { title: "用户管理", route: "userManagement" ,clild:""},
-         { title: "通用文档", route: "commonDoc" ,clild:""},
-      ]
-    };
-  },
-  components: {
-    topBar: TopBar,
-    leftMenu: LeftMenu
+  watch: {
+    $route: "routeChange"
   }
 };
 </script>
