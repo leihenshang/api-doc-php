@@ -1,17 +1,17 @@
 <template>
   <div class="left-menu">
     <ul>
-      <li @click="jump()" :class="{'current-click' : this.$route.path === '/' ? true : false }">
+      <li @click="jump()">
         <a href="javascript:void(0)">
-          <span>◀</span>
+          <span>▢</span>
           首页-全部项目
         </a>
       </li>
       <li
-        v-for="(item,index) in menuListDataComputed"
+        v-for="(item,index) in menuListData"
         :key="item.id"
         @click="jump(item.route,item.child,index)"
-        :class="{'is-click' : item.isClick}"
+        :class="{'is-click' : item.isClick }"
       >
         <a href="javascript:void(0)">
           <span>▢</span>
@@ -31,38 +31,46 @@ export default {
   methods: {
     //跳转
     jump(uri, child, index) {
+      //跳转到首页开始页
+      if (!uri) {
+        if (this.$route.path !== "/") {
+          this.$router.push({ path: "/" });
+        }
+        return;
+      }
+
+      //已跳转过禁止跳转
+      if (this.menuListData[index].isClick === true) {
+        return;
+      }
+
+      //跳转到其他页面
       if (uri) {
         if (child) {
           if (this.menuListData[index].isClick === true) {
             return;
           }
 
-          this.$router.push(
-            "/" + uri + "/" + this.$route.params.id + "/" + child
-          );
+          this.$router.push({
+            path: "/" + uri + "/" + this.$route.params.id + "/" + child
+          });
         } else {
           if (this.$route.params.id) {
-            this.$router.push("/" + uri + "/" + this.$route.params.id);
+            this.$router.push({
+              path: "/" + uri + "/" + this.$route.params.id
+            });
           } else {
-            this.$router.push("/" + uri);
+            this.$router.push({ path: "/" + uri });
           }
         }
-      } else {
-        if (this.$route.path !== "/") {
-          this.$router.push("/");
-        }
-        return;
       }
 
+      //重置点击值
       for (const key in this.menuListData) {
-        this.menuListData[key].isClick = false;
-      }
-      this.menuListData[index].isClick = true;
-    },
-    change() {
-      for (const key in this.menuListData) {
-        if (this.$route.name === this.menuListData[key].child) {
+        if (key == index) {
           this.menuListData[key].isClick = true;
+        } else {
+          this.menuListData[key].isClick = false;
         }
       }
     }
@@ -72,34 +80,35 @@ export default {
       menuListData: this.menuList
     };
   },
-  created: function() {
-    this.change();
-  },
+  created: function() {},
   computed: {
-    menuListDataComputed: function() {
-      if (this.menuListData) {
-        let tmpData = [];
-
-        for (const key in this.menuListData) {
-          if (
-            this.$store.state.userInfo.type !== 2 &&
-            this.menuListData[key].child === "user"
-          ) {
-            continue;
-          }
-
-          tmpData.push(this.menuListData[key]);
-        }
-        return tmpData;
-      } else {
-        return [];
-      }
+    //计算属性，用户权限过滤菜单显示
+    // menuListDataComputed: function() {
+    //   let tmpData = [];
+    //   if (!this.menuListData) {
+    //     return tmpData;
+    //   }
+    //   for (const key in this.menuListData) {
+    //     this.menuListData[key].isClick = false;
+    //     if (
+    //       this.$store.state.userInfo.type !== 2 &&
+    //       this.menuListData[key].child === "user"
+    //     ) {
+    //       continue;
+    //     }
+    //     tmpData.push(this.menuListData[key]);
+    //   }
+    //   return tmpData;
+    // }
+  },
+  watch:{
+    '$route':function(){
+      console.log('路由改变了');
     }
   }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .left-menu {
   width: auto;
@@ -123,7 +132,7 @@ export default {
 }
 
 .left-menu ul li:first-child {
-  background-color: #5ace5e;
+  background-color: #9dde94;
 }
 
 .left-menu ul li:first-child a {
@@ -136,7 +145,7 @@ export default {
 }
 
 .is-click {
-  background-color: rgba(0, 0, 0, 0.479);
+  background-color: rgb(108, 202, 123);
 }
 
 .is-click a {

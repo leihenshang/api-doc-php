@@ -24,12 +24,9 @@ const PAGE_SIZE = 5;
 export default {
   name: "projectPage",
   created() {
-    console.log(this.$router.currentRoute);
-  },
-  mounted(){
     this.routeChange();
-  }
-  ,
+  },
+
   data() {
     return {
       projectList: {},
@@ -103,10 +100,14 @@ export default {
       this.$router.push("/detail/" + id);
     },
     routeChange() {
-      console.log("路由改变了:", this.$router.currentRoute);
       this.insideRoute = [
-        { title: "用户管理1", route: "userManagement", clild: "" },
-        { title: "通用文档1", route: "commonDoc", clild: "" }
+        {
+          title: "用户管理",
+          route: "userManagement",
+          clild: "",
+          isClick: false
+        },
+        { title: "通用文档", route: "commonDoc", clild: "", isClick: false }
       ];
     }
   },

@@ -18,7 +18,6 @@
 import LeftMenu from "../components/common/leftMenu";
 import TopBar from "../components/common/topBar";
 
-// const CODE_OK = 200;
 export default {
   name: "projectDetail",
   props: {
@@ -29,10 +28,20 @@ export default {
     return {
       projectData: {},
       indesideRoute: [
-        { title: "项目概况", route: "detail", child: "" },
-        { title: "API接口", route: "detail", child: "apiPage" },
-        { title: "项目用户管理", route: "detail", child: "user" },
-        { title: "项目文档", route: "detail", child: "projectDoc" }
+        { title: "项目概况", route: "detail", child: "", isClick: true },
+        { title: "API接口", route: "detail", child: "apiPage", isClick: false },
+        {
+          title: "项目用户管理",
+          route: "detail",
+          child: "user",
+          isClick: false
+        },
+        {
+          title: "项目文档",
+          route: "detail",
+          child: "projectDoc",
+          isClick: false
+        }
       ]
     };
   },
