@@ -5,7 +5,6 @@
         <button @click="returnApiPage">↩ 接口列表</button>
         <button @click="box2=0" v-bind:class="{ 'btn-group-1-btn-change' : box2==0}">基础信息</button>
         <button @click="box2=1" v-bind:class="{ 'btn-group-1-btn-change' : box2==1}">详细说明</button>
-        <!-- <button>高级mock</button> -->
       </div>
       <div class="btn-group-2">
         <button>继续添加</button>
@@ -30,14 +29,6 @@
                   <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
                 </select>
               </validation-provider>
-              <!-- <select name="" id="">
-              <option value="1">可选（二级菜单）</option>
-              </select>-->
-              <!-- <em>状态:</em>
-            <select name="" id="">
-              <option value="1">启用</option>
-              <option value="2">禁用</option>
-              </select>-->
               <em>请求协议:</em>
               <validation-provider
                 rules="required"
@@ -194,16 +185,13 @@
               <input type="text" placeholder="值" v-model="item.content" />
             </td>
             <td>
-              <button @click="box3HeaderDelete(index)">删除</button>
+              <button @click="box3HeaderDelete(index)">×</button>
             </td>
           </tr>
         </table>
 
         <!-- 请求参数开始 -->
         <table v-show="box3==1">
-          <header>
-            <button>导入参数</button>
-          </header>
           <tr>
             <th>参数名</th>
             <th>说明</th>
@@ -357,7 +345,7 @@ export default {
         protocol_type: "HTTP", //协议
         description: "", //说明和备注
         requestMethod: "GET", //http请求方法
-        http_return_type: 1, //返回值类型
+        http_return_type: '', //返回值类型
         url: "", //http请求URL
         api_name: "", //接口名称
         object_name: "", //根对象名
@@ -453,7 +441,7 @@ export default {
                 return;
               }
             },
-           res =>  {
+            res => {
               let response = res.body;
               alert("操作失败!" + !response.msg ? response.msg : "");
               return;
@@ -541,7 +529,7 @@ export default {
               this.groupList = response.data;
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -560,7 +548,7 @@ export default {
               this.propertyList = response.data;
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -629,7 +617,7 @@ button {
 /* 第二行开始 */
 .box2 {
   border: 1px solid #dddddd;
-    padding: 10px 10px 30px 10px;
+  padding: 10px 10px 30px 10px;
   position: relative;
   background-color: #fff;
 }
@@ -686,6 +674,10 @@ select {
 .box2two textarea {
   width: 100%;
   height: 100%;
+  border-radius: 5px;
+  resize: none;
+  outline: none;
+  border: 1px solid rgb(204, 203, 203);
 }
 
 .box2twoIsShow {

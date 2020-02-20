@@ -101,10 +101,8 @@ export default {
     //   return tmpData;
     // }
   },
-  watch:{
-    '$route':function(){
-      console.log('路由改变了');
-    }
+  watch: {
+    $route: function() {}
   }
 };
 </script>

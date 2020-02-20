@@ -112,7 +112,7 @@ class Api extends BaseModel
             'http_request_params' => 'http请求参数',
             'http_return_type' => 'http请求返回值',
             'http_return_sample' => 'http响应数据样例',
-            'http_return_params' => 'http\'请求响应参数',
+            'http_return_params' => 'http请求响应参数',
         ];
     }
 
@@ -142,8 +142,10 @@ class Api extends BaseModel
      */
     public function createData()
     {
+
+
         if (!$this->validate()) {
-            return current($this->getFirstErrors());
+            return   current($this->getFirstErrors());
         }
 
         //检查groupId和projectId的存在
@@ -167,6 +169,9 @@ class Api extends BaseModel
             }
             return $a;
         }, $tmp);
+
+//        var_dump($tmp);
+//        return 'ss';
 
         $this->attributes = $tmp;
         if (!$this->save()) {
