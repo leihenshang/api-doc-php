@@ -1,10 +1,13 @@
 <template>
-  <div class="create-api">
+  <div class="create-api" v-loading="loading">
     <div class="box1">
       <div class="btn-group-1">
         <button @click="returnApiPage">↩ 接口列表</button>
         <button @click="box2=0" v-bind:class="{ 'btn-group-1-btn-change' : box2==0}">基础信息</button>
         <button @click="box2=1" v-bind:class="{ 'btn-group-1-btn-change' : box2==1}">详细说明</button>
+      </div>
+      <div class="btn-group-2">
+        <button @click="updateApi()">编辑</button>
       </div>
     </div>
     <div class="box2">
@@ -144,20 +147,14 @@
           <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
         </div>
       </div>
-      <textarea
-        name
-        id
-        v-model="apiData.http_return_sample.returnDataSuccess"
-        v-show="box5==0"
-        placeholder="成功的返回"
-      ></textarea>
-      <textarea
-        name
-        id
-        v-model="apiData.http_return_sample.returnDataFailed"
-        v-show="box5==1"
-        placeholder="失败的返回"
-      ></textarea>
+      <div class="box5-show">
+        <pre v-show="box5==0">
+        {{apiData.http_return_sample.returnDataSuccess}}
+      </pre>
+        <pre v-show="box5==1">
+        {{apiData.http_return_sample.returnDataFailed}}
+      </pre>
+      </div>
     </div>
   </div>
 </template>
@@ -176,6 +173,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       groupList: [],
       propertyList: [],
       apiData: {
@@ -250,13 +248,19 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.apiData = response.data;
-            }else {
-              alert('failed:' + response.msg);
+              this.loading = false;
+            } else {
+              this.$message({
+                message: "failed:" + response.msg,
+                type: "error"
+              });
             }
           },
-         res =>  {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            this.$message({
+              message: "获取数据-操作失败",
+              type: "error"
+            });
           }
         );
     },
@@ -274,11 +278,11 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.groupList = response.data;
-            }else {
-              alert('failed:' + response.msg);
+            } else {
+              alert("failed:" + response.msg);
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -295,15 +299,18 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.propertyList = response.data;
-            }else {
-              alert('failed:' + response.msg);
+            } else {
+              alert("failed:" + response.msg);
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
+    },
+    updateApi() {
+      this.$emit("updateApi");
     }
   },
   computed: {
@@ -316,6 +323,12 @@ export default {
       }
 
       return groupName;
+    }
+  },
+  watch: {
+    apiId: function() {
+      this.loading = true;
+      this.getApiDetail();
     }
   }
 };
@@ -474,9 +487,7 @@ select {
 
 .box3 header {
   background-color: #fff;
-  border-top: 1px solid #ddd;
   border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -615,16 +626,6 @@ select {
   margin-top: 40px;
 }
 
-.box5 textarea {
-  width: 100%;
-  min-height: 240px;
-  outline: none;
-  border: 1px solid #ddd;
-  padding: 5px;
-  resize: vertical;
-  box-sizing: border-box;
-}
-
 .box5 .res-btn {
   position: relative;
   height: 30px;
@@ -638,6 +639,14 @@ select {
 
 .box5 .res-btn button:nth-child(1) {
   border-right: none;
+}
+
+.box5-show {
+  min-height: 300px;
+  border: 1px solid #ddd;
+  border-radius: 1px;
+  padding: 10px;
+  background-color: #fff;
 }
 
 .btn-wrap {

@@ -571,7 +571,7 @@ export default {
 }
 
 button {
-  background-color: #fff;
+  background-color: #efefef;
   border: 1px solid #dddddd;
   width: 90px;
   height: 30px;
@@ -879,7 +879,7 @@ select {
 
 /* tab切换按钮颜色 */
 .tab-change-btn-bg {
-  background-color: #efefef;
+  background-color: #fff;
 }
 
 dl dd div {

@@ -11,7 +11,9 @@ import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
 
 
-
+//element ui
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 
 // Vue.prototype.apiAddress = "http://120.27.241.94:50682";
 Vue.prototype.apiAddress = "http://localhost:1000";
@@ -23,6 +25,7 @@ Vue.config.productionTip = false;
 Vue.use(VueResource);
 Vue.use(Vuex);
 Vue.use(mavonEditor);
+Vue.use(ElementUI);
 
 //扩展指令，设置焦点
 Vue.directive("focus", {

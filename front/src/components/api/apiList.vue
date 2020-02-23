@@ -28,11 +28,19 @@
       </tr>
     </table>
     <div class="container" v-show="hideMe">
-      <div class="container-detail" v-if="currContainer == 'detail'">
-        <apiDetail :apiId="apiId" v-on:childHideMe="childHideMe()" />
+      <div class="container-detail" v-if="currContainer == 'detail'" >
+        <apiDetail
+          :apiId="apiId"
+          v-on:childHideMe="childHideMe()"
+          v-on:updateApi="currContainer = 'edit'"
+        />
       </div>
       <div class="container-edit" v-if="currContainer == 'edit'">
-        <apiEdit :apiId="apiId" v-on:childHideMe="childHideMe()" />
+        <apiEdit
+          :apiId="apiId"
+          v-on:childHideMe="childHideMe()"
+          v-on:saveUpdate="currContainer = 'detail'"
+        />
       </div>
     </div>
   </div>

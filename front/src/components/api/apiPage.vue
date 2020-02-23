@@ -24,7 +24,7 @@
         />
       </div>
 
-      <div class="api-wrapper">
+      <div class="api-wrapper"   v-loading="loading">
         <apiList :id="id" :apiList="apiList" v-on:api-delete="apiDelete" />
       </div>
     </div>
@@ -55,7 +55,8 @@ export default {
         { title: "项目概况", route: "detail" },
         { title: "API接口", route: "api" }
       ],
-      showCreateGroup: false
+      showCreateGroup: false,
+      loading:true
     };
   },
   methods: {
@@ -121,6 +122,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.apiList = response.data;
+              this.loading = false;
             }
           },
          res =>  {

@@ -414,12 +414,20 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              alert("成功！~");
+              this.$message({
+                message: "更新数据成功！",
+                type: "success"
+              });
+              this.$emit("saveUpdate");
+            } else {
+              this.$message({
+                message: "保存失败!" + !response.msg ? response.msg : "",
+                type: "error"
+              });
             }
           },
-          res => {
-            let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            alert("保存失败!");
           }
         );
     },
@@ -527,7 +535,7 @@ export default {
 }
 
 button {
-  background-color: #fff;
+  background-color: #efefef;
   border: 1px solid #dddddd;
   width: 90px;
   height: 30px;
@@ -831,6 +839,6 @@ select {
 
 /* tab切换按钮颜色 */
 .tab-change-btn-bg {
-  background-color: #efefef;
+  background-color: #fff;
 }
 </style>
