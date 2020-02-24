@@ -808,7 +808,7 @@ select {
 
 .box5 textarea {
   width: 100%;
-  min-height: 120px;
+  min-height: 300px;
   outline: none;
   border: 1px solid #ddd;
   padding: 5px;

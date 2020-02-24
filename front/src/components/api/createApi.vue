@@ -332,6 +332,54 @@ export default {
     apiList: Array
   },
   created() {
+    let data1 = [{ test1: 1 }, { test2: 2 }];
+
+    let data2 = {
+      one: 1,
+      two: 2,
+      three: 3,
+      four: {
+        four1: 41,
+        four2: 42,
+        four3: [{ test1: 1 }, { test1: 1 }],
+        four4: {
+          four41: 441,
+          four42: 442
+        }
+      }
+    };
+
+    let arr = [];
+    function parseJson(jsonObj, data) {
+      if (!jsonObj) {
+        return;
+      }
+      let sparator = "";
+      if (typeof jsonObj == "object") {
+        // 循环所有键
+        for (let v in jsonObj) {
+          data.push(sparator + v);
+          let element = jsonObj[v];
+
+          if (typeof element == "object") {
+            sparator += ">";
+            data.push(sparator + v);
+          } else {
+            // sparator += ">";
+            let arrElement = element[0];
+            console.log(element);
+            parseJson(arrElement, data);
+          }
+        }
+      } else {
+        for (let v of jsonObj) {
+          console.log(v);
+        }
+      }
+    }
+    parseJson(data2, arr);
+    console.log(arr);
+
     this.getGroup();
     this.getProperty();
   },
@@ -345,7 +393,7 @@ export default {
         protocol_type: "HTTP", //协议
         description: "", //说明和备注
         requestMethod: "GET", //http请求方法
-        http_return_type: '', //返回值类型
+        http_return_type: "", //返回值类型
         url: "", //http请求URL
         api_name: "", //接口名称
         object_name: "", //根对象名
