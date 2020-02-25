@@ -333,7 +333,6 @@ export default {
   },
   created() {
     let data1 = [{ test1: 1 }, { test2: 2 }];
-
     let data2 = {
       one: 1,
       two: 2,
@@ -341,44 +340,49 @@ export default {
       four: {
         four1: 41,
         four2: 42,
-        four3: [{ test1: 1 }, { test1: 1 }],
+        four3:  [{ test1: 1 }, { test2:  2 }],
         four4: {
           four41: 441,
           four42: 442
         }
-      }
+      },
+      five: [{ five1: 51 }, { five2: 52 }]
     };
 
-    let arr = [];
-    function parseJson(jsonObj, data) {
+
+    function parseJson(jsonObj, data, sparator) {
       if (!jsonObj) {
         return;
       }
-      let sparator = "";
-      if (typeof jsonObj == "object") {
-        // 循环所有键
+
+      if (Object.prototype.toString.call(jsonObj) === "[object Object]") {
+        // 循环所有 键
         for (let v in jsonObj) {
           data.push(sparator + v);
           let element = jsonObj[v];
+          //v是键， element是值
+          // console.log(v, element);  
 
-          if (typeof element == "object") {
-            sparator += ">";
-            data.push(sparator + v);
-          } else {
-            // sparator += ">";
-            let arrElement = element[0];
+          if (Object.prototype.toString.call(element) === "[object Object]") {
+            // console.log("1");
+            parseJson(element, data, sparator + ">");
+          } else if (Array.isArray(element)) {
             console.log(element);
-            parseJson(arrElement, data);
+            parseJson(element[0], data, sparator + ">");
           }
         }
-      } else {
-        for (let v of jsonObj) {
-          console.log(v);
-        }
+
+        //数组的处理
+      } else if (Array.isArray(jsonObj)) {
+        console.log(jsonObj);
+        parseJson(jsonObj[0], data);
       }
     }
-    parseJson(data2, arr);
+
+    let arr = [];
+    parseJson(data2, arr, ">");
     console.log(arr);
+    // console.log(Object.prototype.toString.call({ }) === "[object Object]");
 
     this.getGroup();
     this.getProperty();
