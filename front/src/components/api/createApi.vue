@@ -133,7 +133,7 @@
               <span>接口语言:</span>
               <validation-provider
                 rules="required"
-                v-slot="{ errors }"
+                v-slot="{errors}"
                 vid="api_language"
                 name="api_language"
               >
@@ -241,89 +241,19 @@
         </table>
         <!-- 请求参数结束 -->
       </div>
-      <div class="box4">
-        <header>
-          <span>返回参数</span>
-        </header>
-        <header>
-          <span>导入json</span>
-        </header>
-        <table>
-          <tr>
-            <th>字段名</th>
-            <th>相关类名</th>
-            <th>说明</th>
-            <th>必含</th>
-            <th>类型</th>
-            <th>操作</th>
-          </tr>
-          <tr v-for="(item,index) in box4Item" :key="item.id">
-            <td>
-              <input
-                type="text"
-                placeholder="字段名"
-                v-model="item.fieldName"
-                v-on:input="box4Input(index,$event)"
-              />
-            </td>
-            <td>
-              <input type="text" placeholder v-model="item.objectName" />
-            </td>
-            <td>
-              <input type="text" placeholder="参数名" v-model="item.decription" />
-            </td>
-            <td>
-              <input type="checkbox" name id v-model="item.required" />
-            </td>
-            <td>
-              <select
-                style="width:90%;text-align:center;margin:0 10px;"
-                v-model="item.type"
-                v-if="propertyList.var_type"
-              >
-                <option disabled value>请选择</option>
-                <option
-                  v-for="item in propertyList.var_type"
-                  :key="item.id"
-                  :value="item.tag_name"
-                >{{item.tag_name}}</option>
-              </select>
-            </td>
-            <td>
-              <div v-show="item.fieldName.length >= 1">
-                <button @click="box4delete(index)">×</button>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="box5">
-        <div class="res-btn">
-          <div class="btn-wrap">
-            <button @click="box5=0" :class="{'tab-change-btn-bg' : box5==0}">成功</button>
-            <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
-          </div>
-        </div>
-        <textarea
-          name
-          id
-          v-model="apiData.http_return_sample.returnDataSuccess"
-          v-show="box5==0"
-          placeholder="成功的返回"
-        ></textarea>
-        <textarea
-          name
-          id
-          v-model="apiData.http_return_sample.returnDataFailed"
-          v-show="box5==1"
-          placeholder="失败的返回"
-        ></textarea>
-      </div>
+    <returnParams />
+      <textBox
+        v-on:update:success="apiData.http_return_sample.returnDataSuccess = $event"
+        v-on:update:failed="apiData.http_return_sample.returnDataFailed = $event"
+      />
     </ValidationObserver>
   </div>
 </template>
 
 <script>
+import textBox from "./units/returnDataTextBox.vue";
+import returnParams from "./units/returnDataParams.vue";
+
 const CODE_OK = 200;
 export default {
   name: "createApi",
@@ -332,58 +262,6 @@ export default {
     apiList: Array
   },
   created() {
-    let data1 = [{ test1: 1 }, { test2: 2 }];
-    let data2 = {
-      one: 1,
-      two: 2,
-      three: 3,
-      four: {
-        four1: 41,
-        four2: 42,
-        four3:  [{ test1: 1 }, { test2:  2 }],
-        four4: {
-          four41: 441,
-          four42: 442
-        }
-      },
-      five: [{ five1: 51 }, { five2: 52 }]
-    };
-
-
-    function parseJson(jsonObj, data, sparator) {
-      if (!jsonObj) {
-        return;
-      }
-
-      if (Object.prototype.toString.call(jsonObj) === "[object Object]") {
-        // 循环所有 键
-        for (let v in jsonObj) {
-          data.push(sparator + v);
-          let element = jsonObj[v];
-          //v是键， element是值
-          // console.log(v, element);  
-
-          if (Object.prototype.toString.call(element) === "[object Object]") {
-            // console.log("1");
-            parseJson(element, data, sparator + ">");
-          } else if (Array.isArray(element)) {
-            console.log(element);
-            parseJson(element[0], data, sparator + ">");
-          }
-        }
-
-        //数组的处理
-      } else if (Array.isArray(jsonObj)) {
-        console.log(jsonObj);
-        parseJson(jsonObj[0], data);
-      }
-    }
-
-    let arr = [];
-    parseJson(data2, arr, ">");
-    console.log(arr);
-    // console.log(Object.prototype.toString.call({ }) === "[object Object]");
-
     this.getGroup();
     this.getProperty();
   },
@@ -431,22 +309,32 @@ export default {
           handle: true,
           isAdd: false
         }
-      ],
-      box4Item: [
-        {
-          fieldName: "",
-          objectName: "",
-          description: "",
-          required: false,
-          type: "string",
-          handle: true,
-          isAdd: false
-        }
-      ],
-      box5: 0
+      ]
     };
   },
   methods: {
+    parseJson(jsonObj, data = [], sparator = "") {
+      //数组的处理
+      if (Array.isArray(jsonObj)) {
+        this.parseJson(jsonObj[0], data);
+      }
+
+      //处理对象
+      if (Object.prototype.toString.call(jsonObj) === "[object Object]") {
+        for (let v in jsonObj) {
+          data.push(sparator + v);
+          let element = jsonObj[v];
+          //v是键， element是值
+          if (Object.prototype.toString.call(element) === "[object Object]") {
+            this.parseJson(element, data, sparator + ">");
+          }
+
+          if (Array.isArray(element)) {
+            this.parseJson(element[0], data, sparator + ">");
+          }
+        }
+      }
+    },
     //返回api页面
     returnApiPage() {
       this.$router.go(-1);
@@ -606,6 +494,10 @@ export default {
           }
         );
     }
+  },
+  components: {
+    textBox,
+    returnParams
   }
 };
 </script>
@@ -892,35 +784,6 @@ select {
   background-color: #e3f7ff;
   color: #3692ed;
   font-weight: 500;
-}
-
-.box5 {
-  margin-top: 10px;
-}
-
-.box5 textarea {
-  width: 100%;
-  min-height: 120px;
-  outline: none;
-  border: 1px solid #ddd;
-  padding: 5px;
-  resize: none;
-  box-sizing: border-box;
-}
-
-.box5 .res-btn {
-  position: relative;
-  height: 30px;
-}
-
-.box5 .res-btn button {
-  border-bottom: none;
-  border-radius: 3px;
-  height: 30px;
-}
-
-.box5 .res-btn button:nth-child(1) {
-  border-right: none;
 }
 
 .btn-wrap {
