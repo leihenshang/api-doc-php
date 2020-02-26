@@ -241,7 +241,7 @@
         </table>
         <!-- 请求参数结束 -->
       </div>
-    <returnParams />
+      <returnParams :propertyList="propertyList" />
       <textBox
         v-on:update:success="apiData.http_return_sample.returnDataSuccess = $event"
         v-on:update:failed="apiData.http_return_sample.returnDataFailed = $event"
@@ -422,25 +422,7 @@ export default {
         }
       }
     },
-    //检查box4输入
-    box4Input(index, event) {
-      if (event) {
-        // alert(index);
-        let txt = event.target.value;
-        if (txt.length >= 1 && this.box4Item[index].isAdd === false) {
-          this.box4Item.push({
-            fieldName: "",
-            objectName: "",
-            description: "",
-            required: false,
-            type: "string",
-            handle: true,
-            isAdd: false
-          });
-          this.box4Item[index].isAdd = true;
-        }
-      }
-    },
+
     //box3删除
     box3delete(key) {
       this.box3Item.splice(key, 1);
@@ -449,17 +431,12 @@ export default {
     box3HeaderDelete(key) {
       this.box3HeaderItem.splice(key, 1);
     },
-    //box4删除
-    box4delete(key) {
-      this.box4Item.splice(key, 1);
-    },
     //获取分组信息
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
           params: {
-            projectId: this.$route.params.id,
-            token: this.$store.state.userInfo.token
+            projectId: this.$route.params.id
           }
         })
         .then(
@@ -712,78 +689,6 @@ select {
   border-right: 1;
   border-left: none;
   border-bottom: none;
-}
-
-/* //第四行开始 */
-.box4 {
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-.box4 header span {
-  margin-left: 5px;
-  font-weight: 700;
-}
-
-.box4 table {
-  width: 100%;
-  background-color: #fff;
-}
-
-.box4 header {
-  background-color: #fff;
-  border-top: 1px solid #ddd;
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.box4 header button {
-  margin-left: 5px;
-}
-
-.box4 table,
-.box4 td,
-.box4 th {
-  border: 1px solid #ddd;
-  border-collapse: collapse;
-}
-
-.box4 th {
-  background-color: #fafafa;
-}
-
-.box4 table tr,
-.box4 header {
-  height: 40px;
-}
-
-.box4 input[type="text"] {
-  border: none;
-  height: 40px;
-  width: 100%;
-  padding: 0 10px;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.box4 td {
-  text-align: center;
-}
-
-.box4 header:nth-child(1) span {
-  margin-left: 12px;
-}
-
-.box4 header:nth-child(2) span {
-  border: 1px solid #bcdffb;
-  padding: 5px 7px;
-  border-radius: 3px;
-  background-color: #e3f7ff;
-  color: #3692ed;
-  font-weight: 500;
 }
 
 .btn-wrap {

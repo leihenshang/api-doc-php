@@ -16,12 +16,16 @@
 <script>
 export default {
   name: "returnDataTextBox",
-  props: {},
-  data() {
+  props: {
+    originSuccess: String,
+    originFailed: String
+  },
+  created() {},
+  data: function() {
     return {
       toggle: 0,
-      success: "",
-      failed: ""
+      success: this.originSuccess,
+      failed: this.originFailed
     };
   },
   watch: {

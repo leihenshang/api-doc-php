@@ -231,32 +231,17 @@
         </tr>
       </table>
     </div>
-    <div class="box5">
-      <div class="res-btn">
-        <div class="btn-wrap">
-          <button @click="box5=0" :class="{'tab-change-btn-bg' : box5==0}">成功</button>
-          <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
-        </div>
-      </div>
-      <textarea
-        name
-        id
-        v-model="apiData.http_return_sample.returnDataSuccess"
-        v-show="box5==0"
-        placeholder="成功的返回"
-      ></textarea>
-      <textarea
-        name
-        id
-        v-model="apiData.http_return_sample.returnDataFailed"
-        v-show="box5==1"
-        placeholder="失败的返回"
-      ></textarea>
-    </div>
+    <textBox
+      v-on:update:success="apiData.http_return_sample.returnDataSuccess = $event"
+      v-on:update:failed="apiData.http_return_sample.returnDataFailed = $event"
+      :originSuccess="apiData.http_return_sample.returnDataSuccess"
+      :originFailed="apiData.http_return_sample.returnDataFailed"
+    />
   </div>
 </template>
 
 <script>
+import textBox from "./units/returnDataTextBox.vue";
 const CODE_OK = 200;
 export default {
   name: "apiEdit",
@@ -323,8 +308,7 @@ export default {
           handle: true,
           isAdd: false
         }
-      ],
-      box5: 0
+      ]
     };
   },
   methods: {
@@ -517,11 +501,18 @@ export default {
           }
         );
     }
+  },
+  components: {
+    textBox
+  },
+  watch: {
+    apiId: function() {
+      this.getApiDetail();
+    }
   }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .create-api {
   background-color: #f8f8f8;
@@ -800,35 +791,6 @@ select {
   background-color: #e3f7ff;
   color: #3692ed;
   font-weight: 500;
-}
-
-.box5 {
-  margin-top: 10px;
-}
-
-.box5 textarea {
-  width: 100%;
-  min-height: 300px;
-  outline: none;
-  border: 1px solid #ddd;
-  padding: 5px;
-  resize: none;
-  box-sizing: border-box;
-}
-
-.box5 .res-btn {
-  position: relative;
-  height: 30px;
-}
-
-.box5 .res-btn button {
-  border-bottom: none;
-  border-radius: 3px;
-  height: 30px;
-}
-
-.box5 .res-btn button:nth-child(1) {
-  border-right: none;
 }
 
 .btn-wrap {
