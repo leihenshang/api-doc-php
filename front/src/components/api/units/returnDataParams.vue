@@ -104,12 +104,34 @@ export default {
       this.returnDataItem.splice(key, 1);
     }
   },
-  watch: {}
+  watch: {
+    returnDataItem: function(val) {
+      this.$emit("update", val.slice(0, val.length - 1));
+    }
+  }
 };
 </script>
 
 <style scoped>
-/* //第四行开始 */
+select {
+  padding: 0;
+  outline: none;
+  border: 1px solid #ddd;
+  height: 28px;
+  border-radius: 3px;
+}
+
+button {
+  background-color: #efefef;
+  border: 1px solid #dddddd;
+  width: 90px;
+  height: 30px;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
 .box4 {
   font-size: 14px;
   margin-top: 10px;
@@ -181,11 +203,23 @@ export default {
   font-weight: 500;
 }
 
-select {
-  padding: 0;
-  outline: none;
-  border: 1px solid #ddd;
-  height: 28px;
+.item-head {
+  position: relative;
+  height: 31px;
+}
+
+.item-head ul {
+  position: absolute;
+  bottom: -1px;
+}
+
+.item-head ul button {
   border-radius: 3px;
+}
+
+.item-head li:nth-child(even) button {
+  border-right: 1;
+  border-left: none;
+  border-bottom: none;
 }
 </style>

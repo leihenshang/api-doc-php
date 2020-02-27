@@ -17,8 +17,14 @@
 export default {
   name: "returnDataTextBox",
   props: {
-    originSuccess: String,
-    originFailed: String
+    originSuccess: {
+      type: String,
+      default: ""
+    },
+    originFailed: {
+      type: String,
+      default: ""
+    }
   },
   created() {},
   data: function() {
@@ -83,5 +89,11 @@ export default {
 /* tab切换按钮颜色 */
 .box5 .tab-change-btn-bg {
   background-color: #fff;
+}
+
+.btn-wrap {
+  display: inline-block;
+  position: absolute;
+  left: 0;
 }
 </style>
