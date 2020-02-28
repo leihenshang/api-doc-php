@@ -34,7 +34,7 @@ class ApiController extends BaseController
             return $this->failed($res);
         }
 
-        return ['data' => '成功'];
+        return $this->success($res);
     }
 
     /**
@@ -44,13 +44,13 @@ class ApiController extends BaseController
     public function actionUpdate()
     {
         $api = new Api(['scenario' => Api::SCENARIO_UPDATE]);
-       $request = Yii::$app->request->post();
+        $request = Yii::$app->request->post();
         $res = $api->updateData($request);
         if (is_string($res)) {
             return $this->failed($res);
         }
 
-        return ['data' => '成功'];
+        return $this->success($res);
     }
 
     /**
@@ -59,14 +59,14 @@ class ApiController extends BaseController
      */
     public function actionList()
     {
-        $projectId = Yii::$app->request->get('projectId',0);
-        $groupId = Yii::$app->request->get('groupId',0);
-        if(!$projectId){
-            return ['code' => 22,'msg' => '没有projectId'];
+        $projectId = Yii::$app->request->get('projectId', 0);
+        $groupId = Yii::$app->request->get('groupId', 0);
+        if (!$projectId) {
+            return ['code' => 22, 'msg' => '没有projectId'];
         }
 
         $res = new Api(['scenario' => Api::SCENARIO_LIST]);
-        $res = $res->dataList($projectId,Yii::$app->request->get('ps',10),Yii::$app->request->get('cp',1),$groupId);
+        $res = $res->dataList($projectId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), $groupId);
         return ['data' => $res];
     }
 
@@ -106,5 +106,4 @@ class ApiController extends BaseController
 
         return ['data' => $res];
     }
-
 }

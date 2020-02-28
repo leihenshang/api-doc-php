@@ -142,8 +142,6 @@ class Api extends BaseModel
      */
     public function createData()
     {
-
-
         if (!$this->validate()) {
             return   current($this->getFirstErrors());
         }
@@ -170,9 +168,6 @@ class Api extends BaseModel
             return $a;
         }, $tmp);
 
-//        var_dump($tmp);
-//        return 'ss';
-
         $this->attributes = $tmp;
         if (!$this->save()) {
             return current($this->getFirstErrors());
@@ -182,7 +177,7 @@ class Api extends BaseModel
         OperationLog::createLog($this->project_id, UserInfo::$staticUserInfo->id, $this->id, OperationLog::ACTION['create'][0], '接口:' . $this->api_name, OperationLog::OBJECT_TYPE['api'][0]);
 
 
-        return true;
+        return $this;
     }
 
     /**
@@ -267,7 +262,7 @@ class Api extends BaseModel
         }
 
         //记录操作日志
-        OperationLog::createLog($res->project_id,UserInfo::$staticUserInfo->id, $res->id, OperationLog::ACTION['update'][0], '接口:' . $this->api_name, OperationLog::OBJECT_TYPE['api'][0]);
+        OperationLog::createLog($res->project_id, UserInfo::$staticUserInfo->id, $res->id, OperationLog::ACTION['update'][0], '接口:' . $this->api_name, OperationLog::OBJECT_TYPE['api'][0]);
 
         return true;
     }
@@ -289,8 +284,8 @@ class Api extends BaseModel
             return current($res->getFirstErrors());
         }
 
-         //记录操作日志
-         OperationLog::createLog($res->project_id,UserInfo::$staticUserInfo->id, $res->id, OperationLog::ACTION['delete'][0], '接口:' . $res->api_name, OperationLog::OBJECT_TYPE['api'][0]);
+        //记录操作日志
+        OperationLog::createLog($res->project_id, UserInfo::$staticUserInfo->id, $res->id, OperationLog::ACTION['delete'][0], '接口:' . $res->api_name, OperationLog::OBJECT_TYPE['api'][0]);
 
         return true;
     }
