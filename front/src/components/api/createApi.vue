@@ -3,15 +3,22 @@
     <div class="box1">
       <div class="btn-group-1">
         <button @click="returnApiPage">↩ 接口列表</button>
-        <button @click="box2=0" v-bind:class="{ 'btn-group-1-btn-change' : box2==0}">基础信息</button>
-        <button @click="box2=1" v-bind:class="{ 'btn-group-1-btn-change' : box2==1}">详细说明</button>
+        <button
+          @click="showDescription=false"
+          v-bind:class="{ 'btn-group-1-btn-change' : showDescription==false}"
+        >基础信息</button>
+        <button
+          @click="showDescription=true"
+          v-bind:class="{ 'btn-group-1-btn-change' : showDescription==true}"
+        >详细说明</button>
       </div>
       <div class="btn-group-2">
-        <button>继续添加</button>
+        <!-- <button>继续添加</button> -->
         <button @click="createApi()">保存</button>
       </div>
     </div>
-    <apiInfo :groupList="groupList" :propertyList="propertyList" />
+    <detailDescription v-if="showDescription" />
+    <apiInfo v-if="showDescription === false" :groupList="groupList" :propertyList="propertyList" />
     <requestParams :propertyList="propertyList" />
     <returnParams :propertyList="propertyList" v-on:update="apiData.http_return_params = $event" />
     <textBox
@@ -26,6 +33,7 @@ import textBox from "./units/returnDataTextBox.vue";
 import returnParams from "./units/returnDataParams.vue";
 import requestParams from "./units/requestDataParams.vue";
 import apiInfo from "./units/apiInfo.vue";
+import detailDescription from "./units/detailDescription.vue";
 
 const CODE_OK = 200;
 export default {
@@ -62,7 +70,7 @@ export default {
           returnDataFailed: "" //返回数据失败
         }
       },
-      box2: 0
+      showDescription: false
     };
   },
   methods: {
@@ -188,7 +196,8 @@ export default {
     textBox,
     returnParams,
     requestParams,
-    apiInfo
+    apiInfo,
+    detailDescription
   }
 };
 </script>
@@ -247,7 +256,4 @@ button {
   border-right: 1px solid #dddddd;
   border-radius: 0 3px 3px 0;
 }
-
-
-
 </style>

@@ -1,18 +1,18 @@
 <template>
   <div class="request-box">
-    <div class="box3">
+    <div class="request">
       <div class="item-head">
         <ul>
           <li>
-            <button @click="box3=0" :class="{'tab-change-btn-bg' : box3==0}">请求头部</button>
+            <button @click="show=0" :class="{'tab-change-btn-bg' : show==0}">请求头部</button>
           </li>
           <li>
-            <button @click="box3=1" :class="{'tab-change-btn-bg' : box3==1}">请求参数</button>
+            <button @click="show=1" :class="{'tab-change-btn-bg' : show==1}">请求参数</button>
           </li>
           <!-- <li><button>inject</button></li> -->
         </ul>
       </div>
-      <table v-show="box3==0">
+      <table v-show="show==0">
         <tr>
           <th>请求头名</th>
           <th>值</th>
@@ -37,7 +37,7 @@
       </table>
 
       <!-- 请求参数开始 -->
-      <table v-show="box3==1">
+      <table v-show="show==1">
         <tr>
           <th>参数名</th>
           <th>说明</th>
@@ -99,7 +99,7 @@ export default {
   created() {},
   data: function() {
     return {
-      box3: 1,
+      show: 1,
       box3HeaderItem: [
         {
           name: "",
@@ -170,25 +170,25 @@ export default {
 </script>
 
 <style scope>
-.box3 {
+.request {
   margin-top: 10px;
   font-size: 14px;
 }
 
-.box3 ul {
+.request ul {
   overflow: hidden;
 }
 
-.box3 ul li {
+.request ul li {
   float: left;
 }
 
-.box3 table {
+.request table {
   width: 100%;
   background-color: #fff;
 }
 
-.box3 header {
+.request header {
   background-color: #fff;
   border-top: 1px solid #ddd;
   border-left: 1px solid #ddd;
@@ -198,27 +198,27 @@ export default {
   align-items: center;
 }
 
-.box3 header button {
+.request header button {
   margin-left: 5px;
 }
 
-.box3 table,
-.box3 td,
-.box3 th {
+.request table,
+.request td,
+.request th {
   border: 1px solid #ddd;
   border-collapse: collapse;
 }
 
-.box3 th {
+.request th {
   background-color: #fafafa;
 }
 
-.box3 table tr,
-.box3 header {
+.request table tr,
+.request header {
   height: 40px;
 }
 
-.box3 input[type="text"] {
+.request input[type="text"] {
   border: none;
   height: 40px;
   width: 100%;
@@ -227,11 +227,11 @@ export default {
   /* outline: none; */
 }
 
-.box3 td {
+.request td {
   text-align: center;
 }
 
-.box3 input[type="checkbox"] {
+.request input[type="checkbox"] {
   width: 80%;
 }
 

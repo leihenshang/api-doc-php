@@ -1,7 +1,7 @@
 <template>
   <div class="api-info-box">
-    <div class="box2">
-      <div class="box2one" v-show="box2==0">
+    <div class="info">
+      <div class="box2one" v-show="show==0">
         <dl>
           <dd>
             <span>分组:</span>
@@ -75,9 +75,6 @@
           </dd>
         </dl>
       </div>
-      <div class="box2two" v-show="box2==1">
-        <textarea name id cols="30" rows="10" v-model="apiData.description"></textarea>
-      </div>
     </div>
   </div>
 </template>
@@ -111,7 +108,7 @@ export default {
           returnDataFailed: "" //返回数据失败
         }
       },
-      box2: 0
+      show: 0
     };
   }
 };
@@ -134,22 +131,21 @@ button {
   outline: none;
 }
 
-
-.box2 {
+.info {
   border: 1px solid #dddddd;
   padding: 10px 10px 30px 10px;
   position: relative;
   background-color: #fff;
 }
 
-.box2 em {
+.info em {
   font-style: normal;
   font-size: 12px;
   font-weight: 700;
   margin-right: 5px;
 }
 
-.box2 span {
+.info span {
   font-style: normal;
   font-size: 12px;
   font-weight: 700;
@@ -158,11 +154,11 @@ button {
   width: 4%;
 }
 
-.box2 dl dd {
+.info dl dd {
   margin: 10px 0;
 }
 
-.box2 input,
+.info input,
 select {
   padding: 0;
   outline: none;
@@ -171,36 +167,23 @@ select {
   border-radius: 3px;
 }
 
-.box2 input {
-  width: 100%;
+.info input {
+  width: 80%;
   box-sizing: border-box;
   padding-left: 10px;
 }
 
-.box2 dl dd {
+.info dl dd {
   font-size: 0;
   text-align: left;
 }
 
-.box2 dl dd select {
+.info dl dd select {
   font-size: 12px;
   margin: 0 5px;
 }
 
-.box2 dl dd:first-child select {
+.info dl dd:first-child select {
   margin-left: 0;
-}
-
-.box2two textarea {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  resize: none;
-  outline: none;
-  border: 1px solid rgb(204, 203, 203);
-}
-
-.box2twoIsShow {
-  display: none;
 }
 </style>
