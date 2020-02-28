@@ -81,7 +81,30 @@ export default {
     };
   },
   methods: {
-    //检查box4输入
+    //json解析方法
+    parseJson(jsonObj, data = [], sparator = "") {
+      //数组的处理
+      if (Array.isArray(jsonObj)) {
+        this.parseJson(jsonObj[0], data);
+      }
+
+      //处理对象
+      if (Object.prototype.toString.call(jsonObj) === "[object Object]") {
+        for (let v in jsonObj) {
+          data.push(sparator + v);
+          let element = jsonObj[v];
+          //v是键， element是值
+          if (Object.prototype.toString.call(element) === "[object Object]") {
+            this.parseJson(element, data, sparator + ">");
+          }
+
+          if (Array.isArray(element)) {
+            this.parseJson(element[0], data, sparator + ">");
+          }
+        }
+      }
+    },
+    //检查输入
     dataInput(index, event) {
       if (event) {
         let txt = event.target.value;
@@ -99,7 +122,7 @@ export default {
         }
       }
     },
-    //box4删除
+    //删除
     dataDelete(key) {
       this.returnDataItem.splice(key, 1);
     }

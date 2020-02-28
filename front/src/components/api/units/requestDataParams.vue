@@ -18,20 +18,20 @@
           <th>值</th>
           <th>操作</th>
         </tr>
-        <tr v-for="(item,index) in box3HeaderItem" :key="item.id">
+        <tr v-for="(item,index) in apiParamHeaderItem" :key="item.id">
           <td>
             <input
               type="text"
               placeholder="参数名"
               v-model="item.name"
-              v-on:input="box3HeaderInput(index,$event)"
+              v-on:input="apiParamHeaderInput(index,$event)"
             />
           </td>
           <td>
             <input type="text" placeholder="值" v-model="item.content" />
           </td>
           <td>
-            <button @click="box3HeaderDelete(index)">×</button>
+            <button v-if="item.content.length >= 1" @click="apiParamHeaderDelete(index)">×</button>
           </td>
         </tr>
       </table>
@@ -46,12 +46,12 @@
           <th>示例</th>
           <th>操作</th>
         </tr>
-        <tr v-for="(item,index) in box3Item" :key="item.id">
+        <tr v-for="(item,index) in apiParamItem" :key="item.id">
           <td>
             <input
               type="text"
               placeholder="参数名"
-              v-on:input="box3Input(index,$event)"
+              v-on:input="apiParamInput(index,$event)"
               v-model="item.name"
             />
           </td>
@@ -80,7 +80,7 @@
           </td>
           <td>
             <div v-show="item.name.length >= 1">
-              <button @click="box3delete(index)">×</button>
+              <button @click="apiParamdelete(index)">×</button>
             </div>
           </td>
         </tr>
@@ -100,7 +100,7 @@ export default {
   data: function() {
     return {
       show: 1,
-      box3HeaderItem: [
+      apiParamHeaderItem: [
         {
           name: "",
           content: "",
@@ -108,7 +108,7 @@ export default {
           isAdd: false
         }
       ],
-      box3Item: [
+      apiParamItem: [
         {
           name: "",
           desc: "",
@@ -121,14 +121,21 @@ export default {
       ]
     };
   },
-  watch: {},
+  watch: {
+    apiParamHeaderItem: function(val) {
+      this.$emit("update:header", val.slice(0, val.length - 1));
+    },
+    apiParamItem: function(val) {
+      this.$emit("update:param", val.slice(0, val.length - 1));
+    }
+  },
   methods: {
-    //检测box3输入
-    box3Input(index, event) {
+    //检测apiParam输入
+    apiParamInput(index, event) {
       if (event) {
         let txt = event.target.value;
-        if (txt.length >= 1 && this.box3Item[index].isAdd === false) {
-          this.box3Item.push({
+        if (txt.length >= 1 && this.apiParamItem[index].isAdd === false) {
+          this.apiParamItem.push({
             name: "",
             desc: "",
             required: false,
@@ -137,33 +144,32 @@ export default {
             handle: true,
             isAdd: false
           });
-          this.box3Item[index].isAdd = true;
+          this.apiParamItem[index].isAdd = true;
         }
       }
     },
-    //检测box3 header输入
-    box3HeaderInput(index, event) {
+    //检测apiParam header输入
+    apiParamHeaderInput(index, event) {
       if (event) {
         let txt = event.target.value;
-        if (txt.length >= 1 && this.box3HeaderItem[index].isAdd === false) {
-          this.box3HeaderItem.push({
+        if (txt.length >= 1 && this.apiParamHeaderItem[index].isAdd === false) {
+          this.apiParamHeaderItem.push({
             name: "",
             content: "",
             handle: true,
             isAdd: false
           });
-          this.box3HeaderItem[index].isAdd = true;
+          this.apiParamHeaderItem[index].isAdd = true;
         }
       }
     },
-
-    //box3删除
-    box3delete(key) {
-      this.box3Item.splice(key, 1);
+    //apiParam删除
+    apiParamdelete(key) {
+      this.apiParamItem.splice(key, 1);
     },
-    //box3header删除
-    box3HeaderDelete(key) {
-      this.box3HeaderItem.splice(key, 1);
+    //apiParamheader删除
+    apiParamHeaderDelete(key) {
+      this.apiParamHeaderItem.splice(key, 1);
     }
   }
 };

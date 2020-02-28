@@ -75,7 +75,8 @@ const router = new VueRouter({
         {
           path: "apiPage",
           name: "apiPage",
-          component: ApiPage
+          component: ApiPage,
+          props:true
         },
         { path: "createApi", name: "createApi", component: CreateApi },
 

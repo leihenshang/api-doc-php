@@ -15,7 +15,6 @@
     <div class="api-content">
       <div class="group-wrapper">
         <group
-          :id="this.id"
           :groupList="groupList"
           v-on:add-group="flushGroupList"
           v-on:change-group="changeGroup"
@@ -24,8 +23,8 @@
         />
       </div>
 
-      <div class="api-wrapper"   v-loading="loading">
-        <apiList :id="id" :apiList="apiList" v-on:api-delete="apiDelete" />
+      <div class="api-wrapper" v-loading="loading">
+        <apiList :apiList="apiList" v-on:api-delete="apiDelete" />
       </div>
     </div>
   </div>
@@ -38,9 +37,7 @@ import apiList from "./apiList";
 const CODE_OK = 200;
 export default {
   name: "apiPage",
-  props: {
-    id: String
-  },
+  props: {},
   created() {
     this.getGroup(this.pageSize, this.curr, this.$route.params.id);
     this.getApi(this.pageSize, this.curr, this.$route.params.id);
@@ -56,7 +53,7 @@ export default {
         { title: "API接口", route: "api" }
       ],
       showCreateGroup: false,
-      loading:true
+      loading: true
     };
   },
   methods: {
@@ -89,7 +86,7 @@ export default {
               }
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -125,20 +122,22 @@ export default {
               this.loading = false;
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
     flushGroupList() {
-      this.getGroup(1, 100, this.$route.params.id);
+      this.getGroup(1, 100, this.$route.params.projectId);
     },
     changeGroup(id) {
       this.getApi(this.pageSize, this.curr, this.$route.params.id, id);
     },
     addApi() {
-      this.$router.push("/detail/" + this.$route.params.id + "/createApi");
+      this.$router.push(
+        "/detail/" + this.$route.params.projectId + "/createApi"
+      );
     }
   },
   components: {

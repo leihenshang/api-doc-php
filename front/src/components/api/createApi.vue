@@ -17,10 +17,23 @@
         <button @click="createApi()">保存</button>
       </div>
     </div>
-    <detailDescription v-if="showDescription" />
-    <apiInfo v-if="showDescription === false" :groupList="groupList" :propertyList="propertyList" />
-    <requestParams :propertyList="propertyList" />
-    <returnParams :propertyList="propertyList" v-on:update="apiData.http_return_params = $event" />
+    <detailDescription
+      v-if="showDescription"
+      :description="description"
+      v-on:update="description=$event"
+    />
+    <apiInfo
+      v-if="showDescription === false"
+      :groupList="groupList"
+      :propertyList="propertyList"
+      v-on:update:apiInfo="apiInfo = $event"
+    />
+    <requestParams
+      :propertyList="propertyList"
+      v-on:update:header="apiData.http_request_header=$event"
+      v-on:update:param="apiData.http_request_params=$event"
+    />
+    <returnParams :propertyList="propertyList" v-on:update="apiData.http_return_params=$event" />
     <textBox
       v-on:update:success="apiData.http_return_sample.returnDataSuccess = $event"
       v-on:update:failed="apiData.http_return_sample.returnDataFailed = $event"
@@ -38,30 +51,21 @@ import detailDescription from "./units/detailDescription.vue";
 const CODE_OK = 200;
 export default {
   name: "createApi",
-  props: {
-    id: String,
-    apiList: Array
-  },
+  props: {},
   created() {
     this.getGroup();
     this.getProperty();
   },
   data() {
     return {
+      //分组列表
       groupList: [],
+      //api属性列表
       propertyList: [],
+      //说明和备注
+      description: "",
+      apiInfo: {},
       apiData: {
-        group_id: 0, //分组
-        project_id: 0, //项目Id
-        protocol_type: "HTTP", //协议
-        description: "", //说明和备注
-        requestMethod: "GET", //http请求方法
-        http_return_type: "", //返回值类型
-        url: "", //http请求URL
-        api_name: "", //接口名称
-        object_name: "", //根对象名
-        function_name: "", //程序内部方法名
-        develop_language: "", //接口开发语言
         http_request_header: [], //请求头
         http_request_params: [], //请求参数
         http_return_params: [], //返回参数
@@ -70,85 +74,51 @@ export default {
           returnDataFailed: "" //返回数据失败
         }
       },
+      finalData: {},
       showDescription: false
     };
   },
   methods: {
-    parseJson(jsonObj, data = [], sparator = "") {
-      //数组的处理
-      if (Array.isArray(jsonObj)) {
-        this.parseJson(jsonObj[0], data);
-      }
-
-      //处理对象
-      if (Object.prototype.toString.call(jsonObj) === "[object Object]") {
-        for (let v in jsonObj) {
-          data.push(sparator + v);
-          let element = jsonObj[v];
-          //v是键， element是值
-          if (Object.prototype.toString.call(element) === "[object Object]") {
-            this.parseJson(element, data, sparator + ">");
-          }
-
-          if (Array.isArray(element)) {
-            this.parseJson(element[0], data, sparator + ">");
-          }
-        }
-      }
-    },
     //返回api页面
     returnApiPage() {
       this.$router.go(-1);
     },
     //创建api
     createApi() {
-      //数据验证
-      this.$refs.form.validate().then(res => {
-        if (!res) {
-          alert(JSON.stringify(this.$refs.form.errors));
-          return;
-        }
+      //loading
+      let loadingInstance = this.$loading({ fullscreen: true });
 
-        let data = this.apiData;
-        let box4 = JSON.parse(JSON.stringify(this.box4Item));
-        let box3 = JSON.parse(JSON.stringify(this.box3Item));
-        let box3Header = JSON.parse(JSON.stringify(this.box3HeaderItem));
-        data.http_return_params = box4.splice(0, this.box4Item.length - 1);
-        data.http_request_params = box3.splice(0, this.box3Item.length - 1);
-        data.http_request_header = box3Header.splice(
-          0,
-          this.box3HeaderItem.length - 1
-        );
-
-        this.$http
-          .post(
-            this.apiAddress + "/api/create",
-            {
-              group_id: this.apiData.group_id,
-              project_id: this.$route.params.id,
-              data: JSON.stringify(data),
-              token: this.$store.state.userInfo.token
-            },
-            { emulateJSON: true }
-          )
-          .then(
-            response => {
-              response = response.body;
-              if (response.code === CODE_OK) {
-                alert("成功！~");
-                return;
-              } else {
-                alert("失败!" + response.msg);
-                return;
-              }
-            },
-            res => {
-              let response = res.body;
-              alert("操作失败!" + !response.msg ? response.msg : "");
-              return;
+      let data = Object.assign(this.finalData, this.apiInfo);
+      data = Object.assign(data, this.apiData);
+      this.$http
+        .post(
+          this.apiAddress + "/api/create",
+          {
+            group_id: data.group_id,
+            project_id: this.$route.params.id,
+            data: JSON.stringify(data)
+          },
+          { emulateJSON: true }
+        )
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.$message.success("保存api成功!");
+            } else {
+              this.$message.error("  保存api失败 ： " + response.msg);
             }
-          );
-      });
+            this.$nextTick(() => {
+              loadingInstance.close();
+            });
+          },
+          () => {
+            this.$message.error("操作失败");
+            this.$nextTick(() => {
+              loadingInstance.close();
+            });
+          }
+        );
     },
 
     //获取分组信息
@@ -166,9 +136,8 @@ export default {
               this.groupList = response.data;
             }
           },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            this.$message.error("获取数据失败");
           }
         );
     },
@@ -185,9 +154,8 @@ export default {
               this.propertyList = response.data;
             }
           },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            this.$message.error("获取数据失败");
           }
         );
     }

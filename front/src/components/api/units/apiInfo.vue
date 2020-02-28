@@ -6,13 +6,13 @@
           <dd>
             <span>分组:</span>
 
-            <select v-model="apiData.group_id">
+            <select v-model="apiInfo.group_id">
               <option disabled>请选择</option>
               <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
             </select>
             <em>请求协议:</em>
 
-            <select name id v-model="apiData.protocol_type" v-if="propertyList.http_protocol">
+            <select name id v-model="apiInfo.protocol_type" v-if="propertyList.http_protocol">
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_protocol"
@@ -22,7 +22,7 @@
             </select>
             <em>请求方式:</em>
 
-            <select name id v-model="apiData.http_method_type" v-if="propertyList.http_method">
+            <select name id v-model="apiInfo.http_method_type" v-if="propertyList.http_method">
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_method"
@@ -32,7 +32,7 @@
             </select>
             <em>返回情况:</em>
 
-            <select name id v-model="apiData.http_return_type" v-if="propertyList.http_return">
+            <select name id v-model="apiInfo.http_return_type" v-if="propertyList.http_return">
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.http_return"
@@ -44,27 +44,27 @@
           <dd>
             <span>URL:</span>
 
-            <input type="text" v-model="apiData.url" />
+            <input type="text" v-model="apiInfo.url" />
           </dd>
           <dd>
             <span>名称:</span>
 
-            <input type="text" v-model="apiData.api_name" />
+            <input type="text" v-model="apiInfo.api_name" />
           </dd>
           <dd>
             <span>根对象名:</span>
 
-            <input type="text" v-model="apiData.object_name" />
+            <input type="text" v-model="apiInfo.object_name" />
           </dd>
           <dd>
             <span>方法:</span>
 
-            <input type="text" v-model="apiData.function_name" />
+            <input type="text" v-model="apiInfo.function_name" />
           </dd>
           <dd>
             <span>接口语言:</span>
 
-            <select v-model="apiData.develop_language" v-if="propertyList.api_language">
+            <select v-model="apiInfo.develop_language" v-if="propertyList.api_language">
               <option disabled value>请选择</option>
               <option
                 v-for="item in propertyList.api_language"
@@ -88,28 +88,31 @@ export default {
   },
   data() {
     return {
-      apiData: {
+      apiInfo: {
         group_id: 0, //分组
         project_id: 0, //项目Id
-        protocol_type: "HTTP", //协议
-        description: "", //说明和备注
-        requestMethod: "GET", //http请求方法
+        protocol_type: "", //协议
+        requestMethod: "", //http请求方法
         http_return_type: "", //返回值类型
         url: "", //http请求URL
         api_name: "", //接口名称
         object_name: "", //根对象名
         function_name: "", //程序内部方法名
-        develop_language: "", //接口开发语言
-        http_request_header: [], //请求头
-        http_request_params: [], //请求参数
-        http_return_params: [], //返回参数
-        http_return_sample: {
-          returnDataSuccess: "", //返回数据成功
-          returnDataFailed: "" //返回数据失败
-        }
+        develop_language: "" //接口开发语言
       },
       show: 0
     };
+  },
+  watch: {
+    apiInfoNew: function(val) {
+      this.$emit("update:apiInfo", val);
+    }
+  },
+  computed: {
+    //由于watch无法监听对象的改变，所以使用计算方法来代替
+    apiInfoNew() {
+      return JSON.parse(JSON.stringify(this.apiInfo));
+    }
   }
 };
 </script>

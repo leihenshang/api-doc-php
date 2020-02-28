@@ -36,7 +36,6 @@ const CODE_OK = 200;
 export default {
   name: "group",
   props: {
-    id: String,
     groupList: Array,
     showCreateGroup: Boolean,
     showIsEdit: Boolean
@@ -79,7 +78,7 @@ export default {
               alert("成功！~");
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -122,7 +121,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .li-click {
   background-color: rgba(128, 0, 128, 0.39);
@@ -183,9 +181,13 @@ export default {
 
 .btn-group {
   overflow: hidden;
-  width: 120px;
+  width: 160px;
   line-height: 32px;
   text-align: center;
+}
+
+.btn-group button {
+  width: 40px;
 }
 
 .group ul li a {

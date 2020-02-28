@@ -13,6 +13,11 @@ export default {
     return {
       description: ""
     };
+  },
+  watch: {
+    description: function(val) {
+      this.$emit("update", val);
+    }
   }
 };
 </script>

@@ -96,7 +96,10 @@ export default {
         );
     },
     jump() {
-      this.$router.push({ name: "apiPage", params: { id: this.id } });
+      this.$router.push({
+        name: "apiPage",
+        params: { projectId: this.id }
+      });
     }
   },
   components: {

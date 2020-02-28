@@ -28,7 +28,7 @@
       </tr>
     </table>
     <div class="container" v-show="hideMe">
-      <div class="container-detail" v-if="currContainer == 'detail'" >
+      <div class="container-detail" v-if="currContainer == 'detail'">
         <apiDetail
           :apiId="apiId"
           v-on:childHideMe="childHideMe()"
@@ -55,7 +55,6 @@ const CODE_OK = 200;
 export default {
   name: "apiList",
   props: {
-    id: String,
     apiList: Object
   },
   created() {},
