@@ -84,7 +84,8 @@ export default {
   name: "apiInfo",
   props: {
     groupList: Array,
-    propertyList: [Array, Object]
+    propertyList: [Array, Object],
+    apiData:Object
   },
   data() {
     return {
@@ -121,17 +122,6 @@ export default {
 dl dd div {
   display: inline-block;
   width: 88%;
-}
-
-button {
-  background-color: #efefef;
-  border: 1px solid #dddddd;
-  width: 90px;
-  height: 30px;
-  font-size: 12px;
-  margin: 0;
-  padding: 0;
-  outline: none;
 }
 
 .info {

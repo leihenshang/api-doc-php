@@ -1,11 +1,18 @@
 <template>
   <div class="return-params">
-    <div class="box4">
+    <div class="data-params">
       <header>
         <span>返回参数</span>
       </header>
       <header>
-        <span>导入json</span>
+        <el-button @click="dialogFormVisible = true">导入json</el-button>
+        <el-dialog title="导入数据字符串" :visible.sync="dialogFormVisible">
+          <el-input type="textarea" v-model="jsonData" :rows="15"></el-input>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="handleJsonData()">确 定</el-button>
+          </div>
+        </el-dialog>
       </header>
       <table>
         <tr>
@@ -67,6 +74,7 @@ export default {
   },
   data: function() {
     return {
+      dialogFormVisible: false,
       returnDataItem: [
         {
           fieldName: "",
@@ -77,10 +85,56 @@ export default {
           handle: true,
           isAdd: false
         }
-      ]
+      ],
+      jsonData: ""
     };
   },
   methods: {
+    //处理导入Json数据
+    handleJsonData() {
+      this.dialogFormVisible = false;
+      let data = [];
+      let json = null;
+      try {
+        json = JSON.parse(this.jsonData);
+      } catch (e) {
+        this.$message.error("解析json数据失败");
+        this.jsonData = "";
+        return;
+      }
+
+      this.parseJson(json, data);
+      this.generatorItem(data);
+    },
+    //生成返回数据条目
+    generatorItem(items) {
+      if (!items) {
+        return;
+      }
+
+      this.returnDataItem = [];
+      for (let item of items) {
+        this.returnDataItem.push({
+          fieldName: item,
+          objectName: "",
+          description: "",
+          required: false,
+          type: "string",
+          handle: true,
+          isAdd: false
+        });
+      }
+
+      this.returnDataItem.push({
+        fieldName: "",
+        objectName: "",
+        description: "",
+        required: false,
+        type: "string",
+        handle: true,
+        isAdd: false
+      });
+    },
     //json解析方法
     parseJson(jsonObj, data = [], sparator = "") {
       //数组的处理
@@ -144,33 +198,22 @@ select {
   border-radius: 3px;
 }
 
-button {
-  background-color: #efefef;
-  border: 1px solid #dddddd;
-  width: 90px;
-  height: 30px;
-  font-size: 12px;
-  margin: 0;
-  padding: 0;
-  outline: none;
-}
-
-.box4 {
+.data-params {
   font-size: 14px;
   margin-top: 10px;
 }
 
-.box4 header span {
+.data-params header span {
   margin-left: 5px;
   font-weight: 700;
 }
 
-.box4 table {
+.data-params table {
   width: 100%;
   background-color: #fff;
 }
 
-.box4 header {
+.data-params header {
   background-color: #fff;
   border-top: 1px solid #ddd;
   border-left: 1px solid #ddd;
@@ -180,27 +223,23 @@ button {
   align-items: center;
 }
 
-.box4 header button {
-  margin-left: 5px;
-}
-
-.box4 table,
-.box4 td,
-.box4 th {
+.data-params table,
+.data-params td,
+.data-params th {
   border: 1px solid #ddd;
   border-collapse: collapse;
 }
 
-.box4 th {
+.data-params th {
   background-color: #fafafa;
 }
 
-.box4 table tr,
-.box4 header {
+.data-params table tr,
+.data-params header {
   height: 40px;
 }
 
-.box4 input[type="text"] {
+.data-params input[type="text"] {
   border: none;
   height: 40px;
   width: 100%;
@@ -209,15 +248,15 @@ button {
   outline: none;
 }
 
-.box4 td {
+.data-params td {
   text-align: center;
 }
 
-.box4 header:nth-child(1) span {
+.data-params header:nth-child(1) span {
   margin-left: 12px;
 }
 
-.box4 header:nth-child(2) span {
+.data-params header:nth-child(2) span {
   border: 1px solid #bcdffb;
   padding: 5px 7px;
   border-radius: 3px;
@@ -234,15 +273,5 @@ button {
 .item-head ul {
   position: absolute;
   bottom: -1px;
-}
-
-.item-head ul button {
-  border-radius: 3px;
-}
-
-.item-head li:nth-child(even) button {
-  border-right: 1;
-  border-left: none;
-  border-bottom: none;
 }
 </style>

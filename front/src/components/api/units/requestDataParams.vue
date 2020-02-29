@@ -242,11 +242,11 @@ export default {
 }
 
 /* tab切换按钮颜色 */
-.tab-change-btn-bg {
+.item-head .tab-change-btn-bg {
   background-color: #fff;
 }
 
-button {
+.request-box button {
   background-color: #efefef;
   border: 1px solid #dddddd;
   width: 90px;
@@ -264,4 +264,5 @@ select {
   height: 28px;
   border-radius: 3px;
 }
+
 </style>

@@ -23,7 +23,14 @@
         <td class="api-list-btn">
           <button @click="jumpPage('edit',item.id)">编辑</button>
           <button @click="jumpPage('detail',item.id)">详情</button>
-          <button @click="delApi(item.id)">删除</button>
+          <el-popconfirm
+            title="确定要删除这个api?"
+            placement="top"
+            @onConfirm="delApi(item.id)"
+            width="200"
+          >
+            <el-button slot="reference">删除</el-button>
+          </el-popconfirm>
         </td>
       </tr>
     </table>
@@ -62,15 +69,12 @@ export default {
     return {
       apiId: 0,
       hideMe: false,
-      currContainer: ""
+      currContainer: "",
+      del: 0
     };
   },
   methods: {
     delApi(id) {
-      if (!confirm("确认删除?")) {
-        return;
-      }
-
       this.$http
         .post(
           this.apiAddress + "/api/del",
@@ -84,13 +88,14 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              alert("成功！~");
+              this.$message.success("成功~");
               this.$emit("api-delete");
+            } else {
+              this.$message.error("失败:" + response.msg);
             }
           },
-          res => {
-            let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            this.$message.error("失败~");
           }
         );
     },

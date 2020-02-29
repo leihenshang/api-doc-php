@@ -1,7 +1,7 @@
 <template>
   <div class="detail-description">
     <div class="description">
-      <textarea name id cols="30" rows="10" v-model="description"></textarea>
+      <textarea name id cols="30" rows="10" v-model="newDescription"></textarea>
     </div>
   </div>
 </template>
@@ -9,14 +9,23 @@
 <script>
 export default {
   name: "detailDescription",
+  props: {
+    description: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
-      description: ""
+      newDescription: this.description
     };
   },
   watch: {
-    description: function(val) {
+    newDescription: function(val) {
       this.$emit("update", val);
+    },
+    description: function(val) {
+      this.newDescription = this.description;
     }
   }
 };

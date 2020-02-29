@@ -12,7 +12,7 @@ import UserCenter from "./viewPage/userCenter";
 // 组件
 import ProjectList from "./components/project/projectList";
 import ApiPage from "./components/api/apiPage";
-import CreateApi from "./components/api/createApi";
+import apiCreate from "./components/api/apiCreate";
 import DetailPage from "./components/detail/detailPage";
 import User from "./components/user/user";
 import UserManagement from "./components/user/userManagement";
@@ -78,7 +78,7 @@ const router = new VueRouter({
           component: ApiPage,
           props:true
         },
-        { path: "createApi", name: "createApi", component: CreateApi },
+        { path: "apiCreate", name: "apiCreate", component: apiCreate },
 
         { path: "user", name: "user", component: User, props: true },
         {

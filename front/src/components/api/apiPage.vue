@@ -136,7 +136,7 @@ export default {
     },
     addApi() {
       this.$router.push(
-        "/detail/" + this.$route.params.projectId + "/createApi"
+        "/detail/" + this.$route.params.id + "/apiCreate"
       );
     }
   },

@@ -12,7 +12,7 @@
           v-bind:class="{ 'btn-group-1-btn-change' : showDescription==true}"
         >详细说明</button>
       </div>
-      <div class="btn-group-2">
+      <div class="btn-group-1">
         <!-- <button>继续添加</button> -->
         <button @click="createApi()">保存</button>
       </div>
@@ -50,7 +50,7 @@ import detailDescription from "./units/detailDescription.vue";
 
 const CODE_OK = 200;
 export default {
-  name: "createApi",
+  name: "apiCreate",
   props: {},
   created() {
     this.getGroup();
@@ -105,6 +105,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.$message.success("保存api成功!");
+              this.$router.push({ name: "apiPage" });
             } else {
               this.$message.error("  保存api失败 ： " + response.msg);
             }
@@ -182,8 +183,7 @@ export default {
   justify-content: space-between;
 }
 
-button {
-  background-color: #efefef;
+.btn-group-1 button {
   border: 1px solid #dddddd;
   width: 90px;
   height: 30px;
@@ -191,16 +191,13 @@ button {
   margin: 0;
   padding: 0;
   outline: none;
-}
-
-.btn-group-1 {
-  font-size: 0;
-}
-
-.btn-group-1 button {
   border-right: none;
   border-left: none;
   border-radius: 3px;
+}
+
+.btn-group-1-btn-change {
+  background-color: #efefef;
 }
 
 .btn-group-1 button:first-child {

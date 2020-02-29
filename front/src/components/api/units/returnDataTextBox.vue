@@ -26,7 +26,10 @@ export default {
       default: ""
     }
   },
-  created() {},
+  created() {
+    this.success = this.originSuccess;
+    this.failed = this.originFailed;
+  },
   data: function() {
     return {
       toggle: 0,
