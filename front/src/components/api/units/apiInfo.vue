@@ -85,7 +85,7 @@ export default {
   props: {
     groupList: Array,
     propertyList: [Array, Object],
-    apiData:Object
+    apiData: Object
   },
   data() {
     return {
@@ -105,6 +105,9 @@ export default {
     };
   },
   watch: {
+    apiData: function() {
+      this.apiInfo = this.apiData;
+    },
     apiInfoNew: function(val) {
       this.$emit("update:apiInfo", val);
     }

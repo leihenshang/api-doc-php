@@ -33,6 +33,8 @@
       :propertyList="propertyList"
       v-on:update:header="apiData.http_request_header=$event"
       v-on:update:param="apiData.http_request_params=$event"
+      :header="apiData.http_request_header"
+      :params="apiData.http_request_params"
     />
 
     <!-- 响应参数 -->

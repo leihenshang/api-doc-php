@@ -18,7 +18,7 @@
           <th>值</th>
           <th>操作</th>
         </tr>
-        <tr v-for="(item,index) in apiParamHeaderItem" :key="item.id">
+        <tr v-for="(item,index) in newHeader" :key="item.id">
           <td>
             <input
               type="text"
@@ -94,34 +94,68 @@
 export default {
   name: "requestDataParams",
   props: {
-    propertyList: [Object, Array]
+    propertyList: [Object, Array],
+    header: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
+    params: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
   },
   created() {},
+  computed: {
+    newHeader: function() {
+      return JSON.parse(JSON.stringify(this.header));
+    },
+    newParams: function() {
+      return JSON.parse(JSON.stringify(this.params));
+    }
+  },
   data: function() {
     return {
       show: 1,
-      apiParamHeaderItem: [
-        {
-          name: "",
-          content: "",
-          handle: true,
-          isAdd: false
-        }
-      ],
-      apiParamItem: [
-        {
-          name: "",
-          desc: "",
-          required: false,
-          type: "string",
-          example: "",
-          handle: true,
-          isAdd: false
-        }
-      ]
+      apiParamHeaderItem: this.header,
+      apiParamItem: []
+      // apiParamHeaderItem: [
+      //   {
+      //     name: "",
+      //     content: "",
+      //     handle: true,
+      //     isAdd: false
+      //   }
+      // ],
+      // apiParamItem: [
+      //   {
+      //     name: "",
+      //     desc: "",
+      //     required: false,
+      //     type: "string",
+      //     example: "",
+      //     handle: true,
+      //     isAdd: false
+      //   }
+      // ]
     };
   },
   watch: {
+    /*     header: {
+      handler: function(val) {
+        this.apiParamHeaderItem = val;
+      },
+      deep: true
+    },
+    params: {
+      handler: function(val) {
+        this.apiParamItem = val;
+      },
+      deep: true
+    }, */
     apiParamHeaderItem: function(val) {
       this.$emit("update:header", val.slice(0, val.length - 1));
     },
@@ -132,19 +166,34 @@ export default {
   methods: {
     //检测apiParam输入
     apiParamInput(index, event) {
+      let txt = event.target.value;
       if (event) {
-        let txt = event.target.value;
-        if (txt.length >= 1 && this.apiParamItem[index].isAdd === false) {
-          this.apiParamItem.push({
-            name: "",
-            desc: "",
-            required: false,
-            type: "string",
-            example: "",
-            handle: true,
-            isAdd: false
-          });
-          this.apiParamItem[index].isAdd = true;
+        if (!this.newHeader) {
+          if (txt.length >= 1 && this.apiParamItem[index].isAdd === false) {
+            this.apiParamItem.push({
+              name: "",
+              desc: "",
+              required: false,
+              type: "string",
+              example: "",
+              handle: true,
+              isAdd: false
+            });
+            this.apiParamItem[index].isAdd = true;
+          }
+        } else {
+          if (txt.length >= 1 && this.newHeader[index].isAdd === false) {
+            this.newHeader.push({
+              name: "",
+              desc: "",
+              required: false,
+              type: "string",
+              example: "",
+              handle: true,
+              isAdd: false
+            });
+            this.newHeader[index].isAdd = true;
+          }
         }
       }
     },
@@ -264,5 +313,4 @@ select {
   height: 28px;
   border-radius: 3px;
 }
-
 </style>

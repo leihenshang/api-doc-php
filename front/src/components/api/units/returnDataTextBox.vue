@@ -33,11 +33,17 @@ export default {
   data: function() {
     return {
       toggle: 0,
-      success: this.originSuccess,
-      failed: this.originFailed
+      success: "",
+      failed: ""
     };
   },
   watch: {
+    originSuccess: function() {
+      this.success = this.originSuccess;
+    },
+    originFailed: function() {
+      this.failed = this.originFailed;
+    },
     success: function(val) {
       this.$emit("update:success", val);
     },

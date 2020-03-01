@@ -24,7 +24,7 @@ export default {
     newDescription: function(val) {
       this.$emit("update", val);
     },
-    description: function(val) {
+    description: function() {
       this.newDescription = this.description;
     }
   }
