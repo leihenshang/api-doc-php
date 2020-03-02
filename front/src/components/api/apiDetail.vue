@@ -3,8 +3,6 @@
     <div class="box1">
       <div class="btn-group-1">
         <button @click="returnApiPage">↩ 接口列表</button>
-        <button @click="box2=0" v-bind:class="{ 'btn-group-1-btn-change' : box2==0}">基础信息</button>
-        <button @click="box2=1" v-bind:class="{ 'btn-group-1-btn-change' : box2==1}">详细说明</button>
       </div>
       <div class="btn-group-2">
         <button @click="updateApi()">编辑</button>
@@ -49,23 +47,23 @@
           </dd>
         </dl>
       </div>
-      <div class="box2two" v-show="box2==1">
+    </div>
+
+    <div class="box2" v-show="apiData.description">
+      <div class="box2two">
         <div class="description">{{apiData.description}}</div>
       </div>
     </div>
 
-    <div class="box3">
+    <div class="box3" v-show="apiData.http_request_header">
       <div class="item-head">
         <ul>
           <li>
-            <button @click="box3=0" :class="{'tab-change-btn-bg' : box3==0}">请求头部</button>
-          </li>
-          <li>
-            <button @click="box3=1" :class="{'tab-change-btn-bg' : box3==1}">请求参数</button>
+            <button>请求头部</button>
           </li>
         </ul>
       </div>
-      <table v-show="box3==0">
+      <table>
         <tr>
           <th>请求头名</th>
           <th>值</th>
@@ -79,7 +77,17 @@
           </td>
         </tr>
       </table>
-      <table v-show="box3==1">
+    </div>
+    <div class="box3" >
+      <div class="item-head">
+        <ul>
+          <li>
+            <button>请求参数</button>
+          </li>
+        </ul>
+      </div>
+
+      <table v-if="apiData.http_request_param">
         <tr>
           <th>参数名</th>
           <th>说明</th>
@@ -106,11 +114,30 @@
           </td>
         </tr>
       </table>
+          <table v-else>
+        <tr>
+          <th>参数名</th>
+          <th>说明</th>
+          <th>必填</th>
+          <th>类型</th>
+          <th>示例</th>
+        </tr>
+        <tr>
+          <td colspan="5">
+            无
+          </td>
+          
+        </tr>
+      </table>
     </div>
     <div class="box4" v-show="apiData.http_return_params[0]">
-      <header>
-        <span>返回参数</span>
-      </header>
+      <div class="item-head">
+        <ul>
+          <li>
+            <button>返回参数</button>
+          </li>
+        </ul>
+      </div>
 
       <table>
         <tr>
@@ -168,14 +195,11 @@ export default {
   },
   created() {
     this.getApiDetail();
-    this.getGroup();
-    this.getProperty();
   },
   data() {
     return {
       loading: true,
       groupList: [],
-      propertyList: [],
       apiData: {
         group_id: 0, //分组
         project_id: 0, //项目Id
@@ -197,41 +221,13 @@ export default {
         }
       },
       box2: 0,
-      box3: 1,
-      box3HeaderItem: [
-        {
-          name: "",
-          content: "",
-          handle: true,
-          isAdd: false
-        }
-      ],
-      box3Item: [
-        {
-          name: "",
-          desc: "",
-          required: false,
-          type: "string",
-          example: "",
-          handle: true,
-          isAdd: false
-        }
-      ],
-      box4Item: [
-        {
-          fieldName: "",
-          objectName: "",
-          description: "",
-          required: false,
-          type: "string",
-          handle: true,
-          isAdd: false
-        }
-      ],
       box5: 0
     };
   },
   methods: {
+    updateApi() {
+      this.$emit("updateApi");
+    },
     returnApiPage() {
       this.$emit("childHideMe");
     },
@@ -263,54 +259,6 @@ export default {
             });
           }
         );
-    },
-    //获取分组
-    getGroup() {
-      this.$http
-        .get(this.apiAddress + "/group/list", {
-          params: {
-            projectId: this.$route.params.id,
-            token: this.$store.state.userInfo.token
-          }
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.groupList = response.data;
-            } else {
-              alert("failed:" + response.msg);
-            }
-          },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
-    },
-    //获取公共属性
-    getProperty() {
-      this.$http
-        .get(this.apiAddress + "/property/list", {
-          params: {}
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.propertyList = response.data;
-            } else {
-              alert("failed:" + response.msg);
-            }
-          },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
-    },
-    updateApi() {
-      this.$emit("updateApi");
     }
   },
   computed: {
@@ -374,29 +322,12 @@ button {
   border-left: 1px solid #dddddd;
 }
 
-.btn-group-1 button:nth-child(2) {
-  border-left: 1px solid #dddddd;
-
-  border-radius: 3px 0 0 3px;
-}
-
-.btn-group-1-btn-change {
-  background-color: #4caf50;
-  color: #fff;
-}
-
-.btn-group-1 button:nth-last-child(1) {
-  border-right: 1px solid #dddddd;
-  border-radius: 0 3px 3px 0;
-}
-
-/* 第一行结束 */
-/* 第二行开始 */
 .box2 {
   border: 1px solid #dddddd;
   padding: 10px 10px 10px 10px;
   position: relative;
   background-color: #fff;
+  margin: 10px 0;
 }
 
 .box2one {
@@ -556,28 +487,9 @@ select {
   margin-top: 10px;
 }
 
-.box4 header span {
-  margin-left: 5px;
-  font-weight: 700;
-}
-
 .box4 table {
   width: 100%;
   background-color: #fff;
-}
-
-.box4 header {
-  background-color: #fff;
-  border-top: 1px solid #ddd;
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.box4 header button {
-  margin-left: 5px;
 }
 
 .box4 table,
@@ -591,8 +503,7 @@ select {
   background-color: #fafafa;
 }
 
-.box4 table tr,
-.box4 header {
+.box4 table tr {
   height: 40px;
 }
 
@@ -607,19 +518,6 @@ select {
 
 .box4 td {
   text-align: center;
-}
-
-.box4 header:nth-child(1) span {
-  margin-left: 12px;
-}
-
-.box4 header:nth-child(2) span {
-  border: 1px solid #bcdffb;
-  padding: 5px 7px;
-  border-radius: 3px;
-  background-color: #e3f7ff;
-  color: #3692ed;
-  font-weight: 500;
 }
 
 .box5 {
@@ -657,7 +555,6 @@ select {
 
 /* tab切换按钮颜色 */
 .tab-change-btn-bg {
-  /* background-color: #efefef; */
   background-color: #fff;
 }
 

@@ -35,13 +35,14 @@ export default {
           route: "detail",
           child: "user",
           isClick: false
-        },
-        {
-          title: "项目文档",
-          route: "detail",
-          child: "projectDoc",
-          isClick: false
         }
+        // ,
+        // {
+        //   title: "项目文档",
+        //   route: "detail",
+        //   child: "projectDoc",
+        //   isClick: false
+        // }
       ]
     };
   },

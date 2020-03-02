@@ -16,7 +16,7 @@
     </h4>
     <ul v-if="groupList">
       <li>
-        <a href="javascript:;" @click="clientBtn(null,null)">全部接口</a>
+        <a href="javascript:;" @click="clientBtn(null,null)">全部</a>
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>

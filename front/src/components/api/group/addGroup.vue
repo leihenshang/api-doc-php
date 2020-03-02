@@ -7,9 +7,6 @@
           <button @click="editGroup()">保存</button>
           <button style="background-color:black;color:white;font-weight:700;" @click="closeMe()">取消</button>
         </p>
-        <p style="margin:20px;">
-          <button style="background-color:red;color:white;font-weight:700;">删除分组</button>
-        </p>
       </div>
       <div v-else>
         <p>
@@ -30,7 +27,7 @@ export default {
     groupData: Object,
     isShow: Boolean,
     showIsEdit: Boolean,
-    isAdd:Boolean
+    isAdd: Boolean
   },
   created() {},
   data() {
@@ -43,7 +40,7 @@ export default {
     };
   },
   methods: {
-     createGroup() {
+    createGroup() {
       if (this.newGroup.length < 1) {
         alert("组名长度不能低于1个");
         return;
@@ -66,12 +63,12 @@ export default {
               this.$emit("add-group");
               this.newGroup = "";
               alert("成功！~");
-                 this.$emit("closeAddGroup");
+              this.$emit("closeAddGroup");
             } else {
               alert("创建分组失败:" + response.msg);
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
@@ -103,7 +100,7 @@ export default {
               alert("修改失败:" + response.msg);
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             alert("获操作失败!" + !response.msg ? response.msg : "");
           }

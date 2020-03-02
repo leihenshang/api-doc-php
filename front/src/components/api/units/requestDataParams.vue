@@ -96,7 +96,7 @@ export default {
   props: {
     propertyList: [Object, Array],
     header: {
-      type: Array,
+      type: [Array, Object],
       default: function() {
         return {
           name: "",
@@ -107,7 +107,7 @@ export default {
       }
     },
     params: {
-      type: Array,
+      type: [Array, Object],
       default: function() {
         return {
           name: "",
