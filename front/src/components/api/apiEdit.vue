@@ -12,6 +12,10 @@
           v-bind:class="{ 'btn-group-1-btn-change' : showDescription==true}"
         >详细说明</button>
       </div>
+      <!-- 保存按钮 -->
+      <div class="btn-group-2">
+        <button style="float:right;" @click="updateApi()">保存</button>
+      </div>
     </div>
     <!-- 详细说明 -->
     <detailDescription
@@ -33,12 +37,16 @@
       :propertyList="propertyList"
       v-on:update:header="apiData.http_request_header=$event"
       v-on:update:param="apiData.http_request_params=$event"
-      :header="apiData.http_request_header"
-      :params="apiData.http_request_params"
+      :header="http_request_header"
+      :params="http_request_params"
     />
 
     <!-- 响应参数 -->
-    <returnParams :propertyList="propertyList" v-on:update="apiData.http_return_params=$event" />
+    <returnParams
+      :propertyList="propertyList"
+      v-on:update="apiData.http_return_params=$event"
+      :returnData="http_return_params"
+    />
 
     <!-- 响应模板数据 -->
     <textBox
@@ -92,7 +100,10 @@ export default {
           returnDataSuccess: "", //返回数据成功
           returnDataFailed: "" //返回数据失败
         }
-      }
+      },
+      http_request_header: [],
+      http_request_params: [],
+      http_return_params: []
     };
   },
   methods: {
@@ -101,8 +112,7 @@ export default {
       this.$http
         .get(this.apiAddress + "/api/detail", {
           params: {
-            id: this.apiId,
-            token: this.$store.state.userInfo.token
+            id: this.apiId
           }
         })
         .then(
@@ -110,40 +120,15 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.apiData = response.data;
-              this.box3Item = this.apiData.http_request_params;
-              this.box3Item.push({
-                name: "",
-                desc: "",
-                required: false,
-                type: "string",
-                example: "",
-                handle: true,
-                isAdd: false
-              });
-
-              this.box3HeaderItem = this.apiData.http_request_header;
-              this.box3HeaderItem.push({
-                name: "",
-                content: "",
-                handle: true,
-                isAdd: false
-              });
-
-              this.box4Item = this.apiData.http_return_params;
-              this.box4Item.push({
-                fieldName: "",
-                objectName: "",
-                description: "",
-                required: false,
-                type: "string",
-                handle: true,
-                isAdd: false
-              });
+              this.http_request_params = this.apiData.http_request_params;
+              this.http_request_header = this.apiData.http_request_header;
+              this.http_return_params = this.apiData.http_return_params;
+            } else {
+              this.$message.error("获取数据失败");
             }
           },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            this.$message.error("获取数据失败");
           }
         );
     },
@@ -153,19 +138,6 @@ export default {
     },
     //更新api
     updateApi() {
-      this.apiData.http_request_params = this.box3Item.slice(
-        0,
-        this.box3Item.length - 1
-      );
-      this.apiData.http_return_params = this.box4Item.slice(
-        0,
-        this.box4Item.length - 1
-      );
-      this.apiData.http_request_hader = this.box3HeaderItem.slice(
-        0,
-        this.box3HeaderItem.length - 1
-      );
-
       this.$http
         .post(
           this.apiAddress + "/api/update",
@@ -173,8 +145,7 @@ export default {
             id: this.apiId,
             group_id: this.apiData.group_id,
             project_id: this.$route.params.id,
-            data: JSON.stringify(this.apiData),
-            token: this.$store.state.userInfo.token
+            data: JSON.stringify(this.apiData)
           },
           { emulateJSON: true }
         )
@@ -199,6 +170,7 @@ export default {
           }
         );
     },
+    //获取分组数据
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
@@ -212,14 +184,16 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.groupList = response.data;
+            } else {
+              this.$message.error("获取数据失败");
             }
           },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            this.$message.error("获取数据失败");
           }
         );
     },
+    //获取通用属性
     getProperty() {
       this.$http
         .get(this.apiAddress + "/property/list", {
@@ -230,11 +204,12 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.propertyList = response.data;
+            } else {
+              this.$message.error("获取数据失败");
             }
           },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            this.$message.error("获取数据失败");
           }
         );
     }
@@ -266,7 +241,8 @@ export default {
   justify-content: space-between;
 }
 
-.btn-group-1 button {
+.btn-group-1 button,
+.btn-group-2 button {
   border: 1px solid #dddddd;
   width: 90px;
   height: 30px;
@@ -274,9 +250,12 @@ export default {
   margin: 0;
   padding: 0;
   outline: none;
+  border-radius: 3px;
+}
+
+.btn-group-1 button {
   border-right: none;
   border-left: none;
-  border-radius: 3px;
 }
 
 .btn-group-1-btn-change {

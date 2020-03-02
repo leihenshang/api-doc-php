@@ -70,7 +70,8 @@
 export default {
   name: "returnDataParams",
   props: {
-    propertyList: [Object, Array]
+    propertyList: [Object, Array],
+    returnData: Array
   },
   data: function() {
     return {
@@ -184,6 +185,11 @@ export default {
   watch: {
     returnDataItem: function(val) {
       this.$emit("update", val.slice(0, val.length - 1));
+    },
+    returnData: function(val) {
+      if (val.length) {
+        this.returnDataItem = val;
+      }
     }
   }
 };
