@@ -98,18 +98,18 @@ export default {
     header: {
       type: [Array, Object],
       default: function() {
-        return {
+        return [{
           name: "",
           content: "",
           handle: true,
           isAdd: false
-        };
+        }];
       }
     },
     params: {
       type: [Array, Object],
       default: function() {
-        return {
+        return [{
           name: "",
           desc: "",
           required: false,
@@ -117,7 +117,7 @@ export default {
           example: "",
           handle: true,
           isAdd: false
-        };
+        }];
       }
     }
   },

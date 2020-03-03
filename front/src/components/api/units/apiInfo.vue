@@ -43,8 +43,10 @@
           </dd>
           <dd>
             <span>URL:</span>
-
-            <input type="text" v-model="apiInfo.url" />
+            <ValidationProvider rules="required" v-slot="{ errors }" tag="div">
+              <input type="text" v-model="apiInfo.url" />
+              <em>{{ errors[0] }}</em>
+            </ValidationProvider>
           </dd>
           <dd>
             <span>名称:</span>
@@ -124,7 +126,7 @@ export default {
 <style scoped>
 dl dd div {
   display: inline-block;
-  width: 88%;
+  width: 95%;
 }
 
 .info {
