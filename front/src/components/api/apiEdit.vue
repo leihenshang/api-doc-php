@@ -30,6 +30,7 @@
       :propertyList="propertyList"
       v-on:update:apiInfo="apiInfo = $event"
       :apiData="apiData"
+      v-on:error="errors = $event"
     />
 
     <!-- 请求参数 -->
@@ -103,7 +104,8 @@ export default {
       },
       http_request_header: [],
       http_request_params: [],
-      http_return_params: []
+      http_return_params: [],
+      errors: "信息填写错误"
     };
   },
   methods: {
@@ -138,6 +140,11 @@ export default {
     },
     //更新api
     updateApi() {
+      if (this.errors.length > 1) {
+        this.$message.error(this.errors);
+        return;
+      }
+
       this.$http
         .post(
           this.apiAddress + "/api/update",

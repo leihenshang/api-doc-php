@@ -77,11 +77,11 @@ class Api extends BaseModel
     {
         return [
             [['id', 'data'], 'required'],
-            [['group_id', 'project_id', 'group_id_second'], 'integer'],
+            [['group_id', 'project_id', 'is_deleted', 'group_id_second'], 'integer'],
             [['data', 'create_time', 'update_time'], 'safe'],
             [['group_id', 'project_id'], 'required', 'on' => self::SCENARIO_CREATE],
             [['description', 'api_name'], 'string', 'max' => 1000],
-            [['is_deleted', 'protocol_type', 'http_method_type', 'object_name', 'function_name', 'develop_language'], 'string', 'max' => 20000],
+            [['protocol_type', 'http_method_type', 'object_name', 'function_name', 'develop_language'], 'string', 'max' => 20000],
             [['url', 'http_request_header', 'http_request_params', 'http_return_type', 'http_return_sample', 'http_return_params'], 'string', 'max' => 20000],
         ];
     }
@@ -143,7 +143,7 @@ class Api extends BaseModel
     public function createData()
     {
         if (!$this->validate()) {
-            return   current($this->getFirstErrors());
+            return current($this->getFirstErrors());
         }
 
         //检查groupId和projectId的存在
@@ -187,7 +187,6 @@ class Api extends BaseModel
      */
     public function updateData($request)
     {
-
 
 
         if (!isset($request['data'])) {

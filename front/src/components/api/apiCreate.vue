@@ -27,6 +27,7 @@
       :groupList="groupList"
       :propertyList="propertyList"
       v-on:update:apiInfo="apiInfo = $event"
+      v-on:error="errors = $event"
     />
     <requestParams
       :propertyList="propertyList"
@@ -75,16 +76,25 @@ export default {
         }
       },
       finalData: {},
-      showDescription: false
+      showDescription: false,
+      errors: "信息填写错误"
     };
   },
   methods: {
+    errorHanle(val) {
+      this.errors = val;
+    },
     //返回api页面
     returnApiPage() {
       this.$router.go(-1);
     },
     //创建api
     createApi() {
+      if (this.errors.length > 1) {
+        this.$message.error(this.errors);
+        return;
+      }
+
       //loading
       let loadingInstance = this.$loading({ fullscreen: true });
 

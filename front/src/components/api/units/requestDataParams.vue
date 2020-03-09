@@ -98,26 +98,30 @@ export default {
     header: {
       type: [Array, Object],
       default: function() {
-        return [{
-          name: "",
-          content: "",
-          handle: true,
-          isAdd: false
-        }];
+        return [
+          {
+            name: "",
+            content: "",
+            handle: true,
+            isAdd: false
+          }
+        ];
       }
     },
     params: {
       type: [Array, Object],
       default: function() {
-        return [{
-          name: "",
-          desc: "",
-          required: false,
-          type: "string",
-          example: "",
-          handle: true,
-          isAdd: false
-        }];
+        return [
+          {
+            name: "",
+            desc: "",
+            required: false,
+            type: "string",
+            example: "",
+            handle: true,
+            isAdd: false
+          }
+        ];
       }
     }
   },
@@ -291,6 +295,8 @@ export default {
   margin: 0;
   padding: 0;
   outline: none;
+  border-left: none;
+  border-bottom: none;
 }
 
 select {
