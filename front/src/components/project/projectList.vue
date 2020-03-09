@@ -80,7 +80,9 @@ export default {
           },
           res => {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
             this.hideShade = true;
           }
         );
@@ -95,35 +97,48 @@ export default {
       }
       this.addIsHide = !this.addIsHide;
     },
+    //删除数据
     del(id) {
-      if (!confirm("确定删除？")) {
+      if (!id) {
+        this.$message.error("id错误");
         return;
       }
 
-      this.$http
-        .post(
-          this.apiAddress + "/project/del",
-          {
-            id: id,
-            token: this.$store.state.userInfo.token
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          res => {
-            let response = res.body;
-            if (response.code === CODE_OK) {
-              alert("成功!" + response.msg);
-              this.getProjectList(this.currPage, this.pageSize);
-            } else {
-              alert("失败!" + response.msg);
-            }
-          },
-          res => {
-            let response = res.body;
-            alert("操作失败!" + response.msg);
-          }
-        );
+      this.$confirm("此操作将删除该分组, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$http
+            .post(
+              this.apiAddress + "/project/del",
+              {
+                id
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              res => {
+                let response = res.body;
+                if (response.code === CODE_OK) {
+                  this.$message.success("成功!" + response.msg);
+                  this.getProjectList(this.currPage, this.pageSize);
+                } else {
+                  this.$message.error("失败!" + response.msg);
+                }
+              },
+              res => {
+                this.$message.error("操作失败!");
+              }
+            );
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     update(item) {
       this.updateData = item;

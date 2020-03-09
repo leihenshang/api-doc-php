@@ -46,7 +46,7 @@ export default {
     //创建分组
     createGroup() {
       if (this.newGroup.length < 1) {
-        alert("组名长度不能低于1个");
+        this.$message.error("组名长度不能低于1个");
         return;
       }
 
@@ -67,21 +67,21 @@ export default {
             if (response.code === CODE_OK) {
               this.$emit("add-group");
               this.newGroup = "";
-              alert("成功！~");
+              this.$message.error("成功！~");
               this.$emit("closeAddGroup");
             } else {
-              alert("创建分组失败:" + response.msg);
+              this.$message.error("创建分组失败:" + response.msg);
             }
           },
          res =>  {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
     editGroup() {
       if (this.groupData.title.length < 1) {
-        alert("组名长度不能低于1个");
+        this.$message.error("组名长度不能低于1个");
         return;
       }
 
@@ -99,15 +99,15 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              alert("成功！~");
+              this.$message.error("成功！~");
               this.$emit("closeAddGroup");
             } else {
-              alert("修改失败:" + response.msg);
+              this.$message.error("修改失败:" + response.msg);
             }
           },
          res =>  {
             let response = res.body;
-            alert("获操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },

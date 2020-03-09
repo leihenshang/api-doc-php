@@ -59,7 +59,7 @@ export default {
       }
 
       if (!id) {
-        alert("id错误");
+        this.$message.error("id错误");
         return;
       }
 
@@ -77,12 +77,12 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.$emit("add-group");
-              alert("成功！~");
+              this.$message.error("成功！~");
             }
           },
          res =>  {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },

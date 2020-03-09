@@ -1,10 +1,3 @@
-<!--
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-10 18:12:37
- * @LastEditTime: 2019-10-10 18:12:37
- * @LastEditors: your name
- -->
 <template>
   <div class="api-page">
     <div class="btn-wrapper">
@@ -86,9 +79,8 @@ export default {
               }
             }
           },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            this.$message.error("获取数据-操作失败!");
           }
         );
     },
@@ -122,22 +114,23 @@ export default {
               this.loading = false;
             }
           },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+          () => {
+            this.loading = false;
+            this.$message.error("获取数据-操作失败!");
           }
         );
     },
     flushGroupList() {
       this.getGroup(1, 100, this.$route.params.projectId);
     },
+    //更改分组
     changeGroup(id) {
+      this.loading = true;
       this.getApi(this.pageSize, this.curr, this.$route.params.id, id);
     },
+    //调整添加api
     addApi() {
-      this.$router.push(
-        "/detail/" + this.$route.params.id + "/apiCreate"
-      );
+      this.$router.push("/detail/" + this.$route.params.id + "/apiCreate");
     }
   },
   components: {

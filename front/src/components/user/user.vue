@@ -118,12 +118,12 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.getProjectUserList();
-              alert("成功！~");
+              this.$message.error("成功！~");
             }
           },
           res => {
             let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
@@ -144,14 +144,14 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.getProjectUserList();
-              alert("成功！~");
+              this.$message.error("成功！~");
             } else {
-              alert("操作失败!" + !response.msg ? response.msg : "");
+              this.$message.error("操作失败!" + !response.msg ? response.msg : "");
             }
           },
           res => {
             let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
@@ -174,7 +174,7 @@ export default {
           },
           res => {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
@@ -196,7 +196,7 @@ export default {
           },
           res => {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     }

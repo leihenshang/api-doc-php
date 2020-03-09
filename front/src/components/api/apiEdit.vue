@@ -173,7 +173,7 @@ export default {
             }
           },
           () => {
-            alert("保存失败!");
+            this.$message.error("保存失败!");
           }
         );
     },

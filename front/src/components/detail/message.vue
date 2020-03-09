@@ -48,12 +48,12 @@ export default {
             if (response.code === CODE_OK) {
               this.operationLog = response.data;
             } else {
-              alert("获取数据失败");
+              this.$message.error("获取数据失败");
             }
           },
          res =>  {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     }

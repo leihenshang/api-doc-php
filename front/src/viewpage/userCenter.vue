@@ -99,7 +99,7 @@ export default {
   created() {
     this.getUserInfo();
     if (!this.userInfo) {
-      return alert("没有获取到用户信息");
+      return this.$message.error("没有获取到用户信息");
     }
   },
   methods: {
@@ -111,11 +111,11 @@ export default {
           if (response.code === CODE_OK) {
             this.userInfo = response.data;
           } else {
-            alert("failed:" + response.msg);
+            this.$message.error("failed:" + response.msg);
           }
         },
         () => {
-          alert("获取数据失败");
+          this.$message.error("获取数据失败");
         }
       );
     },
@@ -123,7 +123,7 @@ export default {
     updateNickName() {
       //验证名字是否一样
       if (this.newNickname === this.userInfo.nick_name) {
-        alert("昵称没有修改");
+        this.$message.error("昵称没有修改");
         return;
       }
 
@@ -139,7 +139,7 @@ export default {
           res => {
             let response = res.body;
             if (response.code !== CODE_OK) {
-              alert("failed:" + response.msg);
+              this.$message.error("failed:" + response.msg);
               return;
             } else {
               this.getUserInfo();
@@ -148,7 +148,7 @@ export default {
             }
           },
           () => {
-            alert("请求发生错误");
+            this.$message.error("请求发生错误");
           }
         );
 
@@ -161,16 +161,16 @@ export default {
         this.password.newFirst == "" ||
         this.password.newSecond == ""
       ) {
-        alert("密码不能为空");
+        this.$message.error("密码不能为空");
         return;
       }
 
       if (this.password.newFirst !== this.password.newSecond) {
-        alert("新密码重复数据不一致");
+        this.$message.error("新密码重复数据不一致");
         return;
       }
       if (this.password.newFirst === this.password.old) {
-        alert("新旧密码不能相同");
+        this.$message.error("新旧密码不能相同");
         return;
       }
 
@@ -188,16 +188,16 @@ export default {
           res => {
             let response = res.body;
             if (response.code !== CODE_OK) {
-              alert("failed:" + response.msg);
+              this.$message.error("failed:" + response.msg);
               return;
             } else {
-              alert("success");
+              this.$message.error("success");
               this.getUserInfo();
               this.password.update = !this.password.update;
             }
           },
           () => {
-            alert("请求发生错误");
+            this.$message.error("请求发生错误");
           }
         );
     }

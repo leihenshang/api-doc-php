@@ -80,7 +80,7 @@ export default {
           },
          res =>  {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
@@ -113,7 +113,7 @@ export default {
           },
          res =>  {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },

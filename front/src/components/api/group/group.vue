@@ -51,38 +51,47 @@ export default {
     };
   },
   methods: {
+    //删除分组
     del(id) {
-      if (!confirm("确定删除?")) {
-        return;
-      }
-
       if (!id) {
-        alert("id错误");
+        this.$message.error("id错误");
         return;
       }
 
-      this.$http
-        .post(
-          this.apiAddress + "/group/del",
-          {
-            id: id,
-            token: this.$store.state.userInfo.token
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.$emit("add-group");
-              alert("成功！~");
-            }
-          },
-          res => {
-            let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
+      this.$confirm("此操作将删除该分组, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$http
+            .post(
+              this.apiAddress + "/group/del",
+              {
+                id: id
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.$emit("add-group");
+                  this.$message.success("成功！~");
+                }
+              },
+              res => {
+                let response = res.body;
+                this.$message.error("操作失败!");
+              }
+            );
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     clientBtn(id, index) {
       for (const key in this.group) {

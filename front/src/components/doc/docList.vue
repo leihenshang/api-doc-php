@@ -59,13 +59,13 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              alert("成功！~");
+              this.$message.error("成功！~");
               this.$emit("doc-delete");
             }
           },
           res => {
             let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },

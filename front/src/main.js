@@ -70,7 +70,7 @@ Vue.http.interceptors.push(request => {
     }
     return response => {
         if (response.body.code && response.body.code === 34) {
-            alert("超时,重新登录");
+            this.$message.error("超时,重新登录");
             localStorage.removeItem("userInfo");
             router.push("/login");
         }

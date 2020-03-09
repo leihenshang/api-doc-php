@@ -86,12 +86,12 @@ export default {
               this.projectData = response.data;
               this.$store.commit("saveProject", response.data);
             } else {
-              alert("failed:" + response.msg);
+              this.$message.error("failed:" + response.msg);
             }
           },
           res => {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },

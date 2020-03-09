@@ -139,7 +139,7 @@ export default {
     //发送验证码
     sendCode: function() {
       if (!this.userInfo.email) {
-        alert("邮箱不能为空");
+        this.$message.error("邮箱不能为空");
         return;
       }
 
@@ -153,14 +153,14 @@ export default {
           response => {
             response = response.body;
             if (response.code === CODE_OK) {
-              alert("发送成功:" + JSON.stringify(response.data));
+              this.$message.error("发送成功:" + JSON.stringify(response.data));
             } else {
-              alert("发送失败:" + response.msg);
+              this.$message.error("发送失败:" + response.msg);
             }
           },
           res => {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
@@ -183,16 +183,16 @@ export default {
             response => {
               response = response.body;
               if (response.code === CODE_OK) {
-                alert("成功！~");
+                this.$message.error("成功！~");
                 this.userInfo = this.userInfoDefault;
                 this.$router.push("/login");
               } else {
-                alert("注册失败:" + response.msg);
+                this.$message.error("注册失败:" + response.msg);
               }
             },
             response => {
               response = response.body;
-              alert("操作失败!" + !response.msg ? response.msg : "");
+              this.$message.error("操作失败!" + !response.msg ? response.msg : "");
             }
           );
       });

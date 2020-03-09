@@ -124,12 +124,12 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.getUserList();
-              alert("成功！~");
+              this.$message.error("成功！~");
             }
           },
           res => {
             let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
@@ -140,7 +140,7 @@ export default {
       }
 
       if ([2, 1].indexOf(state) === -1) {
-        alert("参数错误");
+        this.$message.error("参数错误");
         return;
       }
 
@@ -159,12 +159,12 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.getUserList();
-              alert("成功！~");
+              this.$message.error("成功！~");
             }
           },
           res => {
             let response = res.body;
-            alert("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
           }
         );
     },
@@ -187,7 +187,7 @@ export default {
           },
           res => {
             let response = res.body;
-            alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
           }
         );
     }

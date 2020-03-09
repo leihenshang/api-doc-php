@@ -59,18 +59,18 @@
                                     this.groupList = response.data;
                                 }
                             } else {
-                                alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+                                this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
                             }
                         },
                         () => {
-                            alert("获取数据-操作失败!");
+                            this.$message.error("获取数据-操作失败!");
                         }
                     );
             },
             //更新文档
             updateDoc() {
                 if (!this.doc.group_id) {
-                    alert("请选择分组");
+                    this.$message.error("请选择分组");
                     return;
                 }
 
@@ -90,14 +90,14 @@
                             res = res.body;
                             if (res.code === CODE_OK) {
                                 if (res.data) {
-                                    alert("更新成功！");
+                                    this.$message.error("更新成功！");
                                 } else {
-                                    alert("更新文档失败:" + res.msg);
+                                    this.$message.error("更新文档失败:" + res.msg);
                                 }
                             }
                         },
                         () => {
-                            alert("更新文档失败");
+                            this.$message.error("更新文档失败");
                         }
                     );
             },
@@ -115,11 +115,11 @@
                             if (response.code === CODE_OK) {
                                 this.doc = response.data;
                             } else {
-                                alert(`获取数据失败:${response.msg}`);
+                                this.$message.error(`获取数据失败:${response.msg}`);
                             }
                         },
                         () => {
-                            alert("获取数据失败");
+                            this.$message.error("获取数据失败");
                         }
                     );
             }

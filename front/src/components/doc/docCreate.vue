@@ -63,18 +63,18 @@
                                     this.groupList = response.data;
                                 }
                             } else {
-                                alert("获取数据-操作失败!" + !response.msg ? response.msg : "");
+                                this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
                             }
                         },
                         () => {
-                            alert("获取数据-操作失败!");
+                            this.$message.error("获取数据-操作失败!");
                         }
                     );
             },
             //创建文档
             createDoc() {
                 if (!this.groupId) {
-                    alert("请选择分组");
+                    this.$message.error("请选择分组");
                     return;
                 }
 
@@ -93,15 +93,15 @@
                             res = res.body;
                             if (res.code === CODE_OK) {
                                 if (res.data) {
-                                    alert("创建成功！");
+                                    this.$message.error("创建成功！");
                                     this.$router.go(-1);
                                 } else {
-                                    alert("创建文档失败:" + res.msg);
+                                    this.$message.error("创建文档失败:" + res.msg);
                                 }
                             }
                         },
                         () => {
-                            alert("创建文档失败");
+                            this.$message.error("创建文档失败");
                         }
                     );
             }

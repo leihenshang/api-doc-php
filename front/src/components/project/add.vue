@@ -97,16 +97,16 @@ export default {
            res =>  {
               let response = res.body;
               if (response.code === CODE_OK) {
-                alert("成功!" + response.msg);
+                this.$message.error("成功!" + response.msg);
                 this.clear();
                 this.hideMeBtn("flush");
               } else {
-                alert("失败!" + response.msg);
+                this.$message.error("失败!" + response.msg);
               }
             },
            res =>  {
               let response = res.body;
-              alert("操作失败!" + response.msg);
+              this.$message.error("操作失败!" + response.msg);
             }
           );
       });
@@ -129,16 +129,16 @@ export default {
          res =>  {
             let response = res.body;
             if (response.code === CODE_OK) {
-              alert("成功!" + response.msg);
+              this.$message.error("成功!" + response.msg);
               this.clear();
               this.hideMeBtn("flush");
             } else {
-              alert("失败!" + response.msg);
+              this.$message.error("失败!" + response.msg);
             }
           },
          res =>  {
             let response = res.body;
-            alert("操作失败!" + response.msg);
+            this.$message.error("操作失败!" + response.msg);
           }
         );
     },

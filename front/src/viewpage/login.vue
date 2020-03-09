@@ -102,7 +102,7 @@ export default {
                 localStorage.setItem("userInfo", JSON.stringify(response.data));
                 this.$router.push("/");
               } else {
-                alert("登录错误！" + response.msg);
+                this.$message.error("登录错误！" + response.msg);
                 localStorage.removeItem("userInfo");
                 Vue.prototype.userInfo = null;
                 this.$router.push("/login");
@@ -110,7 +110,7 @@ export default {
             },
             res => {
               let response = res.body;
-              alert("操作失败!" + !response.msg ? response.msg : "");
+              this.$message.error("操作失败!" + !response.msg ? response.msg : "");
               return;
             }
           );
