@@ -87,7 +87,7 @@
         </ul>
       </div>
 
-      <table v-if="apiData.http_request_param">
+      <table v-if="apiData.http_request_params">
         <tr>
           <th>参数名</th>
           <th>说明</th>

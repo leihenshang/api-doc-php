@@ -17,7 +17,14 @@
         />
       </div>
       <div class="doc-wrapper">
-        <docList :docList="docData.data" v-on:doc-delete="docDelete" ref="docList" />
+        <button @click="isCreate = false; $router.push({name:'projectDoc'}) " v-show="isCreate === true">取消</button>
+        <docList
+          :docList="docData.data"
+          v-on:doc-delete="docDelete"
+          ref="docList"
+          v-if="isCreate === false"
+        />
+        <router-view v-else />
       </div>
     </div>
   </div>
@@ -37,7 +44,7 @@ export default {
   },
   created() {
     this.getGroup(this.pageSize, this.curr, this.$route.params.id);
-    this.getDoc(10,1,0);
+    this.getDoc(10, 1, 0);
   },
   //默认数据
   data() {
@@ -51,7 +58,8 @@ export default {
         { title: "API接口", route: "api" }
       ],
       showCreateGroup: false,
-      groupId: 0
+      groupId: 0,
+      isCreate: false
     };
   },
   methods: {
@@ -78,9 +86,11 @@ export default {
               this.docData = response.data;
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
-            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     },
@@ -111,9 +121,11 @@ export default {
               }
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
-            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     },
@@ -125,8 +137,10 @@ export default {
       this.groupId = id;
       this.getDoc(this.pageSize, this.curr, id);
     },
+    //添加文档
     addDoc() {
-      this.$router.push("/docCreate");
+      this.isCreate = true;
+      this.$router.push({ name: "docCreate" });
     }
   },
   components: {

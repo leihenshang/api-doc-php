@@ -154,11 +154,26 @@ export default {
     header: function(val) {
       if (val.length) {
         this.apiParamHeaderItem = val;
+        // this.apiParamHeaderItem.push({
+        //   name: "",
+        //   content: "",
+        //   handle: true,
+        //   isAdd: false
+        // });
       }
     },
     params: function(val) {
       if (val.length) {
         this.apiParamItem = val;
+        // this.apiParamItem.push({
+        //   name: "",
+        //   desc: "",
+        //   required: false,
+        //   type: "string",
+        //   example: "",
+        //   handle: true,
+        //   isAdd: false
+        // });
       }
     },
     apiParamHeaderItem: function(val) {

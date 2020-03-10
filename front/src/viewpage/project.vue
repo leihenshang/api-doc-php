@@ -106,8 +106,7 @@ export default {
           route: "userManagement",
           clild: "",
           isClick: false
-        },
-        { title: "通用文档", route: "commonDoc", clild: "", isClick: false }
+        }
       ];
     }
   },

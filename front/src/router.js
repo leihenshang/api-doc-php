@@ -37,28 +37,7 @@ const router = new VueRouter({
           path: "userManagement",
           name: "userManagement",
           component: UserManagement
-        },
-        {
-          path: "commonDoc",
-          name: "commonDoc",
-          component: DocPage,
-          props: true,
-          children: [
-            {
-              path: "docDetail/:docId",
-              name: "docDetail",
-              component: DocDetail,
-              props: true
-            },
-            {
-              path: "docEdit/:docId",
-              name: "docEdit",
-              component: DocEdit,
-              props: true
-            }
-          ]
-        },
-        { path: "docCreate", name: "docCreate", component: DocCreate }
+        }
       ]
     },
     {
@@ -76,7 +55,7 @@ const router = new VueRouter({
           path: "apiPage",
           name: "apiPage",
           component: ApiPage,
-          props:true
+          props: true
         },
         { path: "apiCreate", name: "apiCreate", component: apiCreate },
 
@@ -85,7 +64,27 @@ const router = new VueRouter({
           path: "projectDoc",
           name: "projectDoc",
           component: DocPage,
-          props: true
+          props: true,
+          children: [
+            {
+              path: "docDetail/:docId",
+              name: "docDetail",
+              component: DocDetail,
+              props: true
+            },
+            {
+              path: "docEdit/:docId",
+              name: "docEdit",
+              component: DocEdit,
+              props: true
+            },
+            {
+              path: "docCreate",
+              name: "docCreate",
+              component: DocCreate,
+              props: true
+            }
+          ]
         }
       ]
     },

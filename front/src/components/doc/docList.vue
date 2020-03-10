@@ -1,26 +1,17 @@
 <template>
-  <div class="doc-list common-table">
-    <table v-show="!hideMe">
-      <tr>
-        <th>名称</th>
-        <th>创建者</th>
-        <th>创建时间</th>
-        <th>操作</th>
-      </tr>
-      <tr v-for="item in docList" :key="item.id">
-        <td>
-          <span class="span-dot"></span>
-          {{item.title}}
-        </td>
-        <td>{{item.user_id}}</td>
-        <td>{{item.create_time}}</td>
-        <td class="doc-list-btn">
-          <button @click="jumpPage('docEdit',item.id)">编辑</button>
-          <button @click="jumpPage('docDetail',item.id)">详情</button>
-          <button @click="delDoc(item.id)">删除</button>
-        </td>
-      </tr>
-    </table>
+  <div class="doc-list">
+    <el-table v-show="hideMe === false" :data="docList" stripe style="width: 100%">
+      <el-table-column prop="title" label="名称" width="180"></el-table-column>
+      <el-table-column prop="user_id" label="创建者" width="180"></el-table-column>
+      <el-table-column prop="create_time" label="创建时间"></el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="jumpPage('docEdit',scope.row.id)">编辑</el-button>
+          <el-button size="mini" @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
+          <el-button size="mini" type="danger" @click="delDoc(scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
     <div class="container" v-show="hideMe">
       <div class="container-btn">
@@ -65,7 +56,9 @@ export default {
           },
           res => {
             let response = res.body;
-            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     },
