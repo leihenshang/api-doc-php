@@ -1,28 +1,7 @@
 
 <template>
   <div class="login-page">
-    <div class="login-page-top">
-      <ul>
-        <li>
-          <a href="#" style="color:#4caf50">首页</a>
-        </li>
-        <li>
-          <a href="#">官方网站</a>
-        </li>
-        <li>
-          <a href="#">官方社区</a>
-        </li>
-        <li>
-          <a href="#">关于apidoc</a>
-        </li>
-        <li>
-          <a href="#">用户讨论群</a>
-        </li>
-        <li class="li-r">
-          <a href="javascript:void(0)" @click="jumpRegister()">注册</a>
-        </li>
-      </ul>
-    </div>
+    <homeHeader />
     <div class="middle">
       <div class="login-page-content">
         <div class="title">
@@ -55,14 +34,15 @@
         </div>
       </div>
     </div>
-    <div class="bottom">
-      <p>该开源网站由api doc提供技术支持，开源协议遵循MIT，如需获取最新的api doc开源版以及相关资讯，请点击这里</p>
-    </div>
+    <homeFooter />
   </div>
 </template>
 
 <script>
 import Vue from "vue";
+import homeHeader from "../components/common/units/homeHeader";
+import homeFooter from "../components/common/units/homeFooter";
+
 const CODE_OK = 200;
 
 export default {
@@ -110,7 +90,9 @@ export default {
             },
             res => {
               let response = res.body;
-              this.$message.error("操作失败!" + !response.msg ? response.msg : "");
+              this.$message.error(
+                "操作失败!" + !response.msg ? response.msg : ""
+              );
               return;
             }
           );
@@ -130,81 +112,15 @@ export default {
           localStorage.removeItem("userInfo");
         }
       }
-    },
-    //跳转注册页
-    jumpRegister() {
-      this.$router.push("/register");
     }
+  },
+  components: {
+    homeHeader,
+    homeFooter
   }
 };
 </script>
 <style>
-.login-box span {
-  color: red;
-}
-
-span.login-text {
-  color: white;
-}
-
-.login-page a {
-  text-decoration: none;
-}
-
-.login-page-top {
-  height: 60px;
-  border-bottom: 1px solid #ededed;
-}
-
-.login-page-top ul {
-  overflow: hidden;
-  height: 100%;
-  line-height: 60px;
-}
-
-.login-page-top ul li {
-  list-style: none;
-  float: left;
-  margin-left: 2%;
-}
-
-.login-page-top ul li a {
-  font-size: 14px;
-  color: #777777;
-}
-
-.login-page-top ul li a:hover {
-  color: #4caf50;
-}
-
-.login-page-top .li-r {
-  float: right;
-  margin-right: 2%;
-}
-
-.login-page-top .li-r a {
-  border: 1px solid #4caf50;
-  padding: 7px 20px;
-  border-radius: 3px;
-  color: #4caf50;
-}
-
-.login-page-top .li-r a:hover {
-  background-color: #4caf50;
-  color: #ffffff;
-}
-
-.login-page-top em:first-child {
-  float: right;
-  display: block;
-  margin-right: 1%;
-  border: 1px solid gray;
-  height: 58px;
-  width: 80px;
-  text-align: center;
-  line-height: 60px;
-}
-
 /* 中间内容开始 */
 .login-page-content {
   position: absolute;
@@ -218,6 +134,14 @@ span.login-text {
   font-size: 50px;
   line-height: 140px;
   text-align: center;
+}
+
+.login-box span {
+  color: red;
+}
+
+span.login-text {
+  color: white;
 }
 
 .login-box {
@@ -288,20 +212,4 @@ span.login-text {
 }
 
 /* 中间内容结束 */
-
-/* 底部开始 */
-.bottom {
-  height: 50px;
-  border-top: 1px solid #e5e5e5;
-  background-color: #f1f1f1;
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  line-height: 50px;
-}
-
-.bottom p {
-  font-size: 14px;
-  text-align: center;
-}
 </style>

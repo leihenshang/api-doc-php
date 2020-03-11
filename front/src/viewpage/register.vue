@@ -1,27 +1,6 @@
 <template>
   <div class="register">
-    <div class="login-page-top">
-      <ul>
-        <li>
-          <a href="#" style="color:#4caf50">首页</a>
-        </li>
-        <li>
-          <a href="#">官方网站</a>
-        </li>
-        <li>
-          <a href="#">官方社区</a>
-        </li>
-        <li>
-          <a href="#">关于apidoc</a>
-        </li>
-        <li>
-          <a href="#">用户讨论群</a>
-        </li>
-        <li class="li-r">
-          <a href="javascript:void(0)">登陆</a>
-        </li>
-      </ul>
-    </div>
+    <homeHeader />
     <div class="middle">
       <h4>用户注册</h4>
       <ValidationObserver ref="form" vid="form" tag="div">
@@ -49,26 +28,6 @@
               tag="i"
             >
               <input type="email" name="email" v-model="userInfo.email" placeholder="请输入邮箱" />
-              <button @click="sendCode()">发送验证码</button>
-              <em>{{ errors[0] }}</em>
-            </validation-provider>
-          </li>
-          <li>
-            <span>验证码</span>
-            <validation-provider
-              rules="required"
-              v-slot="{ errors }"
-              vid="code"
-              name="code"
-              tag="i"
-            >
-              <input
-                type="text"
-                name="code"
-                v-model="userInfo.code"
-                placeholder="请输入验证码"
-                autocomplete="off"
-              />
               <em>{{ errors[0] }}</em>
             </validation-provider>
           </li>
@@ -107,12 +66,13 @@
         </ul>
       </ValidationObserver>
     </div>
-    <div class="bottom">
-      <p>该开源网站由api doc提供技术支持，开源协议遵循MIT，如需获取最新的api doc开源版以及相关资讯，请点击这里</p>
-    </div>
+    <homeFooter />
   </div>
 </template>
 <script>
+import homeHeader from "../components/common/units/homeHeader";
+import homeFooter from "../components/common/units/homeFooter";
+
 const CODE_OK = 200;
 export default {
   name: "register",
@@ -129,41 +89,11 @@ export default {
         pwd: "",
         re_pwd: "",
         name: "",
-        email: "",
-        code: ""
+        email: ""
       }
     };
   },
-  created() {},
   methods: {
-    //发送验证码
-    sendCode: function() {
-      if (!this.userInfo.email) {
-        this.$message.error("邮箱不能为空");
-        return;
-      }
-
-      this.$http
-        .get(this.apiAddress + "/message/send", {
-          params: {
-            email: this.userInfo.email
-          }
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.$message.error("发送成功:" + JSON.stringify(response.data));
-            } else {
-              this.$message.error("发送失败:" + response.msg);
-            }
-          },
-          res => {
-            let response = res.body;
-            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
-          }
-        );
-    },
     //用户注册
     register() {
       //执行验证
@@ -190,13 +120,16 @@ export default {
                 this.$message.error("注册失败:" + response.msg);
               }
             },
-            response => {
-              response = response.body;
-              this.$message.error("操作失败!" + !response.msg ? response.msg : "");
+            () => {
+              this.$message.error("操作失败!");
             }
           );
       });
     }
+  },
+  components: {
+    homeHeader,
+    homeFooter
   }
 };
 </script>
