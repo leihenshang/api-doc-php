@@ -37,6 +37,7 @@ export default {
   },
   data() {
     return {
+      groupId: 0,
       groupList: [],
       apiList: {},
       curr: 1,
@@ -125,12 +126,16 @@ export default {
     },
     //更改分组
     changeGroup(id) {
+      this.groupId = id;
       this.loading = true;
       this.getApi(this.pageSize, this.curr, this.$route.params.id, id);
     },
     //调整添加api
     addApi() {
-      this.$router.push("/detail/" + this.$route.params.id + "/apiCreate");
+      this.$router.push({
+        path: "/detail/" + this.$route.params.id + "/apiCreate",
+        params: { groupId: this.groupId }
+      });
     }
   },
   components: {

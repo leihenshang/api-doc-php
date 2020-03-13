@@ -52,7 +52,9 @@ import detailDescription from "./units/detailDescription.vue";
 const CODE_OK = 200;
 export default {
   name: "apiCreate",
-  props: {},
+  props: {
+    groupId:[Number,String]
+  },
   created() {
     this.getGroup();
     this.getProperty();
@@ -100,6 +102,7 @@ export default {
 
       let data = Object.assign(this.finalData, this.apiInfo);
       data = Object.assign(data, this.apiData);
+      
       this.$http
         .post(
           this.apiAddress + "/api/create",
