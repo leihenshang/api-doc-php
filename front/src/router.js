@@ -58,7 +58,7 @@ const router = new VueRouter({
           props: true
         },
         {
-          path: "apiCreate",
+          path: "apiCreate/:groupId",
           name: "apiCreate",
           component: apiCreate,
           props: true
