@@ -26,6 +26,7 @@
       v-if="showDescription === false"
       :groupList="groupList"
       :propertyList="propertyList"
+      :groupId="groupId"
       v-on:update:apiInfo="apiInfo = $event"
       v-on:error="errors = $event"
     />
@@ -53,7 +54,7 @@ const CODE_OK = 200;
 export default {
   name: "apiCreate",
   props: {
-    groupId:[Number,String]
+    groupId: [Number, String]
   },
   created() {
     this.getGroup();
@@ -102,7 +103,7 @@ export default {
 
       let data = Object.assign(this.finalData, this.apiInfo);
       data = Object.assign(data, this.apiData);
-      
+
       this.$http
         .post(
           this.apiAddress + "/api/create",
@@ -118,7 +119,12 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.$message.success("保存api成功!");
-              this.$router.push({ name: "apiPage" });
+              // this.$router.push({ name: "apiPage" });
+              //跳转携带分组参数
+              this.$router.push({
+                name: "apiPage",
+                params: { groupId: this.groupId }
+              });
             } else {
               this.$message.error("  保存api失败 ： " + response.msg);
             }

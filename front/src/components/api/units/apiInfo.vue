@@ -1,7 +1,7 @@
 <template>
   <div class="api-info-box">
     <div class="info">
-      <ValidationObserver ref="form" tag="div" >
+      <ValidationObserver ref="form" tag="div">
         <dl>
           <dd>
             <span></span>
@@ -108,12 +108,13 @@ export default {
   props: {
     groupList: Array,
     propertyList: [Array, Object],
-    apiData: Object
+    apiData: Object,
+    groupId: [String, Number]
   },
   data() {
     return {
       apiInfo: {
-        group_id: null, //分组
+        group_id: this.groupId, //分组
         project_id: 0, //项目Id
         protocol_type: "", //协议
         requestMethod: "", //http请求方法

@@ -32,8 +32,13 @@ export default {
   name: "apiPage",
   props: {},
   created() {
+    if (this.$route.params.groupId) {
+      this.changeGroup(this.$route.params.groupId);
+    } else {
+      this.getApi(this.pageSize, this.curr, this.$route.params.id);
+    }
+
     this.getGroup(this.pageSize, this.curr, this.$route.params.id);
-    this.getApi(this.pageSize, this.curr, this.$route.params.id);
   },
   data() {
     return {
@@ -73,8 +78,13 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               if (response.data) {
+                //添加已点击判断
                 for (const key in response.data) {
-                  response.data[key].isClick = false;
+                  if (this.$route.params.groupId == response.data[key].id) {
+                    response.data[key].isClick = true;
+                  } else {
+                    response.data[key].isClick = false;
+                  }
                 }
                 this.groupList = response.data;
               }
@@ -133,8 +143,7 @@ export default {
     //调整添加api
     addApi() {
       this.$router.push({
-        path: "/detail/" + this.$route.params.id + "/apiCreate",
-        params: { groupId: this.groupId }
+        path: "/detail/" + this.$route.params.id + "/apiCreate/" + this.groupId
       });
     }
   },
