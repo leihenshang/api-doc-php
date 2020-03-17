@@ -44,6 +44,7 @@ import homeHeader from "../components/common/units/homeHeader";
 import homeFooter from "../components/common/units/homeFooter";
 
 const CODE_OK = 200;
+const NO_ACTIVATE = 3;
 
 export default {
   name: "loginPage",
@@ -77,10 +78,15 @@ export default {
             response => {
               response = response.body;
               if (response.code === CODE_OK) {
-                Vue.prototype.userInfo = response.data;
-                this.$store.commit("saveUserInfo", response.data);
-                localStorage.setItem("userInfo", JSON.stringify(response.data));
-                this.$router.push("/");
+                let userInfo = response.data;
+                Vue.prototype.userInfo = userInfo;
+                this.$store.commit("saveUserInfo", userInfo);
+                localStorage.setItem("userInfo", JSON.stringify(userInfo));
+                if (userInfo.state == NO_ACTIVATE) {
+                  this.$router.push({ name: "activate" });
+                } else {
+                  this.$router.push("/");
+                }
               } else {
                 this.$message.error("登录错误！" + response.msg);
                 localStorage.removeItem("userInfo");

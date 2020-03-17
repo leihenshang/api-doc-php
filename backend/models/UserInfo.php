@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
 
@@ -85,7 +86,7 @@ class UserInfo extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
         $scenarios[self::SCENARIO_QUERY] = ['keyword'];
-        $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'email', 'code'];
+        $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'email'];
         $scenarios[self::SCENARIO_UPDATE_PWD] = ['re_pwd', 'pwd'];
         return $scenarios;
     }
@@ -132,7 +133,6 @@ class UserInfo extends BaseModel
         $userInfo = self::findOne([
             'name' => $username,
             'pwd' => $userPassword,
-            'state' => self::USER_STATE['normal'][0],
             'is_deleted' => self::IS_DELETED['no']
         ]);
         if (!$userInfo) {
@@ -140,7 +140,7 @@ class UserInfo extends BaseModel
         }
 
         //生成token以及设置过期时间
-        $userInfo->last_login_ip = \Yii::$app->request->getUserIP();
+        $userInfo->last_login_ip = Yii::$app->request->getUserIP();
         $userInfo->last_login_time = date('Y-m-d H:i:s', time());
         $userInfo->token = self::createToken();
         $userInfo->token_expire_time = date('Y-m-d H:i:s', self::createExpireTime());
@@ -221,30 +221,31 @@ class UserInfo extends BaseModel
         }
 
         //检查验证码
-        $code = Message::find()->where([
-            'and',
-            ['code' => $this->code],
-            ['>', 'expire_time', date('Y-m-d H:i:s', time())],
-            ['is_deleted' => Message::IS_DELETED['no']],
-            ['is_used' => Message::IS_USED['no']],
-            ['receive_source' => $this->email]
-        ])->one();
-        if (!$code) {
-            return '验证码错误';
-        }
+//        $code = Message::find()->where([
+//            'and',
+//            ['code' => $this->code],
+//            ['>', 'expire_time', date('Y-m-d H:i:s', time())],
+//            ['is_deleted' => Message::IS_DELETED['no']],
+//            ['is_used' => Message::IS_USED['no']],
+//            ['receive_source' => $this->email]
+//        ])->one();
+//        if (!$code) {
+//            return '验证码错误';
+//        }
 
-        //检查昵称唯一性
-        $res = self::findOne(['name' => $this->name, 'email' => $this->email]);
+        //检查登录名唯一性
+        $res = self::find()->where(['or', ['name' => $this->name], ['email' => $this->email], ['nick_name' => $this->nick_name]])->one();
         if ($res) {
             return '用户名或邮箱重复';
         }
 
         //修改状态
-        $this->state = self::USER_STATE['normal'][0];
+        $this->state = self::USER_STATE['not_activated'][0];
+        $this->nick_name = '新用户-' . $this->name;
 
         //设置code已使用
-        $code->is_used = Message::IS_USED['yes'];
-        $code->used_time = date('Y-m-d H:i:s', time());
+//        $code->is_used = Message::IS_USED['yes'];
+//        $code->used_time = date('Y-m-d H:i:s', time());
 
         $trans = self::getDb()->beginTransaction();
         try {
@@ -252,25 +253,32 @@ class UserInfo extends BaseModel
                 throw new Exception('用户保存失败!' . current($this->getFirstErrors()));
             }
 
-            if (!$code->save()) {
-                throw new Exception('验证码状态保存失败!' . current($code->getFirstErrors()));
+            $sendMail = Message::sendCodeToMail($this->email);
+            if (is_string($sendMail)) {
+                throw new Exception($sendMail);
             }
+
+//            if (!$code->save()) {
+//                throw new Exception('验证码状态保存失败!' . current($code->getFirstErrors()));
+//            }
             $trans->commit();
-            return true;
+
         } catch (Exception $e) {
             $trans->rollBack();
             return $e->getMessage();
         }
+
+        return true;
     }
 
     /**
      * 检查昵称/邮箱/名字是否重复
-     * @param string $keyword 
-     * @return UserInfo|null 
-     * @throws InvalidConfigException 
+     * @param string $keyword
+     * @return UserInfo|null
+     * @throws InvalidConfigException
      */
     public static function checkReplayNickname(string $keyword)
     {
-        return  self::find()->where(['or', ['name' => $keyword], ['email' => $keyword], ['nick_name' => $keyword]])->one();
+        return self::find()->where(['or', ['name' => $keyword], ['email' => $keyword], ['nick_name' => $keyword]])->one();
     }
 }

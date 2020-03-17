@@ -113,8 +113,7 @@ export default {
             response => {
               response = response.body;
               if (response.code === CODE_OK) {
-                this.$message.error("成功！~");
-                this.userInfo = this.userInfoDefault;
+                this.$message.success("注册成功！");
                 this.$router.push("/login");
               } else {
                 this.$message.error("注册失败:" + response.msg);

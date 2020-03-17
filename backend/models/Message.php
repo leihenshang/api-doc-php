@@ -76,19 +76,19 @@ class Message extends BaseModel
      * @param string $mail
      * @return array|string
      */
-    public function sendCodeToMail(string $mail = '')
+    public static function sendCodeToMail(string $mail = '')
     {
         $number = self::getRandomNum();
         $message = new self();
         $message->receive_source = $mail;
         $message->send_type = self::SEND_TYPE['email'][0];
-        $message->expire_time = date('Y-m-d H:i:s', strtotime('+ 10min'));
+        $message->expire_time = date('Y-m-d H:i:s', strtotime('+ 3day'));
         $message->content = '验证码:' . $number;
         $message->code = (string)$number;
         if (!$message->save()) {
             return '保存失败,' . current($message->getFirstErrors());
         }
-        return [$number];
+        return $message;
     }
 
     /**
@@ -98,6 +98,6 @@ class Message extends BaseModel
      */
     public static function getRandomNum(int $number = 4)
     {
-        return mt_rand(1000, 9999);
+        return mt_rand(100000, 999999);
     }
 }

@@ -21,12 +21,16 @@ import DocCreate from "./components/doc/docCreate";
 import DocEdit from "./components/doc/docEdit";
 import DocDetail from "./components/doc/docDetail";
 
+//未激活用户
+import UserActivate from "./components/user/userActivate";
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
     { path: "/register", component: Register, name: "register" },
     { path: "/project", component: Project },
+    { path: "/activate", component: UserActivate, name: "activate" },
     { path: "/login", name: "userLogin", component: Login },
     {
       path: "/",
