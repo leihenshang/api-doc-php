@@ -70,15 +70,15 @@
         </tr>
         <tr v-for="item in apiData.http_request_header" :key="item.id">
           <td>
-            <input type="text" placeholder="参数名" v-model="item.name" />
+            <input type="text" placeholder="参数名" v-model="item.name" readonly />
           </td>
           <td>
-            <input type="text" placeholder="值" v-model="item.content" />
+            <input type="text" placeholder="值" v-model="item.content" readonly />
           </td>
         </tr>
       </table>
     </div>
-    <div class="box3" >
+    <div class="box3">
       <div class="item-head">
         <ul>
           <li>
@@ -114,7 +114,7 @@
           </td>
         </tr>
       </table>
-          <table v-else>
+      <table v-else>
         <tr>
           <th>参数名</th>
           <th>说明</th>
@@ -123,10 +123,7 @@
           <th>示例</th>
         </tr>
         <tr>
-          <td colspan="5">
-            无
-          </td>
-          
+          <td colspan="5">无</td>
         </tr>
       </table>
     </div>
