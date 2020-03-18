@@ -125,25 +125,37 @@ export default {
         function_name: "", //程序内部方法名
         develop_language: "" //接口开发语言
       },
-      show: 0
+      show: 0,
+      isFirstUpdate: 0
     };
   },
   watch: {
     apiData: function() {
       this.apiInfo = this.apiData;
     },
-    apiInfoNew: function(val) {
-      this.$emit("update:apiInfo", val);
-    },
     apiInfo: {
       handler: function(newdata) {
+        this.isFirstUpdate++;
+        //处理更新时第一次
+        if (
+          this.isFirstUpdate === 1 ||
+          this.isFirstUpdate === 2 ||
+          this.isFirstUpdate === 3
+        ) {
+          this.$refs.form.reset();
+          this.$emit("error", "");
+          return;
+        }
+
         this.$refs.form.validate().then(success => {
           if (!success) {
+            console.log("触发了-错误");
             this.$emit("error", "信息填写错误");
             return;
           }
 
           this.$emit("error", "");
+          this.$emit("update:apiInfo", newdata);
           // Wait until the models are updated in the UI
           this.$nextTick(() => {
             this.$refs.form.reset();
@@ -153,12 +165,7 @@ export default {
       deep: true
     }
   },
-  computed: {
-    //由于watch无法监听对象的改变，所以使用计算方法来代替
-    apiInfoNew() {
-      return JSON.parse(JSON.stringify(this.apiInfo));
-    }
-  },
+
   components: {
     ValidationProvider,
     ValidationObserver
