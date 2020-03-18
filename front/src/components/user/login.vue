@@ -40,11 +40,11 @@
 
 <script>
 import Vue from "vue";
-import homeHeader from "../components/common/units/homeHeader";
-import homeFooter from "../components/common/units/homeFooter";
+import homeHeader from "../common/units/homeHeader";
+import homeFooter from "../common/units/homeFooter";
 
 const CODE_OK = 200;
-const NO_ACTIVATE = 3;
+// const NO_ACTIVATE = 3;
 
 export default {
   name: "loginPage",

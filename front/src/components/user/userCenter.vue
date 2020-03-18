@@ -5,7 +5,7 @@
         <p>返回首页</p>
       </div>
       <div class="avatar">
-        <img src="../assets/logo.png" width="100" />
+        <img src="../../assets/logo.png" width="100" />
       </div>
       <div class="info">
         <ul>

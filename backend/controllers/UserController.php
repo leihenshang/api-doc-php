@@ -66,7 +66,7 @@ class UserController extends BaseController
         $projectId = $params['project_id'] ?? null;
         $res = UserInfo::find()->alias('a')->select('a.*');
         if (UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type == UserInfo::USER_TYPE['admin'][0]) {
-            $whereArr = ['a.is_deleted' => UserInfo::IS_DELETED['no']];
+            $whereArr = ['a.is_deleted' => UserInfo::IS_DELETED['no'],'a.type' => UserInfo::USER_TYPE['normal'][0]];
         } else {
             $whereArr = ['a.type' => UserInfo::USER_TYPE['normal'][0], 'a.state' => UserInfo::USER_STATE['normal'][0], 'a.is_deleted' => UserInfo::IS_DELETED['no']];
         }

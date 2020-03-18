@@ -38,11 +38,12 @@
             </table>
           </div>
         </div>
-        <div class="btn">
+        <div class="btn" v-if="user.type != 2">
           <button @click="delUser(user.id)">删除</button>
           <button @click="enableOrdisabledUser(user.id,2)" v-if="user.state == 1">禁用</button>
           <button @click="enableOrdisabledUser(user.id,1)" v-if="user.state == 2">启用</button>
         </div>
+        <div class="btn" v-else></div>
       </div>
     </div>
   </div>
@@ -66,6 +67,7 @@ export default {
     this.getUserList();
   },
   methods: {
+    createUser() {},
     //计算用户类型
     userType(val) {
       let str;
@@ -129,7 +131,9 @@ export default {
           },
           res => {
             let response = res.body;
-            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     },
@@ -164,7 +168,9 @@ export default {
           },
           res => {
             let response = res.body;
-            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     },
@@ -187,7 +193,9 @@ export default {
           },
           res => {
             let response = res.body;
-            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     }

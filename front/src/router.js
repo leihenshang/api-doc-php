@@ -1,28 +1,30 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-//页面
+//api
 import Project from "./viewPage/project";
 import Detail from "./viewPage/projectDetail";
 // import Msg from "./viewPage/msg";
-import Login from "./viewPage/login";
-import Register from "./viewPage/register";
-import UserCenter from "./viewPage/userCenter";
-
-// 组件
 import ProjectList from "./components/project/projectList";
 import ApiPage from "./components/api/apiPage";
 import apiCreate from "./components/api/apiCreate";
 import DetailPage from "./components/detail/detailPage";
-import User from "./components/user/user";
-import UserManagement from "./components/user/userManagement";
+
+
+//文档相关操作
 import DocPage from "./components/doc/docPage";
 import DocCreate from "./components/doc/docCreate";
 import DocEdit from "./components/doc/docEdit";
 import DocDetail from "./components/doc/docDetail";
 
-//未激活用户
-import UserActivate from "./components/user/userActivate";
+
+//用户相关操作
+import Login from "./components/user/login";
+import Register from "./components/user/register";
+import UserCenter from "./components/user/userCenter";
+import User from "./components/user/user";
+import UserManagement from "./components/user/userManagement";
+
 
 Vue.use(VueRouter);
 
@@ -30,7 +32,6 @@ const router = new VueRouter({
   routes: [
     { path: "/register", component: Register, name: "register" },
     { path: "/project", component: Project },
-    { path: "/activate", component: UserActivate, name: "activate" },
     { path: "/login", name: "userLogin", component: Login },
     {
       path: "/",
