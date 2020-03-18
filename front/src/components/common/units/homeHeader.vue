@@ -19,9 +19,9 @@
       <li class="li-r" @click="toLogin()" v-if="$route.name == 'register'">
         <a href="javascript:void(0)">登陆</a>
       </li>
-        <li class="li-r" @click="jumpRegister()" v-else-if="$route.name == 'userLogin'">
+        <!-- <li class="li-r" @click="jumpRegister()" v-else-if="$route.name == 'userLogin'">
         <a href="javascript:void(0)">注册</a>
-      </li>
+      </li> -->
     </ul>
   </div>
 </template>

@@ -82,11 +82,7 @@ export default {
                 Vue.prototype.userInfo = userInfo;
                 this.$store.commit("saveUserInfo", userInfo);
                 localStorage.setItem("userInfo", JSON.stringify(userInfo));
-                if (userInfo.state == NO_ACTIVATE) {
-                  this.$router.push({ name: "activate" });
-                } else {
-                  this.$router.push("/");
-                }
+                this.$router.push("/");
               } else {
                 this.$message.error("登录错误！" + response.msg);
                 localStorage.removeItem("userInfo");
