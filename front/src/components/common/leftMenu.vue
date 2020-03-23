@@ -34,6 +34,14 @@ export default {
       //跳转到首页开始页
       if (!uri) {
         if (this.$route.path !== "/") {
+          for (const key in this.menuListData) {
+            if (key == index) {
+              this.menuListData[key].isClick = true;
+            } else {
+              this.menuListData[key].isClick = false;
+            }
+          }
+
           this.$router.push({ path: "/" });
         }
         return;
