@@ -192,6 +192,7 @@ export default {
   },
   created() {
     this.getApiDetail();
+    this.getGroup();
   },
   data() {
     return {
@@ -256,7 +257,27 @@ export default {
             });
           }
         );
-    }
+    },
+     //获取分组信息
+    getGroup() {
+      this.$http
+        .get(this.apiAddress + "/group/list", {
+          params: {
+            projectId: this.$route.params.id
+          }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.groupList = response.data;
+            }
+          },
+          () => {
+            this.$message.error("获取数据失败");
+          }
+        );
+    },
   },
   computed: {
     groupName() {
