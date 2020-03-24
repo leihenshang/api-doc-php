@@ -126,6 +126,7 @@ class UserController extends BaseController
      * 检查昵称是否重复
      * @param $keyword
      * @return array
+     * @throws
      */
     public function actionCheckRepeat($keyword = null)
     {
