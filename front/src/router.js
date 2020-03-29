@@ -23,7 +23,7 @@ import Login from "./components/user/login";
 import Register from "./components/user/register";
 import UserCenter from "./components/user/userCenter";
 import User from "./components/user/user";
-import UserManagement from "./components/user/userManagement";
+// import UserManagement from "./components/user/userManagement";
 
 
 Vue.use(VueRouter);
@@ -37,12 +37,13 @@ const router = new VueRouter({
       path: "/",
       component: Project,
       children: [
-        { path: "", component: ProjectList },
-        {
-          path: "userManagement",
-          name: "userManagement",
-          component: UserManagement
-        }
+        { path: "", component: ProjectList }
+        // ,
+        // {
+        //   path: "userManagement",
+        //   name: "userManagement",
+        //   component: UserManagement
+        // }
       ]
     },
     {

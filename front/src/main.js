@@ -5,11 +5,9 @@ import router from "./router";
 import VueResource from "vue-resource";
 import "./validate";
 
-
 //markdown组件
 import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
-
 
 //element ui
 import ElementUI from 'element-ui';
@@ -17,10 +15,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 // Vue.prototype.apiAddress = "http://120.27.241.94:50682";
 Vue.prototype.apiAddress = "http://localhost:1000";
-Vue.prototype.globalId = 0;
 Vue.prototype.userInfo = null;
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = true;
 
 Vue.use(VueResource);
 Vue.use(Vuex);
@@ -54,7 +51,7 @@ const store = new Vuex.Store({
 });
 
 
-//拦截器拦截请求,添加token
+//vue-resource拦截器拦截请求,添加token
 Vue.http.interceptors.push(request => {
     if (request.method === "GET") {
         if (!request.params.token) {

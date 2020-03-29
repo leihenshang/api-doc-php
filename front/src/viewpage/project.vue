@@ -101,12 +101,12 @@ export default {
     },
     routeChange() {
       this.insideRoute = [
-        {
-          title: "用户管理",
-          route: "userManagement",
-          clild: "",
-          isClick: false
-        }
+        // {
+        //   title: "用户管理",
+        //   route: "userManagement",
+        //   clild: "",
+        //   isClick: false
+        // }
       ];
     }
   },
