@@ -185,12 +185,8 @@ class UserController extends BaseController
 
     /**
      * 更新用户昵称
-     * @return (array|string|int)[]|mixed 
-     * @throws InvalidConfigException 
-     * @throws NotSupportedException 
-     * @throws Exception 
-     * @throws Throwable 
-     * @throws Throwable 
+     * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionUpdateNickname()
     {
@@ -198,7 +194,6 @@ class UserController extends BaseController
         if (!$nickname) {
             return $this->failed('失败');
         }
-
 
         //检查昵称是否重复
         if (UserInfo::checkReplayNickname($nickname)) {

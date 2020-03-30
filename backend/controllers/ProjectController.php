@@ -127,7 +127,7 @@ class ProjectController extends BaseController
      */
     public function actionDel()
     {
-        if($this->userInfo->type !== UserInfo::USER_TYPE['admin'][0]){
+        if ($this->userInfo->type !== UserInfo::USER_TYPE['admin'][0]) {
             return $this->failed('非管理员不能执行删除');
         }
 
@@ -152,12 +152,16 @@ class ProjectController extends BaseController
             return $this->failed('获取id参数失败');
         }
 
-        $res = UserProject::find()->alias('a')->leftJoin('user_info b', 'a.user_id = b.id')
+        $res = UserProject::find()->alias('a')
+            ->leftJoin('user_info b', 'a.user_id = b.id')
             ->select('b.*,a.id relation_id')
             ->where([
                 'a.project_id' => $id,
                 'a.is_deleted' => UserProject::IS_DELETED['no']
-            ])->asArray()->all();
+            ])
+            //不显示根管理员
+            ->andWhere(['<>', 'b.type', UserInfo::USER_TYPE['admin'][0]])
+            ->asArray()->all();
 
         $res = array_map(function ($a) {
             if (isset($a['pwd'])) {
@@ -219,6 +223,80 @@ class ProjectController extends BaseController
         }
 
         return $this->failed('更新失败');
+    }
+
+    /**
+     * 设置团队leader
+     * @return array
+     */
+    public function actionSetLeader()
+    {
+        $userId = Yii::$app->request->post('userId', null);
+        //判断只有管理员可知设置团队leader
+        if ($this->userInfo->type != UserInfo::USER_TYPE['admin'][0]) {
+            return $this->failed('非管理员禁止操作');
+        }
+
+        if (!$userId) {
+            return $this->failed('必须传入userId');
+        }
+
+        $userProject = UserProject::findOne(['user_id' => $userId]);
+        if (!$userProject) {
+            return $this->failed('没有找到要设置的用户');
+        }
+
+        $userProject->is_leader = UserProject::IS_LEADER['yes'];
+        if (!$userProject->save()) {
+            return $this->failed('设置团队leader失败');
+        }
+
+        return $this->success('成功');
+    }
+
+    /**
+     * 退出项目
+     * @return array
+     */
+    public function actionQuitProject()
+    {
+        $userId = Yii::$app->request->post('userId', null);
+        $projectId = Yii::$app->request->post('projectId', null);
+
+        if (!$userId || !$projectId) {
+            return $this->failed('必须传入userId以及projectId');
+        }
+
+        //判断是否是团队leader
+        $leaderInfo = UserProject::find()->where([
+            'user_id' => $this->userInfo->id,
+            'is_leader' => UserProject::IS_LEADER['no'],
+            'is_deleted' => UserProject::IS_DELETED['no'],
+            'project_id' => $projectId
+        ])->one();
+
+        //如果不是根管理员，则要判断是否是团队Leader
+        if (!$this->userInfo->type != UserInfo::USER_TYPE['admin'][0]) {
+            if (!$leaderInfo) {
+                return $this->failed('非管理员以及团队leader禁止操作');
+            }
+        }
+
+        $userProject = UserProject::find()->where([
+            'user_id' => $userId,
+            'is_deleted' => UserProject::IS_DELETED['no'],
+            'project_id' => $projectId
+        ])->one();
+        if (!$userProject) {
+            return $this->failed('没有找到要设置的用户');
+        }
+
+        $userProject->is_deleted = UserProject::IS_DELETED['yes'];
+        if (!$userProject->save()) {
+            return $this->failed('退出项目失败');
+        }
+
+        return $this->success([]);
     }
 
 }

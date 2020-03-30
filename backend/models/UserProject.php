@@ -14,6 +14,9 @@ namespace app\models;
  */
 class UserProject extends BaseModel
 {
+    //是否是团队统领人
+    const IS_LEADER = ['yes' => 1,'no' => 0];
+
     /**
      * {@inheritdoc}
      */
