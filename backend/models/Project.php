@@ -3,6 +3,9 @@
 
 namespace app\models;
 
+use Throwable;
+use yii\db\StaleObjectException;
+
 /**
  * 项目模型
  * Class Project
@@ -18,14 +21,14 @@ class Project extends BaseModel
     const SCENARIO_LIST = 'list';
 
     const TYPE = [
-       'web' => ['tag' => 1,'desc' => 'web'],
-        'pc' => ['tag' => 2,'desc' => 'pc'],
+        'web' => ['tag' => 1, 'desc' => 'web'],
+        'pc' => ['tag' => 2, 'desc' => 'pc'],
     ];
 
     public function rules()
     {
         return [
-            [['ps','cp'],'integer'],
+            [['ps', 'cp'], 'integer'],
             ['id', 'required'],
             ['id', 'number'],
             [['title', 'version', 'type'], 'required'],
@@ -40,8 +43,8 @@ class Project extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = ['title', 'description', 'version', 'type'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
-        $scenarios[self::SCENARIO_LIST] = ['ps','cp'];
-        $scenarios[self::SCENARIO_UPDATE] = ['title', 'description','version','type'];
+        $scenarios[self::SCENARIO_LIST] = ['ps', 'cp'];
+        $scenarios[self::SCENARIO_UPDATE] = ['title', 'description', 'version', 'type'];
         return $scenarios;
     }
 
@@ -65,7 +68,7 @@ class Project extends BaseModel
         }
 
         //记录操作日志
-        OperationLog::createLog($this->id,UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['create'][0],'项目:'.$this->title,OperationLog::OBJECT_TYPE['project'][0]);
+        OperationLog::createLog($this->id, UserInfo::$staticUserInfo->id, $this->id, OperationLog::ACTION['create'][0], '项目:' . $this->title, OperationLog::OBJECT_TYPE['project'][0]);
 
 
         return true;
@@ -94,7 +97,7 @@ class Project extends BaseModel
         }
 
         //记录操作日志
-        OperationLog::createLog($this->id,UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['update'][0],'项目:'.$request['title'],OperationLog::OBJECT_TYPE['project'][0]);
+        OperationLog::createLog($this->id, UserInfo::$staticUserInfo->id, $this->id, OperationLog::ACTION['update'][0], '项目:' . $request['title'], OperationLog::OBJECT_TYPE['project'][0]);
 
         return true;
     }
@@ -102,8 +105,8 @@ class Project extends BaseModel
     /**
      * 删除数据
      * @return bool|mixed
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function del()
     {
@@ -117,7 +120,33 @@ class Project extends BaseModel
         }
 
         //记录操作日志
-        OperationLog::createLog($this->id,UserInfo::$staticUserInfo->id,$this->id,OperationLog::ACTION['delete'][0],'项目:'.$res->title,OperationLog::OBJECT_TYPE['project'][0]);
+        OperationLog::createLog($this->id, UserInfo::$staticUserInfo->id, $this->id, OperationLog::ACTION['delete'][0], '项目:' . $res->title, OperationLog::OBJECT_TYPE['project'][0]);
+        return true;
+    }
+
+    /**
+     * 检查用户项目操作权限
+     * @param UserInfo $user
+     * @param $projectId
+     * @return bool
+     * @throws
+     */
+    public static function checkUserProjectOperationPermission($user, $projectId)
+    {
+        //判断是否是团队leader
+        $leaderInfo = UserProject::find()->where([
+            'user_id' => $user->id,
+            'is_leader' => UserProject::IS_LEADER['no'],
+            'is_deleted' => UserProject::IS_DELETED['no'],
+            'project_id' => $projectId
+        ])->one();
+
+        //如果不是根管理员，则要判断是否是团队Leader
+        if (!$user->type != UserInfo::USER_TYPE['admin'][0]) {
+            if (!$leaderInfo) {
+                return false;
+            }
+        }
 
         return true;
     }

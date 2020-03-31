@@ -267,19 +267,10 @@ class ProjectController extends BaseController
             return $this->failed('必须传入userId以及projectId');
         }
 
-        //判断是否是团队leader
-        $leaderInfo = UserProject::find()->where([
-            'user_id' => $this->userInfo->id,
-            'is_leader' => UserProject::IS_LEADER['no'],
-            'is_deleted' => UserProject::IS_DELETED['no'],
-            'project_id' => $projectId
-        ])->one();
-
-        //如果不是根管理员，则要判断是否是团队Leader
-        if (!$this->userInfo->type != UserInfo::USER_TYPE['admin'][0]) {
-            if (!$leaderInfo) {
-                return $this->failed('非管理员以及团队leader禁止操作');
-            }
+        //检查操作权限
+        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo,$projectId);
+        if(!$checkRes){
+            return $this->failed('非管理员以及团队leader禁止操作');
         }
 
         $userProject = UserProject::find()->where([
@@ -298,5 +289,49 @@ class ProjectController extends BaseController
 
         return $this->success([]);
     }
+
+
+    /**
+     * 设置权限
+     * @return array
+     */
+    public function actionSetPermission()
+    {
+        $userId = Yii::$app->request->post('userId', null);
+        $projectId = Yii::$app->request->post('projectId', null);
+        $permission = Yii::$app->request->post('permission', null);
+
+        if (!$userId || !$projectId || !$permission) {
+            return $this->failed('必须传入userId以及projectId,permission');
+        }
+
+        $permissionRange  = array_merge(array_column(UserProject::PERMISSION,0),[6]);
+        if(!in_array($permission,$permissionRange)){
+            return $this->failed('设置权限值不正确');
+        }
+
+        //检查操作权限
+        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo,$projectId);
+        if(!$checkRes){
+            return $this->failed('非管理员以及团队leader禁止操作');
+        }
+
+        $userProject = UserProject::find()->where([
+            'user_id' => $userId,
+            'is_deleted' => UserProject::IS_DELETED['no'],
+            'project_id' => $projectId
+        ])->one();
+        if (!$userProject) {
+            return $this->failed('没有找到要设置的用户');
+        }
+
+        $userProject->permission = $permission;
+        if (!$userProject->save()) {
+            return $this->failed('设置权限失败');
+        }
+
+        return $this->success([]);
+    }
+
 
 }

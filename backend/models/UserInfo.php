@@ -281,4 +281,5 @@ class UserInfo extends BaseModel
     {
         return self::find()->where(['or', ['name' => $keyword], ['email' => $keyword], ['nick_name' => $keyword]])->one();
     }
+
 }

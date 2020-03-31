@@ -11,11 +11,17 @@ namespace app\models;
  * @property int $is_leader
  * @property int $is_deleted
  * @property string $create_time
+ * @property int $permission
  */
 class UserProject extends BaseModel
 {
     //是否是团队统领人
-    const IS_LEADER = ['yes' => 1,'no' => 0];
+    const IS_LEADER = ['yes' => 1, 'no' => 0];
+
+    const PERMISSION = [
+        'read' => [4, '读'],
+        'write' => [2, '写'],
+    ];
 
     /**
      * {@inheritdoc}
@@ -31,7 +37,7 @@ class UserProject extends BaseModel
     public function rules()
     {
         return [
-            [['user_id', 'project_id', 'is_leader'], 'integer'],
+            [['user_id', 'project_id', 'is_leader','permission'], 'integer'],
             [['user_id', 'project_id'], 'required']
         ];
     }
@@ -52,7 +58,7 @@ class UserProject extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['user_id','project_id'];
+        $scenarios[self::SCENARIO_CREATE] = ['user_id', 'project_id'];
         return $scenarios;
     }
 }
