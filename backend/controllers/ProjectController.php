@@ -333,5 +333,25 @@ class ProjectController extends BaseController
         return $this->success([]);
     }
 
+    /**
+     * 检查可操作权限
+     * @return array
+     */
+    public function actionCheckOperationPermission()
+    {
+        $projectId = Yii::$app->request->post('projectId', null);
+
+        if (!$projectId ) {
+            return $this->failed('必须传入projectId');
+        }
+
+        //检查操作权限
+        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo,$projectId);
+        if(!$checkRes){
+            return $this->failed('非管理员以及团队leader禁止操作');
+        }
+
+        return $this->success($checkRes);
+    }
 
 }
