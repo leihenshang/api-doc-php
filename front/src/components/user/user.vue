@@ -80,7 +80,12 @@
           </div>
         </div>
         <div class="btn">
-          <button @click="delProjectUser(user.relation_id)">删除</button>
+          <button @click="delProjectUser(user.relation_id)">踢出项目</button>
+          <button @click="delProjectUser(user.relation_id)">修改昵称</button>
+          <button @click="delProjectUser(user.relation_id)">设置项目管理员</button>
+          <button @click="delProjectUser(user.relation_id)">取消项目管理员</button>
+          <button @click="delProjectUser(user.relation_id)">设置只读</button>
+          <button @click="delProjectUser(user.relation_id)">设置为读/写</button>
         </div>
       </div>
     </div>

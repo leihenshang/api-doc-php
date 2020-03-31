@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="btn" v-if="user.type != 2">
-          <button @click="delUser(user.id)">删除</button>
+          <button @click="delUser(user.id)">踢出项目</button>
           <button @click="enableOrdisabledUser(user.id,2)" v-if="user.state == 1">禁用</button>
           <button @click="enableOrdisabledUser(user.id,1)" v-if="user.state == 2">启用</button>
         </div>
