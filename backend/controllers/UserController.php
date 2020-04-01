@@ -3,16 +3,10 @@
 namespace app\controllers;
 
 use app\behaviors\UserVerify;
-use app\models\User;
 use app\models\UserInfo;
-use Throwable;
 use Yii;
-use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
-use yii\base\NotSupportedException;
-use yii\db\Exception;
 use yii\db\Query;
-use yii\db\StaleObjectException;
 
 class UserController extends BaseController
 {
@@ -66,30 +60,30 @@ class UserController extends BaseController
         $projectId = $params['project_id'] ?? null;
         $res = UserInfo::find()->alias('a')->select('a.*');
         if (UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type == UserInfo::USER_TYPE['admin'][0]) {
-            $whereArr = ['a.is_deleted' => UserInfo::IS_DELETED['no'],'a.type' => UserInfo::USER_TYPE['normal'][0]];
+            $whereArr = ['a.is_deleted' => UserInfo::IS_DELETED['no'], 'a.type' => UserInfo::USER_TYPE['normal'][0]];
         } else {
             $whereArr = ['a.type' => UserInfo::USER_TYPE['normal'][0], 'a.state' => UserInfo::USER_STATE['normal'][0], 'a.is_deleted' => UserInfo::IS_DELETED['no']];
         }
 
         $res->where($whereArr);
         if ($user->keyword) {
-            $res->andWhere(['or', ['like', 'a.nick_name', $user->keyword . '%', false], ['a.email' => $user->keyword], ['a.mobile_number' => $user->keyword]]);
+            $res->andWhere(['or', ['like', 'a.nick_name', $user->keyword . '%', false], ['a.email' => $user->keyword], ['a.name' => $user->keyword]]);
         }
 
         //传入了项目id
-        if ($projectId) {
-            $query = (new Query())->select('user_id')
-                ->where([
-                    'and',
-                    ['b.is_deleted' => UserInfo::IS_DELETED['no']],
-                    ['b.project_id' => $projectId]
-                ])->from('user_project b');
-
-            $res->andWhere([
-                'and',
-                ['not in', 'a.id', $query]
-            ]);
-        }
+//        if ($projectId) {
+//            $query = (new Query())->select('user_id')
+//                ->where([
+//                    'and',
+//                    ['b.is_deleted' => UserInfo::IS_DELETED['no']],
+//                    ['b.project_id' => $projectId]
+//                ])->from('user_project b');
+//
+//            $res->andWhere([
+//                'and',
+//                ['not in', 'a.id', $query]
+//            ]);
+//        }
 
         $res = $res->all();
         return $this->success($res);
@@ -191,16 +185,20 @@ class UserController extends BaseController
     public function actionUpdateNickname()
     {
         $nickname = Yii::$app->request->post('nickname', null);
+        $userId = Yii::$app->request->post('userId', null);
         if (!$nickname) {
-            return $this->failed('失败');
+            return $this->failed('昵称不能为空');
         }
 
         //检查昵称是否重复
         if (UserInfo::checkReplayNickname($nickname)) {
             return $this->failed('昵称重复');
         }
-
-        $res = UserInfo::updateAll(['nick_name' => $nickname], ['id' => $this->userInfo->id]);
+        if (is_numeric($userId)) {
+            $res = UserInfo::updateAll(['nick_name' => $nickname], ['id' => $userId]);
+        } else {
+            $res = UserInfo::updateAll(['nick_name' => $nickname], ['id' => $this->userInfo->id]);
+        }
         if ($res) {
             return $this->success([], '更新完成');
         }
@@ -210,12 +208,8 @@ class UserController extends BaseController
 
     /**
      * 更改用户密码
-     * @return (array|string|int)[]|mixed 
-     * @throws InvalidConfigException 
-     * @throws InvalidArgumentException 
-     * @throws NotSupportedException 
-     * @throws Exception 
-     * @throws StaleObjectException 
+     * @return array
+     * @throws
      */
     public function actionUpdatePwd()
     {
@@ -255,8 +249,8 @@ class UserController extends BaseController
 
     /**
      * 获取用户信息
-     * @return (array|string|int)[] 
-     * @throws InvalidConfigException 
+     * @return (array|string|int)[]
+     * @throws InvalidConfigException
      */
     public function actionGetUserInfo()
     {
@@ -266,13 +260,13 @@ class UserController extends BaseController
             $res = $res->toArray();
             $res['state_text'] = 0;
             $res['type_text'] = 0;
-            foreach (UserInfo::USER_TYPE as  $value) {
+            foreach (UserInfo::USER_TYPE as $value) {
                 if ($res['type'] == $value[0]) {
                     $res['type_text'] = $value[1];
                 }
             }
 
-            foreach (UserInfo::USER_STATE as  $value) {
+            foreach (UserInfo::USER_STATE as $value) {
                 if ($res['state'] == $value[0]) {
                     $res['state_text'] = $value[1];
                 }

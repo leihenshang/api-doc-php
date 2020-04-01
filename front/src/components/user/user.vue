@@ -5,36 +5,29 @@
       <button @click="userList = [];keyword=''">重置</button>
       <button @click="getUserList(keyword)">搜索用户</button>
     </div>
-    <h4>搜索到的用户列表：</h4>
-    <div class="all-user" v-show="userList">
+
+    <div class="all-user" v-show="userList.length > 0">
+      <h4>搜索到的用户列表：</h4>
       <div class="user-tab" v-for="user in userList" :key="user.id">
         <div class="user-tab-info">
           <div class="avatar">
-            <img src="../../assets/logo.png" alt width="100" />
+            <img src="../../assets/logo.png" alt width="60" />
           </div>
           <div class="info">
             <table border="1">
               <tr>
                 <td>用户名</td>
                 <td>{{user.name}}</td>
-                <td>状态</td>
-                <td>{{user.state}}</td>
               </tr>
               <tr>
                 <td>昵称</td>
                 <td>{{user.nick_name}}</td>
                 <td>类型</td>
-                <td>{{user.type}}</td>
+                <td colspan="3">{{user.type == 1 ? '普通用户' : '管理员' }}</td>
               </tr>
               <tr>
                 <td>邮箱</td>
                 <td colspan="3">{{user.email}}</td>
-              </tr>
-              <tr>
-                <td>最后登录ip</td>
-                <td>{{user.last_login_ip}}</td>
-                <td>最后登录时间</td>
-                <td>{{user.last_login_time}}</td>
               </tr>
             </table>
           </div>
@@ -47,33 +40,27 @@
     <hr />
     <h4>项目组成员：</h4>
     <div class="all-user" v-show="projectUser">
-      <div class="user-tab" v-for="user in projectUser" :key="user.id">
+      <div class="user-tab" v-for="(user,index) in projectUser" :key="user.id">
         <div class="user-tab-info">
           <div class="avatar">
-            <img src="../../assets/logo.png" alt width="100" />
+            <img src="../../assets/logo.png" alt width="60" />
           </div>
           <div class="info">
             <table border="1">
               <tr>
                 <td>昵称</td>
-                <td colspan="2" >{{user.nick_name}}</td>
-                <td><button>修改昵称</button></td>
+                <td colspan="2">{{user.nick_name}}</td>
+                <td>
+                  <button @click="open(user.nick_name,index)">修改昵称</button>
+                </td>
               </tr>
               <tr>
-                <td>昵称</td>
-                <td>{{user.nick_name}}</td>
                 <td>类型</td>
-                <td>{{user.type == 1 ? '普通用户' : '管理员' }}</td>
+                <td colspan="3">{{user.type == 1 ? '普通用户' : '管理员' }}</td>
               </tr>
               <tr>
                 <td>邮箱</td>
                 <td colspan="3">{{user.email}}</td>
-              </tr>
-              <tr>
-                <td>最后登录ip</td>
-                <td>{{user.last_login_ip}}</td>
-                <td>最后登录时间</td>
-                <td>{{user.last_login_time}}</td>
               </tr>
             </table>
           </div>
@@ -81,7 +68,7 @@
         <div class="btn">
           <button @click="quitProject(user.id)">踢出项目</button>
           <button v-if="user.is_leader != 1" @click="setLeader(user.id)">设置项目管理员</button>
-          <button v-else @click="setLeader(user.id)">取消项目管理员</button>
+          <button v-else @click="setLeader(user.id)">设为普通用户</button>
           <button v-if="user.permission == 6" @click="setPermission(user.id,4)">设置只读</button>
           <button v-else @click="setPermission(user.id,6)">设置为读/写</button>
         </div>
@@ -105,6 +92,54 @@ export default {
     this.getProjectUserList();
   },
   methods: {
+    //修改昵称弹出框
+    open(name, index) {
+      this.$prompt("请输入新昵称", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /.{2,20}/,
+        inputErrorMessage: "昵称不正确"
+      })
+        .then(({ value }) => {
+          this.$http
+            .post(
+              this.apiAddress + "/user/update-nickname",
+              {
+                userId: this.projectUser[index].id,
+                nickname: value
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.getProjectUserList();
+                  this.$message.success({
+                    type: "success",
+                    message: "你的新昵称是: " + value
+                  });
+                } else {
+                  this.$message.error(
+                    "操作失败!" + !response.msg ? response.msg : ""
+                  );
+                }
+              },
+              res => {
+                let response = res.body;
+                this.$message.error(
+                  "操作失败!" + !response.msg ? response.msg : ""
+                );
+              }
+            );
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消设置"
+          });
+        });
+    },
     //退出项目
     quitProject(userId) {
       this.$http
