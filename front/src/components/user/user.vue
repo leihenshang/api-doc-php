@@ -55,16 +55,15 @@
           <div class="info">
             <table border="1">
               <tr>
-                <td>用户名</td>
-                <td>{{user.name}}</td>
-                <td>状态</td>
-                <td>{{user.state}}</td>
+                <td>昵称</td>
+                <td colspan="2" >{{user.nick_name}}</td>
+                <td><button>修改昵称</button></td>
               </tr>
               <tr>
                 <td>昵称</td>
                 <td>{{user.nick_name}}</td>
                 <td>类型</td>
-                <td>{{user.type}}</td>
+                <td>{{user.type == 1 ? '普通用户' : '管理员' }}</td>
               </tr>
               <tr>
                 <td>邮箱</td>
@@ -80,12 +79,11 @@
           </div>
         </div>
         <div class="btn">
-          <button @click="delProjectUser(user.relation_id)">踢出项目</button>
-          <button @click="delProjectUser(user.relation_id)">修改昵称</button>
-          <button @click="delProjectUser(user.relation_id)">设置项目管理员</button>
-          <button @click="delProjectUser(user.relation_id)">取消项目管理员</button>
-          <button @click="delProjectUser(user.relation_id)">设置只读</button>
-          <button @click="delProjectUser(user.relation_id)">设置为读/写</button>
+          <button @click="quitProject(user.id)">踢出项目</button>
+          <button v-if="user.is_leader != 1" @click="setLeader(user.id)">设置项目管理员</button>
+          <button v-else @click="setLeader(user.id)">取消项目管理员</button>
+          <button v-if="user.permission == 6" @click="setPermission(user.id,4)">设置只读</button>
+          <button v-else @click="setPermission(user.id,6)">设置为读/写</button>
         </div>
       </div>
     </div>
@@ -107,6 +105,88 @@ export default {
     this.getProjectUserList();
   },
   methods: {
+    //退出项目
+    quitProject(userId) {
+      this.$http
+        .post(
+          this.apiAddress + "/project/quit-project",
+          {
+            userId,
+            projectId: this.$route.params.id
+          },
+          { emulateJSON: true }
+        )
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.getProjectUserList();
+              this.$message.success("成功！~");
+            }
+          },
+          res => {
+            let response = res.body;
+            this.$message.error(
+              "操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
+    },
+    //设置用户对项目的读写权限
+    setLeader(userId) {
+      this.$http
+        .post(
+          this.apiAddress + "/project/set-leader",
+          {
+            userId,
+            projectId: this.$route.params.id
+          },
+          { emulateJSON: true }
+        )
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.getProjectUserList();
+              this.$message.success("成功！~");
+            }
+          },
+          res => {
+            let response = res.body;
+            this.$message.error(
+              "操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
+    },
+    //设置用户对项目的读写权限
+    setPermission(userId, permission) {
+      this.$http
+        .post(
+          this.apiAddress + "/project/set-permission",
+          {
+            userId,
+            permission,
+            projectId: this.$route.params.id
+          },
+          { emulateJSON: true }
+        )
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.getProjectUserList();
+              this.$message.success("成功！~");
+            }
+          },
+          res => {
+            let response = res.body;
+            this.$message.error(
+              "操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
+    },
     //删除项目用户
     delProjectUser(id) {
       this.$http
@@ -123,12 +203,14 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.getProjectUserList();
-              this.$message.error("成功！~");
+              this.$message.success("成功！~");
             }
           },
           res => {
             let response = res.body;
-            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     },
@@ -151,12 +233,16 @@ export default {
               this.getProjectUserList();
               this.$message.error("成功！~");
             } else {
-              this.$message.error("操作失败!" + !response.msg ? response.msg : "");
+              this.$message.error(
+                "操作失败!" + !response.msg ? response.msg : ""
+              );
             }
           },
           res => {
             let response = res.body;
-            this.$message.error("操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     },
@@ -179,7 +265,9 @@ export default {
           },
           res => {
             let response = res.body;
-            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     },
@@ -201,7 +289,9 @@ export default {
           },
           res => {
             let response = res.body;
-            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     }

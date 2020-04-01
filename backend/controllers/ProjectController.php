@@ -154,7 +154,7 @@ class ProjectController extends BaseController
 
         $res = UserProject::find()->alias('a')
             ->leftJoin('user_info b', 'a.user_id = b.id')
-            ->select('b.*,a.id relation_id')
+            ->select('b.*,a.id relation_id,a.permission,a.is_leader')
             ->where([
                 'a.project_id' => $id,
                 'a.is_deleted' => UserProject::IS_DELETED['no']
@@ -232,16 +232,17 @@ class ProjectController extends BaseController
     public function actionSetLeader()
     {
         $userId = Yii::$app->request->post('userId', null);
+        $projectId = Yii::$app->request->post('projectId', null);
         //判断只有管理员可知设置团队leader
         if ($this->userInfo->type != UserInfo::USER_TYPE['admin'][0]) {
             return $this->failed('非管理员禁止操作');
         }
 
-        if (!$userId) {
-            return $this->failed('必须传入userId');
+        if (!$userId || !$projectId) {
+            return $this->failed('必须传入userId以及projectId');
         }
 
-        $userProject = UserProject::findOne(['user_id' => $userId]);
+        $userProject = UserProject::findOne(['user_id' => $userId,'project_id' => $projectId]);
         if (!$userProject) {
             return $this->failed('没有找到要设置的用户');
         }

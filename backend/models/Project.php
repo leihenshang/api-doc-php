@@ -142,7 +142,7 @@ class Project extends BaseModel
         ])->one();
 
         //如果不是根管理员，则要判断是否是团队Leader
-        if (!$user->type != UserInfo::USER_TYPE['admin'][0]) {
+        if ($user->type != UserInfo::USER_TYPE['admin'][0]) {
             if (!$leaderInfo) {
                 return false;
             }
