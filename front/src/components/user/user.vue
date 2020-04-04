@@ -49,10 +49,7 @@
             <table border="1">
               <tr>
                 <td>昵称</td>
-                <td colspan="2">{{user.nick_name}}</td>
-                <td>
-                  <button @click="open(user.nick_name,index)">修改昵称</button>
-                </td>
+                <td colspan="3">{{user.nick_name}}</td>
               </tr>
               <tr>
                 <td>类型</td>
@@ -65,7 +62,9 @@
             </table>
           </div>
         </div>
-        <div class="btn">
+        <div class="btn" v-if="permission == 4"></div>
+        <div class="btn" v-else>
+          <button @click="open(user.nick_name,index)">修改昵称</button>
           <button @click="quitProject(user.id)">踢出项目</button>
           <button v-if="user.is_leader != 1" @click="setLeader(user.id)">设置项目管理员</button>
           <button v-else @click="setLeader(user.id)">设为普通用户</button>
@@ -85,20 +84,47 @@ export default {
     return {
       userList: [],
       projectUser: [],
-      keyword: ""
+      keyword: "",
+      permission: 4
     };
   },
   created() {
     this.getProjectUserList();
+    this.getPermission();
   },
   methods: {
+    //获取用户操作权限
+    getPermission() {
+      this.$http
+        .get(this.apiAddress + "/project/get-project-operation-permission", {
+          params: {
+            token: this.$store.state.userInfo.token,
+            projectId: this.$route.params.id
+          }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.permission = response.data;
+            }
+          },
+          res => {
+            let response = res.body;
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
+    },
     //修改昵称弹出框
     open(name, index) {
       this.$prompt("请输入新昵称", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /.{2,20}/,
-        inputErrorMessage: "昵称不正确"
+        inputErrorMessage: "昵称不正确",
+        inputValue: name
       })
         .then(({ value }) => {
           this.$http
@@ -133,12 +159,7 @@ export default {
               }
             );
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "取消设置"
-          });
-        });
+        .catch(() => {});
     },
     //退出项目
     quitProject(userId) {
@@ -372,7 +393,7 @@ export default {
 }
 
 .btn button {
-  width: 80px;
+  width: 100px;
   height: 30px;
   margin: 3px 3px 3px;
 }

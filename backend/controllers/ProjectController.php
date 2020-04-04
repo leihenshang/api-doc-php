@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\behaviors\UserVerify;
+use app\models\BaseModel;
 use app\models\Project;
 use app\models\UserInfo;
 use app\models\UserProject;
@@ -242,7 +243,7 @@ class ProjectController extends BaseController
             return $this->failed('必须传入userId以及projectId');
         }
 
-        $userProject = UserProject::findOne(['user_id' => $userId,'project_id' => $projectId]);
+        $userProject = UserProject::findOne(['user_id' => $userId, 'project_id' => $projectId]);
         if (!$userProject) {
             return $this->failed('没有找到要设置的用户');
         }
@@ -269,8 +270,8 @@ class ProjectController extends BaseController
         }
 
         //检查操作权限
-        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo,$projectId);
-        if(!$checkRes){
+        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo, $projectId);
+        if (!$checkRes) {
             return $this->failed('非管理员以及团队leader禁止操作');
         }
 
@@ -306,14 +307,14 @@ class ProjectController extends BaseController
             return $this->failed('必须传入userId以及projectId,permission');
         }
 
-        $permissionRange  = array_merge(array_column(UserProject::PERMISSION,0),[6]);
-        if(!in_array($permission,$permissionRange)){
+        $permissionRange = array_merge(array_column(UserProject::PERMISSION, 0), [6]);
+        if (!in_array($permission, $permissionRange)) {
             return $this->failed('设置权限值不正确');
         }
 
         //检查操作权限
-        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo,$projectId);
-        if(!$checkRes){
+        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo, $projectId);
+        if (!$checkRes) {
             return $this->failed('非管理员以及团队leader禁止操作');
         }
 
@@ -342,17 +343,46 @@ class ProjectController extends BaseController
     {
         $projectId = Yii::$app->request->post('projectId', null);
 
-        if (!$projectId ) {
+        if (!$projectId) {
             return $this->failed('必须传入projectId');
         }
 
         //检查操作权限
-        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo,$projectId);
-        if(!$checkRes){
+        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo, $projectId);
+        if (!$checkRes) {
             return $this->failed('非管理员以及团队leader禁止操作');
         }
 
         return $this->success($checkRes);
+    }
+
+    /**
+     * 获取用户对项目的操作权限
+     * @return array
+     */
+    public function actionGetProjectOperationPermission()
+    {
+        $projectId = Yii::$app->request->get('projectId', null);
+
+        if (!$projectId) {
+            return $this->failed('必须传入projectId');
+        }
+
+        if ($this->userInfo->type == UserInfo::USER_TYPE['admin'][0]) {
+            return $this->success(4);
+            return $this->success(UserProject::PERMISSION['read'][0] + UserProject::PERMISSION['write'][0]);
+        }
+
+        //检查操作权限
+        $permission = UserProject::find()
+            ->where(['userId' => $this->userInfo->id])
+            ->where(['project_id' => $projectId])
+            ->where(['is_deleted' => BaseModel::IS_DELETED['no']])->one();
+        if (!$permission) {
+            return $this->failed('获取用户-项目权限数据失败，不允许操作');
+        }
+
+        return $this->success($permission->permission);
     }
 
 }

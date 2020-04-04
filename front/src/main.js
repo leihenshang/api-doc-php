@@ -6,12 +6,12 @@ import VueResource from "vue-resource";
 import "./validate";
 
 //markdown组件
-import mavonEditor from 'mavon-editor';
-import 'mavon-editor/dist/css/index.css';
+import mavonEditor from "mavon-editor";
+import "mavon-editor/dist/css/index.css";
 
 //element ui
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
 
 // Vue.prototype.apiAddress = "http://120.27.241.94:50682";
 Vue.prototype.apiAddress = "http://localhost:1000";
@@ -26,56 +26,62 @@ Vue.use(ElementUI);
 
 //扩展指令，设置焦点
 Vue.directive("focus", {
-    inserted: function (el) {
-        el.focus();
-    }
+  inserted: function(el) {
+    el.focus();
+  }
 });
 
 const store = new Vuex.Store({
-    state: {
-        count: 0,
-        userInfo: {},
-        project: {}
+  state: {
+    count: 0,
+    userInfo: {},
+    project: {},
+    projectPermission: 4
+  },
+  mutations: {
+    increment(state) {
+      state.count++;
     },
-    mutations: {
-        increment(state) {
-            state.count++;
-        },
-        saveUserInfo(state, user) {
-            state.userInfo = user;
-        },
-        saveProject(state, project) {
-            state.project = project;
-        }
+    //用户信息
+    saveUserInfo(state, user) {
+      state.userInfo = user;
+    },
+    //项目信息
+    saveProject(state, project) {
+      state.project = project;
+    },
+    //用户对项目的操作权限
+    saveProjectPermission(state, permission) {
+      state.projectPermission = permission;
     }
+  }
 });
-
 
 //vue-resource拦截器拦截请求,添加token
 Vue.http.interceptors.push(request => {
-    if (request.method === "GET") {
-        if (!request.params.token) {
-            request.params.token = store.state.userInfo.token;
-        }
-    } else if (request.method === "POST") {
-        if (!request.body.token) {
-            request.body.token = store.state.userInfo.token;
-        }
-        if (request.emulateJSON !== true) {
-            request.emulateJSON = true;
-        }
+  if (request.method === "GET") {
+    if (!request.params.token) {
+      request.params.token = store.state.userInfo.token;
     }
-    return response => {
-        if (response.body.code && response.body.code === 34) {
-            this.$message.error("超时,重新登录");
-            localStorage.removeItem("userInfo");
-            router.push("/login");
-        }
-    };
+  } else if (request.method === "POST") {
+    if (!request.body.token) {
+      request.body.token = store.state.userInfo.token;
+    }
+    if (request.emulateJSON !== true) {
+      request.emulateJSON = true;
+    }
+  }
+  return response => {
+    if (response.body.code && response.body.code === 34) {
+      this.$message.error("超时,重新登录");
+      localStorage.removeItem("userInfo");
+      router.push("/login");
+    }
+  };
 });
 
 new Vue({
-    router,
-    store,
-    render: h => h(App)
+  router,
+  store,
+  render: h => h(App)
 }).$mount("#app");
