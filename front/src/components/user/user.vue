@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-    <div class="text-box">
+    <div class="text-box" v-show="$store.state.projectPermission === 6">
       <input type="text" v-model="keyword" />
       <button @click="userList = [];keyword=''">重置</button>
       <button @click="getUserList(keyword)">搜索用户</button>
@@ -53,7 +53,9 @@
               </tr>
               <tr>
                 <td>类型</td>
-                <td colspan="3">{{user.type == 1 ? '普通用户' : '管理员' }}</td>
+                <td
+                  colspan="3"
+                >{{user.type == 1 ? '普通用户' : '管理员' }}{{ user.is_leader == 1 ? '(项目管理员)' :'' }}</td>
               </tr>
               <tr>
                 <td>邮箱</td>
@@ -62,12 +64,12 @@
             </table>
           </div>
         </div>
-        <div class="btn" v-if="permission == 4"></div>
+        <div class="btn" v-if="$store.state.projectPermission == 4"></div>
         <div class="btn" v-else>
           <button @click="open(user.nick_name,index)">修改昵称</button>
           <button @click="quitProject(user.id)">踢出项目</button>
           <button v-if="user.is_leader != 1" @click="setLeader(user.id)">设置项目管理员</button>
-          <button v-else @click="setLeader(user.id)">设为普通用户</button>
+          <button v-else @click="setLeader(user.id,1)">取消项目管理权限</button>
           <button v-if="user.permission == 6" @click="setPermission(user.id,4)">设置只读</button>
           <button v-else @click="setPermission(user.id,6)">设置为读/写</button>
         </div>
@@ -84,8 +86,7 @@ export default {
     return {
       userList: [],
       projectUser: [],
-      keyword: "",
-      permission: 4
+      keyword: ""
     };
   },
   created() {
@@ -189,13 +190,14 @@ export default {
         );
     },
     //设置用户对项目的读写权限
-    setLeader(userId) {
+    setLeader(userId, cancel) {
       this.$http
         .post(
           this.apiAddress + "/project/set-leader",
           {
             userId,
-            projectId: this.$route.params.id
+            projectId: this.$route.params.id,
+            cancel
           },
           { emulateJSON: true }
         )
@@ -393,7 +395,7 @@ export default {
 }
 
 .btn button {
-  width: 100px;
+  width: 120px;
   height: 30px;
   margin: 3px 3px 3px;
 }

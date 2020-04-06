@@ -21,7 +21,7 @@
         <td>{{item.develop_language}}</td>
         <td>{{item.create_time}}</td>
         <td class="api-list-btn">
-          <button @click="jumpPage('edit',item.id)">编辑</button>
+          <button @click="jumpPage('edit',item.id)" v-show="showEdit == 1">编辑</button>
           <button @click="jumpPage('detail',item.id)">详情</button>
           <el-popconfirm
             title="确定要删除这个api?"
@@ -29,7 +29,7 @@
             @onConfirm="delApi(item.id)"
             width="200"
           >
-            <el-button slot="reference">删除</el-button>
+            <el-button slot="reference" v-show="showEdit == 1">删除</el-button>
           </el-popconfirm>
         </td>
       </tr>
@@ -62,7 +62,8 @@ const CODE_OK = 200;
 export default {
   name: "apiList",
   props: {
-    apiList: Object
+    apiList: Object,
+    showEdit:Number
   },
   created() {},
   data() {

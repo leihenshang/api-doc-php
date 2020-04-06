@@ -20,7 +20,7 @@
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
-        <div class="btn-group">
+        <div class="btn-group" v-show="showIsEdit === true">
           <button @click="del(item.id)">删除</button>
           <button @click="editGroup(item)">编辑</button>
         </div>
@@ -39,7 +39,10 @@ export default {
     id: String,
     groupList: Array,
     showCreateGroup: Boolean,
-    showIsEdit: Boolean
+    showIsEdit: {
+      type: Boolean,
+      default: false
+    }
   },
   created() {},
   data() {
@@ -80,9 +83,11 @@ export default {
               this.$message.error("成功！~");
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
-            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
     },

@@ -26,9 +26,9 @@ Vue.use(ElementUI);
 
 //扩展指令，设置焦点
 Vue.directive("focus", {
-  inserted: function(el) {
+  inserted: function (el) {
     el.focus();
-  }
+  },
 });
 
 const store = new Vuex.Store({
@@ -36,7 +36,7 @@ const store = new Vuex.Store({
     count: 0,
     userInfo: {},
     project: {},
-    projectPermission: 4
+    projectPermission: 4,
   },
   mutations: {
     increment(state) {
@@ -53,12 +53,14 @@ const store = new Vuex.Store({
     //用户对项目的操作权限
     saveProjectPermission(state, permission) {
       state.projectPermission = permission;
-    }
-  }
+    },
+  },
 });
 
+
+
 //vue-resource拦截器拦截请求,添加token
-Vue.http.interceptors.push(request => {
+Vue.http.interceptors.push((request) => {
   if (request.method === "GET") {
     if (!request.params.token) {
       request.params.token = store.state.userInfo.token;
@@ -71,17 +73,64 @@ Vue.http.interceptors.push(request => {
       request.emulateJSON = true;
     }
   }
-  return response => {
+  return (response) => {
     if (response.body.code && response.body.code === 34) {
-      this.$message.error("超时,重新登录");
+      Vue.prototype.$message.error("超时,重新登录");
       localStorage.removeItem("userInfo");
       router.push("/login");
     }
   };
 });
 
+router.beforeEach((to, from, next) => {
+  if (
+    to.matched.some((record) => record.meta.requiresAuth) &&
+    Vue.prototype.userInfo
+  ) {
+    Vue.http
+      .get(
+        Vue.prototype.apiAddress + "/project/get-project-operation-permission",
+        {
+          params: {
+            token: Vue.prototype.userInfo.token,
+            projectId: 22,
+          },
+        }
+      )
+      .then(
+        (response) => {
+          response = response.body;
+          if (response.code === 200) {
+            store.commit("saveProjectPermission", response.data);
+          }
+        },
+        (res) => {
+          let response = res.body;
+          Vue.$message.error(
+            "获取项目信息-操作失败!" + !response.msg ? response.msg : ""
+          );
+        }
+      );
+  }
+
+  if (to.name !== "register") {
+    let routerArr = ["userLogin", "register"];
+    if (routerArr.indexOf(to.name) === 0) {
+      next();
+    } else {
+      if (!Vue.prototype.userInfo) {
+        next("/login");
+      } else {
+        next();
+      }
+    }
+  } else {
+    next();
+  }
+});
+
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

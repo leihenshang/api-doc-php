@@ -14,15 +14,20 @@
           v-on:change-group="changeGroup"
           v-on:close-add-group="closeAddGroup"
           :showCreateGroup="showCreateGroup"
+          :showIsEdit="$store.state.projectPermission == 4 ? false : true"
         />
       </div>
       <div class="doc-wrapper">
-        <button @click="isCreate = false; $router.push({name:'projectDoc'}) " v-show="isCreate === true">取消</button>
+        <button
+          @click="isCreate = false; $router.push({name:'projectDoc'}) "
+          v-show="isCreate === true"
+        >取消</button>
         <docList
           :docList="docData.data"
           v-on:doc-delete="docDelete"
           ref="docList"
           v-if="isCreate === false"
+          :showEdit="$store.state.projectPermission == 4 ? false : true"
         />
         <router-view v-else />
       </div>

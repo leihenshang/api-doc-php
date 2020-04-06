@@ -1,8 +1,10 @@
 <template>
   <div class="api-page">
     <div class="btn-wrapper">
-      <button @click="addApi()">+创建api</button>
-      <button @click="showCreateGroup = true">+新建分组</button>
+      <div v-show="$store.state.projectPermission == 6">
+        <button @click="addApi()">+创建api</button>
+        <button @click="showCreateGroup = true">+新建分组</button>
+      </div>
     </div>
 
     <div class="api-content">
@@ -13,11 +15,16 @@
           v-on:change-group="changeGroup"
           v-on:close-add-group="closeAddGroup"
           :showCreateGroup="showCreateGroup"
+          :showIsEdit="$store.state.projectPermission == 4 ? false : true"
         />
       </div>
 
       <div class="api-wrapper" v-loading="loading">
-        <apiList :apiList="apiList" v-on:api-delete="apiDelete" />
+        <apiList
+          :apiList="apiList"
+          v-on:api-delete="apiDelete"
+          :showEdit="$store.state.projectPermission == 4 ? 0 : 1"
+        />
       </div>
     </div>
   </div>

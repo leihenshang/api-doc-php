@@ -21,8 +21,6 @@ import Login from "./components/user/login";
 import Register from "./components/user/register";
 import UserCenter from "./components/user/userCenter";
 import User from "./components/user/user";
-import VueResource from "vue-resource";
-import { Store } from "vuex";
 // import UserManagement from "./components/user/userManagement";
 
 Vue.use(VueRouter);
@@ -36,20 +34,19 @@ const router = new VueRouter({
       path: "/",
       component: Project,
       children: [
-        { path: "", component: ProjectList }
+        { path: "", component: ProjectList },
         // ,
         // {
         //   path: "userManagement",
         //   name: "userManagement",
         //   component: UserManagement
         // }
-      ]
+      ],
     },
     {
       path: "/detail/:id",
       component: Detail,
       props: true,
-      name: "detail",
 
       children: [
         {
@@ -57,21 +54,21 @@ const router = new VueRouter({
           name: "detailPage",
           component: DetailPage,
           meta: { requiresAuth: true },
-          props: true
+          props: true,
         },
         {
           path: "apiPage",
           name: "apiPage",
           component: ApiPage,
           meta: { requiresAuth: true },
-          props: true
+          props: true,
         },
         {
           path: "apiCreate/:groupId",
           name: "apiCreate",
           component: apiCreate,
           meta: { requiresAuth: true },
-          props: true
+          props: true,
         },
 
         {
@@ -79,7 +76,7 @@ const router = new VueRouter({
           name: "user",
           component: User,
           props: true,
-          meta: { requiresAuth: true }
+          meta: { requiresAuth: true },
         },
         {
           path: "projectDoc",
@@ -92,76 +89,33 @@ const router = new VueRouter({
               name: "docDetail",
               component: DocDetail,
               props: true,
-              meta: { requiresAuth: true }
+              meta: { requiresAuth: true },
             },
             {
               path: "docEdit/:docId",
               name: "docEdit",
               component: DocEdit,
               props: true,
-              meta: { requiresAuth: true }
+              meta: { requiresAuth: true },
             },
             {
               path: "docCreate",
               name: "docCreate",
               component: DocCreate,
               props: true,
-              meta: { requiresAuth: true }
-            }
-          ]
-        }
-      ]
+              meta: { requiresAuth: true },
+            },
+          ],
+        },
+      ],
     },
     {
       path: "/userCenter",
       component: UserCenter,
-      name: "userCenter"
-    }
+      name: "userCenter",
+    },
     // { path: "/msg", name: "msg", component: Msg }
-  ]
-});
-
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    Vue.resource.get(
-      Vue.prototype.apiAddress + "/project/get-project-operation-permission",
-      {
-        params: {
-          token: Vue.prototype.userInfo.token,
-          projectId: 22
-        }
-      }
-    ).then(
-      response => {
-        response = response.body;
-        if (response.code === CODE_OK) {
-          Vue.$store.commit("savePermission", response.data);
-        }
-      },
-      res => {
-        let response = res.body;
-        Vue.$message.error(
-          "获取项目信息-操作失败!" + !response.msg ? response.msg : ""
-        );
-      }
-    );
-    console.log("进入了项目详情页");
-  }
-
-  if (to.name !== "register") {
-    let routerArr = ["userLogin", "register"];
-    if (routerArr.indexOf(to.name) === 0) {
-      next();
-    } else {
-      if (!Vue.prototype.userInfo) {
-        next("/login");
-      } else {
-        next();
-      }
-    }
-  } else {
-    next();
-  }
+  ],
 });
 
 export default router;

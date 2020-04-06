@@ -6,9 +6,18 @@
       <el-table-column prop="create_time" label="创建时间"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="jumpPage('docEdit',scope.row.id)">编辑</el-button>
+          <el-button
+            size="mini"
+            @click="jumpPage('docEdit',scope.row.id)"
+            v-show="showEdit == true"
+          >编辑</el-button>
           <el-button size="mini" @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
-          <el-button size="mini" type="danger" @click="delDoc(scope.row.id)">删除</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="delDoc(scope.row.id)"
+            v-show="showEdit == true"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -28,7 +37,11 @@ export default {
   name: "docList",
   props: {
     id: String,
-    docList: Array
+    docList: Array,
+    showEdit: {
+      default: false,
+      type: Boolean
+    }
   },
   created() {},
   data() {

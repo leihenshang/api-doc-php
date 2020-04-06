@@ -20,7 +20,7 @@
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
-        <div class="btn-group">
+        <div class="btn-group" v-show="showIsEdit === true">
           <button @click="del(item.id)">删除</button>
           <button @click="editGroup(item)">编辑</button>
         </div>
@@ -38,7 +38,10 @@ export default {
   props: {
     groupList: Array,
     showCreateGroup: Boolean,
-    showIsEdit: Boolean
+    showIsEdit: {
+      default: false,
+      type: Boolean
+    }
   },
   created() {},
   data() {
