@@ -4,8 +4,10 @@ namespace app\controllers;
 
 use app\behaviors\UserVerify;
 use app\models\Api;
+use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 
 class ApiController extends BaseController
 {
@@ -16,7 +18,8 @@ class ApiController extends BaseController
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
             'actions' => ['*'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
-            'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
+            'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证,
+            'projectPermission' => ['update','del','create']
         ];
         return $behaviors;
     }
@@ -71,12 +74,11 @@ class ApiController extends BaseController
     }
 
 
-
     /**
      * 删除数据
      * @return array
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function actionDel()
     {
@@ -92,8 +94,8 @@ class ApiController extends BaseController
 
     /**
      * 接口详情
-     * @return (array|string|int)[]|(app\models\Api|null)[] 
-     * @throws InvalidConfigException 
+     * @return (array|string|int)[]|(app\models\Api|null)[]
+     * @throws InvalidConfigException
      */
     public function actionDetail()
     {

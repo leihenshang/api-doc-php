@@ -6,6 +6,7 @@
 namespace app\behaviors;
 
 use app\models\UserInfo;
+use app\models\UserProject;
 use Yii;
 use yii\base\Behavior;
 use yii\base\ErrorException;
@@ -44,6 +45,8 @@ class UserVerify extends Behavior
      * @var UserInfo $userInfo 用户信息
      */
     public $userInfo = null;
+    public $projectUser = null;
+
     //需要进行验证的action数组
     public $actions = [];
 
@@ -63,6 +66,9 @@ class UserVerify extends Behavior
     public $frontUserType = [601];
     //后台用户类型
     public $backendUserType = [600];
+
+    //==============检擦项目操作权限============================
+    public $projectPermission = [];
 
     public function events()
     {
@@ -88,6 +94,58 @@ class UserVerify extends Behavior
         $checkPermissionResult = $this->checkPermission($event);
         if ($checkPermissionResult !== true) {
             return false;
+        }
+
+        $checkProjectOperationPermission = $this->checkProjectOperationPermission($event);
+        if ($checkProjectOperationPermission !== true) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 检查用户对项目的操作权限
+     * @param $event
+     * @return bool
+     * @throws UnauthorizedHttpException
+     */
+    public function checkProjectOperationPermission($event)
+    {
+        //拿到action的id,比如访问的是actionIndex,此处获取的actionId是 index
+        $action = $event->action->id;
+        if (!in_array($action, $this->projectPermission)) {
+            return true;
+        }
+
+        if (!$this->userInfo) {
+            throw new UnauthorizedHttpException('没有用户登陆信息', 34);
+        }
+
+        if ($this->userInfo->type == UserInfo::USER_TYPE['admin'][0]) {
+            return true;
+        }
+
+        if (Yii::$app->request->isPost) {
+            $projectId = Yii::$app->request->getBodyParam('projectId', 0) ?: Yii::$app->request->getBodyParam('project_id', 0);
+        } else {
+            $projectId = Yii::$app->request->get('projectId', 0) ?: Yii::$app->request->get('project_id', 0);
+        }
+
+        if (!$projectId) {
+            throw new UnauthorizedHttpException('没有项目id', 34);
+        }
+
+        if (in_array($action, $this->projectPermission)) {
+            $this->projectUser = UserProject::findOne(['user_id' => $this->userInfo->id, 'is_deleted' => UserProject::IS_DELETED['no'], 'project_id' => $projectId]);
+            if (!$this->projectUser) {
+                throw new UnauthorizedHttpException('没有该项目的操作权限', 34);
+            }
+
+
+            if ($this->projectUser->permission == UserProject::PERMISSION['read'][0]) {
+                throw new UnauthorizedHttpException('没有操作权限', 22);
+            }
         }
 
         return true;

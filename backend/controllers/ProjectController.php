@@ -234,6 +234,8 @@ class ProjectController extends BaseController
     {
         $userId = Yii::$app->request->post('userId', null);
         $projectId = Yii::$app->request->post('projectId', null);
+        $cancel = Yii::$app->request->post('cancel', 0);
+
         //判断只有管理员可知设置团队leader
         if ($this->userInfo->type != UserInfo::USER_TYPE['admin'][0]) {
             return $this->failed('非管理员禁止操作');
@@ -248,7 +250,12 @@ class ProjectController extends BaseController
             return $this->failed('没有找到要设置的用户');
         }
 
-        $userProject->is_leader = UserProject::IS_LEADER['yes'];
+        if($cancel === 1){
+            $userProject->is_leader = UserProject::IS_LEADER['no'];
+        }else {
+            $userProject->is_leader = UserProject::IS_LEADER['yes'];
+        }
+
         if (!$userProject->save()) {
             return $this->failed('设置团队leader失败');
         }
@@ -369,7 +376,6 @@ class ProjectController extends BaseController
         }
 
         if ($this->userInfo->type == UserInfo::USER_TYPE['admin'][0]) {
-            return $this->success(4);
             return $this->success(UserProject::PERMISSION['read'][0] + UserProject::PERMISSION['write'][0]);
         }
 
