@@ -73,12 +73,17 @@ export default {
         }
       }
 
-      //重置点击值
-      for (const key in this.menuListData) {
-        if (key == index) {
-          this.menuListData[key].isClick = true;
-        } else {
-          this.menuListData[key].isClick = false;
+      this.resetClick(index);
+    },
+    //重置点击值
+    resetClick(index) {
+      if (index !== null) {
+        for (const key in this.menuListData) {
+          if (key == index) {
+            this.menuListData[key].isClick = true;
+          } else {
+            this.menuListData[key].isClick = false;
+          }
         }
       }
     }
@@ -110,7 +115,21 @@ export default {
     // }
   },
   watch: {
-    $route: function() {}
+    $route: function(val) {
+      this.$nextTick(() => {
+        if (
+          /^\/detail\/((?:[^\/]+?))\/apiPage(?:\/(?=$))?$/i.test(val.fullPath)
+        ) {
+          for (let key in this.menuListData) {
+            if (this.menuListData[key].child == "apiPage") {
+              this.menuListData[key].isClick = true;
+            } else {
+              this.menuListData[key].isClick = false;
+            }
+          }
+        }
+      });
+    }
   }
 };
 </script>

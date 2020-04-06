@@ -14,6 +14,7 @@
           v-on:add-group="flushGroupList"
           v-on:change-group="changeGroup"
           v-on:close-add-group="closeAddGroup"
+          v-on:del-group="delGroup"
           :showCreateGroup="showCreateGroup"
           :showIsEdit="$store.state.projectPermission == 4 ? false : true"
         />
@@ -152,6 +153,9 @@ export default {
       this.$router.push({
         path: "/detail/" + this.$route.params.id + "/apiCreate/" + this.groupId
       });
+    },
+    delGroup() {
+      this.getGroup(this.pageSize, this.curr, this.$route.params.id);
     }
   },
   components: {

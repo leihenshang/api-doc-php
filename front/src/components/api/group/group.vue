@@ -79,7 +79,7 @@ export default {
               response => {
                 response = response.body;
                 if (response.code === CODE_OK) {
-                  this.$emit("add-group");
+                  this.$emit("del-group");
                   this.$message.success("成功！~");
                 }
               },
