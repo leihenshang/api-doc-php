@@ -29,7 +29,11 @@
           v-if="isCreate === false"
           :showEdit="$store.state.projectPermission == 4 ? false : true"
         />
-        <router-view v-else />
+        <div v-else>
+          <transition name="el-fade-in-linear" mode="out-in" appear>
+            <router-view />
+          </transition>
+        </div>
       </div>
     </div>
   </div>

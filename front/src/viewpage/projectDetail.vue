@@ -8,7 +8,9 @@
         <leftMenu :menuList="indesideRoute" />
       </div>
       <div class="right">
+          <transition name="el-fade-in-linear" mode="out-in" appear>
         <router-view></router-view>
+        </transition>
       </div>
     </div>
   </div>
