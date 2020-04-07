@@ -55,7 +55,7 @@ export default {
           this.apiAddress + "/group/create",
           {
             title: this.newGroup,
-            project_id: 0,
+            project_id: this.$route.params.id,
             token: this.$store.state.userInfo.token,
             type: 3
           },
@@ -67,7 +67,7 @@ export default {
             if (response.code === CODE_OK) {
               this.$emit("add-group");
               this.newGroup = "";
-              this.$message.error("成功！~");
+              this.$message.success("成功！~");
               this.$emit("closeAddGroup");
             } else {
               this.$message.error("创建分组失败:" + response.msg);
