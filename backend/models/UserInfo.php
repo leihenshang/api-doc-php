@@ -188,6 +188,10 @@ class UserInfo extends BaseModel
             'is_deleted' => self::IS_DELETED['no']
         ]);
 
+        if(!$userInfo){
+            return null;
+        }
+
         $currentTime = time();
 
         $expireTime = strtotime($userInfo['token_expire_time']);
