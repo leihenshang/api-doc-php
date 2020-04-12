@@ -84,7 +84,6 @@ class GroupController extends BaseController
 
         $where['project_id'] = $projectId;
 
-
         $res = Group::findAll($where);
         return $this->success($res);
     }

@@ -76,6 +76,9 @@ class DocController extends BaseController
 
         $res = new Doc(['scenario' => Api::SCENARIO_LIST]);
         $res = $res->dataList($groupId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1));
+        if(is_string($res)){
+            return $this->success([],$res);
+        }
         return $this->success($res);
     }
 

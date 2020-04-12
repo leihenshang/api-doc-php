@@ -3,6 +3,9 @@
 
 namespace app\models;
 
+use Throwable;
+use yii\db\StaleObjectException;
+
 /**
  * 项目模型
  * Class Project
@@ -25,9 +28,9 @@ class Group extends BaseModel
     public function rules()
     {
         return [
-            ['id','required'],
-            ['project_id','required'],
-            [['id','p_id','project_id','is_deleted','type'],'number'],
+            ['id', 'required'],
+            ['project_id', 'required'],
+            [['id', 'p_id', 'project_id', 'is_deleted', 'type'], 'number'],
             ['title', 'required'],
             ['title', 'string', 'length' => [1, 100]],
         ];
@@ -35,10 +38,10 @@ class Group extends BaseModel
 
     public function scenarios()
     {
-        $scenarios =  parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['title','project_id','type'];
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_CREATE] = ['title', 'project_id', 'type'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['title','id'];
+        $scenarios[self::SCENARIO_UPDATE] = ['title', 'id'];
         return $scenarios;
     }
 
@@ -53,11 +56,23 @@ class Group extends BaseModel
      */
     public function createData()
     {
-        if(!$this->validate()){
+        if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
 
-        if(!$this->save()){
+        //检查同组名重复
+        $res = self::find()
+            ->where([
+                'is_deleted' => self::IS_DELETED['no'],
+                'project_id' => $this->project_id,
+                'title' => $this->title
+            ])
+            ->one();
+        if ($res) {
+            return '组名不能重复';
+        }
+
+        if (!$this->save()) {
             return current($this->getFirstErrors());
         }
 
@@ -72,17 +87,17 @@ class Group extends BaseModel
     public function updateData($request)
     {
         $this->attributes = $request;
-        if(!$this->validate()){
+        if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
 
         $res = self::findOne($this->id);
-        if(!$res){
+        if (!$res) {
             return '没有找到数据';
         }
 
         $res->attributes = $request;
-        if(!$res->save()){
+        if (!$res->save()) {
             return current($this->getFirstErrors());
         }
 
@@ -92,17 +107,17 @@ class Group extends BaseModel
     /**
      * 删除数据
      * @return bool|mixed
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function del()
     {
-        if(!$this->validate()){
+        if (!$this->validate()) {
             return current($this->getFirstErrors());
         }
 
         $res = self::findOne($this->id);
-        if(!$res->delete()){
+        if (!$res->delete()) {
             return current($res->getFirstErrors());
         }
 

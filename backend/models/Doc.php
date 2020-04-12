@@ -77,7 +77,7 @@ class Doc extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = ['group_id', 'title', 'content'];
         $scenarios[self::SCENARIO_DELETE] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['state', 'title', 'content','group_id', 'id'];
+        $scenarios[self::SCENARIO_UPDATE] = ['state', 'title', 'content', 'group_id', 'id'];
         return $scenarios;
     }
 
@@ -156,7 +156,7 @@ class Doc extends BaseModel
      * @param string $field
      * @return array|string
      */
-    public function dataList(int $groupId = 0, int $ps = 10, int $cp = 1, string $field = 'id,title,create_time,view_count,like_count,user_id')
+    public function dataList($groupId = 0, $ps = 10, $cp = 1, $field = 'id,title,create_time,view_count,like_count,user_id')
     {
         $group = null;
         if ($groupId) {
