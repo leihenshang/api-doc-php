@@ -37,16 +37,24 @@ export default {
   name: "docList",
   props: {
     id: String,
-    docList: Array,
     showEdit: {
       default: false,
       type: Boolean
+    },
+    groupId:{
+      type:[Number,String],
+      default:0
     }
   },
-  created() {},
+  created() {
+    this.getDocList(this.ps, this.cp, this.groupId);
+  },
   data() {
     return {
-      hideMe: false
+      hideMe: false,
+      docList: [],
+      cp: 1,
+      ps: 10
     };
   },
   methods: {
@@ -71,6 +79,35 @@ export default {
             let response = res.body;
             this.$message.error(
               "操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
+    },
+    //获取文档
+    getDocList(size, curr, id) {
+      
+      if (!id) {
+        id = 0;
+      }
+
+      this.$http
+        .get(this.apiAddress + "/doc/list", {
+          params: {
+            groupId: id,
+            token: this.$store.state.userInfo.token
+          }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.docList = response.data.data;
+            }
+          },
+          res => {
+            let response = res.body;
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
             );
           }
         );

@@ -73,6 +73,8 @@
             },
             //创建文档
             createDoc() {
+                 this.$router.push({name:"projectDoc"});
+                 return;
                 if (!this.groupId) {
                     this.$message.error("请选择分组");
                     return;
@@ -93,7 +95,7 @@
                             res = res.body;
                             if (res.code === CODE_OK) {
                                 if (res.data) {
-                                    this.$message.error("创建成功！");
+                                    this.$message.success("创建成功！");
                                     this.$router.go(-1);
                                 } else {
                                     this.$message.error("创建文档失败:" + res.msg);

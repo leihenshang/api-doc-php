@@ -18,22 +18,9 @@
         />
       </div>
       <div class="doc-wrapper">
-        <button
-          @click="isCreate = false; $router.push({name:'projectDoc'}) "
-          v-show="isCreate === true"
-        >取消</button>
-        <docList
-          :docList="docData.data"
-          v-on:doc-delete="docDelete"
-          ref="docList"
-          v-if="isCreate === false"
-          :showEdit="$store.state.projectPermission == 4 ? false : true"
-        />
-        <div v-else>
-          <transition name="el-fade-in-linear" mode="out-in" appear>
-            <router-view />
-          </transition>
-        </div>
+        <transition name="el-fade-in-linear" mode="out-in" appear>
+          <router-view />
+        </transition>
       </div>
     </div>
   </div>
@@ -41,7 +28,6 @@
 
 <script>
 import group from "./group/group";
-import docList from "./docList";
 
 const CODE_OK = 200;
 const GROUP_TYPE_DOC = 3;
@@ -53,7 +39,6 @@ export default {
   },
   created() {
     this.getGroup(this.pageSize, this.curr, this.$route.params.id);
-    this.getDoc(10, 1, 0);
   },
   //默认数据
   data() {
@@ -74,34 +59,6 @@ export default {
   methods: {
     closeAddGroup(val) {
       this.showCreateGroup = val;
-    },
-    //获取文档
-    getDoc(size, curr, id) {
-      if (!id) {
-        id = 0;
-      }
-
-      this.$http
-        .get(this.apiAddress + "/doc/list", {
-          params: {
-            groupId: id,
-            token: this.$store.state.userInfo.token
-          }
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.docData = response.data;
-            }
-          },
-          res => {
-            let response = res.body;
-            this.$message.error(
-              "获取数据-操作失败!" + !response.msg ? response.msg : ""
-            );
-          }
-        );
     },
     //删除api
     docDelete() {
@@ -142,9 +99,8 @@ export default {
       this.getGroup(1, 100, this.$route.params.id);
     },
     changeGroup(id) {
-      this.$refs.docList.hideMe = false;
-      this.groupId = id;
-      this.getDoc(this.pageSize, this.curr, id);
+      this.$router.push({ name: "docList", params: { groupId: id } });
+      //  this.$router.push({path:});
     },
     //添加文档
     addDoc() {
@@ -153,8 +109,7 @@ export default {
     }
   },
   components: {
-    group,
-    docList
+    group
   }
 };
 </script>
