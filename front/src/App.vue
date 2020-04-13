@@ -7,7 +7,7 @@
  -->
 <template>
   <div id="app">
-    <transition name="el-fade-in-linear"  mode="out-in" appear>
+    <transition name="el-fade-in-linear" mode="out-in" appear>
       <router-view></router-view>
     </transition>
   </div>
@@ -25,7 +25,8 @@ export default {
 @import "static/css/base.css";
 
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;

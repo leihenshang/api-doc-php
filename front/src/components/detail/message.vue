@@ -70,6 +70,7 @@ export default {
 .message li {
   margin: 5px 0;
   text-align: left;
+  list-style: none;
 }
 
 .message li p {

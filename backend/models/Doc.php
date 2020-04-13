@@ -153,10 +153,9 @@ class Doc extends BaseModel
      * @param int $groupId
      * @param int $ps
      * @param int $cp
-     * @param string $field
      * @return array|string
      */
-    public function dataList($groupId = 0, $ps = 10, $cp = 1, $field = 'id,title,create_time,view_count,like_count,user_id')
+    public function dataList($groupId = 0, $ps = 10, $cp = 1)
     {
         $group = null;
         if ($groupId) {
@@ -168,21 +167,29 @@ class Doc extends BaseModel
 
         if ($group) {
             $where = [
-                'group_id' => $groupId,
-                'is_deleted' => self::IS_DELETED['no'],
-                'state' => self::STATE['normal']
+                'a.group_id' => $groupId,
+                'a.is_deleted' => self::IS_DELETED['no'],
+                'a.state' => self::STATE['normal']
             ];
         } else {
             $where = [
-                'is_deleted' => self::IS_DELETED['no'],
-                'state' => self::STATE['normal']
+                'a.is_deleted' => self::IS_DELETED['no'],
+                'a.state' => self::STATE['normal']
             ];
-
         }
 
+        $query = self::find()->alias('a')->where($where);
         $data = ['total' => 0, 'data' => []];
-        $data['total'] = self::find()->where($where)->count();
-        $data['data'] = self::find()->select($field)->where($where)->offset(($cp - 1) * $ps)->orderBy('id DESC')->limit($ps)->all();
+        $data['total'] = $query->count();
+        $data['data'] = $query
+            ->leftJoin('user_info b', 'a.user_id  = b.id')
+            ->select('a.*,b.nick_name')
+            ->where($where)
+            ->offset(($cp - 1) * $ps)
+            ->orderBy('a.id DESC')
+            ->limit($ps)
+            ->asArray()
+            ->all();
         return $data;
     }
 }

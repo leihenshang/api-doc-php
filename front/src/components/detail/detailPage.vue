@@ -151,6 +151,7 @@ export default {
   height: 80px;
   border-right: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
+  list-style: none;
 }
 
 .right-l ul li:first-child {

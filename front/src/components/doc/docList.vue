@@ -1,22 +1,28 @@
 <template>
   <div class="doc-list">
-    <el-table v-show="hideMe === false" :data="docList" stripe style="width: 100%">
+    <el-table
+      v-show="hideMe === false"
+      :data="docList"
+      stripe
+      style="width: 100%"
+      v-loading="loading"
+    >
       <el-table-column prop="title" label="名称" width="180"></el-table-column>
-      <el-table-column prop="user_id" label="创建者" width="180"></el-table-column>
+      <el-table-column prop="nick_name" label="创建者" width="180"></el-table-column>
       <el-table-column prop="create_time" label="创建时间"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"
             @click="jumpPage('docEdit',scope.row.id)"
-            v-show="showEdit == true"
+            v-show="$store.state.projectPermission == 6"
           >编辑</el-button>
           <el-button size="mini" @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
           <el-button
             size="mini"
             type="danger"
             @click="delDoc(scope.row.id)"
-            v-show="showEdit == true"
+            v-show="$store.state.projectPermission == 6"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -37,24 +43,23 @@ export default {
   name: "docList",
   props: {
     id: String,
-    showEdit: {
-      default: false,
-      type: Boolean
-    },
-    groupId:{
-      type:[Number,String],
-      default:0
+    groupId: {
+      type: [Number, String],
+      default: 0
     }
   },
   created() {
-    this.getDocList(this.ps, this.cp, this.groupId);
+    this.getDocList(this.defaultPs, this.defaultCp, this.groupId);
   },
   data() {
     return {
+      loading: true,
       hideMe: false,
       docList: [],
       cp: 1,
-      ps: 10
+      ps: 10,
+      defaultPs: 10,
+      defaultCp: 1
     };
   },
   methods: {
@@ -85,7 +90,6 @@ export default {
     },
     //获取文档
     getDocList(size, curr, id) {
-      
       if (!id) {
         id = 0;
       }
@@ -102,6 +106,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.docList = response.data.data;
+              this.loading = false;
             }
           },
           res => {
@@ -115,6 +120,12 @@ export default {
     jumpPage(name, docId) {
       this.hideMe = true;
       this.$router.push({ name, params: { docId: docId } });
+    }
+  },
+  watch: {
+    $route: function(to) {
+      this.getDocList(this.defaultPs, this.defaultCp, to.params.groupId);
+      this.loading  = true;
     }
   }
 };

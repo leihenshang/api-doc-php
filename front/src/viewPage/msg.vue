@@ -111,6 +111,7 @@ export default {
 
 .top li {
   float: left;
+  list-style: none;
 }
 
 .top .t-r {

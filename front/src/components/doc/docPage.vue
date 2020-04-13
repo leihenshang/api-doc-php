@@ -99,8 +99,16 @@ export default {
       this.getGroup(1, 100, this.$route.params.id);
     },
     changeGroup(id) {
-      this.$router.push({ name: "docList", params: { groupId: id } });
-      //  this.$router.push({path:});
+      id = id ? id : 0;
+      this.$router.push(
+        { name: "docList", params: { groupId: id } },
+        () => {
+          return;
+        },
+        () => {
+          return;
+        }
+      );
     },
     //添加文档
     addDoc() {

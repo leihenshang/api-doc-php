@@ -83,7 +83,7 @@ export default {
                   this.$message.success("成功！~");
                 }
               },
-              res => {
+              () => {
                 this.$message.error("操作失败!");
               }
             );

@@ -1,22 +1,15 @@
 <template>
   <div class="doc-edit">
+    <div class="btn">
+      <div class="left">
+        <el-button plain size="mini" @click="$router.go(-1)">&lt; 返回</el-button>
+      </div>
+      <div class="right">
+        <el-button type="success" plain size="mini" @click="updateDoc()">保存文档</el-button>
+      </div>
+    </div>
     <div class="doc-wrapper">
-      <div class="btn">
-        <span></span>
-        <button @click="updateDoc()">提交更新</button>
-      </div>
-      <div class="title">
-        <span>标题:</span>
-        <input type="text" name id v-model="doc.title" />
-      </div>
-      <div class="info">
-        <span>分组:</span>
-        <select name id v-model="doc.group_id" v-bind:disabled="groupList.length < 1">
-          <option value disabled selected>-选择分组-</option>
-          <option :value="group.id" v-for="group in groupList" :key="group.id">{{group.title}}</option>
-        </select>
-      </div>
-
+      <DocInfo :doc="doc" :groupList="this.groupList" v-on:update-info="updateInfo($event)" />
       <div class="doc-content">
         <mavon-editor v-model="doc.content" ref="md" />
       </div>
@@ -24,12 +17,16 @@
   </div>
 </template>
 <script>
+import DocInfo from "./units/docInfo";
 const CODE_OK = 200;
 
 export default {
+  components: {
+    DocInfo
+  },
   name: "docEdit",
   props: {
-    docId: Number
+    docId: [Number,String]
   },
   data() {
     return {
@@ -39,6 +36,10 @@ export default {
     };
   },
   methods: {
+    updateInfo(val) {
+      this.doc.title = val.title;
+      this.doc.group_id = val.groupId;
+    },
     //获取分组列表
     getGroup(pageSize = 10, curr = 1, projectId) {
       this.$http
@@ -75,32 +76,32 @@ export default {
         return;
       }
 
-      if (!confirm("确认?")) {
-        return;
+      if (this.doc.title.length < 1) {
+        this.$message.error("标题不能为空");
       }
 
-      this.$http
-        .post(this.apiAddress + "/doc/update", {
-          title: this.doc.title,
-          content: this.doc.content,
-          group_id: this.doc.group_id,
-          id: this.docId
-        })
-        .then(
-          res => {
+      this.$confirm("要保存吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$http
+          .post(this.apiAddress + "/doc/update", {
+            title: this.doc.title,
+            content: this.doc.content,
+            group_id: this.doc.group_id,
+            id: this.docId
+          })
+          .then(res => {
             res = res.body;
             if (res.code === CODE_OK) {
-              if (res.data) {
-                this.$message.error("更新成功！");
-              } else {
-                this.$message.error("更新文档失败:" + res.msg);
-              }
+              this.$message.success("更新成功!");
+              this.$router.go(-1);
+            } else {
+              this.$message.error(res.msg);
             }
-          },
-          () => {
-            this.$message.error("更新文档失败");
-          }
-        );
+          });
+      });
     },
     //获取文档详情
     getDocDetail() {
@@ -130,53 +131,30 @@ export default {
       return;
     }
 
-    this.getGroup();
+    this.getGroup(100, 1, this.$route.params.id);
     this.getDocDetail();
   }
 };
 </script>
 <style scoped>
 .doc-wrapper {
-  width: 75%;
   margin: 20px auto;
-  border: 1px solid gray;
   min-height: 800px;
-}
-
-.doc-wrapper span {
-  display: inline-block;
-  width: 100px;
-  text-align: right;
-  padding-right: 20px;
-}
-
-.doc-wrapper input,
-.doc-wrapper select {
-  height: 25px;
-  width: 200px;
-}
-
-.doc-wrapper input,
-.doc-wrapper textarea {
-  width: 300px;
-}
-
-.doc-wrapper textarea {
-  width: 1200px;
-  min-height: 600px;
-}
-
-.doc-wrapper div {
-  margin: 20px auto;
-}
-
-.doc-wrapper button {
-  width: 80px;
-  height: 30px;
 }
 
 .doc-content .v-note-wrapper {
   margin: 10px;
   height: 1000px;
+}
+
+.btn {
+  width: 100%;
+  display: flex;
+  margin: 0 10px;
+}
+
+.btn .right {
+  text-align: right;
+  padding-right: 20px;
 }
 </style>

@@ -86,6 +86,7 @@ export default {
 
 .top-bar li {
   float: left;
+  list-style: none;
 }
 
 .top-bar .t-r {
@@ -148,6 +149,7 @@ export default {
   width: 100%;
   float: none;
   height: 50px;
+  list-style: none;
 }
 
 .user-lay ul li a {
