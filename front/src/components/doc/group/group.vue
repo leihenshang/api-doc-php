@@ -1,16 +1,6 @@
 
 <template>
   <div class="group">
-    <div class="add-group-werapper" v-show="showAdd">
-      <addGroup
-        :isShow="showAdd"
-        :isAdd="showCreateGroup"
-        :isEdit="isEdit"
-        :groupData="groupData"
-        v-on:closeAddGroup="closeAddGroup()"
-        v-on:add-group="addGroup()"
-      />
-    </div>
     <h4>
       <span>分组</span>
     </h4>
@@ -21,8 +11,22 @@
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
         <div class="btn-group" v-show="showIsEdit === true">
-          <button @click="del(item.id)">删除</button>
-          <button @click="editGroup(item)">编辑</button>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              操作
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>
+                <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="del(item.id)">
+                  <el-button slot="reference" size="mini">删除</el-button>
+                </el-popconfirm>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <el-button @click="editGroup(item)" size="mini">编辑</el-button>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
       </li>
     </ul>
@@ -30,8 +34,6 @@
 </template>
 
 <script>
-import addGroup from "./addGroup";
-
 const CODE_OK = 200;
 export default {
   name: "group",
@@ -51,16 +53,13 @@ export default {
       group: [],
       showAdd: false,
       groupData: {},
-      isEdit: false
+      isEdit: false,
+      visible: false
     };
   },
   methods: {
     //删除分组
     del(id) {
-      if (!confirm("确定删除?")) {
-        return;
-      }
-
       if (!id) {
         this.$message.error("id错误");
         return;
@@ -75,21 +74,16 @@ export default {
           },
           { emulateJSON: true }
         )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.$emit("add-group");
-              this.$message.error("成功！~");
-            }
-          },
-          res => {
-            let response = res.body;
-            this.$message.error(
-              "获取数据-操作失败!" + !response.msg ? response.msg : ""
-            );
+        .then(response => {
+          response = response.body;
+          if (response.code === CODE_OK) {
+            this.$emit("add-group");
+            this.$message.success("成功!");
+          } else {
+            this.$emit("add-group");
+            this.$message.error("操作失败");
           }
-        );
+        });
     },
     //点击分组
     clientBtn(id, index) {
@@ -102,17 +96,46 @@ export default {
 
       this.$emit("change-group", id);
     },
+    //更新数据
     editGroup(data) {
-      this.groupData = data;
-      this.showAdd = !this.showAdd;
-      this.isEdit = true;
-    },
-    closeAddGroup() {
-      this.showAdd = !this.showAdd;
-      this.$emit("close-add-group", this.showAdd);
-    },
-    addGroup() {
-      this.$emit("add-group");
+      this.$prompt("请修改分组名", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /.{2,100}/,
+        inputValue: data.title,
+        inputErrorMessage: "组名格式不正确"
+      })
+        .then(({ value }) => {
+          this.$http
+            .post(
+              this.apiAddress + "/group/update",
+              {
+                title: value,
+                id: data.id,
+                type: 3
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.$message.success("更新成功!");
+                  this.$emit("add-group");
+                } else {
+                  this.$message.error(response.msg);
+                  this.$emit("close-add-group", this.showAdd);
+                }
+              },
+              res => {
+                let response = res.body;
+                this.$message.error(
+                  "获取数据-操作失败!" + !response.msg ? response.msg : ""
+                );
+              }
+            );
+        })
+        .catch(() => {});
     }
   },
   watch: {
@@ -120,12 +143,55 @@ export default {
       this.group = val;
     },
     showCreateGroup: function(val) {
-      this.showAdd = val;
+      if (val === false) {
+        return;
+      }
+
+      this.$prompt("请输入分组名", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /.{2,100}/,
+        inputErrorMessage: "组名格式不正确"
+      })
+        .then(({ value }) => {
+          this.$http
+            .post(
+              this.apiAddress + "/group/create",
+              {
+                title: value,
+                project_id: this.$route.params.id,
+                type: 3
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.$message.success("创建成功!");
+                } else {
+                  this.$message.error(response.msg);
+                }
+                this.$emit("close-add-group", this.showAdd);
+              },
+              res => {
+                let response = res.body;
+                this.$message.error(
+                  "获取数据-操作失败!" + !response.msg ? response.msg : ""
+                );
+              }
+            );
+        })
+        .catch(() => {
+          this.$emit("close-add-group", this.showAdd);
+          this.$message({
+            type: "info",
+            message: "取消输入"
+          });
+        });
     }
   },
-  components: {
-    addGroup
-  }
+  components: {}
 };
 </script>
 
@@ -151,6 +217,11 @@ export default {
 .group h4 {
   font-size: 14px;
   padding: 5px 0 0 15px;
+  position: relative;
+}
+
+.group h4 span {
+  display: inline-block;
 }
 
 .group ul li button {
