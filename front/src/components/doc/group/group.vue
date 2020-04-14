@@ -6,26 +6,23 @@
     </h4>
     <ul v-if="groupList">
       <li>
-        <a href="javascript:;" @click="clientBtn(null,null)">全部文档</a>
+        <a href="javascript:;" @click="clientBtn(null,null)">
+         <i class="el-icon-s-order"></i> <slot>全部条目</slot>
+        </a>
+      </li>
+      <li class="last-item">
+        <a href="javascript:;" @click="clientBtn(null,null)"> <i class="el-icon-delete"></i> 回收站</a>
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
         <div class="btn-group" v-show="showIsEdit === true">
-          <el-dropdown size="small" placement="left" @command="handleCommand">
+          <el-dropdown size="small" placement="left-start" @command="handleCommand">
             <span class="el-dropdown-link">
               <i class="el-icon-s-unfold"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item :command="{action:'del',data:item}">删除</el-dropdown-item>
               <el-dropdown-item :command="{action:'edit',data:item}">编辑</el-dropdown-item>
-              <!-- <el-dropdown-item>
-                <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="del(item.id)">
-                  <el-button slot="reference" size="mini">删除</el-button>
-                </el-popconfirm>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <el-button @click="editGroup(item)" size="mini">编辑</el-button>
-              </el-dropdown-item>-->
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -52,7 +49,6 @@ export default {
     return {
       newGroup: "",
       group: [],
-      showAdd: false,
       groupData: {},
       isEdit: false,
       visible: false
@@ -91,10 +87,10 @@ export default {
             .then(response => {
               response = response.body;
               if (response.code === CODE_OK) {
-                this.$emit("add-group");
+                this.$emit("flush-group-list");
                 this.$message.success("成功!");
               } else {
-                this.$emit("add-group");
+                this.$emit("flush-group-list");
                 this.$message.error("操作失败");
               }
             });
@@ -137,10 +133,10 @@ export default {
                 response = response.body;
                 if (response.code === CODE_OK) {
                   this.$message.success("更新成功!");
-                  this.$emit("add-group");
+                  this.$emit("flush-group-list");
                 } else {
                   this.$message.error(response.msg);
-                  this.$emit("close-add-group", this.showAdd);
+                  this.$emit("flush-group-list", false);
                 }
               },
               res => {
@@ -188,7 +184,7 @@ export default {
                 } else {
                   this.$message.error(response.msg);
                 }
-                this.$emit("close-add-group", this.showAdd);
+                this.$emit("flush-group-list", false);
               },
               res => {
                 let response = res.body;
@@ -199,11 +195,7 @@ export default {
             );
         })
         .catch(() => {
-          this.$emit("close-add-group", this.showAdd);
-          this.$message({
-            type: "info",
-            message: "取消输入"
-          });
+          this.$emit("flush-group-list", false);
         });
     }
   },
@@ -259,13 +251,14 @@ export default {
   width: 100%;
   overflow: hidden;
   display: flex;
-  margin: 10px 0;
+  margin: 8px 0;
   height: 32px;
   line-height: 32px;
 }
 
-.group ul li:first-child {
+.group ul li.last-item {
   border-bottom: 1px solid rgb(228, 219, 219);
+   padding-bottom: 6px;
 }
 
 .group ul li:hover {
@@ -294,5 +287,9 @@ export default {
   margin-left: 8px;
   padding-left: 10px;
   height: 100%;
+}
+
+.group ul li i {
+  margin-right:5px;
 }
 </style>

@@ -10,12 +10,11 @@
         <group
           :id="this.id"
           :groupList="groupList"
-          v-on:add-group="flushGroupList"
           v-on:change-group="changeGroup"
-          v-on:close-add-group="closeAddGroup"
+          v-on:flush-group-list="flushGroupList"
           :showCreateGroup="showCreateGroup"
           :showIsEdit="$store.state.projectPermission == 4 ? false : true"
-        />
+        >全部文档</group>
       </div>
       <div class="doc-wrapper">
         <transition name="el-fade-in-linear" mode="out-in" appear>
@@ -57,9 +56,6 @@ export default {
     };
   },
   methods: {
-    closeAddGroup(val) {
-      this.showCreateGroup = val;
-    },
     //删除api
     docDelete() {
       this.getDoc(this.pageSize, this.curr, this.groupId);
@@ -96,6 +92,7 @@ export default {
         );
     },
     flushGroupList() {
+      this.showCreateGroup = false;
       this.getGroup(1, 100, this.$route.params.id);
     },
     changeGroup(id) {
