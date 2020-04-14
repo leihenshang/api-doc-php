@@ -11,20 +11,21 @@
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
         <div class="btn-group" v-show="showIsEdit === true">
-          <el-dropdown>
+          <el-dropdown size="small" placement="left" @command="handleCommand">
             <span class="el-dropdown-link">
-              操作
-              <i class="el-icon-arrow-down el-icon--right"></i>
+              <i class="el-icon-s-unfold"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
+              <el-dropdown-item :command="{action:'del',data:item}">删除</el-dropdown-item>
+              <el-dropdown-item :command="{action:'edit',data:item}">编辑</el-dropdown-item>
+              <!-- <el-dropdown-item>
                 <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="del(item.id)">
                   <el-button slot="reference" size="mini">删除</el-button>
                 </el-popconfirm>
               </el-dropdown-item>
               <el-dropdown-item>
                 <el-button @click="editGroup(item)" size="mini">编辑</el-button>
-              </el-dropdown-item>
+              </el-dropdown-item>-->
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -58,6 +59,13 @@ export default {
     };
   },
   methods: {
+    handleCommand(command) {
+      if (command.action === "del") {
+        this.del(command.data.id);
+      } else if (command.action === "edit") {
+        this.editGroup(command.data);
+      }
+    },
     //删除分组
     del(id) {
       if (!id) {
@@ -65,25 +73,33 @@ export default {
         return;
       }
 
-      this.$http
-        .post(
-          this.apiAddress + "/group/del",
-          {
-            id: id,
-            token: this.$store.state.userInfo.token
-          },
-          { emulateJSON: true }
-        )
-        .then(response => {
-          response = response.body;
-          if (response.code === CODE_OK) {
-            this.$emit("add-group");
-            this.$message.success("成功!");
-          } else {
-            this.$emit("add-group");
-            this.$message.error("操作失败");
-          }
-        });
+      this.$confirm("该分组将被删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$http
+            .post(
+              this.apiAddress + "/group/del",
+              {
+                id: id,
+                token: this.$store.state.userInfo.token
+              },
+              { emulateJSON: true }
+            )
+            .then(response => {
+              response = response.body;
+              if (response.code === CODE_OK) {
+                this.$emit("add-group");
+                this.$message.success("成功!");
+              } else {
+                this.$emit("add-group");
+                this.$message.error("操作失败");
+              }
+            });
+        })
+        .catch(() => {});
     },
     //点击分组
     clientBtn(id, index) {
