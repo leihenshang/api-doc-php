@@ -1,38 +1,39 @@
 <template>
   <div class="doc-list">
-    <el-table
-      v-show="hideMe === false"
-      :data="docList"
-      stripe
-      style="width: 100%"
-      v-loading="loading"
-    >
-      <el-table-column prop="title" label="名称" width="180"></el-table-column>
-      <el-table-column prop="nick_name" label="创建者" width="180"></el-table-column>
-      <el-table-column prop="create_time" label="创建时间"></el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="jumpPage('docEdit',scope.row.id)"
-            v-show="$store.state.projectPermission == 6"
-          >编辑</el-button>
-          <el-button size="mini" @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="delDoc(scope.row.id)"
-            v-show="$store.state.projectPermission == 6"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div class="container" v-show="hideMe">
-      <div class="container-btn">
-        <button @click="hideMe = !hideMe">返回</button>
-      </div>
-      <router-view></router-view>
+    <div class="doc-list-table">
+      <el-table :data="docList" stripe style="width: 100%" v-loading="loading">
+        <el-table-column prop="title" label="名称" width="180"></el-table-column>
+        <el-table-column prop="nick_name" label="创建者" width="180"></el-table-column>
+        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="jumpPage('docEdit',scope.row.id)"
+              v-show="$store.state.projectPermission == 6"
+            >编辑</el-button>
+            <el-button size="mini" @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="delDoc(scope.row.id)"
+              v-show="$store.state.projectPermission == 6"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="page">
+      <el-pagination
+        background
+        layout="total,prev, pager, next"
+        :total="count"
+        :page-size="ps"
+        :current-page="cp"
+        @prev-click="changePage($event)"
+        @next-click="changePage($event)"
+        @current-change="changePage($event)"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -53,26 +54,26 @@ export default {
     }
   },
   created() {
-    console.log(this.$route);
-    this.getDocList(
-      this.defaultPs,
-      this.defaultCp,
-      this.groupId,
-      this.$route.params.id
-    );
+    this.getDocList(this.ps, this.cp, this.groupId, this.$route.params.id);
   },
   data() {
     return {
       loading: true,
-      hideMe: false,
       docList: [],
       cp: 1,
       ps: 10,
-      defaultPs: 10,
-      defaultCp: 1
+      count: 0
     };
   },
   methods: {
+    changePage(event) {
+      if (event == this.cp) {
+        return;
+      }
+      this.loading = true;
+      this.getDocList(this.ps, event, this.groupId, this.$route.params.id);
+      this.cp = event;
+    },
     delDoc(id) {
       if (!confirm("确认删除?")) {
         return;
@@ -113,7 +114,9 @@ export default {
         .get(this.apiAddress + "/doc/list", {
           params: {
             group_id: groupId,
-            project_id: projectId
+            project_id: projectId,
+            ps: size,
+            cp: curr
           }
         })
         .then(
@@ -121,6 +124,7 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.docList = response.data.data;
+              this.count = Number.parseInt(response.data.total);
               this.loading = false;
             }
           },
@@ -133,18 +137,13 @@ export default {
         );
     },
     jumpPage(name, docId) {
-      this.hideMe = true;
       this.$router.push({ name, params: { docId: docId } });
     }
   },
   watch: {
     $route: function(to) {
-      this.getDocList(
-        this.defaultPs,
-        this.defaultCp,
-        to.params.groupId,
-        to.params.id
-      );
+      this.cp = 1;
+      this.getDocList(this.ps, this.cp, to.params.groupId, to.params.id);
       this.loading = true;
     }
   }
@@ -152,70 +151,14 @@ export default {
 </script>
 
 <style scoped>
-/* .api-list table,
-.api-list td,
-.api-list th {
-  border: 1px solid #e5e5e5;
-} */
+.doc-list-table {
+  min-height: 620px;
+}
 
-.api-list {
+.page {
   background-color: #fff;
-  height: auto;
-}
-
-.api-list td,
-.api-list th {
-  padding: 8px 8px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.api-list tr:hover {
-  background-color: #e3f1e5;
-}
-
-.api-list th {
-  font-size: 14px;
-  font-weight: 700;
-  text-align: left;
-}
-
-.api-list table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.api-list table button {
-  height: 28px;
-  padding: 0 10px;
-  margin-right: 2px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 3px;
-  font-size: 12px;
-}
-
-.span-dot {
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-  border-radius: 10px;
-  background-color: #4caf50;
-  margin-right: 5px;
-}
-
-.container button {
-  height: 30px;
-  width: 120px;
-}
-
-.container-btn {
-  width: 75%;
-  margin: 0 auto;
-  text-align: right;
+  border: 1px;
+  text-align: center;
+  margin: 20px 0;
 }
 </style>
