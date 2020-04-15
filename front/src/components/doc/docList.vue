@@ -23,7 +23,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="page">
+    <div class="page" v-show="docList.length > 0">
       <el-pagination
         background
         layout="total,prev, pager, next"

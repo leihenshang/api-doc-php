@@ -1,8 +1,21 @@
 <template>
   <div class="doc-page">
     <div class="btn-wrapper">
-      <button @click="addDoc()">+创建文档</button>
-      <button @click="showCreateGroup = true">+新建分组</button>
+      <div class="btn">
+        <el-button @click="addDoc()" size="small">创建文档</el-button>
+        <el-button @click="showCreateGroup = true" size="small">+新建分组</el-button>
+      </div>
+      <div class="input">
+        <el-input
+          placeholder="请输入标题"
+          v-model="keyword"
+          class="input-with-select"
+          style="width:300px"
+          size="small"
+        >
+          <el-button slot="append" icon="el-icon-search"></el-button>
+        </el-input>
+      </div>
     </div>
 
     <div class="doc-content">
@@ -42,6 +55,7 @@ export default {
   //默认数据
   data() {
     return {
+      keyword:'',
       groupList: [],
       docData: {},
       curr: 1,
@@ -126,18 +140,6 @@ export default {
 
 .btn-wrapper {
   height: 48px;
-  line-height: 48px;
-}
-
-.btn-wrapper button {
-  width: 87px;
-  height: 32px;
-  padding: 0 10px;
-  margin-right: 2px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 3px;
-  font-size: 12px;
 }
 
 .doc-content {
@@ -160,5 +162,19 @@ export default {
   flex: 1;
   overflow-y: scroll;
   padding: 10px;
+}
+
+.input,
+.btn {
+  display: inline-block;
+}
+
+.btn {
+  margin-top: 8px;
+}
+
+.input {
+  margin-top: 5px;
+  margin-left: 175px;
 }
 </style>

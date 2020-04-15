@@ -157,9 +157,10 @@ class Doc extends BaseModel
      * @param int $groupId
      * @param int $ps
      * @param int $cp
+     * @param int $isDelete
      * @return array|string
      */
-    public function dataList($projectId, $groupId = 0, $ps = 10, $cp = 1)
+    public function dataList($projectId, $groupId = 0, $ps = 10, $cp = 1,$isDelete = 0)
     {
         $where = [];
         if ($groupId) {
@@ -167,7 +168,7 @@ class Doc extends BaseModel
         }
 
         $where['a.project_id'] = $projectId;
-        $where['a.is_deleted'] = self::IS_DELETED['no'];
+        $where['a.is_deleted'] = $isDelete == 1 ? self::IS_DELETED['yes'] : self::IS_DELETED['no'];
         $where['a.state'] = self::STATE['normal'];
 
         $query = self::find()->alias('a')->where($where);
