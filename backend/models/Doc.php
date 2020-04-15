@@ -16,6 +16,7 @@ namespace app\models;
  * @property string $update_time
  * @property int $view_count
  * @property int $like_count
+ * @property int $project_id
  */
 class Doc extends BaseModel
 {
@@ -40,12 +41,13 @@ class Doc extends BaseModel
     public function rules()
     {
         return [
-            [['is_deleted', 'user_id', 'state', 'group_id', 'view_count', 'like_count'], 'integer'],
+            [['is_deleted', 'user_id', 'state', 'group_id', 'view_count', 'like_count', 'project_id'], 'integer'],
             [['title', 'content'], 'required', 'on' => self::SCENARIO_CREATE],
             [['content'], 'string'],
             [['create_time', 'update_time'], 'safe'],
             [['title'], 'string', 'max' => 100],
-            ['group_id', 'required', 'on' => self::SCENARIO_CREATE],
+            [['group_id', 'project_id'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_LIST]],
+            ['project_id', 'integer', 'min' => 1],
             ['id', 'integer'],
             ['id', 'required', 'on' => [self::SCENARIO_DELETE, self::SCENARIO_DETAIL]],
 
@@ -78,6 +80,7 @@ class Doc extends BaseModel
         $scenarios[self::SCENARIO_CREATE] = ['group_id', 'title', 'content'];
         $scenarios[self::SCENARIO_DELETE] = ['id'];
         $scenarios[self::SCENARIO_UPDATE] = ['state', 'title', 'content', 'group_id', 'id'];
+        $scenarios[self::SCENARIO_LIST] = ['project_id', 'group_id',];
         return $scenarios;
     }
 
@@ -150,33 +153,22 @@ class Doc extends BaseModel
 
     /**
      * 文档列表
+     * @param int $projectId
      * @param int $groupId
      * @param int $ps
      * @param int $cp
      * @return array|string
      */
-    public function dataList($groupId = 0, $ps = 10, $cp = 1)
+    public function dataList($projectId, $groupId = 0, $ps = 10, $cp = 1)
     {
-        $group = null;
+        $where = [];
         if ($groupId) {
-            $group = Group::findOne(['id' => $groupId, 'is_deleted' => self::IS_DELETED['no']]);
-            if (!$group) {
-                return '没有找到分组';
-            }
+            $where = ['a.group_id' => $groupId];
         }
 
-        if ($group) {
-            $where = [
-                'a.group_id' => $groupId,
-                'a.is_deleted' => self::IS_DELETED['no'],
-                'a.state' => self::STATE['normal']
-            ];
-        } else {
-            $where = [
-                'a.is_deleted' => self::IS_DELETED['no'],
-                'a.state' => self::STATE['normal']
-            ];
-        }
+        $where['a.project_id'] = $projectId;
+        $where['a.is_deleted'] = self::IS_DELETED['no'];
+        $where['a.state'] = self::STATE['normal'];
 
         $query = self::find()->alias('a')->where($where);
         $data = ['total' => 0, 'data' => []];

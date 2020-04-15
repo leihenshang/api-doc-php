@@ -46,10 +46,20 @@ export default {
     groupId: {
       type: [Number, String],
       default: 0
+    },
+    projectId: {
+      type: [Number, String],
+      default: 0
     }
   },
   created() {
-    this.getDocList(this.defaultPs, this.defaultCp, this.groupId);
+    console.log(this.$route);
+    this.getDocList(
+      this.defaultPs,
+      this.defaultCp,
+      this.groupId,
+      this.$route.params.id
+    );
   },
   data() {
     return {
@@ -89,16 +99,21 @@ export default {
         );
     },
     //获取文档
-    getDocList(size, curr, id) {
-      if (!id) {
-        id = 0;
+    getDocList(size, curr, groupId, projectId) {
+      if (!projectId) {
+        this.$message.error("异常错误");
+        return;
+      }
+
+      if (!groupId) {
+        groupId = 0;
       }
 
       this.$http
         .get(this.apiAddress + "/doc/list", {
           params: {
-            groupId: id,
-            token: this.$store.state.userInfo.token
+            group_id: groupId,
+            project_id: projectId
           }
         })
         .then(
@@ -124,8 +139,13 @@ export default {
   },
   watch: {
     $route: function(to) {
-      this.getDocList(this.defaultPs, this.defaultCp, to.params.groupId);
-      this.loading  = true;
+      this.getDocList(
+        this.defaultPs,
+        this.defaultCp,
+        to.params.groupId,
+        to.params.id
+      );
+      this.loading = true;
     }
   }
 };

@@ -69,13 +69,13 @@ class DocController extends BaseController
      */
     public function actionList()
     {
-        $groupId = Yii::$app->request->get('groupId', 0);
-       /* if (!$groupId) {
-            return $this->failed('没有groupId',22);
-        }*/
-
-        $res = new Doc(['scenario' => Api::SCENARIO_LIST]);
-        $res = $res->dataList($groupId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1));
+        $params = Yii::$app->request->get();
+        $res = new Doc(['scenario' => Doc::SCENARIO_LIST]);
+        $res->attributes = $params;
+        if(!$res->validate()){
+            return $this->failed(current($res->getFirstErrors()));
+        }
+        $res = $res->dataList($params['project_id'],$params['group_id'], Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1));
         if(is_string($res)){
             return $this->success([],$res);
         }
