@@ -11,7 +11,7 @@
         </a>
       </li>
       <li class="last-item">
-        <a href="javascript:;" @click="clientBtn(null,null)"> <i class="el-icon-delete"></i> 回收站</a>
+        <a href="javascript:;" @click="clientBtn(-1,null)"> <i class="el-icon-delete"></i> 回收站</a>
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>

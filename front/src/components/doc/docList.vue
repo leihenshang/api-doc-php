@@ -14,6 +14,14 @@
             >编辑</el-button>
             <el-button size="mini" @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
             <el-button
+              v-if="$route.params.groupId == -1"
+              size="mini"
+              type="danger"
+              @click="restoreDoc(scope.row.id)"
+              v-show="$store.state.projectPermission == 6"
+            >还原</el-button>
+            <el-button
+              v-else
               size="mini"
               type="danger"
               @click="delDoc(scope.row.id)"
@@ -66,6 +74,10 @@ export default {
     };
   },
   methods: {
+    restoreDoc() {
+      this.$message.success("恢复文档");
+    },
+    //翻页
     changePage(event) {
       if (event == this.cp) {
         return;
@@ -74,30 +86,39 @@ export default {
       this.getDocList(this.ps, event, this.groupId, this.$route.params.id);
       this.cp = event;
     },
+    //删除文档
     delDoc(id) {
-      if (!confirm("确认删除?")) {
-        return;
-      }
-
-      this.$http
-        .post(this.apiAddress + "/doc/delete", {
-          id: id
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.$message.error("成功！~");
-              this.$emit("doc-delete");
-            }
-          },
-          res => {
-            let response = res.body;
-            this.$message.error(
-              "操作失败!" + !response.msg ? response.msg : ""
+      this.$confirm("该文档将被删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$http
+            .post(this.apiAddress + "/doc/delete", {
+              id: id
+            })
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.$message.success("成功!");
+                  this.getDocList(
+                    this.ps,
+                    this.cp,
+                    this.groupId,
+                    this.$route.params.id
+                  );
+                } else {
+                  this.$message.error("操作失败!");
+                }
+              },
+              () => {
+                this.$message.error("操作失败!");
+              }
             );
-          }
-        );
+        })
+        .catch(() => {});
     },
     //获取文档
     getDocList(size, curr, groupId, projectId) {
@@ -116,7 +137,8 @@ export default {
             group_id: groupId,
             project_id: projectId,
             ps: size,
-            cp: curr
+            cp: curr,
+            is_deleted: groupId < 0 ? 1 : 0
           }
         })
         .then(

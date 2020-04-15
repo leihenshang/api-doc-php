@@ -13,7 +13,6 @@ namespace app\models;
  * @property string $action 动作
  * @property string $content 操作内容
  * @property int $type 1项目2分组3api4用户
- * @property int $project_id 项目id
  */
 class OperationLog extends BaseModel
 {
