@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       operationLog: [],
-      ps: 20,
+      ps: 18,
       cp: 1
     };
   },

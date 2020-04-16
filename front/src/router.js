@@ -8,7 +8,7 @@ import Detail from "./viewPage/projectDetail";
 import ProjectList from "./components/project/projectList";
 import ApiPage from "./components/api/apiPage";
 import apiCreate from "./components/api/apiCreate";
-import DetailPage from "./components/detail/detailPage";
+import DetailPage from "./components/project/detailPage";
 
 //文档相关操作
 import DocPage from "./components/doc/docPage";

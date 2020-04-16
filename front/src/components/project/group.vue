@@ -162,7 +162,7 @@ export default {
               {
                 title: value,
                 id: data.id,
-                type: 3
+                type: this.type
               },
               { emulateJSON: true }
             )
@@ -189,7 +189,7 @@ export default {
     }
   },
   watch: {
-    showCreateGroup: function(val) {
+    showCreateGroup: function() {
       this.$prompt("请输入分组名", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -203,7 +203,7 @@ export default {
               {
                 title: value,
                 project_id: this.$route.params.id,
-                type: 3
+                type: this.type
               },
               { emulateJSON: true }
             )

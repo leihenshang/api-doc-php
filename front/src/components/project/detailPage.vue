@@ -1,15 +1,11 @@
-<!--
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-10 18:12:37
- * @LastEditTime: 2019-10-10 18:12:37
- * @LastEditors: your name
- -->
 <template>
   <div class="detailPage">
     <div class="right-l">
       <div class="title">
         <span>{{projectData.title}}</span>
+      </div>
+      <div class="desc">
+        <p>{{projectData.description}}</p>
       </div>
       <ul>
         <li>
@@ -24,21 +20,24 @@
           <p>创建时间</p>
           <p>{{projectData.create_time}}</p>
         </li>
-        <li>
-          <p>项目描述</p>
-          <p>{{projectData.description}}</p>
-        </li>
-      </ul>
-
-      <ul>
         <li @click="jump()" class="api-detail">
           <p>api接口</p>
           <p>点击查看详情</p>
         </li>
-        <li></li>
-        <li></li>
-        <li></li>
       </ul>
+
+      <div class="user-box">
+        <div v-for="item in userList" :key="item.id" class="user-item">
+          <div class="avatar">
+            <el-avatar>{{item.nick_name[0].toUpperCase()}}</el-avatar>
+          </div>
+          <div class="info">
+            <p>{{item.nick_name}}</p>
+            <p>{{item.type == 1 ? '普通用户' : '管理员' }}</p>
+            <p>{{item.email}}</p>
+          </div>
+        </div>
+      </div>
 
       <!-- 右侧内容结束 -->
     </div>
@@ -59,6 +58,7 @@ export default {
   },
   created() {
     this.getDetail();
+    this.getUserList();
   },
   data() {
     return {
@@ -66,7 +66,8 @@ export default {
       indesideRoute: [
         { title: "项目概况", route: "detail", child: "detailPage" },
         { title: "API接口", route: "detail", child: "apiPage" }
-      ]
+      ],
+      userList: []
     };
   },
   methods: {
@@ -91,9 +92,27 @@ export default {
           },
           res => {
             let response = res.body;
-            this.$message.error("获取数据-操作失败!" + !response.msg ? response.msg : "");
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
           }
         );
+    },
+    //获取用户列表
+    getUserList(keyword) {
+      this.$http
+        .get(this.apiAddress + "/user/list", {
+          params: {
+            keyword,
+            project_id: this.$route.params.id
+          }
+        })
+        .then(response => {
+          response = response.body;
+          if (response.code === CODE_OK) {
+            this.userList = response.data;
+          }
+        });
     },
     jump() {
       this.$router.push({
@@ -115,6 +134,41 @@ export default {
   height: 100%;
 }
 
+.user-box {
+  background-color: #fff;
+  margin-top: 15px;
+  border: 1px solid #e5e5e5;
+  display: flex;
+}
+
+.user-item {
+  flex: 1;
+  position: relative;
+  border-right: 1px solid #e5e5e5;
+  padding:10px;
+  box-sizing: border-box;
+}
+
+.user-item:last-child{
+  border:none;
+}
+
+.user-item .info {
+ float: left;
+ font-size: 14px;
+}
+
+.user-item .avatar {
+   float: left;
+   width: 20%;
+  text-align: center;
+  margin-top:10px;
+}
+
+.user-item .avatar .el-avatar {
+  background-color: #409EFF;
+}
+
 .right-l {
   width: 50%;
   height: 100%;
@@ -125,13 +179,25 @@ export default {
 }
 
 .right-l .title {
-  height: 130px;
-  border: 1px solid #e5e5e5;
-  line-height: 130px;
+  height: 100px;
+  border-top: 1px solid #e5e5e5;
+  border-left: 1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
+  line-height: 100px;
   padding-left: 20px;
   font-weight: 700;
   font-size: 2em;
   color: #4caf50;
+  background-color: #fff;
+}
+
+.desc {
+  border-bottom: 1px solid #e5e5e5;
+  border-left: 1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
+  padding: 0 0 10px 20px;
+  font-size: 18px;
+  color: #7e7d7d;
   background-color: #fff;
 }
 

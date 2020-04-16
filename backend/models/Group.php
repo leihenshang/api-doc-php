@@ -30,7 +30,7 @@ class Group extends BaseModel
         'undefined' => [0, '未定义'],
         'api' => [1, 'api'],
         'project' => [2, '项目'],
-        'doc' => [3, '文档'],
+        'doc' => [2, '文档'],
     ];
 
     public function rules()
