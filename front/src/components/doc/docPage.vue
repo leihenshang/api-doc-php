@@ -13,7 +13,7 @@
           style="width:300px"
           size="small"
         >
-          <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="searchDoc()"></el-button>
         </el-input>
       </div>
     </div>
@@ -70,6 +70,9 @@ export default {
     };
   },
   methods: {
+    searchDoc(){
+        // this.keyword = 
+    },
     //删除api
     docDelete() {
       this.getDoc(this.pageSize, this.curr, this.groupId);
@@ -171,10 +174,10 @@ export default {
 
 .btn {
   margin-top: 8px;
+  margin-right:80px;
 }
 
 .input {
   margin-top: 5px;
-  margin-left: 175px;
 }
 </style>

@@ -59,6 +59,10 @@ export default {
     projectId: {
       type: [Number, String],
       default: 0
+    },
+    keyword: {
+      type: [String],
+      default: ""
     }
   },
   created() {
@@ -121,7 +125,7 @@ export default {
         .catch(() => {});
     },
     //获取文档
-    getDocList(size, curr, groupId, projectId) {
+    getDocList(size, curr, groupId, projectId, keyword = "") {
       if (!projectId) {
         this.$message.error("异常错误");
         return;
@@ -138,7 +142,8 @@ export default {
             project_id: projectId,
             ps: size,
             cp: curr,
-            is_deleted: groupId < 0 ? 1 : 0
+            is_deleted: groupId < 0 ? 1 : 0,
+            keyword: keyword.length > 0 ? keyword : ""
           }
         })
         .then(
@@ -167,6 +172,11 @@ export default {
       this.cp = 1;
       this.getDocList(this.ps, this.cp, to.params.groupId, to.params.id);
       this.loading = true;
+    },
+    keyword:function(val){
+      if(val.length > 2){
+         this.getDocList(20, 1,0, this.$route.params.id,val);
+      }
     }
   }
 };
