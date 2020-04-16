@@ -25,6 +25,14 @@ class Group extends BaseModel
     const SCENARIO_DEL = 'del';
     const SCENARIO_UPDATE = 'update';
 
+    // 1api,2project,3doc,0undefined
+    const GROUP_TYPE = [
+        'undefined' => [0, '未定义'],
+        'api' => [1, 'api'],
+        'project' => [2, '项目'],
+        'doc' => [3, '文档'],
+    ];
+
     public function rules()
     {
         return [
@@ -32,6 +40,7 @@ class Group extends BaseModel
             ['project_id', 'required'],
             [['id', 'p_id', 'project_id', 'is_deleted', 'type'], 'number'],
             ['title', 'required'],
+            ['type', 'required', 'on' => self::SCENARIO_CREATE],
             ['title', 'string', 'length' => [1, 100]],
         ];
     }
@@ -63,8 +72,8 @@ class Group extends BaseModel
         //检查同组名重复
         $res = self::find()
             ->where([
-                'is_deleted' => self::IS_DELETED['no'],
                 'project_id' => $this->project_id,
+                'type' => $this->type,
                 'title' => $this->title
             ])
             ->one();
@@ -117,11 +126,19 @@ class Group extends BaseModel
         }
 
         $res = self::findOne($this->id);
-        if (!$res->delete()) {
+        $res->is_deleted =  self::IS_DELETED['yes'];
+        if (!$res->save(false)) {
             return current($res->getFirstErrors());
+        }
+
+        if ($res->type === self::GROUP_TYPE['api'][0]) {
+            Api::updateAll(['is_deleted' => self::IS_DELETED['yes']], ['group_id' => $res->id]);
+        }
+
+        if ($res->type === self::GROUP_TYPE['doc'][0]) {
+            Doc::updateAll(['is_deleted' => self::IS_DELETED['yes']], ['group_id' => $res->id]);
         }
 
         return true;
     }
-
 }

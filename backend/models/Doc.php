@@ -158,9 +158,10 @@ class Doc extends BaseModel
      * @param int $ps
      * @param int $cp
      * @param int $isDelete
+     * @param int $keyword
      * @return array|string
      */
-    public function dataList($projectId, $groupId = 0, $ps = 10, $cp = 1, $isDelete = 0)
+    public function dataList($projectId, $groupId = 0, $ps = 10, $cp = 1, $isDelete = 0, $keyword = '')
     {
         $where = [];
         if ($groupId) {
@@ -175,18 +176,22 @@ class Doc extends BaseModel
             unset($where['a.group_id']);
         }
 
-        $query = self::find()->alias('a')->where($where);
+        $query = self::find()->alias('a')->where($where)
+            ->leftJoin('user_info b', 'a.user_id  = b.id')
+            ->select('a.*,b.nick_name');
+        if ($keyword) {
+            $query->andWhere(['like', 'a.title',  "{$keyword}%", false]);
+        }
+
         $data = ['total' => 0, 'data' => []];
         $data['total'] = $query->count();
         $data['data'] = $query
-            ->leftJoin('user_info b', 'a.user_id  = b.id')
-            ->select('a.*,b.nick_name')
-            ->where($where)
             ->offset(($cp - 1) * $ps)
             ->orderBy('a.id DESC')
             ->limit($ps)
             ->asArray()
             ->all();
-        return $data;
+        
+            return $data;
     }
 }

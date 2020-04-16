@@ -1,17 +1,24 @@
 <template>
   <div class="doc-edit">
-    <div class="btn">
-      <div class="left">
-        <el-button plain size="mini" @click="$router.go(-1)">&lt; 返回</el-button>
+    <div
+      class="loading"
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+    >
+      <div class="btn">
+        <div class="left">
+          <el-button plain size="mini" @click="$router.go(-1)">&lt; 返回</el-button>
+        </div>
+        <div class="right">
+          <el-button type="success" plain size="mini" @click="updateDoc()">保存文档</el-button>
+        </div>
       </div>
-      <div class="right">
-        <el-button type="success" plain size="mini" @click="updateDoc()">保存文档</el-button>
-      </div>
-    </div>
-    <div class="doc-wrapper">
-      <DocInfo :doc="doc" :groupList="this.groupList" v-on:update-info="updateInfo($event)" />
-      <div class="doc-content">
-        <mavon-editor v-model="doc.content" ref="md" />
+      <div class="doc-wrapper">
+        <DocInfo :doc="doc" :groupList="this.groupList" v-on:update-info="updateInfo($event)" />
+        <div class="doc-content">
+          <mavon-editor v-model="doc.content" ref="md" />
+        </div>
       </div>
     </div>
   </div>
@@ -26,13 +33,14 @@ export default {
   },
   name: "docEdit",
   props: {
-    docId: [Number,String]
+    docId: [Number, String]
   },
   data() {
     return {
       doc: {},
       groupList: [],
-      isCreate: true
+      isCreate: true,
+      loading: true
     };
   },
   methods: {
@@ -133,6 +141,13 @@ export default {
 
     this.getGroup(100, 1, this.$route.params.id);
     this.getDocDetail();
+  },
+  watch: {
+    doc: function(val) {
+      if (val.id) {
+        this.loading = false;
+      }
+    }
   }
 };
 </script>

@@ -55,7 +55,7 @@ export default {
   //默认数据
   data() {
     return {
-      keyword:'',
+      keyword: "",
       groupList: [],
       docData: {},
       curr: 1,
@@ -70,8 +70,14 @@ export default {
     };
   },
   methods: {
-    searchDoc(){
-        // this.keyword = 
+    searchDoc() {
+      this.$router
+        .push({
+          name: "docList",
+          params: { groupId: 0 },
+          query: { keyword: this.keyword }
+        })
+        .catch(() => {});
     },
     //删除api
     docDelete() {
@@ -174,7 +180,7 @@ export default {
 
 .btn {
   margin-top: 8px;
-  margin-right:80px;
+  margin-right: 80px;
 }
 
 .input {

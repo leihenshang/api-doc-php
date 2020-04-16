@@ -59,10 +59,6 @@ export default {
     projectId: {
       type: [Number, String],
       default: 0
-    },
-    keyword: {
-      type: [String],
-      default: ""
     }
   },
   created() {
@@ -169,13 +165,14 @@ export default {
   },
   watch: {
     $route: function(to) {
-      this.cp = 1;
-      this.getDocList(this.ps, this.cp, to.params.groupId, to.params.id);
-      this.loading = true;
-    },
-    keyword:function(val){
-      if(val.length > 2){
-         this.getDocList(20, 1,0, this.$route.params.id,val);
+      if (to.query.keyword) {
+        this.cp = 1;
+        this.getDocList(20, 1, 0, to.params.id, to.query.keyword);
+        this.loading = true;
+      } else {
+        this.cp = 1;
+        this.getDocList(this.ps, this.cp, to.params.groupId, to.params.id);
+        this.loading = true;
       }
     }
   }

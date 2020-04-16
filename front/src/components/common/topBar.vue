@@ -2,13 +2,12 @@
   <div class="top-bar">
     <ul>
       <li class="t-link">
-        <a href="#">(●'◡'●)</a>
+        <a href="#">my-doc</a>
       </li>
       <li class="name">
-        <span>apiDoc开源版本</span>
+        <span></span>
       </li>
       <li>
-        <!-- <span>API接口>电子社-工信书院>项目概况</span> -->
         <span>{{showTitle}}</span>
       </li>
       <li class="t-r">
@@ -96,6 +95,7 @@ export default {
 
 .top-bar .t-r span {
   font-size: 14px;
+
 }
 
 .top-bar .t-link {
@@ -105,6 +105,7 @@ export default {
 
 .top-bar .t-link a {
   color: #999;
+  font-weight: 700;
 }
 
 .top-bar .name {
@@ -114,6 +115,8 @@ export default {
 
 .top-bar span {
   color: #999;
+    display: inline-block;
+    width: 100px;
 }
 
 .top-bar em {

@@ -76,7 +76,7 @@ class DocController extends BaseController
             return $this->failed(current($res->getFirstErrors()));
         }
 
-        $res = $res->dataList($params['project_id'],$params['group_id'], Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1),Yii::$app->request->get('is_deleted'));
+        $res = $res->dataList($params['project_id'],$params['group_id'], Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1),Yii::$app->request->get('is_deleted'),Yii::$app->request->get('keyword'));
         if(is_string($res)){
             return $this->success([],$res);
         }
