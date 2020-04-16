@@ -4,14 +4,17 @@
     <h4>
       <span>分组</span>
     </h4>
-    <ul v-if="groupList">
+    <ul v-show="group">
       <li>
         <a href="javascript:;" @click="clientBtn(null,null)">
-         <i class="el-icon-s-order"></i> <slot>全部条目</slot>
+          <i class="el-icon-s-order"></i>
+          <slot>全部条目</slot>
         </a>
       </li>
       <li class="last-item">
-        <a href="javascript:;" @click="clientBtn(-1,null)"> <i class="el-icon-delete"></i> 回收站</a>
+        <a href="javascript:;" @click="clientBtn(-1,null)">
+          <i class="el-icon-delete"></i> 回收站
+        </a>
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
@@ -36,22 +39,27 @@ const CODE_OK = 200;
 export default {
   name: "group",
   props: {
-    id: String,
-    groupList: Array,
     showCreateGroup: Boolean,
     showIsEdit: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: Number,
+      default: 0
     }
   },
-  created() {},
+  created() {
+    this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+  },
   data() {
     return {
       newGroup: "",
       group: [],
-      groupData: {},
       isEdit: false,
-      visible: false
+      visible: false,
+      curr: 1,
+      pageSize: 100
     };
   },
   methods: {
@@ -61,6 +69,37 @@ export default {
       } else if (command.action === "edit") {
         this.editGroup(command.data);
       }
+    },
+    //获取分组列表
+    getGroup(pageSize, curr, projectId) {
+      this.$http
+        .get(this.apiAddress + "/group/list", {
+          params: {
+            cp: curr,
+            type: this.type,
+            ps: pageSize,
+            projectId: projectId ? projectId : 0
+          }
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              if (response.data) {
+                for (const key in response.data) {
+                  response.data[key].isClick = false;
+                }
+                this.group = response.data;
+              }
+            }
+          },
+          res => {
+            let response = res.body;
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
     },
     //删除分组
     del(id) {
@@ -87,12 +126,11 @@ export default {
             .then(response => {
               response = response.body;
               if (response.code === CODE_OK) {
-                this.$emit("flush-group-list");
                 this.$message.success("成功!");
               } else {
-                this.$emit("flush-group-list");
                 this.$message.error("操作失败");
               }
+              this.getGroup(this.pageSize, this.curr, this.$route.params.id);
             });
         })
         .catch(() => {});
@@ -133,11 +171,11 @@ export default {
                 response = response.body;
                 if (response.code === CODE_OK) {
                   this.$message.success("更新成功!");
-                  this.$emit("flush-group-list");
                 } else {
                   this.$message.error(response.msg);
-                  this.$emit("flush-group-list", false);
                 }
+
+                this.getGroup(this.pageSize, this.curr, this.$route.params.id);
               },
               res => {
                 let response = res.body;
@@ -151,14 +189,7 @@ export default {
     }
   },
   watch: {
-    groupList: function(val) {
-      this.group = val;
-    },
     showCreateGroup: function(val) {
-      if (val === false) {
-        return;
-      }
-
       this.$prompt("请输入分组名", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -184,7 +215,9 @@ export default {
                 } else {
                   this.$message.error(response.msg);
                 }
-                this.$emit("flush-group-list", false);
+
+                this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+                // this.showCreateGroup =
               },
               res => {
                 let response = res.body;
@@ -195,7 +228,7 @@ export default {
             );
         })
         .catch(() => {
-          this.$emit("flush-group-list", false);
+          this.getGroup(this.pageSize, this.curr, this.$route.params.id);
         });
     }
   },
@@ -258,7 +291,7 @@ export default {
 
 .group ul li.last-item {
   border-bottom: 1px solid rgb(228, 219, 219);
-   padding-bottom: 6px;
+  padding-bottom: 6px;
 }
 
 .group ul li:hover {
@@ -290,6 +323,6 @@ export default {
 }
 
 .group ul li i {
-  margin-right:5px;
+  margin-right: 5px;
 }
 </style>

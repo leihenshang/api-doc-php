@@ -3,10 +3,11 @@
 namespace app\controllers;
 
 use app\behaviors\UserVerify;
-use app\models\Api;
 use app\models\Doc;
-use app\models\Team;
+use app\models\Group;
+use Throwable;
 use Yii;
+use yii\base\Exception;
 
 class DocController extends BaseController
 {
@@ -51,7 +52,7 @@ class DocController extends BaseController
         if (!$doc->validate()) {
             return $this->failed(current($doc->getFirstErrors()));
         }
-        if(!$doc->id){
+        if (!$doc->id) {
             return $this->failed('id不能为空');
         }
 
@@ -72,13 +73,13 @@ class DocController extends BaseController
         $params = Yii::$app->request->get();
         $res = new Doc(['scenario' => Doc::SCENARIO_LIST]);
         $res->attributes = $params;
-        if(!$res->validate()){
+        if (!$res->validate()) {
             return $this->failed(current($res->getFirstErrors()));
         }
 
-        $res = $res->dataList($params['project_id'],$params['group_id'], Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1),Yii::$app->request->get('is_deleted'),Yii::$app->request->get('keyword'));
-        if(is_string($res)){
-            return $this->success([],$res);
+        $res = $res->dataList($params['project_id'], $params['group_id'], Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), Yii::$app->request->get('is_deleted'), Yii::$app->request->get('keyword'));
+        if (is_string($res)) {
+            return $this->success([], $res);
         }
         return $this->success($res);
     }
@@ -92,8 +93,8 @@ class DocController extends BaseController
     {
         $doc = new Doc(['scenario' => Doc::SCENARIO_DELETE]);
         $doc->attributes = Yii::$app->request->post();
-        if(!$doc->validate()){
-         return $this->failed(current($doc->getFirstErrors()));
+        if (!$doc->validate()) {
+            return $this->failed(current($doc->getFirstErrors()));
         }
 
         $res = $doc->deleteData();
@@ -118,6 +119,38 @@ class DocController extends BaseController
         }
 
         return $this->success($res);
+    }
+
+    /**
+     * 恢复doc
+     * @return array
+     */
+    public function actionRestore()
+    {
+        $id = Yii::$app->request->post('id');
+        if (!$id || !is_numeric($id)) {
+            return $this->failed('id错误');
+        }
+
+        $res = Doc::findOne($id);
+        if (!$res) {
+            return $this->failed('没有找到要恢复的对象');
+        }
+
+        $res->is_deleted = Doc::IS_DELETED['no'];
+        $trans = Yii::$app->db->beginTransaction();
+        try {
+            if (!$res->save()) {
+                throw new Exception('恢复失败');
+            }
+            Group::updateAll(['is_deleted' => Doc::IS_DELETED['no']], ['id' => $res->group_id]);
+            $trans->commit();
+        } catch (Throwable $t) {
+            $trans->rollBack();
+            return $this->failed($t->getMessage());
+        }
+
+        return $this->success();
     }
 
 }

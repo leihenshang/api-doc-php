@@ -31,7 +31,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="page" v-show="docList.length > 0">
+    <div class="page" v-show="docList.length > 0 && !$route.query.keyword">
       <el-pagination
         background
         layout="total,prev, pager, next"
@@ -74,8 +74,38 @@ export default {
     };
   },
   methods: {
-    restoreDoc() {
-      this.$message.success("恢复文档");
+    restoreDoc(id) {
+          this.$confirm("该文档将被还原, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$http
+            .post(this.apiAddress + "/doc/restore", {
+              id: id
+            })
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.$message.success("成功!");
+                  this.getDocList(
+                    this.ps,
+                    this.cp,
+                    this.groupId,
+                    this.$route.params.id
+                  );
+                } else {
+                  this.$message.error("操作失败!");
+                }
+              },
+              () => {
+                this.$message.error("操作失败!");
+              }
+            );
+        })
+        .catch(() => {});
     },
     //翻页
     changePage(event) {

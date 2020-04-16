@@ -3,7 +3,7 @@
     <div class="btn-wrapper">
       <div class="btn">
         <el-button @click="addDoc()" size="small">创建文档</el-button>
-        <el-button @click="showCreateGroup = true" size="small">+新建分组</el-button>
+        <el-button @click="showCreateGroup = !showCreateGroup" size="small">+新建分组</el-button>
       </div>
       <div class="input">
         <el-input
@@ -21,10 +21,8 @@
     <div class="doc-content">
       <div class="group-wrapper">
         <group
-          :id="this.id"
-          :groupList="groupList"
+          :type="type"
           v-on:change-group="changeGroup"
-          v-on:flush-group-list="flushGroupList"
           :showCreateGroup="showCreateGroup"
           :showIsEdit="$store.state.projectPermission == 4 ? false : true"
         >全部文档</group>
@@ -39,27 +37,25 @@
 </template>
 
 <script>
-import group from "./group/group";
+import group from "../project/group";
 
-const CODE_OK = 200;
-const GROUP_TYPE_DOC = 3;
+// const CODE_OK = 200;
 
 export default {
   name: "docPage",
   props: {
     id: String
   },
-  created() {
-    this.getGroup(this.pageSize, this.curr, this.$route.params.id);
-  },
+  created() {},
   //默认数据
   data() {
     return {
       keyword: "",
       groupList: [],
       docData: {},
-      curr: 1,
-      pageSize: 100,
+      type: 3,
+      // curr: 1,
+      // pageSize: 100,
       indesideRoute: [
         { title: "项目概况", route: "detail" },
         { title: "API接口", route: "api" }
@@ -78,45 +74,6 @@ export default {
           query: { keyword: this.keyword }
         })
         .catch(() => {});
-    },
-    //删除api
-    docDelete() {
-      this.getDoc(this.pageSize, this.curr, this.groupId);
-    },
-    //获取分组列表
-    getGroup(pageSize, curr, projectId) {
-      this.$http
-        .get(this.apiAddress + "/group/list", {
-          params: {
-            cp: curr,
-            type: GROUP_TYPE_DOC,
-            ps: pageSize,
-            projectId: projectId ? projectId : 0
-          }
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              if (response.data) {
-                for (const key in response.data) {
-                  response.data[key].isClick = false;
-                }
-                this.groupList = response.data;
-              }
-            }
-          },
-          res => {
-            let response = res.body;
-            this.$message.error(
-              "获取数据-操作失败!" + !response.msg ? response.msg : ""
-            );
-          }
-        );
-    },
-    flushGroupList() {
-      this.showCreateGroup = false;
-      this.getGroup(1, 100, this.$route.params.id);
     },
     changeGroup(id) {
       id = id ? id : 0;
