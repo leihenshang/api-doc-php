@@ -21,7 +21,6 @@ import DocList from "./components/doc/docList";
 import Login from "./components/user/login";
 import Register from "./components/user/register";
 import UserCenter from "./components/user/userCenter";
-import User from "./components/user/user";
 // import UserManagement from "./components/user/userManagement";
 
 Vue.use(VueRouter);
@@ -70,20 +69,12 @@ const router = new VueRouter({
           meta: { requiresAuth: true },
           props: true
         },
-
-        {
-          path: "user",
-          name: "user",
-          component: User,
-          props: true,
-          meta: { requiresAuth: true }
-        },
         {
           path: "projectDoc",
           name: "projectDoc",
           component: DocPage,
           props: true,
-          redirect:'projectDoc/docList/0',
+          redirect: 'projectDoc/docList/0',
           children: [
             {
               path: "docList/:groupId",

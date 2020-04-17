@@ -8,8 +8,8 @@
         <leftMenu :menuList="indesideRoute" />
       </div>
       <div class="right">
-          <transition name="el-fade-in-linear" mode="out-in" appear>
-        <router-view></router-view>
+        <transition name="el-fade-in-linear" mode="out-in" appear>
+          <router-view></router-view>
         </transition>
       </div>
     </div>
@@ -32,12 +32,6 @@ export default {
       indesideRoute: [
         { title: "项目概况", route: "detail", child: "", isClick: true },
         { title: "API接口", route: "detail", child: "apiPage", isClick: false },
-        {
-          title: "项目用户管理",
-          route: "detail",
-          child: "user",
-          isClick: false
-        },
         {
           title: "项目文档",
           route: "detail",

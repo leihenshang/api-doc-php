@@ -191,16 +191,23 @@ class ProjectController extends BaseController
         //检查重复添加
         $res = UserProject::find()->where([
             'user_id' => $userProject->user_id,
-            'project_id' => $userProject->project_id,
-            'is_deleted' => UserProject::IS_DELETED['no']
+            'project_id' => $userProject->project_id
         ])->one();
 
         if ($res) {
-            return $this->failed('请勿重复添加');
-        }
 
-        if (!$userProject->save(false)) {
-            return $this->failed(current($userProject->getFirstErrors()));
+            if (!$res->is_deleted) {
+                return $this->failed('请勿重复添加');
+            }
+
+            $res->is_deleted = Project::IS_DELETED['no'];
+            if (!$res->save(false)) {
+                return $this->failed(current($res->getFirstErrors()));
+            }
+        } else {
+            if (!$userProject->save(false)) {
+                return $this->failed(current($userProject->getFirstErrors()));
+            }
         }
 
         return $this->success();
@@ -250,9 +257,9 @@ class ProjectController extends BaseController
             return $this->failed('没有找到要设置的用户');
         }
 
-        if($cancel === 1){
+        if (intval($cancel) === 1) {
             $userProject->is_leader = UserProject::IS_LEADER['no'];
-        }else {
+        } else {
             $userProject->is_leader = UserProject::IS_LEADER['yes'];
         }
 
