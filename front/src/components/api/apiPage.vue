@@ -17,32 +17,20 @@
         >全部接口</group>
       </div>
 
-      <div class="api-wrapper" v-loading="loading">
-        <apiList
-          :apiList="apiList"
-          v-on:api-delete="apiDelete"
-          :showEdit="$store.state.projectPermission == 4 ? 0 : 1"
-        />
+      <div class="api-wrapper">
+        <router-view></router-view>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import apiList from "./apiList";
 import group from "../project/group";
 
-const CODE_OK = 200;
 export default {
   name: "apiPage",
   props: {},
-  created() {
-    if (this.$route.params.groupId) {
-      this.changeGroup(this.$route.params.groupId);
-    } else {
-      this.getApi(this.pageSize, this.curr, this.$route.params.id);
-    }
-  },
+  created() {},
   data() {
     return {
       type: 1,
@@ -55,66 +43,32 @@ export default {
         { title: "项目概况", route: "detail" },
         { title: "API接口", route: "api" }
       ],
-      showCreateGroup: false,
-      loading: true
+      showCreateGroup: false
     };
   },
   methods: {
-    apiDelete() {
-      this.getApi(this.pageSize, this.curr, this.$route.params.id);
-    },
-    //获取api列表
-    getApi(pageSize, curr, projectId, groupId) {
-      let params = {
-        cp: curr,
-        ps: pageSize,
-        projectId,
-        token: this.$store.state.userInfo.token
-      };
-      if (groupId) {
-        params = {
-          cp: curr,
-          ps: pageSize,
-          projectId,
-          groupId,
-          token: this.$store.state.userInfo.token
-        };
-      }
-
-      this.$http
-        .get(this.apiAddress + "/api/list", {
-          params: params
-        })
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.apiList = response.data;
-              this.loading = false;
-            }
-          },
-          () => {
-            this.loading = false;
-            this.$message.error("获取数据-操作失败!");
-          }
-        );
-    },
     //更改分组
     changeGroup(id) {
-      this.groupId = id;
-      this.loading = true;
-      this.getApi(this.pageSize, this.curr, this.$route.params.id, id);
+      id = id ? id : 0;
+      this.$router.push(
+        { name: "apiList", params: { groupId: id } },
+        () => {
+          return;
+        },
+        () => {
+          return;
+        }
+      );
     },
     //调整添加api
     addApi() {
       this.$router.push({
-        path: "/detail/" + this.$route.params.id + "/apiCreate/" + this.groupId
+        name: "apiCreate"
       });
     }
   },
   components: {
-    group,
-    apiList
+    group
   }
 };
 </script>

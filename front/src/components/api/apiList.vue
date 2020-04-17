@@ -1,6 +1,6 @@
 <template>
   <div class="api-list">
-    <table v-show="!hideMe">
+    <table v-loading="loading">
       <tr>
         <th>名称</th>
         <th>请求方法</th>
@@ -21,7 +21,7 @@
         <td>{{item.develop_language}}</td>
         <td>{{item.create_time}}</td>
         <td class="api-list-btn">
-          <button @click="jumpPage('edit',item.id)" v-show="showEdit == 1">编辑</button>
+          <button @click="jumpPage('edit',item.id)" v-show="$store.state.projectPermission == 6">编辑</button>
           <button @click="jumpPage('detail',item.id)">详情</button>
           <el-popconfirm
             title="确定要删除这个api?"
@@ -29,52 +29,75 @@
             @onConfirm="delApi(item.id)"
             width="200"
           >
-            <el-button slot="reference" v-show="showEdit == 1">删除</el-button>
+            <el-button slot="reference" v-show="$store.state.projectPermission == 6">删除</el-button>
           </el-popconfirm>
         </td>
       </tr>
     </table>
-    <div class="container" v-show="hideMe">
-      <div class="container-detail" v-if="currContainer == 'detail'">
-        <apiDetail
-          :apiId="apiId"
-          v-on:childHideMe="childHideMe()"
-          v-on:updateApi="currContainer = 'edit'"
-        />
-      </div>
-      <div class="container-edit" v-if="currContainer == 'edit'">
-        <apiEdit
-          :apiId="apiId"
-          v-on:childHideMe="childHideMe()"
-          v-on:saveUpdate="currContainer = 'detail'"
-        />
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import apiDetail from "./apiDetail";
-import apiEdit from "./apiEdit";
-
 const CODE_OK = 200;
 
 export default {
   name: "apiList",
   props: {
-    apiList: Object,
-    showEdit:Number
+    showEdit: Number
   },
-  created() {},
+  created() {
+    this.getApiList(
+      this.ps,
+      this.cp,
+      this.$route.params.id,
+      this.$route.params.groupId
+    );
+  },
   data() {
     return {
-      apiId: 0,
-      hideMe: false,
-      currContainer: "",
-      del: 0
+      loading: true,
+      apiList: {},
+      ps: 20,
+      cp: 1
     };
   },
   methods: {
+    //获取api列表
+    getApiList(ps, cp, projectId, groupId) {
+      let params = {
+        cp: cp,
+        ps: ps,
+        projectId,
+        token: this.$store.state.userInfo.token
+      };
+      if (groupId) {
+        params = {
+          cp: cp,
+          ps: ps,
+          projectId,
+          groupId,
+          token: this.$store.state.userInfo.token
+        };
+      }
+
+      this.$http
+        .get(this.apiAddress + "/api/list", {
+          params: params
+        })
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.apiList = response.data;
+              this.loading = false;
+            }
+          },
+          () => {
+            this.loading = false;
+            this.$message.error("获取数据-操作失败!");
+          }
+        );
+    },
     delApi(id) {
       this.$http
         .post(
@@ -101,12 +124,19 @@ export default {
         );
     },
     jumpPage(name, id) {
-      this.apiId = parseInt(id);
-      this.hideMe = true;
-      this.currContainer = name;
-    },
-    childHideMe() {
-      this.hideMe = false;
+      id = parseInt(id);
+      switch (name) {
+        case "edit":
+          this.$router.push({ name: "apiEdit", params: { apiId: id } });
+          break;
+
+        case "detail":
+          this.$router.push({ name: "apiDetail", params: { apiId: id } });
+          break;
+
+        default:
+          break;
+      }
     }
   },
   computed: {
@@ -114,9 +144,19 @@ export default {
       return this.$route.params.apiId;
     }
   },
-  components: {
-    apiDetail,
-    apiEdit
+  components: {},
+  watch: {
+    $route: function(to) {
+      if (to.query.keyword) {
+        this.cp = 1;
+        this.getApiList(20, 1, 0, to.params.id, to.query.keyword);
+        this.loading = true;
+      } else {
+        this.cp = 1;
+        this.getApiList(this.ps, this.cp, to.params.id, to.params.groupId);
+        this.loading = true;
+      }
+    }
   }
 };
 </script>

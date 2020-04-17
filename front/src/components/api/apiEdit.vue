@@ -1,5 +1,5 @@
 <template>
-  <div class="create-api">
+  <div class="create-api" v-loading="loading">
     <div class="box1">
       <div class="btn-group-1">
         <button @click="returnApiPage">↩ 接口列表</button>
@@ -69,7 +69,7 @@ const CODE_OK = 200;
 export default {
   name: "apiEdit",
   props: {
-    apiId: Number
+    apiId: [Number,String]
   },
   created() {
     this.getApiDetail();
@@ -79,6 +79,7 @@ export default {
   data() {
     return {
       showDescription: false,
+      loading: true,
       //说明和备注
       groupList: [],
       propertyList: [],
@@ -128,6 +129,8 @@ export default {
             } else {
               this.$message.error("获取数据失败");
             }
+
+            this.loading = false;
           },
           () => {
             this.$message.error("获取数据失败");
@@ -136,7 +139,7 @@ export default {
     },
     //返回api列表页面
     returnApiPage() {
-      this.$emit("childHideMe");
+      this.$router.go(-1);
     },
     //更新api
     updateApi() {
@@ -164,7 +167,6 @@ export default {
                 message: "更新数据成功！",
                 type: "success"
               });
-              this.$emit("saveUpdate");
             } else {
               this.$message({
                 message: "保存失败!" + !response.msg ? response.msg : "",

@@ -24,7 +24,7 @@ const CODE_OK = 200;
 const PAGE_SIZE = 5;
 
 export default {
-  name: "projectPage",
+  name: "home",
   created() {
     this.routeChange();
   },

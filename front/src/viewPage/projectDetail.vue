@@ -31,7 +31,12 @@ export default {
       projectData: {},
       indesideRoute: [
         { title: "项目概况", route: "detail", child: "", isClick: true },
-        { title: "API接口", route: "detail", child: "apiPage", isClick: false },
+        {
+          title: "API接口",
+          route: "detail",
+          child: "apiPage",
+          isClick: false
+        },
         {
           title: "项目文档",
           route: "detail",

@@ -402,7 +402,7 @@ export default {
     jump() {
       this.$router.push({
         name: "apiPage",
-        params: { projectId: this.id }
+        params: { projectId: this.id, groupId: 0 }
       });
     }
   },

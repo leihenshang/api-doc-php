@@ -2,13 +2,16 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 //api
-import Project from "./viewPage/project";
+import Home from "./viewPage/home";
 import Detail from "./viewPage/projectDetail";
 // import Msg from "./viewPage/msg";
 import ProjectList from "./components/project/projectList";
 import ApiPage from "./components/api/apiPage";
 import apiCreate from "./components/api/apiCreate";
 import DetailPage from "./components/project/detailPage";
+import ApiList from "./components/api/apiList";
+import ApiDetail from "./components/api/apiDetail";
+import ApiEdit from "./components/api/apiEdit";
 
 //文档相关操作
 import DocPage from "./components/doc/docPage";
@@ -27,21 +30,18 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
+    {
+      path: "/userCenter",
+      component: UserCenter,
+      name: "userCenter",
+    },
     { path: "/register", component: Register, name: "register" },
-    { path: "/project", component: Project },
+    { path: "/project", component: Home },
     { path: "/login", name: "userLogin", component: Login },
     {
       path: "/",
-      component: Project,
-      children: [
-        { path: "", component: ProjectList }
-        // ,
-        // {
-        //   path: "userManagement",
-        //   name: "userManagement",
-        //   component: UserManagement
-        // }
-      ]
+      component: Home,
+      children: [{ path: "", component: ProjectList }],
     },
     {
       path: "/detail/:id",
@@ -53,68 +53,86 @@ const router = new VueRouter({
           name: "detailPage",
           component: DetailPage,
           meta: { requiresAuth: true },
-          props: true
+          props: true,
         },
         {
           path: "apiPage",
           name: "apiPage",
           component: ApiPage,
           meta: { requiresAuth: true },
-          props: true
-        },
-        {
-          path: "apiCreate/:groupId",
-          name: "apiCreate",
-          component: apiCreate,
-          meta: { requiresAuth: true },
-          props: true
+          redirect: "apiPage/apiList/0",
+          props: true,
+          children: [
+            {
+              path: "apiCreate/:groupId",
+              name: "apiCreate",
+              component: apiCreate,
+              meta: { requiresAuth: true },
+              props: true,
+            },
+            {
+              path: "apiList/:groupId",
+              name: "apiList",
+              component: ApiList,
+              meta: { requiresAuth: true },
+              props: true,
+            },
+            {
+              path: "apiEdit/:apiId",
+              name: "apiEdit",
+              component: ApiEdit,
+              meta: { requiresAuth: true },
+              props: true,
+            },
+            {
+              path: "apiDetail/:apiId",
+              name: "apiDetail",
+              component: ApiDetail,
+              meta: { requiresAuth: true },
+              props: true,
+            },
+          ],
         },
         {
           path: "projectDoc",
           name: "projectDoc",
           component: DocPage,
           props: true,
-          redirect: 'projectDoc/docList/0',
+          redirect: "projectDoc/docList/0",
           children: [
             {
               path: "docList/:groupId",
               name: "docList",
               component: DocList,
               props: true,
-              meta: { requiresAuth: true }
+              meta: { requiresAuth: true },
             },
             {
               path: "docDetail/:docId",
               name: "docDetail",
               component: DocDetail,
               props: true,
-              meta: { requiresAuth: true }
+              meta: { requiresAuth: true },
             },
             {
               path: "docEdit/:docId",
               name: "docEdit",
               component: DocEdit,
               props: true,
-              meta: { requiresAuth: true }
+              meta: { requiresAuth: true },
             },
             {
               path: "docCreate",
               name: "docCreate",
               component: DocCreate,
               props: true,
-              meta: { requiresAuth: true }
-            }
-          ]
-        }
-      ]
+              meta: { requiresAuth: true },
+            },
+          ],
+        },
+      ],
     },
-    {
-      path: "/userCenter",
-      component: UserCenter,
-      name: "userCenter"
-    }
-    // { path: "/msg", name: "msg", component: Msg }
-  ]
+  ],
 });
 
 export default router;

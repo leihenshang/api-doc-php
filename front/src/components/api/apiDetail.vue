@@ -188,7 +188,7 @@ const CODE_OK = 200;
 export default {
   name: "apiDetail",
   props: {
-    apiId: Number
+    apiId: [Number, String]
   },
   created() {
     this.getApiDetail();
@@ -224,10 +224,10 @@ export default {
   },
   methods: {
     updateApi() {
-      this.$emit("updateApi");
+      this.$router.push({ name: "apiEdit", params: { apiId: this.apiId } });
     },
     returnApiPage() {
-      this.$emit("childHideMe");
+      this.$router.go(-1);
     },
     //获取api详情
     getApiDetail() {
@@ -258,7 +258,7 @@ export default {
           }
         );
     },
-     //获取分组信息
+    //获取分组信息
     getGroup() {
       this.$http
         .get(this.apiAddress + "/group/list", {
@@ -277,7 +277,7 @@ export default {
             this.$message.error("获取数据失败");
           }
         );
-    },
+    }
   },
   computed: {
     groupName() {
