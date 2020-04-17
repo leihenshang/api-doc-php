@@ -25,20 +25,31 @@
           <p>点击查看详情</p>
         </li>
       </ul>
-
-      <div class="user-box">
-        <div v-for="item in userList" :key="item.id" class="user-item">
-          <div class="avatar">
-            <el-avatar>{{item.nick_name[0].toUpperCase()}}</el-avatar>
-          </div>
-          <div class="info">
-            <p>{{item.nick_name}}</p>
-            <p>{{item.type == 1 ? '普通用户' : '管理员' }}</p>
-            <p>{{item.email}}</p>
+      <div class="user-wrapper">
+        <div class="user-search">
+          <el-input
+            placeholder="请输入用户名或邮箱"
+            v-model="keyword"
+            class="input-with-select"
+            size="small"
+            maxlength="30"
+          >
+            <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
+        </div>
+        <div class="user-box">
+          <div v-for="item in userList" :key="item.id" class="user-item">
+            <div class="avatar">
+              <el-avatar>{{item.nick_name[0].toUpperCase()}}</el-avatar>
+            </div>
+            <div class="info">
+              <p>{{item.nick_name}}</p>
+              <p>{{item.type == 1 ? '普通用户' : '管理员' }}</p>
+              <p>{{item.email}}</p>
+            </div>
           </div>
         </div>
       </div>
-
       <!-- 右侧内容结束 -->
     </div>
     <div class="right-r">
@@ -62,6 +73,7 @@ export default {
   },
   data() {
     return {
+      keyword: "",
       projectData: {},
       indesideRoute: [
         { title: "项目概况", route: "detail", child: "detailPage" },
@@ -134,6 +146,14 @@ export default {
   height: 100%;
 }
 
+.user-search {
+  margin-top: 15px;
+}
+
+.user-search .el-input {
+  width: 50%;
+}
+
 .user-box {
   background-color: #fff;
   margin-top: 15px;
@@ -145,28 +165,28 @@ export default {
   flex: 1;
   position: relative;
   border-right: 1px solid #e5e5e5;
-  padding:10px;
+  padding: 10px;
   box-sizing: border-box;
 }
 
-.user-item:last-child{
-  border:none;
+.user-item:last-child {
+  border: none;
 }
 
 .user-item .info {
- float: left;
- font-size: 14px;
+  float: left;
+  font-size: 14px;
 }
 
 .user-item .avatar {
-   float: left;
-   width: 20%;
+  float: left;
+  width: 20%;
   text-align: center;
-  margin-top:10px;
+  margin-top: 10px;
 }
 
 .user-item .avatar .el-avatar {
-  background-color: #409EFF;
+  background-color: #409eff;
 }
 
 .right-l {

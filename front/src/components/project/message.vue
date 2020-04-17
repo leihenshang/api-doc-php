@@ -1,6 +1,6 @@
 <template>
   <div class="message">
-    <ul>
+    <ul v-loading="loading">
       <li>
         <p>项目动态</p>
         <p></p>
@@ -24,8 +24,9 @@ export default {
   props: {},
   data() {
     return {
+      loading:true,
       operationLog: [],
-      ps: 18,
+      ps: 15,
       cp: 1
     };
   },
@@ -36,7 +37,6 @@ export default {
         .get(this.apiAddress + "/operation-log/list", {
           params: {
             object_id: this.$route.params.id,
-            token: this.$store.state.userInfo.token,
             type: '1,2,3,4',
             ps: this.ps,
             cp: this.cp
@@ -50,6 +50,7 @@ export default {
             } else {
               this.$message.error("获取数据失败");
             }
+            this.loading = false;
           },
          res =>  {
             let response = res.body;
@@ -65,6 +66,7 @@ export default {
 <style scoped>
 .message ul {
   margin: 15px;
+  min-height: 800px;
 }
 
 .message li {
