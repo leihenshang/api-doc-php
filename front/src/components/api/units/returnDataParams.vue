@@ -5,8 +5,13 @@
         <span>返回参数</span>
       </header>
       <header>
-        <el-button @click="dialogFormVisible = true">导入json</el-button>
-        <el-dialog title="导入数据字符串" :visible.sync="dialogFormVisible">
+        <el-button
+          @click="dialogFormVisible = true"
+          size="mini"
+          type="primary"
+          style="margin-left:5px"
+        >导入json</el-button>
+        <el-dialog title="填入响应json" :visible.sync="dialogFormVisible" :show-close="false">
           <el-input type="textarea" v-model="jsonData" :rows="15"></el-input>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -119,7 +124,7 @@ export default {
           fieldName: item,
           objectName: "",
           description: "",
-          required: false,
+          required: true,
           type: "string",
           handle: true,
           isAdd: false
@@ -130,7 +135,7 @@ export default {
         fieldName: "",
         objectName: "",
         description: "",
-        required: false,
+        required: true,
         type: "string",
         handle: true,
         isAdd: false

@@ -141,7 +141,7 @@ export default {
         {
           name: "",
           desc: "",
-          required: false,
+          required: true,
           type: "string",
           example: "",
           handle: true,
@@ -168,7 +168,7 @@ export default {
         this.apiParamItem.push({
           name: "",
           desc: "",
-          required: false,
+          required: true,
           type: "string",
           example: "",
           handle: true,
@@ -192,7 +192,7 @@ export default {
           this.apiParamItem.push({
             name: "",
             desc: "",
-            required: false,
+            required: true,
             type: "string",
             example: "",
             handle: true,
@@ -242,6 +242,7 @@ export default {
 
 .request ul li {
   float: left;
+  list-style: none;
 }
 
 .request table {

@@ -122,7 +122,7 @@ export default {
               // this.$router.push({ name: "apiPage" });
               //跳转携带分组参数
               this.$router.push({
-                name: "apiPage",
+                name: "apiList",
                 params: { groupId: this.groupId }
               });
             } else {

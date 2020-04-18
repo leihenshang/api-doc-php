@@ -4,9 +4,11 @@ namespace app\controllers;
 
 use app\behaviors\UserVerify;
 use app\models\Api;
+use app\models\Doc;
+use app\models\Group;
 use Throwable;
 use Yii;
-use yii\base\InvalidConfigException;
+use yii\base\Exception;
 use yii\db\StaleObjectException;
 
 class ApiController extends BaseController
@@ -19,7 +21,7 @@ class ApiController extends BaseController
             'class' => UserVerify::class,
             'actions' => ['*'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证,
-            'projectPermission' => ['update','del','create']
+            'projectPermission' => ['update', 'del', 'create']
         ];
         return $behaviors;
     }
@@ -64,12 +66,17 @@ class ApiController extends BaseController
     {
         $projectId = Yii::$app->request->get('projectId', 0);
         $groupId = Yii::$app->request->get('groupId', 0);
+        $isDeleted = Yii::$app->request->get('isDeleted', 0);
         if (!$projectId) {
             return ['code' => 22, 'msg' => '没有projectId'];
         }
 
+        if (!is_numeric($isDeleted)) {
+            return $this->failed('is_deleted参数错误');
+        }
+
         $res = new Api(['scenario' => Api::SCENARIO_LIST]);
-        $res = $res->dataList($projectId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), $groupId);
+        $res = $res->dataList($projectId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), $groupId, $isDeleted);
         return ['data' => $res];
     }
 
@@ -94,8 +101,7 @@ class ApiController extends BaseController
 
     /**
      * 接口详情
-     * @return (array|string|int)[]|(app\models\Api|null)[]
-     * @throws InvalidConfigException
+     * @return array
      */
     public function actionDetail()
     {
@@ -107,5 +113,38 @@ class ApiController extends BaseController
         }
 
         return ['data' => $res];
+    }
+
+
+    /**
+     * 恢复api
+     * @return array
+     */
+    public function actionRestore()
+    {
+        $id = Yii::$app->request->post('id');
+        if (!$id || !is_numeric($id)) {
+            return $this->failed('id错误');
+        }
+
+        $res = Api::findOne($id);
+        if (!$res) {
+            return $this->failed('没有找到要恢复的对象');
+        }
+
+        $res->is_deleted = Api::IS_DELETED['no'];
+        $trans = Yii::$app->db->beginTransaction();
+        try {
+            if (!$res->save(false)) {
+                throw new Exception('恢复失败');
+            }
+            Group::updateAll(['is_deleted' => Doc::IS_DELETED['no']], ['id' => $res->group_id]);
+            $trans->commit();
+        } catch (Throwable $t) {
+            $trans->rollBack();
+            return $this->failed($t->getMessage());
+        }
+
+        return $this->success();
     }
 }

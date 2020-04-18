@@ -149,7 +149,6 @@ export default {
 
         this.$refs.form.validate().then(success => {
           if (!success) {
-            console.log("触发了-错误");
             this.$emit("error", "信息填写错误");
             return;
           }

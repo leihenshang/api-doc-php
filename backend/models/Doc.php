@@ -158,13 +158,13 @@ class Doc extends BaseModel
      * @param int $ps
      * @param int $cp
      * @param int $isDelete
-     * @param int $keyword
+     * @param string $keyword
      * @return array|string
      */
     public function dataList($projectId, $groupId = 0, $ps = 10, $cp = 1, $isDelete = 0, $keyword = '')
     {
         $where = [];
-        if ($groupId) {
+        if ($groupId > 0) {
             $where = ['a.group_id' => $groupId];
         }
 

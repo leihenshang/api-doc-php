@@ -69,7 +69,7 @@ const CODE_OK = 200;
 export default {
   name: "apiEdit",
   props: {
-    apiId: [Number,String]
+    apiId: [Number, String]
   },
   created() {
     this.getApiDetail();
@@ -167,6 +167,7 @@ export default {
                 message: "更新数据成功！",
                 type: "success"
               });
+              this.$router.go(-1);
             } else {
               this.$message({
                 message: "保存失败!" + !response.msg ? response.msg : "",

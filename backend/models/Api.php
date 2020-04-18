@@ -2,9 +2,6 @@
 
 namespace app\models;
 
-use Throwable;
-use yii\db\StaleObjectException;
-
 /**
  * This is the model class for table "{{%api}}".
  *
@@ -269,8 +266,6 @@ class Api extends BaseModel
     /**
      * 删除数据
      * @return bool|mixed
-     * @throws Throwable
-     * @throws StaleObjectException
      */
     public function del()
     {
@@ -279,13 +274,13 @@ class Api extends BaseModel
         }
 
         $res = self::findOne($this->id);
-        if (!$res->delete()) {
+        $res->is_deleted = self::IS_DELETED['yes'];
+        if (!$res->save(false)) {
             return current($res->getFirstErrors());
         }
 
         //记录操作日志
         OperationLog::createLog($res->project_id, UserInfo::$staticUserInfo->id, $res->id, OperationLog::ACTION['delete'][0], '接口:' . $res->api_name, OperationLog::OBJECT_TYPE['api'][0]);
-
         return true;
     }
 
@@ -295,32 +290,28 @@ class Api extends BaseModel
      * @param int $ps
      * @param int $cp
      * @param int $groupId
+     * @param int $isDeleted
      * @return Api[]|array
      */
-    public function dataList($projectId, $ps, $cp, $groupId = 0)
+    public function dataList($projectId, $ps, $cp, $groupId = 0, $isDeleted = 0)
     {
         $this->ps = $ps;
         $this->cp = $cp;
 
         $res = self::find()
-            ->where(['is_deleted' => self::IS_DELETED['no']])
-            ->andWhere(['project_id' => $projectId])
-            ->limit($this->ps)->offset($this->offset);
+            ->andWhere(['project_id' => $projectId]);
 
-        if ($groupId) {
+        if ($isDeleted) {
+            $res->andWhere(['is_deleted' => self::IS_DELETED['yes']]);
+        } else {
+            $res->andWhere(['is_deleted' => self::IS_DELETED['no']]);
+        }
+
+        if ($groupId > 0) {
             $res->andWhere(['group_id' => $groupId]);
         }
-
         $resCount = $res->count();
-        $res = $res->all();
-
-        //解析json数据
-        if ($resCount) {
-            $res = array_map(function ($a) {
-                $a->data = json_decode($a->data);
-                return $a;
-            }, $res);
-        }
+        $res = $res->limit($this->ps)->offset($this->offset)->all();
 
         return ['resCount' => $resCount, 'resItem' => $res];
     }

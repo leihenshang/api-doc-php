@@ -50,7 +50,9 @@ export default {
     }
   },
   created() {
-    this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+    if (this.group.length < 1) {
+      this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+    }
   },
   data() {
     return {
@@ -230,6 +232,11 @@ export default {
         .catch(() => {
           this.getGroup(this.pageSize, this.curr, this.$route.params.id);
         });
+    },
+    $route: function(to) {
+      if (to.params.groupId == 0) {
+        this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+      }
     }
   },
   components: {}
