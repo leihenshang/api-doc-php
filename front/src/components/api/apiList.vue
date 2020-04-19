@@ -129,7 +129,7 @@ export default {
         .catch(() => {});
     },
     //获取api列表
-    getApiList(ps, cp, projectId, groupId) {
+    getApiList(ps, cp, projectId, groupId,keyword) {
       this.$http
         .get(this.apiAddress + "/api/list", {
           params: {
@@ -137,7 +137,8 @@ export default {
             ps: ps,
             projectId,
             isDeleted: groupId < 0 ? 1 : 0,
-            groupId: groupId
+            groupId: groupId,
+            keyword
           }
         })
         .then(
@@ -224,7 +225,7 @@ export default {
     $route: function(to) {
       if (to.query.keyword) {
         this.cp = 1;
-        this.getApiList(20, 1, 0, to.params.id, to.query.keyword);
+        this.getApiList(20, 1, to.params.id, 0, to.query.keyword);
         this.loading = true;
       } else {
         this.cp = 1;

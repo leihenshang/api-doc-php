@@ -291,9 +291,10 @@ class Api extends BaseModel
      * @param int $cp
      * @param int $groupId
      * @param int $isDeleted
+     * @param string $keyword
      * @return Api[]|array
      */
-    public function dataList($projectId, $ps, $cp, $groupId = 0, $isDeleted = 0)
+    public function dataList($projectId, $ps, $cp, $groupId = 0, $isDeleted = 0, $keyword = '')
     {
         $this->ps = $ps;
         $this->cp = $cp;
@@ -310,6 +311,15 @@ class Api extends BaseModel
         if ($groupId > 0) {
             $res->andWhere(['group_id' => $groupId]);
         }
+
+        if ($keyword) {
+            $res->andWhere(['or', [
+                'LIKE', 'api_name', $keyword . '%', false
+            ], [
+                'LIKE', 'url', $keyword . '%', false
+            ]]);
+        }
+
         $resCount = $res->count();
         $res = $res->limit($this->ps)->offset($this->offset)->all();
 

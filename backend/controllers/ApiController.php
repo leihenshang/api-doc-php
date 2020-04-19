@@ -9,7 +9,6 @@ use app\models\Group;
 use Throwable;
 use Yii;
 use yii\base\Exception;
-use yii\db\StaleObjectException;
 
 class ApiController extends BaseController
 {
@@ -67,6 +66,7 @@ class ApiController extends BaseController
         $projectId = Yii::$app->request->get('projectId', 0);
         $groupId = Yii::$app->request->get('groupId', 0);
         $isDeleted = Yii::$app->request->get('isDeleted', 0);
+        $keyword =  Yii::$app->request->get('keyword', 0);
         if (!$projectId) {
             return ['code' => 22, 'msg' => '没有projectId'];
         }
@@ -76,7 +76,7 @@ class ApiController extends BaseController
         }
 
         $res = new Api(['scenario' => Api::SCENARIO_LIST]);
-        $res = $res->dataList($projectId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), $groupId, $isDeleted);
+        $res = $res->dataList($projectId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), $groupId, $isDeleted,$keyword);
         return ['data' => $res];
     }
 
@@ -84,8 +84,6 @@ class ApiController extends BaseController
     /**
      * 删除数据
      * @return array
-     * @throws Throwable
-     * @throws StaleObjectException
      */
     public function actionDel()
     {

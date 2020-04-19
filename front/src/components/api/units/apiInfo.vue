@@ -8,7 +8,6 @@
             <i>分组:</i>
             <ValidationProvider rules="required" v-slot="{ errors }" name="分组" tag="p">
               <select v-model="apiInfo.group_id">
-                <option disabled>请选择</option>
                 <option v-for="item in groupList" :key="item.id" :value="item.id">{{item.title}}</option>
               </select>
               <em>{{ errors[0] }}</em>
@@ -17,7 +16,6 @@
 
             <ValidationProvider rules="required" v-slot="{ errors }" name="请求协议" tag="p">
               <select v-model="apiInfo.protocol_type" v-if="propertyList.http_protocol">
-                <option disabled>请选择</option>
                 <option
                   v-for="item in propertyList.http_protocol"
                   :key="item.id"
@@ -29,7 +27,6 @@
             <i>请求方式:</i>
             <ValidationProvider rules="required" v-slot="{ errors }" name="请求方式" tag="p">
               <select name id v-model="apiInfo.http_method_type" v-if="propertyList.http_method">
-                <option disabled value>请选择</option>
                 <option
                   v-for="item in propertyList.http_method"
                   :key="item.id"
@@ -41,7 +38,6 @@
             <i>返回情况:</i>
             <ValidationProvider rules="required" v-slot="{ errors }" name="返回情况" tag="p">
               <select name id v-model="apiInfo.http_return_type" v-if="propertyList.http_return">
-                <option disabled>请选择</option>
                 <option
                   v-for="item in propertyList.http_return"
                   :key="item.id"
@@ -117,7 +113,7 @@ export default {
         group_id: this.groupId, //分组
         project_id: 0, //项目Id
         protocol_type: "", //协议
-        requestMethod: "", //http请求方法
+        http_method_type: "", //http请求方法
         http_return_type: "", //返回值类型
         url: "", //http请求URL
         api_name: "", //接口名称
@@ -162,6 +158,26 @@ export default {
         });
       },
       deep: true
+    },
+    propertyList: function(val) {
+      for (let item in val) {
+        switch (item) {
+          case "http_method":
+            this.apiInfo.http_method_type = val[item][0].tag_name;
+            break;
+
+          case "http_protocol":
+               this.apiInfo.protocol_type = val[item][0].tag_name;
+            break;
+
+          case "http_return":
+               this.apiInfo.http_return_type = val[item][0].tag_name;
+            break;
+          case "api_language":
+               this.apiInfo.develop_language = val[item][0].tag_name;
+            break;
+        }
+      }
     }
   },
 

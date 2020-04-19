@@ -1,9 +1,20 @@
 <template>
   <div class="api-page">
     <div class="btn-wrapper">
-      <div v-show="$store.state.projectPermission == 6">
+      <div class="btn" v-show="$store.state.projectPermission == 6">
         <button @click="addApi()">+创建api</button>
         <button @click="showCreateGroup = !showCreateGroup">+新建分组</button>
+      </div>
+      <div class="input">
+        <el-input
+          placeholder="请输入标题"
+          v-model="keyword"
+          class="input-with-select"
+          style="width:300px"
+          size="small"
+        >
+          <el-button slot="append" icon="el-icon-search" @click="searchApi()"></el-button>
+        </el-input>
       </div>
     </div>
 
@@ -43,10 +54,20 @@ export default {
         { title: "项目概况", route: "detail" },
         { title: "API接口", route: "api" }
       ],
-      showCreateGroup: false
+      showCreateGroup: false,
+      keyword:""
     };
   },
   methods: {
+      searchApi() {
+      this.$router
+        .push({
+          name: "apiList",
+          params: { groupId: 0},
+          query: { keyword: this.keyword }
+        })
+        .catch(() => {});
+    },
     //更改分组
     changeGroup(id) {
       id = id ? id : 0;
@@ -81,9 +102,14 @@ export default {
 .btn-wrapper {
   height: 48px;
   line-height: 48px;
+  display: flex;
 }
 
-.btn-wrapper button {
+.btn {
+   flex: 0.2;
+}
+
+.btn button {
   width: 87px;
   height: 32px;
   padding: 0 10px;
@@ -92,6 +118,7 @@ export default {
   border: 1px solid #e5e5e5;
   border-radius: 3px;
   font-size: 12px;
+ 
 }
 
 .api-content {
