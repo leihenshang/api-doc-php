@@ -4,7 +4,7 @@
     <boxShade :hide="hideShade" />
 
     <div class="project-list-btn">
-      <button @click="create">+新增项目</button>
+      <button @click="create" v-show="$store.state.userInfo.type == 2">+新增项目</button>
       <!-- <button>+导入项目</button>
       <button>+开启SDK提交项目</button>-->
     </div>
@@ -26,19 +26,14 @@
           <td>{{item.create_time}}</td>
           <td>
             <button @click="detail(item.id)">详情</button>
-            <button @click="update(item)">修改</button>
-            <button @click="del(item.id)">删除</button>
+            <button @click="update(item)" v-show="$store.state.userInfo.type == 2">修改</button>
+            <button @click="del(item.id)" v-show="$store.state.userInfo.type == 2">删除</button>
           </td>
         </tr>
       </table>
-      <div class="page-wrapper">
-        <page
-          :curr="currPage"
-          :itemCount="itemCount"
-          :pageSize="pageSize"
-          v-on:jump-page="jumpPage"
-        />
-      </div>
+    </div>
+    <div class="page-wrapper">
+      <page :curr="currPage" :itemCount="itemCount" :pageSize="pageSize" v-on:jump-page="jumpPage" />
     </div>
     <div class="add-wrapper">
       <add :is-show="addIsHide" :update-data="updateData" v-on:hide-box="onClickHide" />
@@ -133,12 +128,7 @@ export default {
               }
             );
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+        .catch(() => {});
     },
     update(item) {
       this.updateData = item;
@@ -203,6 +193,7 @@ export default {
   border: 1px solid #e5e5e5;
   margin: 10px;
   min-height: 400px;
+  background-color: #fff;
 }
 
 .project-list-content table,
@@ -244,7 +235,7 @@ td {
 }
 
 .page-wrapper {
-  margin: 50px 0;
+  margin: 20px 0;
 }
 
 .project-list-content button {

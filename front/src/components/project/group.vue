@@ -245,14 +245,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.li-click {
-  background-color: rgba(128, 0, 128, 0.39);
-}
-
-.li-click a {
-  color: #fff !important;
-}
-
 .group {
   width: 100%;
   height: 100%;
@@ -272,21 +264,6 @@ export default {
   display: inline-block;
 }
 
-.group ul li button {
-  height: 26px;
-  padding: 0 5px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 3px;
-  font-size: 12px;
-  display: none;
-}
-
-/* .group ul li button:hover {
-  background-color: gray;
-  color: #fff;
-} */
-
 .group ul li {
   width: 100%;
   overflow: hidden;
@@ -299,13 +276,6 @@ export default {
 .group ul li.last-item {
   border-bottom: 1px solid rgb(228, 219, 219);
   padding-bottom: 6px;
-}
-
-.group ul li:hover {
-  background-color: #e3f1e5;
-}
-.group ul li:hover button {
-  display: inline-block;
 }
 
 .btn-group {
@@ -331,5 +301,21 @@ export default {
 
 .group ul li i {
   margin-right: 5px;
+}
+
+.group ul li:hover {
+  background-color: #e3f1e5;
+}
+
+.group ul li:hover a {
+  color: black;
+}
+
+.li-click {
+  background-color: rgba(24, 173, 49, 0.603);
+}
+
+ul li.li-click a {
+  color: #fff;
 }
 </style>

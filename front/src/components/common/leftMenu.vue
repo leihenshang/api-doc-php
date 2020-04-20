@@ -140,12 +140,17 @@ export default {
   background-color: #ecf8ee;
 }
 
+
 .is-click {
-  background-color: rgb(108, 202, 123);
+  background-color: rgba(43, 189, 87, 0.589);
 }
 
-.is-click a {
-  color: #fff !important;
+div ul .is-click a {
+  color: #fff;
+}
+
+.left-menu li:hover a {
+  color:black;
 }
 
 .left-menu li span {
@@ -162,13 +167,5 @@ export default {
 
 .message {
   border-bottom: 1px solid #e5e5e5;
-}
-
-.current-click {
-  background-color: #9bcf9d;
-}
-
-.current-click a {
-  color: #fff !important;
 }
 </style>

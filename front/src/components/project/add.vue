@@ -1,7 +1,7 @@
 <template>
   <div class="add-panel">
     <div class="add" v-bind:class="{hide : isHide}">
-      <h4>添加项目</h4>
+      <h4>{{ updateData ? '编辑项目-' + updateData.title : '添加项目' }}  </h4>
       <ValidationObserver ref="form" vid="form">
         <ul>
           <li>
@@ -27,8 +27,7 @@
               name="type"
             >
               <select v-model="type">
-                <option></option>
-                <option value="web">web</option>
+                <option value="web" selected>web</option>
                 <option value="pc">pc</option>
               </select>
               <span>{{ errors[0] }}</span>
@@ -64,7 +63,7 @@ export default {
   props: {
     msg: String,
     isShow: Boolean,
-    updateData: null
+    updateData: [Array,Object]
   },
   data() {
     return {
@@ -94,7 +93,7 @@ export default {
             type: this.type
           })
           .then(
-           res =>  {
+            res => {
               let response = res.body;
               if (response.code === CODE_OK) {
                 this.$message.error("成功!" + response.msg);
@@ -104,7 +103,7 @@ export default {
                 this.$message.error("失败!" + response.msg);
               }
             },
-           res =>  {
+            res => {
               let response = res.body;
               this.$message.error("操作失败!" + response.msg);
             }
@@ -126,7 +125,7 @@ export default {
           { emulateJSON: true }
         )
         .then(
-         res =>  {
+          res => {
             let response = res.body;
             if (response.code === CODE_OK) {
               this.$message.error("成功!" + response.msg);
@@ -136,7 +135,7 @@ export default {
               this.$message.error("失败!" + response.msg);
             }
           },
-         res =>  {
+          res => {
             let response = res.body;
             this.$message.error("操作失败!" + response.msg);
           }
@@ -200,6 +199,7 @@ export default {
 
 .add ul li {
   margin: 20px 0;
+  list-style: none;
 }
 
 .add ul li textarea {
