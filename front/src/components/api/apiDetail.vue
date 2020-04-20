@@ -12,21 +12,18 @@
       <div class="box2one" v-show="box2==0">
         <dl>
           <dd>
+            <span></span>
             <em>
               分组:
-              <i>{{groupName}}</i>
+              <i>{{groupName ? groupName : 'unknown'}}</i>
             </em>
             <em>
               请求协议:
-              <i>{{apiData.protocol_type}}</i>
+              <i>{{apiData.protocol_type ? apiData.protocol_type : 'unknown'}}</i>
             </em>
             <em>
               请求方式:
-              <i>{{apiData.http_method_type}}</i>
-            </em>
-            <em>
-              接口语言:
-              <i>{{apiData.develop_language}}</i>
+              <i>{{apiData.http_method_type ? apiData.http_method_type : 'unknown'}}</i>
             </em>
           </dd>
           <dd>
@@ -36,14 +33,6 @@
           <dd>
             <span>名称:</span>
             <input type="text" v-model="apiData.api_name" readonly />
-          </dd>
-          <dd>
-            <span>根对象名:</span>
-            <input type="text" v-model="apiData.object_name" readonly />
-          </dd>
-          <dd>
-            <span>方法:</span>
-            <input type="text" v-model="apiData.function_name" readonly />
           </dd>
         </dl>
       </div>
@@ -55,7 +44,7 @@
       </div>
     </div>
 
-    <div class="box3" v-show="apiData.http_request_header">
+    <div class="box3" v-show="apiData.http_request_header.length > 0">
       <div class="item-head">
         <ul>
           <li>
@@ -172,18 +161,22 @@
         </div>
       </div>
       <div class="box5-show">
-        <pre v-show="box5==0">
-        {{apiData.http_return_sample.returnDataSuccess}}
-      </pre>
-        <pre v-show="box5==1">
-        {{apiData.http_return_sample.returnDataFailed}}
-      </pre>
+        <json-viewer
+          v-show="box5==0"
+          :value=" apiData.http_return_sample.returnDataSuccess ? JSON.parse(apiData.http_return_sample.returnDataSuccess) : {}"
+          :expand-depth="4"
+          copyable
+        ></json-viewer>
+
+        <json-viewer v-show="box5==1" :value="apiData.http_return_sample.returnDataFailed ? JSON.parse(apiData.http_return_sample.returnDataFailed) : {}"></json-viewer>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import JsonViewer from "vue-json-viewer";
+
 const CODE_OK = 200;
 export default {
   name: "apiDetail",
@@ -296,7 +289,8 @@ export default {
       this.loading = true;
       this.getApiDetail();
     }
-  }
+  },
+  components: { JsonViewer }
 };
 </script>
 
@@ -364,7 +358,7 @@ button {
   font-size: 12px;
   font-weight: 700;
   display: inline-block;
-  text-align: left;
+  text-align: center;
   width: 5%;
 }
 
@@ -558,7 +552,6 @@ select {
 }
 
 .box5-show {
-  min-height: 300px;
   border: 1px solid #ddd;
   border-radius: 1px;
   padding: 10px;
@@ -579,10 +572,13 @@ select {
 em i {
   font-style: normal;
   border: 1px solid rgb(64, 165, 110);
-  background-color: #4caf50;
+  background-color: #4caf4f96;
   color: white;
   padding: 4px 5px;
   margin-left: 5px;
   border-radius: 4px;
+  width: 50px;
+  display: inline-block;
+  text-align: center;
 }
 </style>

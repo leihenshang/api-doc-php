@@ -192,7 +192,7 @@ export default {
 .project-list-content {
   border: 1px solid #e5e5e5;
   margin: 10px;
-  min-height: 400px;
+  min-height: 600px;
   background-color: #fff;
 }
 

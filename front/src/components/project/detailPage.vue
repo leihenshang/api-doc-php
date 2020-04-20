@@ -561,6 +561,6 @@ ul:nth-child(5) {
 }
 
 .api-detail:hover {
-  background-color: #5ace5e;
+  background-color: #5ace5eb7;
 }
 </style>

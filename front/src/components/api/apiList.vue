@@ -1,54 +1,55 @@
 <template>
   <div class="api-list">
     <div class="api-box">
-      <table v-loading="loading">
-        <tr>
-          <th>名称</th>
-          <th>请求方法</th>
-          <th>url</th>
-          <th>协议</th>
-          <th>语言</th>
-          <th>创建时间</th>
-          <th>操作</th>
-        </tr>
-        <tr v-for="item in apiList.resItem" :key="item.id">
-          <td>
-            <span class="span-dot"></span>
-            {{item.api_name}}
-          </td>
-          <td>{{item.http_method_type}}</td>
-          <td>{{item.url}}</td>
-          <td>{{item.protocol_type}}</td>
-          <td>{{item.develop_language}}</td>
-          <td>{{item.create_time}}</td>
-          <td class="api-list-btn">
-            <button
-              @click="jumpPage('edit',item.id)"
+      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading" height="650">
+        <el-table-column prop="api_name" label="名称" width="180"></el-table-column>
+        <el-table-column prop="http_method_type" label="请求方法" width="180"></el-table-column>
+        <el-table-column prop="url" label="url"></el-table-column>
+        <el-table-column prop="protocol_type" label="协议"></el-table-column>
+        <el-table-column prop="develop_language" label="开发语言"></el-table-column>
+        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+        <el-table-column prop="address" label="操作">
+          <template slot-scope="scope">
+            <el-button
+              type="warning"
+              plain
+              @click="jumpPage('edit',scope.row.id)"
               v-show="$store.state.projectPermission == 6"
-            >编辑</button>
+              size="mini"
+            >编辑</el-button>
+            <el-button slot="reference" v-show="$store.state.projectPermission == 6" size="mini">删除</el-button>
+            <el-button
+              type="success"
+              plain
+              @click="jumpPage('detail',scope.row.id)"
+              v-show="$store.state.projectPermission == 6"
+              size="mini"
+            >详情</el-button>
 
-            <button @click="jumpPage('detail',item.id)">详情</button>
             <el-popconfirm
-              v-if="item.is_deleted == 1"
+              v-if="scope.row.is_deleted == 1"
               title="确定要还原这个api?"
               placement="top"
-              @onConfirm="restoreApi(item.id)"
+              @onConfirm="restoreApi(scope.row.id)"
               width="200"
             >
-              <el-button slot="reference" v-show="$store.state.projectPermission == 6">还原</el-button>
+              <el-button
+                slot="reference"
+                v-show="$store.state.projectPermission == 6"
+                style="margin-right:10px;"
+              >还原</el-button>
             </el-popconfirm>
+
             <el-popconfirm
               v-else
               title="确定要删除这个api?"
               placement="top"
-              @onConfirm="delApi(item.id)"
+              @onConfirm="delApi(scope.row.id)"
               width="200"
-            >
-              <el-button slot="reference" v-show="$store.state.projectPermission == 6">删除</el-button>
-            </el-popconfirm>
-          </td>
-        </tr>
-      </table>
+            ></el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
     <div class="page" v-show="count > 0 && !$route.query.keyword">
       <el-pagination
@@ -129,7 +130,7 @@ export default {
         .catch(() => {});
     },
     //获取api列表
-    getApiList(ps, cp, projectId, groupId,keyword) {
+    getApiList(ps, cp, projectId, groupId, keyword) {
       this.$http
         .get(this.apiAddress + "/api/list", {
           params: {
@@ -243,45 +244,10 @@ export default {
   height: auto;
 }
 
-.api-list td,
-.api-list th {
-  padding: 8px 8px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.api-list tr:hover {
-  background-color: #e3f1e5;
-}
-
-.api-list th {
-  font-size: 14px;
-  font-weight: 700;
-  text-align: left;
-}
-
-.api-list table {
-  border-collapse: collapse;
-  width: 99%;
-  margin: 0 auto;
-}
-
-.api-list table button {
-  height: 28px;
-  padding: 0 10px;
-  margin-right: 2px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 3px;
-  font-size: 12px;
-}
-
 .api-box {
   min-height: 650px;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
 .api-list .page {
