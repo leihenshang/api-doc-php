@@ -1,12 +1,6 @@
 <template>
   <div class="left-menu">
     <ul>
-      <li @click="jump()">
-        <a href="javascript:void(0)">
-          <span>▢</span>
-          首页-全部项目
-        </a>
-      </li>
       <li
         v-for="(item,index) in menuListData"
         :key="item.id"
@@ -42,7 +36,7 @@ export default {
             }
           }
 
-          this.$router.push({ path: "/" });
+          this.$router.push({ path: "/" }, () => {});
         }
         return;
       }
@@ -59,16 +53,22 @@ export default {
             return;
           }
 
-          this.$router.push({
-            path: "/" + uri + "/" + this.$route.params.id + "/" + child
-          });
+          this.$router.push(
+            {
+              path: "/" + uri + "/" + this.$route.params.id + "/" + child
+            },
+            () => {}
+          );
         } else {
           if (this.$route.params.id) {
-            this.$router.push({
-              path: "/" + uri + "/" + this.$route.params.id
-            });
+            this.$router.push(
+              {
+                path: "/" + uri + "/" + this.$route.params.id
+              },
+              () => {}
+            );
           } else {
-            this.$router.push({ path: "/" + uri });
+            this.$router.push({ path: "/" + uri }, () => {});
           }
         }
       }
@@ -94,34 +94,24 @@ export default {
     };
   },
   created: function() {},
-  computed: {
-    //计算属性，用户权限过滤菜单显示
-    // menuListDataComputed: function() {
-    //   let tmpData = [];
-    //   if (!this.menuListData) {
-    //     return tmpData;
-    //   }
-    //   for (const key in this.menuListData) {
-    //     this.menuListData[key].isClick = false;
-    //     if (
-    //       this.$store.state.userInfo.type !== 2 &&
-    //       this.menuListData[key].child === "user"
-    //     ) {
-    //       continue;
-    //     }
-    //     tmpData.push(this.menuListData[key]);
-    //   }
-    //   return tmpData;
-    // }
-  },
   watch: {
     $route: function(val) {
       this.$nextTick(() => {
         if (
-          /^\/detail\/((?:[^\/]+?))\/apiPage(?:\/(?=$))?$/i.test(val.fullPath)
+          /^\/detail\/((?:[^\/]+?))\/apiPage\/apiList\/((?:[^\/]+?))(?:\/(?=$))?$/i.test(
+            val.fullPath
+          )
         ) {
           for (let key in this.menuListData) {
             if (this.menuListData[key].child == "apiPage") {
+              this.menuListData[key].isClick = true;
+            } else {
+              this.menuListData[key].isClick = false;
+            }
+          }
+        } else if (val.fullPath == "/") {
+          for (let key in this.menuListData) {
+            if (this.menuListData[key].route == "") {
               this.menuListData[key].isClick = true;
             } else {
               this.menuListData[key].isClick = false;
@@ -144,29 +134,10 @@ export default {
 .left-menu li {
   padding: 15px 0;
   text-align: left;
-  border-top: 1px dashed black;
-}
-
-.left-menu li:last-child {
-  border-bottom: 1px dashed black;
-}
-
-.left-menu li:first-child {
-  margin-bottom: 10px;
-  border: none;
-}
-
-.left-menu ul li:first-child {
-  background-color: #9dde94;
-}
-
-.left-menu ul li:first-child a {
-  color: #fff;
-  font-weight: 700;
 }
 
 .left-menu li:hover {
-  background-color: #3baf88c4;
+  background-color: #ecf8ee;
 }
 
 .is-click {
@@ -175,10 +146,6 @@ export default {
 
 .is-click a {
   color: #fff !important;
-}
-
-.left-menu li:hover a {
-  color: #fff;
 }
 
 .left-menu li span {

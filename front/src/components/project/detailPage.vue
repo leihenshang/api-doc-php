@@ -45,10 +45,11 @@
             ></el-option>
           </el-select>
         </div>
+        <div class="user-count">共计{{userList.length}}位成员</div>
         <div class="user-box">
           <div v-for="item in userList" :key="item.id" class="user-item">
             <div class="avatar">
-              <el-avatar>{{item.nick_name[0].toUpperCase()}}</el-avatar>
+              <el-avatar>{{item.nick_name[0].toUpperCase()+item.nick_name[1].toUpperCase()}}</el-avatar>
             </div>
             <div class="info">
               <p>{{item.nick_name}}</p>
@@ -427,9 +428,15 @@ export default {
   width: 50%;
 }
 
+.user-count {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #909399;
+}
+
 .user-box {
   background-color: #fff;
-  margin-top: 15px;
+  margin-top: 8px;
   /* border: 1px solid #e5e5e5; */
   display: flex;
 }

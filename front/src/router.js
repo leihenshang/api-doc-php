@@ -23,25 +23,25 @@ import DocList from "./components/doc/docList";
 //用户相关操作
 import Login from "./components/user/login";
 import Register from "./components/user/register";
-import UserCenter from "./components/user/userCenter";
+import MyCenter from "./components/user/myCenter";
 // import UserManagement from "./components/user/userManagement";
 
 Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
-    {
-      path: "/userCenter",
-      component: UserCenter,
-      name: "userCenter",
-    },
     { path: "/register", component: Register, name: "register" },
-    { path: "/project", component: Home },
     { path: "/login", name: "userLogin", component: Login },
     {
       path: "/",
       component: Home,
-      children: [{ path: "", component: ProjectList }],
+      children: [{ path: "", component: ProjectList, name: 'projectList' },
+      {
+        path: "myCenter",
+        component: MyCenter,
+        name: "myCenter"
+      },
+      ],
     },
     {
       path: "/detail/:id",

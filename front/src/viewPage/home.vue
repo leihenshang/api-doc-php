@@ -25,9 +25,7 @@ const PAGE_SIZE = 5;
 
 export default {
   name: "home",
-  created() {
-    this.routeChange();
-  },
+  created() {},
 
   data() {
     return {
@@ -38,7 +36,20 @@ export default {
       updateData: null,
       itemCount: 0,
       hideShade: true,
-      insideRoute: []
+      insideRoute: [
+        {
+          title: "项目列表",
+          route: "",
+          clild: "",
+          isClick: false
+        },
+        {
+          title: "个人中心",
+          route: "myCenter",
+          clild: "",
+          isClick: false
+        }
+      ]
     };
   },
   components: {
@@ -48,10 +59,6 @@ export default {
   methods: {
     jump(route) {
       this.$router.push({ path: "/" + route });
-    },
-    create() {
-      this.addIsHide = !this.addIsHide;
-      this.routeChange();
     },
     //点击隐藏
     onClickHide(val) {
@@ -112,9 +119,7 @@ export default {
       ];
     }
   },
-  watch: {
-    $route: "routeChange"
-  }
+  watch: {}
 };
 </script>
 

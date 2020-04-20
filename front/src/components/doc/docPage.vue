@@ -106,6 +106,7 @@ export default {
 
 .btn-wrapper {
   height: 48px;
+  line-height: 48px;
 }
 
 .doc-content {
@@ -130,17 +131,12 @@ export default {
   padding: 10px;
 }
 
+.btn {
+  width: 15%;
+}
+
 .input,
 .btn {
-  display: inline-block;
-}
-
-.btn {
-  margin-top: 8px;
-  margin-right: 80px;
-}
-
-.input {
-  margin-top: 5px;
+  float: left;
 }
 </style>

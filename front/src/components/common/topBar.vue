@@ -8,7 +8,10 @@
         <span></span>
       </li>
       <li>
-        <span>{{showTitle}}</span>
+        <span>
+          <router-link :to="{path:'/'}" v-show="$route.fullPath !== '/'">首页</router-link>
+          {{showTitle}}
+        </span>
       </li>
       <li class="t-r">
         <em>hello, {{nickName}}</em>
@@ -36,15 +39,20 @@ export default {
   props: {},
   computed: {
     showTitle: function() {
-      if (this.$route.path === "/") {
-        return "首页";
-      } else {
-        if (this.$store.state.project.title) {
-          return "首页>项目详情-" + this.$store.state.project.title;
-        }
-
-        return "";
+      if (this.$route.fullPath === "/") {
+        return;
       }
+
+      let routerStr = "";
+      if (this.$store.state.project.title) {
+        routerStr = " > " + this.$store.state.project.title;
+        if (this.$route.name == "apiList") {
+          routerStr += " > api";
+        } else if (this.$route.name == "docList") {
+          routerStr += " > 文档";
+        }
+      }
+      return routerStr;
     },
     nickName: function() {
       return this.$store.state.userInfo.nick_name;
@@ -60,7 +68,7 @@ export default {
     },
     //到个人中心
     goToUserCenter() {
-      this.$router.push({ name: "userCenter" });
+      this.$router.push({ name: "myCenter" });
     }
   },
   data: function() {
@@ -95,7 +103,6 @@ export default {
 
 .top-bar .t-r span {
   font-size: 14px;
-
 }
 
 .top-bar .t-link {
@@ -115,8 +122,8 @@ export default {
 
 .top-bar span {
   color: #999;
-    display: inline-block;
-    width: 100px;
+  display: inline-block;
+  /* width: 100px; */
 }
 
 .top-bar em {

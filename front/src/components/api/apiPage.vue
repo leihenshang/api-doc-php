@@ -55,15 +55,15 @@ export default {
         { title: "API接口", route: "api" }
       ],
       showCreateGroup: false,
-      keyword:""
+      keyword: ""
     };
   },
   methods: {
-      searchApi() {
+    searchApi() {
       this.$router
         .push({
           name: "apiList",
-          params: { groupId: 0},
+          params: { groupId: 0 },
           query: { keyword: this.keyword }
         })
         .catch(() => {});
@@ -102,11 +102,15 @@ export default {
 .btn-wrapper {
   height: 48px;
   line-height: 48px;
-  display: flex;
 }
 
 .btn {
-   flex: 0.2;
+  width: 15%;
+  float: left;
+}
+
+.input {
+  float: left;
 }
 
 .btn button {
@@ -118,7 +122,6 @@ export default {
   border: 1px solid #e5e5e5;
   border-radius: 3px;
   font-size: 12px;
- 
 }
 
 .api-content {

@@ -1,9 +1,6 @@
 <template>
   <div class="user-center">
     <div class="user-content">
-      <div class="user-return" @click="$router.push({path:'/'})">
-        <p>返回首页</p>
-      </div>
       <div class="avatar">
         <img src="../../assets/logo.png" width="100" />
       </div>
@@ -215,23 +212,10 @@ export default {
 .user-content {
   border: 1px solid black;
   width: 40%;
-  margin: 200px auto;
+  margin: 100px auto;
   padding: 50px 0;
   position: relative;
-}
-
-.user-return {
-  position: absolute;
-  top: 0;
-  right: 0;
-  border: 1px solid black;
-  margin: 2px;
-  padding: 4px;
-}
-
-.user-return:hover {
-  background-color: rgb(13, 163, 63);
-  color: #fff;
+  background-color: #fff;
 }
 
 .avatar {
