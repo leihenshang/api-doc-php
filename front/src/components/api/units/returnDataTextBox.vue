@@ -7,7 +7,6 @@
           <button @click="toggle=1" :class="{'tab-change-btn-bg' : toggle==1}">失败</button>
         </div>
       </div>
-       <vue-json-editor v-model="json" :show-btns="true" :expandedOnStart="true" @json-change="onJsonChange"></vue-json-editor>
       <textarea name id v-model="success" v-show="toggle==0" placeholder="成功的返回"></textarea>
       <textarea name id v-model="failed" v-show="toggle==1" placeholder="失败的返回"></textarea>
     </div>
@@ -15,7 +14,6 @@
 </template>
 
 <script>
-  import vueJsonEditor from 'vue-json-editor'
 
 export default {
   name: "returnDataTextBox",
@@ -37,10 +35,7 @@ export default {
     return {
       toggle: 0,
       success: "",
-      failed: "",
-       json: {
-          msg: 'demo of jsoneditor'
-        }
+      failed: ""
     };
   },
   watch: {
@@ -57,7 +52,7 @@ export default {
       this.$emit("update:failed", val);
     }
   },
-  components: { vueJsonEditor }
+  components: {  }
 };
 </script>
 
