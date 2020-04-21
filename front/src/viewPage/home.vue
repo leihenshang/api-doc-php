@@ -41,7 +41,7 @@ export default {
           title: "项目列表",
           route: "",
           clild: "",
-          isClick: false
+          isClick: true
         },
         {
           title: "个人中心",

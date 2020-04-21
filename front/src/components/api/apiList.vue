@@ -1,30 +1,16 @@
 <template>
   <div class="api-list">
     <div class="api-box">
-      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading" height="650">
+      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading">
         <el-table-column prop="api_name" label="名称" width="180"></el-table-column>
         <el-table-column prop="http_method_type" label="请求方法" width="180"></el-table-column>
         <el-table-column prop="url" label="url"></el-table-column>
         <el-table-column prop="protocol_type" label="协议"></el-table-column>
         <el-table-column prop="develop_language" label="开发语言"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
-        <el-table-column prop="address" label="操作">
+        <el-table-column prop label="操作">
           <template slot-scope="scope">
-            <el-button
-              type="warning"
-              plain
-              @click="jumpPage('edit',scope.row.id)"
-              v-show="$store.state.projectPermission == 6"
-              size="mini"
-            >编辑</el-button>
-            <el-button slot="reference" v-show="$store.state.projectPermission == 6" size="mini">删除</el-button>
-            <el-button
-              type="success"
-              plain
-              @click="jumpPage('detail',scope.row.id)"
-              v-show="$store.state.projectPermission == 6"
-              size="mini"
-            >详情</el-button>
+            <el-button type="success" plain @click="jumpPage('detail',scope.row.id)" size="mini">详情</el-button>
 
             <el-popconfirm
               v-if="scope.row.is_deleted == 1"
@@ -36,7 +22,7 @@
               <el-button
                 slot="reference"
                 v-show="$store.state.projectPermission == 6"
-                style="margin-right:10px;"
+                size="mini"
               >还原</el-button>
             </el-popconfirm>
 
@@ -46,7 +32,21 @@
               placement="top"
               @onConfirm="delApi(scope.row.id)"
               width="200"
-            ></el-popconfirm>
+            >
+              <el-button
+                slot="reference"
+                v-show="$store.state.projectPermission == 6"
+                size="mini"
+              >删除</el-button>
+            </el-popconfirm>
+
+            <el-button
+              type="warning"
+              plain
+              @click="jumpPage('edit',scope.row.id)"
+              v-show="$store.state.projectPermission == 6"
+              size="mini"
+            >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -246,8 +246,6 @@ export default {
 
 .api-box {
   min-height: 650px;
-  padding: 5px;
-  box-sizing: border-box;
 }
 
 .api-list .page {

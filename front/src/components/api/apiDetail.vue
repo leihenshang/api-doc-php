@@ -168,7 +168,10 @@
           copyable
         ></json-viewer>
 
-        <json-viewer v-show="box5==1" :value="apiData.http_return_sample.returnDataFailed ? JSON.parse(apiData.http_return_sample.returnDataFailed) : {}"></json-viewer>
+        <json-viewer
+          v-show="box5==1"
+          :value="apiData.http_return_sample.returnDataFailed ? JSON.parse(apiData.http_return_sample.returnDataFailed) : {}"
+        ></json-viewer>
       </div>
     </div>
   </div>
@@ -483,6 +486,10 @@ select {
   bottom: -1px;
 }
 
+.item-head ul li {
+  list-style: none;
+}
+
 .item-head ul button {
   border-radius: 3px;
 }
@@ -554,7 +561,6 @@ select {
 .box5-show {
   border: 1px solid #ddd;
   border-radius: 1px;
-  padding: 10px;
   background-color: #fff;
 }
 

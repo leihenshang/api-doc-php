@@ -9,28 +9,38 @@
       <button>+开启SDK提交项目</button>-->
     </div>
     <div class="project-list-content">
-      <table>
-        <tr>
-          <th>项目名称</th>
-          <th>描述</th>
-          <th>版本号</th>
-          <th>类型</th>
-          <th>修改时间</th>
-          <th>操作</th>
-        </tr>
-        <tr v-for="item in projectList" :key="item.id">
-          <td>{{item.title}}</td>
-          <td>{{item.description}}</td>
-          <td>v{{item.version}}</td>
-          <td>{{item.type}}</td>
-          <td>{{item.create_time}}</td>
-          <td>
-            <button @click="detail(item.id)">详情</button>
-            <button @click="update(item)" v-show="$store.state.userInfo.type == 2">修改</button>
-            <button @click="del(item.id)" v-show="$store.state.userInfo.type == 2">删除</button>
-          </td>
-        </tr>
-      </table>
+      <el-table :data="projectList" stripe style="width: 100%" v-loading="loading" height="650">
+        <el-table-column prop="title" label="项目名称" width="180"></el-table-column>
+        <el-table-column prop="version" label="版本号" width="180"></el-table-column>
+        <el-table-column prop="type" label="类型"></el-table-column>
+        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+        <el-table-column prop label="操作">
+          <template slot-scope="scope">
+            <el-button
+              slot="reference"
+              v-show="$store.state.userInfo.type == 2"
+              @click="del(item.id)"
+              size="mini"
+            >删除</el-button>
+            <el-button
+              type="warning"
+              plain
+              @click="update(scope.row)"
+              v-show="$store.state.userInfo.type == 2"
+              size="mini"
+            >编辑</el-button>
+
+            <el-button type="success" plain @click="detail(scope.row.id)" size="mini">详情</el-button>
+
+            <el-popconfirm
+              title="确定要删除这个api?"
+              placement="top"
+              @onConfirm="delApi(scope.row.id)"
+              width="200"
+            ></el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
     <div class="page-wrapper">
       <page :curr="currPage" :itemCount="itemCount" :pageSize="pageSize" v-on:jump-page="jumpPage" />
@@ -72,12 +82,11 @@ export default {
               this.itemCount = Number(response.data.count);
               this.hideShade = true;
             }
+
+            this.loading = false;
           },
-          res => {
-            let response = res.body;
-            this.$message.error(
-              "获取数据-操作失败!" + !response.msg ? response.msg : ""
-            );
+          () => {
+            this.$message.error("获取数据-操作失败!");
             this.hideShade = true;
           }
         );
@@ -148,14 +157,15 @@ export default {
   },
   data() {
     return {
-      projectList: {},
+      projectList: [],
       pageSize: 5,
       currPage: 1,
       addIsHide: true,
       updateData: null,
       itemCount: 0,
       hideShade: true,
-      indesideRoute: []
+      indesideRoute: [],
+      loading: true
     };
   },
   components: {
@@ -194,44 +204,6 @@ export default {
   margin: 10px;
   min-height: 600px;
   background-color: #fff;
-}
-
-.project-list-content table,
-tbody,
-tr,
-th,
-td {
-  border: 0;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.project-list-content table {
-  background-color: #fff;
-}
-
-.project-list-content tr th {
-  border-bottom: 1px solid #e5e5e5;
-  text-align: left;
-  padding: 15px 0;
-}
-
-.project-list-content tr td {
-  padding: 15px 0;
-}
-
-.project-list-content tr:hover {
-  background-color: #efefef;
-}
-
-.project-list-content tr th:first-child,
-.project-list-content tr td:first-child {
-  padding-left: 10px;
-}
-
-.project-list-content table {
-  width: 100%;
-  font-size: 14px;
 }
 
 .page-wrapper {
