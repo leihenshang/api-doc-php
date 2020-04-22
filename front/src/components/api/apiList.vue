@@ -1,7 +1,7 @@
 <template>
   <div class="api-list">
     <div class="api-box">
-      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading">
+      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading" border>
         <el-table-column prop="api_name" label="名称" width="180"></el-table-column>
         <el-table-column prop="http_method_type" label="请求方法" width="180"></el-table-column>
         <el-table-column prop="url" label="url"></el-table-column>
