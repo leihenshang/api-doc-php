@@ -25,10 +25,11 @@
               placeholder="参数名"
               v-model="item.name"
               v-on:input="apiParamHeaderInput(index,$event)"
+              class="content"
             />
           </td>
           <td>
-            <input type="text" placeholder="值" v-model="item.content" />
+            <input class="content" type="text" placeholder="值" v-model="item.content" />
           </td>
           <td>
             <button v-if="item.content.length >= 1" @click="apiParamHeaderDelete(index)">×</button>
@@ -49,6 +50,7 @@
         <tr v-for="(item,index) in apiParamItem" :key="item.id">
           <td>
             <input
+              class="content"
               type="text"
               placeholder="参数名"
               v-on:input="apiParamInput(index,$event)"
@@ -56,31 +58,43 @@
             />
           </td>
           <td>
-            <input type="text" placeholder v-model="item.desc" />
+            <input class="content" type="text" placeholder v-model="item.desc" />
           </td>
           <td>
-            <input type="checkbox" name id v-model="item.required" />
+            <input class="content" type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-            <select
-              style="width:90%;text-align:center;margin:0 10px;"
+            <el-select
               v-model="item.type"
+              placeholder="请选择类型"
+              size="small"
               v-if="propertyList.var_type"
             >
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.var_type"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
+              <el-option-group
+                v-for="(group,index) in propertyList.var_type"
+                :key="group.label"
+                :label="index"
+              >
+                <el-option
+                  v-for="item in group"
+                  :key="item.tag_name"
+                  :label="item.tag_name"
+                  :value="item.tag_name"
+                ></el-option>
+              </el-option-group>
+            </el-select>
           </td>
           <td>
-            <input type="text" placeholder="参数示例" v-model="item.example" />
+            <input class="content" type="text" placeholder="参数示例" v-model="item.example" />
           </td>
           <td>
             <div v-show="item.name.length >= 1">
-              <button @click="apiParamdelete(index)">×</button>
+              <el-button
+                type="danger"
+                @click="apiParamdelete(index)"
+                size="mini"
+                icon="el-icon-close"
+              ></el-button>
             </div>
           </td>
         </tr>
@@ -125,6 +139,8 @@ export default {
       }
     }
   },
+  computed: {},
+
   created() {},
   data: function() {
     return {
@@ -280,7 +296,7 @@ export default {
   height: 40px;
 }
 
-.request input[type="text"] {
+.request input.content {
   border: none;
   height: 40px;
   width: 100%;
@@ -300,26 +316,5 @@ export default {
 /* tab切换按钮颜色 */
 .item-head .tab-change-btn-bg {
   background-color: #fff;
-}
-
-.request-box button {
-  background-color: #efefef;
-  border: 1px solid #dddddd;
-  width: 90px;
-  height: 30px;
-  font-size: 12px;
-  margin: 0;
-  padding: 0;
-  outline: none;
-  border-left: none;
-  border-bottom: none;
-}
-
-select {
-  padding: 0;
-  outline: none;
-  border: 1px solid #ddd;
-  height: 28px;
-  border-radius: 3px;
 }
 </style>

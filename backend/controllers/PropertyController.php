@@ -8,10 +8,14 @@ use yii\helpers\ArrayHelper;
 
 class PropertyController extends BaseController
 {
+    /**
+     * 获取属性列表
+     * @return array
+     */
     public function actionList()
     {
         $type = Yii::$app->request->get('tag', null);
-        $res = Property::find()->select('tag,tag_name,description');
+        $res = Property::find()->select('tag,tag_name,description,group');
         if ($type) {
             $res = $res->where(['tag' => $type])->all();
         } else {
@@ -22,18 +26,18 @@ class PropertyController extends BaseController
         }
 
         $varType = $res['var_type'];
-
-        $type = array_column($varType,null,'tag_name');
-        $typeKey = array_keys($type);
-        sort($typeKey);
-
-        $sortVarType = [];
-        foreach ($typeKey as $value){
-            $sortVarType[] = $type[$value];
+        $group = array_column($varType, null, 'group');
+        $groupKey = array_unique(array_keys($group));
+        $data = [];
+        foreach ($groupKey as $value) {
+            foreach ($varType as $item) {
+                if ($item['group'] === $value) {
+                    $data[$value][] = $item;
+                }
+            }
         }
 
-        $res['var_type'] = $sortVarType;
-
+        $res['var_type'] = $data;
         return $this->success($res);
     }
 

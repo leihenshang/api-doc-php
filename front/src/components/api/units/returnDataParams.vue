@@ -47,18 +47,25 @@
             <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-            <select
-              style="width:90%;text-align:center;margin:0 10px;"
+            <el-select
               v-model="item.type"
+              placeholder="请选择类型"
+              size="small"
               v-if="propertyList.var_type"
             >
-              <option disabled value>请选择</option>
-              <option
-                v-for="item in propertyList.var_type"
-                :key="item.id"
-                :value="item.tag_name"
-              >{{item.tag_name}}</option>
-            </select>
+              <el-option-group
+                v-for="(group,index) in propertyList.var_type"
+                :key="group.label"
+                :label="index"
+              >
+                <el-option
+                  v-for="item in group"
+                  :key="item.tag_name"
+                  :label="item.tag_name"
+                  :value="item.tag_name"
+                ></el-option>
+              </el-option-group>
+            </el-select>
           </td>
           <td>
             <div v-show="item.fieldName.length >= 1">
@@ -201,14 +208,6 @@ export default {
 </script>
 
 <style scoped>
-select {
-  padding: 0;
-  outline: none;
-  border: 1px solid #ddd;
-  height: 28px;
-  border-radius: 3px;
-}
-
 .data-params {
   font-size: 14px;
   margin-top: 10px;
