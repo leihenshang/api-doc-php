@@ -4,12 +4,11 @@
       <div class="item-head">
         <ul>
           <li>
-            <button @click="show=0" :class="{'tab-change-btn-bg' : show==0}">请求头部</button>
+            <button @click="show=0" :class="{'tab-change-btn-bg' : show==0}" class="req-btn">请求头部</button>
           </li>
           <li>
-            <button @click="show=1" :class="{'tab-change-btn-bg' : show==1}">请求参数</button>
+            <button @click="show=1" :class="{'tab-change-btn-bg' : show==1}" class="req-btn">请求参数</button>
           </li>
-          <!-- <li><button>inject</button></li> -->
         </ul>
       </div>
       <table v-show="show==0">
@@ -32,7 +31,13 @@
             <input class="content" type="text" placeholder="值" v-model="item.content" />
           </td>
           <td>
-            <button v-if="item.content.length >= 1" @click="apiParamHeaderDelete(index)">×</button>
+            <el-button
+              v-if="item.content.length >= 1"
+              icon="el-icon-delete"
+              size="mini"
+              @click="apiParamHeaderDelete(index)"
+              plain
+            ></el-button>
           </td>
         </tr>
       </table>
@@ -89,12 +94,7 @@
           </td>
           <td>
             <div v-show="item.name.length >= 1">
-              <el-button
-                type="danger"
-                @click="apiParamdelete(index)"
-                size="mini"
-                icon="el-icon-close"
-              ></el-button>
+              <el-button icon="el-icon-delete" size="mini" @click="apiParamdelete(index)" plain></el-button>
             </div>
           </td>
         </tr>
@@ -313,8 +313,21 @@ export default {
   width: 80%;
 }
 
+.request-box button.req-btn {
+  background-color: #efefef;
+  border: 1px solid #dddddd;
+  width: 90px;
+  height: 30px;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border-left: none;
+  border-bottom: none;
+}
+
 /* tab切换按钮颜色 */
-.item-head .tab-change-btn-bg {
+div.item-head .tab-change-btn-bg {
   background-color: #fff;
 }
 </style>

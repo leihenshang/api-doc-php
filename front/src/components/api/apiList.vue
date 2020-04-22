@@ -261,4 +261,8 @@ export default {
   background-color: #4caf50;
   margin-right: 5px;
 }
+
+.api-box button {
+  margin-right: 5px;
+}
 </style>

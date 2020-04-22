@@ -69,7 +69,12 @@
           </td>
           <td>
             <div v-show="item.fieldName.length >= 1">
-              <button @click="dataDelete(index)">×</button>
+              <el-button
+                icon="el-icon-delete"
+                size="mini"
+                @click="dataDelete(index)"
+                plain
+              ></el-button>
             </div>
           </td>
         </tr>

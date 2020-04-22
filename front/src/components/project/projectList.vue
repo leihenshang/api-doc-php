@@ -4,7 +4,7 @@
     <boxShade :hide="hideShade" />
 
     <div class="project-list-btn">
-      <button @click="create" v-show="$store.state.userInfo.type == 2">+新增项目</button>
+      <el-button @click="create" v-show="$store.state.userInfo.type == 2" size="mini">+新增项目</el-button>
       <!-- <button>+导入项目</button>
       <button>+开启SDK提交项目</button>-->
     </div>
@@ -210,12 +210,4 @@ export default {
   margin: 20px 0;
 }
 
-.project-list-content button {
-  padding: 4px 14px;
-  margin-right: 2px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 3px;
-  font-size: 12px;
-}
 </style>
