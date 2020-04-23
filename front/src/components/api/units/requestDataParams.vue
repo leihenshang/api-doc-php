@@ -330,4 +330,9 @@ export default {
 div.item-head .tab-change-btn-bg {
   background-color: #fff;
 }
+
+.request-box table tr:hover td,
+.request-box table tr:hover input {
+  background-color: rgba(164, 219, 132, 0.103);
+}
 </style>

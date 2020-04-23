@@ -588,7 +588,8 @@ em i {
   text-align: center;
 }
 
-table tr:hover td,table tr:hover input {
+.create-api table tr:hover td,
+.create-api table tr:hover input {
   background-color: rgba(164, 219, 132, 0.103);
 }
 </style>

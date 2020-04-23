@@ -9,7 +9,7 @@
       <button>+开启SDK提交项目</button>-->
     </div>
     <div class="project-list-content">
-      <el-table :data="projectList" stripe style="width: 100%" v-loading="loading" height="650" stripe>
+      <el-table :data="projectList" stripe style="width: 100%" v-loading="loading" height="650">
         <el-table-column prop="title" label="项目名称" width="180"></el-table-column>
         <el-table-column prop="version" label="版本号" width="180"></el-table-column>
         <el-table-column prop="type" label="类型"></el-table-column>
@@ -132,7 +132,7 @@ export default {
                   this.$message.error("失败!" + response.msg);
                 }
               },
-              res => {
+              () => {
                 this.$message.error("操作失败!");
               }
             );
@@ -209,5 +209,4 @@ export default {
 .page-wrapper {
   margin: 20px 0;
 }
-
 </style>

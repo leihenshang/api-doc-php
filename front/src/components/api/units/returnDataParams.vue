@@ -69,12 +69,7 @@
           </td>
           <td>
             <div v-show="item.fieldName.length >= 1">
-              <el-button
-                icon="el-icon-delete"
-                size="mini"
-                @click="dataDelete(index)"
-                plain
-              ></el-button>
+              <el-button icon="el-icon-delete" size="mini" @click="dataDelete(index)" plain></el-button>
             </div>
           </td>
         </tr>
@@ -288,5 +283,10 @@ export default {
 .item-head ul {
   position: absolute;
   bottom: -1px;
+}
+
+.return-params table tr:hover td,
+.return-params table tr:hover input {
+  background-color: rgba(164, 219, 132, 0.103);
 }
 </style>
