@@ -587,4 +587,8 @@ em i {
   display: inline-block;
   text-align: center;
 }
+
+table tr:hover td,table tr:hover input {
+  background-color: rgba(164, 219, 132, 0.103);
+}
 </style>

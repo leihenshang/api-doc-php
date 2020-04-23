@@ -1,7 +1,7 @@
 <template>
   <div class="doc-list">
     <div class="doc-list-table">
-      <el-table :data="docList" stripe style="width: 100%" v-loading="loading">
+      <el-table :data="docList" stripe style="width: 100%" v-loading="loading" border>
         <el-table-column prop="title" label="名称" width="180"></el-table-column>
         <el-table-column prop="nick_name" label="创建者" width="180"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
