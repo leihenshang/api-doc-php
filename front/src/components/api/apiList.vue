@@ -3,12 +3,12 @@
     <div class="api-box">
       <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading" border>
         <el-table-column prop="api_name" label="名称" width="180"></el-table-column>
-        <el-table-column prop="http_method_type" label="请求方法" width="180"></el-table-column>
+        <el-table-column prop="http_method_type" label="请求方法" width="80"></el-table-column>
         <el-table-column prop="url" label="url"></el-table-column>
         <el-table-column prop="protocol_type" label="协议"></el-table-column>
         <el-table-column prop="develop_language" label="开发语言"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
-        <el-table-column prop label="操作">
+        <el-table-column prop label="操作"  fixed="right">
           <template slot-scope="scope">
             <el-button type="success" plain @click="jumpPage('detail',scope.row.id)" size="mini">详情</el-button>
 

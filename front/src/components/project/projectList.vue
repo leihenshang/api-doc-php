@@ -9,7 +9,7 @@
       <button>+开启SDK提交项目</button>-->
     </div>
     <div class="project-list-content">
-      <el-table :data="projectList" stripe style="width: 100%" v-loading="loading" height="650">
+      <el-table :data="projectList" stripe style="width: 100%" v-loading="loading" height="650" stripe>
         <el-table-column prop="title" label="项目名称" width="180"></el-table-column>
         <el-table-column prop="version" label="版本号" width="180"></el-table-column>
         <el-table-column prop="type" label="类型"></el-table-column>

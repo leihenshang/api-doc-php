@@ -343,6 +343,7 @@ button {
   position: relative;
   background-color: #fff;
   margin: 10px 0;
+  border-radius: 2px;
 }
 
 .box2one {
@@ -401,7 +402,6 @@ select {
 .box2two .description {
   width: 100%;
   height: 150px;
-  border: 1px solid rgb(233, 227, 227);
   border-radius: 4px;
   box-sizing: border-box;
   padding: 8px;
