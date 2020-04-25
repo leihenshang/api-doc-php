@@ -6,7 +6,6 @@ use app\behaviors\UserVerify;
 use app\models\UserInfo;
 use Yii;
 use yii\base\InvalidConfigException;
-use yii\db\Query;
 
 class UserController extends BaseController
 {
@@ -69,8 +68,10 @@ class UserController extends BaseController
             $res->andWhere(['or', ['like', 'a.nick_name', $user->keyword . '%', false], ['a.email' => $user->keyword], ['a.name' => $user->keyword]]);
         }
 
-        $res = $res->all();
-        return $this->success($res);
+        $recordCount = $res->count();
+
+        $res = $res->limit($user->ps)->offset(($user->cp - 1) * $user->ps)->all();
+        return $this->success(['count' => $recordCount, 'list' => $res]);
     }
 
     /**

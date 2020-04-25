@@ -5,7 +5,7 @@
         <button @click="returnApiPage">↩ 接口列表</button>
       </div>
       <div class="btn-group-2">
-        <button @click="updateApi()">编辑</button>
+        <button @click="updateApi()" v-show="$store.state.projectPermission == 6">编辑</button>
       </div>
     </div>
     <div class="box2">

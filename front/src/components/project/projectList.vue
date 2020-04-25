@@ -19,7 +19,7 @@
             <el-button
               slot="reference"
               v-show="$store.state.userInfo.type == 2"
-              @click="del(item.id)"
+              @click="del(scope.row.id)"
               size="mini"
             >删除</el-button>
             <el-button
@@ -32,12 +32,12 @@
 
             <el-button type="success" plain @click="detail(scope.row.id)" size="mini">详情</el-button>
 
-            <el-popconfirm
+            <!-- <el-popconfirm
               title="确定要删除这个api?"
               placement="top"
               @onConfirm="delApi(scope.row.id)"
               width="200"
-            ></el-popconfirm>
+            ></el-popconfirm> -->
           </template>
         </el-table-column>
       </el-table>

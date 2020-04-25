@@ -20,7 +20,7 @@
         <a href="javascript:void(0)">登陆</a>
       </li>
         <li class="li-r" @click="jumpRegister()" v-else-if="$route.name == 'userLogin'">
-        <a href="javascript:void(0)">注册</a>
+        <!-- <a href="javascript:void(0)">注册</a> -->
       </li>
     </ul>
   </div>

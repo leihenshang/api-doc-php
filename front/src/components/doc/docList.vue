@@ -40,7 +40,6 @@
         :current-page="cp"
         @prev-click="changePage($event)"
         @next-click="changePage($event)"
-        @current-change="changePage($event)"
       ></el-pagination>
     </div>
   </div>
@@ -75,7 +74,7 @@ export default {
   },
   methods: {
     restoreDoc(id) {
-          this.$confirm("该文档将被还原, 是否继续?", "提示", {
+      this.$confirm("该文档将被还原, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

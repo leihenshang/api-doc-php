@@ -1,66 +1,65 @@
 <template>
   <div class="user">
     <div class="text-box">
-      <input type="text" v-model="keyword" />
-      <button @click="getUserList();keyword=''">重置</button>
-      <button @click="getUserList(keyword)">搜索用户</button>
+      <el-input
+        placeholder="请输入内容"
+        v-model="keyword"
+        clearable
+        style="width:10%;margin-right:8px"
+        @clear="getUserList();keyword=''"
+      ></el-input>
+      <el-button icon="el-icon-search" type="primary" plain size="small"></el-button>
+      <el-button size="small">添加用户</el-button>
     </div>
-    <div class="all-user" v-show="userList[0]">
-      <div class="user-tab" v-for="user in userList" :key="user.id">
-        <div class="user-tab-info">
-          <div class="avatar">
-            <img src="../../assets/logo.png" alt width="100" />
-          </div>
-          <div class="info">
-            <table border="1">
-              <tr>
-                <td>用户名</td>
-                <td>{{user.name}}</td>
-                <td>状态</td>
-                <td>{{user.state}}</td>
-              </tr>
-              <tr>
-                <td>昵称</td>
-                <td>{{user.nick_name}}</td>
-                <td>类型</td>
-                <td>{{user.type}}</td>
-              </tr>
-              <tr>
-                <td>邮箱</td>
-                <td colspan="3">{{user.email}}</td>
-              </tr>
-              <tr>
-                <td>最后登录ip</td>
-                <td>{{user.last_login_ip}}</td>
-                <td>最后登录时间</td>
-                <td>{{user.last_login_time}}</td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <div class="btn" v-if="user.type != 2">
-          <button @click="delUser(user.id)">踢出项目</button>
-          <button @click="enableOrdisabledUser(user.id,2)" v-if="user.state == 1">禁用</button>
-          <button @click="enableOrdisabledUser(user.id,1)" v-if="user.state == 2">启用</button>
-        </div>
-        <div class="btn" v-else></div>
-      </div>
+    <div class="all-user" v-show="userList.count > 0" v-loading="loading">
+      <el-table :data="userList.list" stripe style="width: 100%" border>
+        <el-table-column prop="id" label="id" width="100"></el-table-column>
+        <el-table-column prop="name" label="登录名" width="180"></el-table-column>
+        <el-table-column prop="state" label="状态" width="180">
+          <template slot-scope="scope">{{ transferState(scope.row.state) }}</template>
+        </el-table-column>
+        <el-table-column prop="type" label="类型" width="180">
+          <template slot-scope="scope">{{ transferType(scope.row.type) }}</template>
+        </el-table-column>
+        <el-table-column prop="nick_name" label="昵称" width="180"></el-table-column>
+        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+        <el-table-column prop="last_login_time" label="最后登录时间"></el-table-column>
+        <el-table-column prop="last_login_ip" label="最后登录ip"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="100">
+          <template slot-scope="scope">
+            <el-button type="text" size="small">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="page">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total=" parseInt(userList.count)"
+        :page-size="ps"
+        :current-page="cp"
+        @prev-click="cp --; getUserList()"
+        @next-click="cp ++; getUserList()"
+      ></el-pagination>
     </div>
   </div>
 </template>
 <script>
-import "../../static/css/table.css";
-
 const CODE_OK = 200;
 const IS_DELETED = 1;
 
 export default {
-  name: "userManagement",
+  name: "userManager",
   data() {
     return {
       userList: [],
       projectUser: [],
-      keyword: ""
+      keyword: "",
+      ps: 10,
+      cp: 1,
+      loading: true
     };
   },
   created() {
@@ -180,8 +179,9 @@ export default {
         .get(this.apiAddress + "/user/list", {
           params: {
             keyword,
-            token: this.$store.state.userInfo.token,
-            project_id: this.$route.params.id
+            project_id: this.$route.params.id,
+            ps: this.ps,
+            cp: this.cp
           }
         })
         .then(
@@ -189,15 +189,49 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.userList = response.data;
+            } else {
+              this.$message.error(response.msg);
             }
+            this.loading = false;
           },
-          res => {
-            let response = res.body;
-            this.$message.error(
-              "获取数据-操作失败!" + !response.msg ? response.msg : ""
-            );
+          () => {
+            this.$message.error("获取数据-操作失败!");
           }
         );
+    },
+    transferState(state) {
+      state = parseInt(state);
+      //1正常2禁用3未激活
+      switch (state) {
+        case 1:
+          return "正常";
+          break;
+        case 2:
+          return "禁用";
+          break;
+        case 3:
+          return "未激活";
+          break;
+
+        default:
+          return "未知";
+          break;
+      }
+    },
+    transferType(type) {
+      type = parseInt(type);
+      //1普通用户2管理员
+      switch (type) {
+        case 1:
+          return "普通用户";
+          break;
+        case 2:
+          return "管理员";
+          break;
+        default:
+          return "未知";
+          break;
+      }
     }
   }
 };
@@ -207,84 +241,20 @@ export default {
   font-size: 14px;
 }
 
-.user-tab {
-  border: 1px solid gray;
-  width: 600px;
-  display: inline-block;
-  margin: 20px 30px;
-}
-
-.user-tab-info {
-  border-bottom: 1px solid gray;
-  display: flex;
-  padding: 2px;
-}
-
-.avatar {
-  flex: 0.5;
-  position: relative;
-}
-
-.avatar img {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.info {
-  flex: 2;
-}
-
-.btn {
-  text-align: right;
-}
-
-.btn button {
-  width: 80px;
-  height: 30px;
-  margin: 3px 3px 3px;
-}
-
-.user-tab table {
-  width: 100%;
-}
-
-.user-tab table,
-.user-tab tr,
-.user-tab td,
-.user-tab th {
-  border: 1px solid black;
-  border-collapse: collapse;
-  text-align: left;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 .user {
   height: 100%;
 }
 
 .text-box {
-  margin: 20px 0;
-  /* border:1px solid black; */
-}
-
-.text-box input {
-  height: 30px;
-  width: 15%;
-  margin: 0 5px;
-  padding: 0 5px;
-}
-
-.text-box button {
-  height: 35px;
-  width: 100px;
-  font-size: 14px;
+  padding: 10px 10px;
 }
 
 .all-user {
-  float: left;
+  padding: 0 10px;
+  min-height: 600px;
+}
+
+.page {
+  text-align: center;
 }
 </style>

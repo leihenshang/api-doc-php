@@ -77,7 +77,7 @@ class ApiController extends BaseController
 
         $res = new Api(['scenario' => Api::SCENARIO_LIST]);
         $res = $res->dataList($projectId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), $groupId, $isDeleted,$keyword);
-        return ['data' => $res];
+        return $this->success($res);
     }
 
 
@@ -94,7 +94,7 @@ class ApiController extends BaseController
             return $this->failed($res);
         }
 
-        return ['data' => '成功'];
+        return $this->success(null);
     }
 
     /**
@@ -110,7 +110,7 @@ class ApiController extends BaseController
             return $this->failed($res);
         }
 
-        return ['data' => $res];
+        return $this->success($res);
     }
 
 

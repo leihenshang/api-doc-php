@@ -57,7 +57,7 @@
               <p>{{item.email}}</p>
             </div>
 
-            <el-dropdown size="small" placement="bottom" @command="handleCommand">
+            <el-dropdown size="small" placement="bottom" @command="handleCommand" v-show="$store.state.projectPermission == 6">
               <i class="el-icon-s-unfold" style="font-size:18px"></i>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item

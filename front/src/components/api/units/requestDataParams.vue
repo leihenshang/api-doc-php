@@ -66,7 +66,7 @@
             <input class="content" type="text" placeholder v-model="item.desc" />
           </td>
           <td>
-            <input class="content" type="checkbox" name id v-model="item.required" />
+            <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
             <el-select

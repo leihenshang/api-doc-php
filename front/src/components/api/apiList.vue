@@ -60,7 +60,6 @@
         :current-page="cp"
         @prev-click="changePage($event)"
         @next-click="changePage($event)"
-        @current-change="changePage($event)"
       ></el-pagination>
     </div>
   </div>

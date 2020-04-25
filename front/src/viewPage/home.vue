@@ -48,6 +48,12 @@ export default {
           route: "myCenter",
           clild: "",
           isClick: false
+        },
+        {
+          title: "用户管理",
+          route: "userManager",
+          clild: "",
+          isClick: false
         }
       ]
     };

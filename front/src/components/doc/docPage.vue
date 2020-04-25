@@ -1,7 +1,7 @@
 <template>
   <div class="doc-page">
     <div class="btn-wrapper">
-      <div class="btn">
+      <div class="btn" v-show="$store.state.projectPermission == 6">
         <el-button @click="addDoc()" size="small">创建文档</el-button>
         <el-button @click="showCreateGroup = !showCreateGroup" size="small">+新建分组</el-button>
       </div>

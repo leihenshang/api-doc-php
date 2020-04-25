@@ -2,10 +2,19 @@
   <div class="doc-wrapper">
     <div class="btn">
       <div class="left">
-        <el-button plain size="mini" @click="$router.go(-1)">&lt; 文档列表</el-button>
+        <el-button plain size="small" @click="$router.go(-1)">
+          <i class="el-icon-arrow-left"></i> 文档列表
+        </el-button>
       </div>
       <div class="right">
-        <el-button type="success" plain size="mini" @click="updateDoc()" :loading="btnLoading">修改文档</el-button>
+        <el-button
+          type="success"
+          plain
+          size="mini"
+          @click="updateDoc()"
+          :loading="btnLoading"
+          v-show="$store.state.projectPermission == 6"
+        >修改文档</el-button>
       </div>
     </div>
     <div class="doc-detail" v-if="doc">
@@ -105,7 +114,7 @@ export default {
 }
 
 .doc-content ul li {
-    list-style:auto;
+  list-style: auto;
 }
 
 .btn {

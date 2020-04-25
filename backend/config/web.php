@@ -1,5 +1,7 @@
 <?php
 
+use yii\web\Response;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -9,7 +11,7 @@ $config = [
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
         'request' => [
@@ -21,20 +23,20 @@ $config = [
         ],
         'response' => [
             'class' => 'yii\web\Response',
-            'format' => \yii\web\Response::FORMAT_JSON,
-            'on beforeSend' => function ($event){
-                                    //如果是gii 代码生成器则不进行格式化
+            'format' => Response::FORMAT_JSON,
+            'on beforeSend' => function ($event) {
+                //如果是gii 代码生成器则不进行格式化
                 if (strstr(Yii::$app->request->getPathInfo(), 'gii') === false) {
                     $event->sender->headers->add('Access-Control-Allow-Origin', '*');
                     $response = $event->sender;
                     //设置响应状态码为200
                     $response->statusCode = 200;
-                    $response->format = \yii\web\Response::FORMAT_JSON;
+                    $response->format = Response::FORMAT_JSON;
                     $code = isset($response->data['code']) ? $response->data['code'] : 200;
                     $response->data = [
                         'code' => $code,
-                        'msg' => isset($response->data['msg']) ? $response->data['msg'] : '',
-                        'data' => !isset($response->data['data']) ? (isset($response->data['message']) ? $response->data['message']: []) :$response->data['data'],
+                        'msg' => isset($response->data['msg']) ? $response->data['msg'] : (isset($response->data['message']) ? $response->data['message'] : []),
+                        'data' => !isset($response->data['data']) ? [] : $response->data['data'],
                     ];
                 }
 
@@ -68,7 +70,7 @@ $config = [
             ],
         ],
         'db' => $db,
-        
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,

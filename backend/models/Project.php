@@ -12,6 +12,7 @@ use yii\db\StaleObjectException;
  * @package app\models
  * @property string $title 标题
  * @property integer $id id
+ * @property int $is_deleted
  */
 class Project extends BaseModel
 {
@@ -115,7 +116,13 @@ class Project extends BaseModel
         }
 
         $res = self::findOne($this->id);
-        if (!$res->delete()) {
+        if (!$res) {
+            return '没有找到要删除的对象';
+        }
+
+        $res->is_deleted = self::IS_DELETED['yes'];
+
+        if (!$res->save(false)) {
             return current($res->getFirstErrors());
         }
 

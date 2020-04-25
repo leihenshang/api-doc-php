@@ -24,7 +24,7 @@ import DocList from "./components/doc/docList";
 import Login from "./components/user/login";
 import Register from "./components/user/register";
 import MyCenter from "./components/user/myCenter";
-// import UserManagement from "./components/user/userManagement";
+import UserManager from "./components/user/userManager";
 
 Vue.use(VueRouter);
 
@@ -35,12 +35,18 @@ const router = new VueRouter({
     {
       path: "/",
       component: Home,
-      children: [{ path: "", component: ProjectList, name: 'projectList' },
-      {
-        path: "myCenter",
-        component: MyCenter,
-        name: "myCenter"
-      },
+      children: [
+        { path: "", component: ProjectList, name: "projectList" },
+        {
+          path: "myCenter",
+          component: MyCenter,
+          name: "myCenter",
+        },
+        {
+          path: "userManager",
+          component: UserManager,
+          name: "userManager",
+        },
       ],
     },
     {

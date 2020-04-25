@@ -5,7 +5,7 @@
     <div class="middle">
       <div class="login-page-content">
         <div class="title">
-          <span>apiDoc 0.1</span>
+          <span>my-doc</span>
         </div>
         <div class="login-box">
           <ValidationObserver ref="form" vid="form">
@@ -24,7 +24,7 @@
             </validation-provider>
             <button @click="login()">
               <span class="login-text">登陆</span>
-              <em>〉</em>
+              <i class="el-icon-arrow-right"></i>
             </button>
           </ValidationObserver>
         </div>
@@ -184,12 +184,6 @@ span.login-text {
   border: 1px solid #4caf50;
   background-color: #43a047;
   color: #fff;
-}
-
-.login-box button em {
-  margin-right: 10px;
-  float: right;
-  font-style: normal;
 }
 
 .remember {

@@ -93,7 +93,40 @@ export default {
       menuListData: this.menuList
     };
   },
-  created: function() {},
+  created: function() {
+    let val = this.$route;
+    this.$nextTick(() => {
+      if (
+        /^\/detail\/((?:[^\/]+?))\/apiPage\/apiList\/((?:[^\/]+?))(?:\/(?=$))?$/i.test(
+          val.fullPath
+        )
+      ) {
+        for (let key in this.menuListData) {
+          if (this.menuListData[key].child == "apiPage") {
+            this.menuListData[key].isClick = true;
+          } else {
+            this.menuListData[key].isClick = false;
+          }
+        }
+      } else if (/^\/myCenter(?:\/(?=$))?$/i.test(val.fullPath)) {
+        for (let key in this.menuListData) {
+          if (this.menuListData[key].route == "myCenter") {
+            this.menuListData[key].isClick = true;
+          } else {
+            this.menuListData[key].isClick = false;
+          }
+        }
+      } else if (val.fullPath == "/") {
+        for (let key in this.menuListData) {
+          if (this.menuListData[key].route == "") {
+            this.menuListData[key].isClick = true;
+          } else {
+            this.menuListData[key].isClick = false;
+          }
+        }
+      }
+    });
+  },
   watch: {
     $route: function(val) {
       this.$nextTick(() => {
@@ -104,6 +137,14 @@ export default {
         ) {
           for (let key in this.menuListData) {
             if (this.menuListData[key].child == "apiPage") {
+              this.menuListData[key].isClick = true;
+            } else {
+              this.menuListData[key].isClick = false;
+            }
+          }
+        } else if (/^\/myCenter(?:\/(?=$))?$/i.test(val.fullPath)) {
+          for (let key in this.menuListData) {
+            if (this.menuListData[key].route == "myCenter") {
               this.menuListData[key].isClick = true;
             } else {
               this.menuListData[key].isClick = false;
@@ -140,7 +181,6 @@ export default {
   background-color: #ecf8ee;
 }
 
-
 .is-click {
   background-color: rgba(43, 189, 87, 0.589);
 }
@@ -150,7 +190,7 @@ div ul .is-click a {
 }
 
 .left-menu li:hover a {
-  color:black;
+  color: black;
 }
 
 .left-menu li span {

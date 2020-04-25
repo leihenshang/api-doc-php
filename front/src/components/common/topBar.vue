@@ -68,7 +68,7 @@ export default {
     },
     //到个人中心
     goToUserCenter() {
-      this.$router.push({ name: "myCenter" });
+      this.$router.push({ name: "myCenter" }).catch(() => {});
     }
   },
   data: function() {
@@ -145,7 +145,7 @@ export default {
   position: absolute;
   right: 0;
   /* margin: 5px 0; */
-  z-index: 1;
+  z-index: 9999;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
   display: none;
 }
