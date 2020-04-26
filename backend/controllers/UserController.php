@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\behaviors\UserVerify;
+use app\models\User;
 use app\models\UserInfo;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -15,7 +16,7 @@ class UserController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
-            'actions' => ['list', 'update-status', 'get-user-info', 'update-nickname', 'update-pwd'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
+            'actions' => ['list', 'update-status', 'get-user-info', 'update-nickname', 'update-pwd','create'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
             'projectPermission' => ['update-status','update-nickname','date-pwd']
         ];
@@ -87,10 +88,44 @@ class UserController extends BaseController
     public function actionReg()
     {
         /**
-         * 1.昵称
-         * 2.密码
-         * 3.邮箱
+         * 1.登录账号
+         * 2.昵称
+         * 3.密码
+         * 4.邮箱
          */
+        $params = Yii::$app->request->post();
+        $user = new UserInfo(['scenario' => UserInfo::SCENARIO_REGISTER]);
+        $user->attributes = $params;
+        if (!$user->validate()) {
+            return $this->failed(current($user->getFirstErrors()));
+        }
+
+        $userInfo = $user->reg();
+        if (is_string($userInfo)) {
+            return $this->failed($userInfo);
+        }
+
+        return $this->success($userInfo);
+    }
+
+    /**
+     * 用户创建
+     *
+     * @return array
+     */
+    public function actionCreate()
+    {
+        /**
+         * 1.登录账号
+         * 2.昵称
+         * 3.密码
+         * 4.邮箱
+         */
+
+        if($this->userInfo->type != UserInfo::USER_TYPE['admin'][0]){
+            return $this->failed('普通用户不能进行用户创建');
+        }
+
         $params = Yii::$app->request->post();
         $user = new UserInfo(['scenario' => UserInfo::SCENARIO_REGISTER]);
         $user->attributes = $params;

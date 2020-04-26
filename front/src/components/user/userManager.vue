@@ -10,7 +10,31 @@
         size="small"
       ></el-input>
       <el-button icon="el-icon-search" type="primary" plain size="small" @click="getUserList()">搜索</el-button>
-      <el-button size="small">添加用户</el-button>
+      <el-button size="small" icon="el-icon-plus" @click="dialogFormVisible = true">用户</el-button>
+      <el-dialog title="新建用户" :visible.sync="dialogFormVisible" width="30%">
+        <el-form :model="form" label-width="80px" ref="form">
+          <el-form-item label="登录名" prop="name">
+            <el-input v-model="form.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="昵称" prop="nick_name">
+            <el-input v-model="form.nick_name" autocomplete="off" placeholder="昵称"></el-input>
+          </el-form-item>
+
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="form.email" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="pwd">
+            <el-input v-model="form.pwd" autocomplete="off" type="password" placeholder="密码"></el-input>
+          </el-form-item>
+          <el-form-item label="重复密码" prop="re_pwd">
+            <el-input v-model="form.re_pwd" autocomplete="off" type="password"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="createUser()">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
     <div class="all-user" v-loading="loading">
       <el-table :data="userList.list" stripe style="width: 100%" border>
@@ -68,14 +92,21 @@ export default {
       keyword: "",
       ps: 10,
       cp: 1,
-      loading: true
+      loading: true,
+      dialogFormVisible: false,
+      form: {
+        name: "",
+        nick_name: "",
+        email: "",
+        pwd: "",
+        re_pwd: ""
+      }
     };
   },
   created() {
     this.getUserList();
   },
   methods: {
-    createUser() {},
     //计算用户类型
     userType(val) {
       let str;
@@ -112,6 +143,33 @@ export default {
           break;
       }
       return str;
+    }, //删除项目用户
+    createUser() {
+      this.$refs.form.resetFields();
+      return;
+      this.$http
+        .post(
+          this.apiAddress + "/user/create",
+          {
+            ...this.form
+          },
+          { emulateJSON: true }
+        )
+        .then(
+          response => {
+            response = response.body;
+            if (response.code === CODE_OK) {
+              this.getUserList();
+              this.$message.success("成功！~");
+            } else {
+              this.$message.error(response.msg);
+            }
+            this.dialogFormVisible = false;
+          },
+          () => {
+            this.$message.error("操作失败!");
+          }
+        );
     },
     //删除项目用户
     delUser(id) {
@@ -161,8 +219,7 @@ export default {
           this.apiAddress + "/user/update-status",
           {
             state: state,
-            userId: id,
-            token: this.$store.state.userInfo.token
+            userId: id
           },
           { emulateJSON: true }
         )
@@ -171,14 +228,11 @@ export default {
             response = response.body;
             if (response.code === CODE_OK) {
               this.getUserList();
-              this.$message.error("成功！~");
+              this.$message.success("成功！~");
             }
           },
-          res => {
-            let response = res.body;
-            this.$message.error(
-              "操作失败!" + !response.msg ? response.msg : ""
-            );
+          () => {
+            this.$message.error("操作失败!");
           }
         );
     },

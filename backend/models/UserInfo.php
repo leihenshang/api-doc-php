@@ -73,7 +73,7 @@ class UserInfo extends BaseModel
             [['create_time', 'last_login_time', 'token_expire_time'], 'safe'],
             [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 100],
             ['email', 'email'],
-            [['re_pwd', 'name', 'email', 'code'], 'required', 'on' => self::SCENARIO_REGISTER],
+            [['re_pwd', 'name', 'email','nick_name', 'code'], 'required', 'on' => self::SCENARIO_REGISTER],
             ['re_pwd', 'required', 'on' => self::SCENARIO_UPDATE_PWD],
             [['mobile_number'], 'string', 'max' => 11],
             [['keyword', 'code'], 'string', 'max' => 50],
@@ -86,7 +86,7 @@ class UserInfo extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
         $scenarios[self::SCENARIO_QUERY] = ['keyword','ps','cp'];
-        $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'email'];
+        $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'nick_name', 'email'];
         $scenarios[self::SCENARIO_UPDATE_PWD] = ['re_pwd', 'pwd'];
         return $scenarios;
     }
@@ -224,19 +224,6 @@ class UserInfo extends BaseModel
             return '两次输入的密码不一致!~';
         }
 
-        //检查验证码
-//        $code = Message::find()->where([
-//            'and',
-//            ['code' => $this->code],
-//            ['>', 'expire_time', date('Y-m-d H:i:s', time())],
-//            ['is_deleted' => Message::IS_DELETED['no']],
-//            ['is_used' => Message::IS_USED['no']],
-//            ['receive_source' => $this->email]
-//        ])->one();
-//        if (!$code) {
-//            return '验证码错误';
-//        }
-
         //检查登录名唯一性
         $res = self::find()->where(['or', ['name' => $this->name], ['email' => $this->email], ['nick_name' => $this->nick_name]])->one();
         if ($res) {
@@ -244,12 +231,9 @@ class UserInfo extends BaseModel
         }
 
         //修改状态
-        $this->state = self::USER_STATE['not_activated'][0];
+        $this->state = self::USER_STATE['normal'][0];
         $this->nick_name = '新用户-' . $this->name;
 
-        //设置code已使用
-//        $code->is_used = Message::IS_USED['yes'];
-//        $code->used_time = date('Y-m-d H:i:s', time());
 
         $trans = self::getDb()->beginTransaction();
         try {
@@ -262,9 +246,6 @@ class UserInfo extends BaseModel
                 throw new Exception($sendMail);
             }
 
-//            if (!$code->save()) {
-//                throw new Exception('验证码状态保存失败!' . current($code->getFirstErrors()));
-//            }
             $trans->commit();
 
         } catch (Exception $e) {

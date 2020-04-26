@@ -26,7 +26,7 @@ Vue.use(ElementUI);
 
 //扩展指令，设置焦点
 Vue.directive("focus", {
-  inserted: function (el) {
+  inserted: function(el) {
     el.focus();
   },
 });
@@ -57,18 +57,25 @@ const store = new Vuex.Store({
   },
 });
 
-
-
 //vue-resource拦截器拦截请求,添加token
 Vue.http.interceptors.push((request) => {
   if (request.method === "GET") {
     if (!request.params.token) {
       request.params.token = store.state.userInfo.token;
     }
+    //附加项目id
+    if (!request.params.projectId && store.state.project) {
+      request.params.projectId = store.state.project.id;
+    }
   } else if (request.method === "POST") {
     if (!request.body.token) {
       request.body.token = store.state.userInfo.token;
     }
+    //附加项目id
+    if (!request.body.projectId && store.state.project) {
+      request.body.projectId = store.state.project.id;
+    }
+
     if (request.emulateJSON !== true) {
       request.emulateJSON = true;
     }
@@ -82,6 +89,7 @@ Vue.http.interceptors.push((request) => {
   };
 });
 
+//http请求前置操作
 router.beforeEach((to, from, next) => {
   if (
     to.matched.some((record) => record.meta.requiresAuth) &&
