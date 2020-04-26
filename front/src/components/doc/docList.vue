@@ -40,6 +40,7 @@
         :current-page="cp"
         @prev-click="changePage($event)"
         @next-click="changePage($event)"
+        @current-change="changePage($event)"
       ></el-pagination>
     </div>
   </div>
@@ -125,7 +126,8 @@ export default {
         .then(() => {
           this.$http
             .post(this.apiAddress + "/doc/delete", {
-              id: id
+              id: id,
+              projectId:this.$route.params.id
             })
             .then(
               response => {

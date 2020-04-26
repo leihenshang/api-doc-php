@@ -98,7 +98,8 @@ export default {
             title: this.doc.title,
             content: this.doc.content,
             group_id: this.doc.group_id,
-            id: this.docId
+            id: this.docId,
+            projectId:this.$route.params.id
           })
           .then(res => {
             res = res.body;

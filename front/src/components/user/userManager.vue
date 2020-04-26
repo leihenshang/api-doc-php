@@ -50,6 +50,7 @@
         :current-page="cp"
         @prev-click="cp --; getUserList()"
         @next-click="cp ++; getUserList()"
+        @current-change="getUserList($event)"
       ></el-pagination>
     </div>
   </div>
@@ -182,14 +183,18 @@ export default {
         );
     },
     //获取用户列表
-    getUserList() {
+    getUserList(cp) {
+      if (!cp) {
+        cp = this.cp;
+      }
+
       this.$http
         .get(this.apiAddress + "/user/list", {
           params: {
             keyword: this.keyword,
             project_id: this.$route.params.id,
             ps: this.ps,
-            cp: this.cp
+            cp: cp
           }
         })
         .then(

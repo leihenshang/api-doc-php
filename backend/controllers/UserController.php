@@ -17,6 +17,7 @@ class UserController extends BaseController
             'class' => UserVerify::class,
             'actions' => ['list', 'update-status', 'get-user-info', 'update-nickname', 'update-pwd'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
+            'projectPermission' => ['update-status','update-nickname','date-pwd']
         ];
         return $behaviors;
     }

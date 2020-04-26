@@ -133,7 +133,7 @@ class UserVerify extends Behavior
         }
 
         if (!$projectId) {
-            throw new UnauthorizedHttpException('没有项目id', 34);
+            throw new UnauthorizedHttpException('没有项目id', 22);
         }
 
         if (in_array($action, $this->projectPermission)) {

@@ -8,7 +8,7 @@
         <el-table-column prop="protocol_type" label="协议"></el-table-column>
         <el-table-column prop="develop_language" label="开发语言"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
-        <el-table-column prop label="操作"  fixed="right">
+        <el-table-column prop label="操作" fixed="right">
           <template slot-scope="scope">
             <el-button type="success" plain @click="jumpPage('detail',scope.row.id)" size="mini">详情</el-button>
 
@@ -60,6 +60,7 @@
         :current-page="cp"
         @prev-click="changePage($event)"
         @next-click="changePage($event)"
+        @current-change="changePage($event)"
       ></el-pagination>
     </div>
   </div>
