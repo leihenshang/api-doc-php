@@ -19,10 +19,8 @@
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
         <div class="btn-group" v-show="showIsEdit === true">
-          <el-dropdown size="small" placement="left-start" @command="handleCommand">
-            <span class="el-dropdown-link">
-              <i class="el-icon-s-unfold"></i>
-            </span>
+          <el-dropdown size="small" placement="left-start" @command="handleCommand" trigger="click">
+            <span class="el-icon-s-unfold"></span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item :command="{action:'del',data:item}">删除</el-dropdown-item>
               <el-dropdown-item :command="{action:'edit',data:item}">编辑</el-dropdown-item>

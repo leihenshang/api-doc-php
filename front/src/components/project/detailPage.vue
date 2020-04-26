@@ -22,7 +22,7 @@
         </li>
         <li @click="jump()" class="api-detail">
           <p>api接口</p>
-          <p>点击查看详情</p>
+          <p><el-link type="danger">点击查看详情</el-link></p>
         </li>
       </ul>
       <div class="user-wrapper">
@@ -57,8 +57,14 @@
               <p>{{item.email}}</p>
             </div>
 
-            <el-dropdown size="small" placement="bottom" @command="handleCommand" v-show="$store.state.projectPermission == 6">
-              <i class="el-icon-s-unfold" style="font-size:18px"></i>
+            <el-dropdown
+              size="small"
+              placement="bottom"
+              trigger="click"
+              @command="handleCommand"
+              v-show="$store.state.projectPermission == 6"
+            >
+              <i class="el-icon-s-unfold"></i>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   :command="{action:'setLeader',data:item}"
@@ -486,6 +492,7 @@ export default {
   box-sizing: border-box;
   border-radius: 3px;
   overflow: hidden;
+  background-color: #fff;
 }
 
 .right-l .title {
@@ -545,22 +552,15 @@ export default {
   margin: 10px 15px;
 }
 
-ul:nth-child(5) {
-  margin-top: 20px;
-  border-top: 1px solid #e5e5e5;
-}
-
 .right-r {
   width: 50%;
   height: 100%;
   background-color: #f3f3f3;
 }
 
-.api-detail {
-  background-color: #5ace5e6e;
+
+.right-l ul li.api-detail p:last-child {
+  color:red;
 }
 
-.api-detail:hover {
-  background-color: #5ace5eb7;
-}
 </style>

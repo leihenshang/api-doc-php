@@ -2,16 +2,17 @@
   <div class="user">
     <div class="text-box">
       <el-input
-        placeholder="请输入内容"
+        placeholder="请输入用户名/昵称/邮箱"
         v-model="keyword"
         clearable
-        style="width:10%;margin-right:8px"
-        @clear="getUserList();keyword=''"
+        style="width:20%;margin-right:8px"
+        @clear="keyword='';getUserList();"
+        size="small"
       ></el-input>
-      <el-button icon="el-icon-search" type="primary" plain size="small"></el-button>
+      <el-button icon="el-icon-search" type="primary" plain size="small" @click="getUserList()">搜索</el-button>
       <el-button size="small">添加用户</el-button>
     </div>
-    <div class="all-user" v-show="userList.count > 0" v-loading="loading">
+    <div class="all-user" v-loading="loading">
       <el-table :data="userList.list" stripe style="width: 100%" border>
         <el-table-column prop="id" label="id" width="100"></el-table-column>
         <el-table-column prop="name" label="登录名" width="180"></el-table-column>
@@ -28,7 +29,14 @@
         <el-table-column prop="last_login_ip" label="最后登录ip"></el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template slot-scope="scope">
-            <el-button type="text" size="small">编辑</el-button>
+            <el-dropdown :hide-on-click="false" trigger="click">
+              <el-button type="text" size="small">编辑</el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>删除用户</el-dropdown-item>
+                <el-dropdown-item>禁用用户</el-dropdown-item>
+                <el-dropdown-item>初始化密码</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -174,11 +182,11 @@ export default {
         );
     },
     //获取用户列表
-    getUserList(keyword) {
+    getUserList() {
       this.$http
         .get(this.apiAddress + "/user/list", {
           params: {
-            keyword,
+            keyword: this.keyword,
             project_id: this.$route.params.id,
             ps: this.ps,
             cp: this.cp

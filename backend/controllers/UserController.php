@@ -65,7 +65,11 @@ class UserController extends BaseController
 
         $res->where($whereArr);
         if ($user->keyword) {
-            $res->andWhere(['or', ['like', 'a.nick_name', $user->keyword . '%', false], ['a.email' => $user->keyword], ['a.name' => $user->keyword]]);
+            $res->andWhere(['or',
+                ['like', 'a.nick_name', $user->keyword . '%', false],
+                ['like', 'a.email', $user->keyword . '%', false],
+                ['like', 'a.name', $user->keyword . '%', false]
+            ]);
         }
 
         $recordCount = $res->count();
