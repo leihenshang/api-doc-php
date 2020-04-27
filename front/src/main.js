@@ -17,7 +17,7 @@ import "element-ui/lib/theme-chalk/index.css";
 Vue.prototype.apiAddress = "http://localhost:1000";
 Vue.prototype.userInfo = null;
 
-Vue.config.productionTip = true;
+Vue.config.productionTip = false;
 
 Vue.use(VueResource);
 Vue.use(Vuex);

@@ -46,32 +46,27 @@
           </li>
         </ul>
         <div class="btn">
-          <button @click="password.update = true">修改密码</button>
+          <el-button @click="dialogFormVisible = true" type="primary" size="small">修改密码</el-button>
         </div>
       </div>
     </div>
-    <div class="user-update-pwd" v-if="password.update === true ">
-      <ul>
-        <li>
-          <em>旧密码:</em>
-          <input type="password" v-model="password.old" placeholder="输入旧密码" autocomplete="off" />
-        </li>
-        <li>
-          <em>新密码:</em>
-          <input type="password" v-model="password.newFirst" placeholder="输入旧密码" />
-        </li>
-        <li>
-          <em>新密码:</em>
-          <input type="password" v-model="password.newSecond" placeholder="输入旧密码" />
-        </li>
-        <li>
-          <em></em>
-          <button @click="updatePwd()">确定</button>
-          <button @click="password.update = false">取消</button>
-        </li>
-      </ul>
-    </div>
-    <div class="user-update-pwd-background" v-if="password.update === true"></div>
+    <el-dialog title="新建用户" :visible.sync="dialogFormVisible" width="30%">
+      <el-form :model="form" label-width="80px" ref="form" :rules="rules">
+        <el-form-item label="旧密码" prop="old_pwd">
+          <el-input v-model="form.old_pwd" autocomplete="off" type="password" placeholder="旧密码"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="pwd">
+          <el-input v-model="form.pwd" autocomplete="off" type="password" placeholder="密码"></el-input>
+        </el-form-item>
+        <el-form-item label="重复密码" prop="re_pwd">
+          <el-input v-model="form.re_pwd" autocomplete="off" type="password" placeholder="重复密码"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updatePwd()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -81,15 +76,67 @@ const CODE_OK = 200;
 export default {
   name: "userCenter",
   data() {
+    //自定义的 密码验证，判断两次密码是否一致
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.form.pwd !== "") {
+          this.$refs.form.validateField("re_pwd");
+        }
+        callback();
+      }
+    };
+    var reValidatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.form.pwd) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       userInfo: {},
       editNickName: false,
       newNickname: "",
-      password: {
-        old: "",
-        newFirst: "",
-        newSecond: "",
-        update: false
+      form: {
+        old_pwd: "",
+        pwd: "",
+        re_pwd: ""
+      },
+      dialogFormVisible: false,
+      rules: {
+        old_pwd: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 50,
+            message: "长度在 6 到 50 个字符",
+            trigger: "blur"
+          }
+        ],
+        pwd: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 50,
+            message: "长度在 6 到 50 个字符",
+            trigger: "blur"
+          },
+          { validator: validatePass, trigger: "blur" }
+        ],
+        re_pwd: [
+          { required: true, message: "请再次输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 50,
+            message: "长度在 6 到 50 个字符",
+            trigger: "blur"
+          },
+          { validator: reValidatePass, trigger: "blur" }
+        ]
       }
     };
   },
@@ -153,50 +200,43 @@ export default {
     },
     //更新密码
     updatePwd() {
-      if (
-        this.password.old == "" ||
-        this.password.newFirst == "" ||
-        this.password.newSecond == ""
-      ) {
-        this.$message.error("密码不能为空");
-        return;
-      }
-
-      if (this.password.newFirst !== this.password.newSecond) {
-        this.$message.error("新密码重复数据不一致");
-        return;
-      }
-      if (this.password.newFirst === this.password.old) {
-        this.$message.error("新旧密码不能相同");
-        return;
-      }
-
-      this.$http
-        .post(
-          this.apiAddress + "/user/update-pwd",
-          {
-            oldPwd: this.password.old,
-            newPwd: this.password.newFirst,
-            rePwd: this.password.newSecond
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          res => {
-            let response = res.body;
-            if (response.code !== CODE_OK) {
-              this.$message.error("failed:" + response.msg);
-              return;
-            } else {
-              this.$message.error("success");
-              this.getUserInfo();
-              this.password.update = !this.password.update;
-            }
-          },
-          () => {
-            this.$message.error("请求发生错误");
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          if (this.form.pwd === this.form.old_pwd) {
+            this.$message.error("新旧密码不能相同");
+            return;
           }
-        );
+
+          this.$http
+            .post(
+              this.apiAddress + "/user/update-pwd",
+              {
+                oldPwd: this.form.old_pwd,
+                newPwd: this.form.pwd,
+                rePwd: this.form.re_pwd
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              res => {
+                let response = res.body;
+                if (response.code !== CODE_OK) {
+                  this.$message.error(response.msg);
+                  this.dialogFormVisible = false;
+                  this.$refs.form.resetFields();
+                } else {
+                  this.$message.success("success");
+                  this.getUserInfo();
+                }
+              },
+              () => {
+                this.$message.error("请求发生错误");
+              }
+            );
+        } else {
+          return false;
+        }
+      });
     }
   },
   computed: {}
@@ -210,12 +250,13 @@ export default {
 }
 
 .user-content {
-  border: 1px solid black;
+  border: 1px solid rgb(195, 195, 195);
   width: 40%;
   margin: 100px auto;
   padding: 50px 0;
   position: relative;
   background-color: #fff;
+  border-radius: 10px;
 }
 
 .avatar {
@@ -267,53 +308,5 @@ export default {
 
 .btn button {
   display: inline-block;
-}
-
-.user-update-pwd {
-  border: 1px solid black;
-  width: 600px;
-  height: 200px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  background-color: #fff;
-  padding: 40px;
-  padding-bottom: 80px;
-  box-shadow: 10px 10px;
-  border-radius: 5px;
-}
-
-.user-update-pwd ul {
-  border: 1px solid black;
-}
-
-.user-update-pwd ul li {
-  margin: 20px 0;
-}
-
-.user-update-pwd ul li input {
-  height: 30px;
-  width: 400px;
-}
-
-.user-update-pwd ul em {
-  width: 120px;
-  text-align: center;
-  display: inline-block;
-}
-
-.user-update-pwd button {
-  width: 60px;
-  height: 30px;
-}
-
-.user-update-pwd-background {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(61, 55, 55, 0.589);
 }
 </style>

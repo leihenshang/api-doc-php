@@ -24,12 +24,6 @@ class GroupController extends BaseController
         return $behaviors;
     }
 
-    public function actionTest()
-    {
-        $res = Group::find()->where(['id' => '1'])->one();
-        return ['data' => $res];
-    }
-
     /**
      * 创建数据
      * @return array

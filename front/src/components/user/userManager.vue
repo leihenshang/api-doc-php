@@ -131,7 +131,7 @@ export default {
           {
             type: "email",
             message: "请输入邮箱地址",
-            trigger: "change"
+            trigger: "blur"
           }
         ],
         pwd: [
@@ -383,6 +383,7 @@ export default {
     },
     transferState(state) {
       state = parseInt(state);
+        let str = "";
       //1正常2禁用3未激活
       switch (state) {
         case 1:
@@ -402,18 +403,21 @@ export default {
     },
     transferType(type) {
       type = parseInt(type);
+      let str = "";
       //1普通用户2管理员
       switch (type) {
         case 1:
-          return "普通用户";
+          str = "普通用户";
           break;
         case 2:
-          return "管理员";
+          str = "管理员";
           break;
         default:
-          return "未知";
+          str = "未知";
           break;
       }
+
+      return str;
     }
   }
 };

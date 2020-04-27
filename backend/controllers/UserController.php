@@ -15,9 +15,9 @@ class UserController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
-            'actions' => ['list', 'update-status', 'get-user-info', 'update-nickname', 'update-pwd', 'create','init-pwd'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
+            'actions' => ['list', 'update-status', 'get-user-info', 'update-nickname', 'update-pwd', 'create', 'init-pwd'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
-            'projectPermission' => ['update-status', 'update-nickname', 'date-pwd','init-pwd']
+            'projectPermission' => ['update-status', 'update-nickname', 'date-pwd', 'init-pwd']
         ];
         return $behaviors;
     }
@@ -257,12 +257,12 @@ class UserController extends BaseController
         }
 
         //查找用户信息
-        $res = UserInfo::findOne(['id' => $this->userInfo->id, 'pwd' => $user->pwd, 'is_deleted' => UserInfo::IS_DELETED['no']]);
+        $res = UserInfo::findOne(['id' => $this->userInfo->id, 'pwd' => UserInfo::encryptionPwd($user->pwd), 'is_deleted' => UserInfo::IS_DELETED['no']]);
         if (!$res) {
             return $this->failed('获取用户信息失败');
         }
 
-        $res->pwd = $user->re_pwd;
+        $res->pwd = UserInfo::encryptionPwd($user->re_pwd);
         if (!$res->save()) {
             return $this->failed(current($user->getFirstErrors()));
         }
@@ -282,17 +282,17 @@ class UserController extends BaseController
         }
 
         //查找用户信息
-        $res = UserInfo::findOne(['id' => $userId,  'is_deleted' => UserInfo::IS_DELETED['no']]);
+        $res = UserInfo::findOne(['id' => $userId, 'is_deleted' => UserInfo::IS_DELETED['no']]);
         if (!$res) {
             return $this->failed('获取用户信息失败');
         }
 
-        $res->pwd = '123456';
+        $res->pwd = UserInfo::encryptionPwd('123456');
         if (!$res->save()) {
             return $this->failed(current($res->getFirstErrors()));
         }
 
-        return $this->success([],'密码重置为 123456');
+        return $this->success([], '密码重置为 123456');
     }
 
     /**
@@ -333,5 +333,10 @@ class UserController extends BaseController
         $verbs['login'] = ['post'];
         $verbs['reg'] = ['post'];
         return $verbs;
+    }
+
+    public function actionTest($pwd)
+    {
+        die(UserInfo::encryptionPwd($pwd));
     }
 }

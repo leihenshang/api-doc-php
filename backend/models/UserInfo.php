@@ -132,7 +132,7 @@ class UserInfo extends BaseModel
     {
         $userInfo = self::findOne([
             'name' => $username,
-            'pwd' => $userPassword,
+            'pwd' => self::encryptionPwd($userPassword),
             'is_deleted' => self::IS_DELETED['no']
         ]);
         if (!$userInfo) {
@@ -158,7 +158,12 @@ class UserInfo extends BaseModel
      */
     public static function createToken()
     {
-        return md5(mt_rand(1, 999999));
+        return md5(mt_rand(1, 999999).time());
+    }
+
+    public static function encryptionPwd(string $pwd)
+    {
+        return sha1(md5($pwd.$pwd).'myDocIsMyProjectUseVueAndPhpYii2');
     }
 
     /**
@@ -241,6 +246,7 @@ class UserInfo extends BaseModel
         //修改状态
         $this->state = self::USER_STATE['normal'][0];
         $this->nick_name = $this->nick_name ?: '新用户-' . $this->name;
+        $this->pwd = self::encryptionPwd($this->pwd);
 
 
         $trans = self::getDb()->beginTransaction();
@@ -249,10 +255,10 @@ class UserInfo extends BaseModel
                 throw new Exception('用户保存失败!' . current($this->getFirstErrors()));
             }
 
-           /* $sendMail = Message::sendCodeToMail($this->email);
-            if (is_string($sendMail)) {
-                throw new Exception($sendMail);
-            }*/
+            /* $sendMail = Message::sendCodeToMail($this->email);
+             if (is_string($sendMail)) {
+                 throw new Exception($sendMail);
+             }*/
 
             $trans->commit();
 
