@@ -76,7 +76,7 @@ class UserController extends BaseController
 
         $recordCount = $res->count();
 
-        $res = $res->limit($user->ps)->offset(($user->cp - 1) * $user->ps)->all();
+        $res = $res->limit($user->ps)->offset(($user->cp - 1) * $user->ps)->orderBy('id DESC')->all();
         return $this->success(['count' => $recordCount, 'list' => $res]);
     }
 

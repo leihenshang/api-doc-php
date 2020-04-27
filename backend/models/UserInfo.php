@@ -73,7 +73,7 @@ class UserInfo extends BaseModel
             [['create_time', 'last_login_time', 'token_expire_time'], 'safe'],
             [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 100],
             ['email', 'email'],
-            [['re_pwd', 'name', 'email','nick_name', 'code'], 'required', 'on' => self::SCENARIO_REGISTER],
+            [['re_pwd', 'name'], 'required', 'on' => self::SCENARIO_REGISTER],
             ['re_pwd', 'required', 'on' => self::SCENARIO_UPDATE_PWD],
             [['mobile_number'], 'string', 'max' => 11],
             [['keyword', 'code'], 'string', 'max' => 50],
@@ -85,7 +85,7 @@ class UserInfo extends BaseModel
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
-        $scenarios[self::SCENARIO_QUERY] = ['keyword','ps','cp'];
+        $scenarios[self::SCENARIO_QUERY] = ['keyword', 'ps', 'cp'];
         $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'nick_name', 'email'];
         $scenarios[self::SCENARIO_UPDATE_PWD] = ['re_pwd', 'pwd'];
         return $scenarios;
@@ -188,7 +188,7 @@ class UserInfo extends BaseModel
             'is_deleted' => self::IS_DELETED['no']
         ]);
 
-        if(!$userInfo){
+        if (!$userInfo) {
             return null;
         }
 
@@ -224,15 +224,23 @@ class UserInfo extends BaseModel
             return '两次输入的密码不一致!~';
         }
 
-        //检查登录名唯一性
-        $res = self::find()->where(['or', ['name' => $this->name], ['email' => $this->email], ['nick_name' => $this->nick_name]])->one();
+        //检查登录名或者昵称的唯一性
+        $res = self::find()->where(['or', ['name' => $this->name]]);
+        if ($this->email) {
+            $res->orWhere(['email' => $this->email]);
+        }
+        if ($this->nick_name) {
+            $res->orWhere(['nick_name' => $this->nick_name]);
+        }
+
+        $res = $res->one();
         if ($res) {
             return '用户名或邮箱重复';
         }
 
         //修改状态
         $this->state = self::USER_STATE['normal'][0];
-        $this->nick_name = '新用户-' . $this->name;
+        $this->nick_name = $this->nick_name ?: '新用户-' . $this->name;
 
 
         $trans = self::getDb()->beginTransaction();
@@ -241,10 +249,10 @@ class UserInfo extends BaseModel
                 throw new Exception('用户保存失败!' . current($this->getFirstErrors()));
             }
 
-            $sendMail = Message::sendCodeToMail($this->email);
+           /* $sendMail = Message::sendCodeToMail($this->email);
             if (is_string($sendMail)) {
                 throw new Exception($sendMail);
-            }
+            }*/
 
             $trans->commit();
 

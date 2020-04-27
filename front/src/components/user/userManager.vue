@@ -12,14 +12,10 @@
       <el-button icon="el-icon-search" type="primary" plain size="small" @click="getUserList()">搜索</el-button>
       <el-button size="small" icon="el-icon-plus" @click="dialogFormVisible = true">用户</el-button>
       <el-dialog title="新建用户" :visible.sync="dialogFormVisible" width="30%">
-        <el-form :model="form" label-width="80px" ref="form">
+        <el-form :model="form" label-width="80px" ref="form" :rules="rules">
           <el-form-item label="登录名" prop="name">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="昵称" prop="nick_name">
-            <el-input v-model="form.nick_name" autocomplete="off" placeholder="昵称"></el-input>
-          </el-form-item>
-
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="form.email" autocomplete="off"></el-input>
           </el-form-item>
@@ -80,12 +76,36 @@
   </div>
 </template>
 <script>
+import Schema from "async-validator";
+Schema.warning = function() {};
+
 const CODE_OK = 200;
 const IS_DELETED = 1;
 
 export default {
   name: "userManager",
   data() {
+    //自定义的 密码验证，判断两次密码是否一致
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.form.pwd !== "") {
+          this.$refs.form.validateField("re_pwd");
+        }
+        callback();
+      }
+    };
+    var reValidatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.form.pwd) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       userList: [],
       projectUser: [],
@@ -96,10 +116,42 @@ export default {
       dialogFormVisible: false,
       form: {
         name: "",
-        nick_name: "",
         email: "",
         pwd: "",
         re_pwd: ""
+      },
+      rules: {
+        name: [
+          { required: true, message: "请输入登录名称", trigger: "blur" },
+          { min: 2, max: 50, message: "长度在 2 到 50 个字符", trigger: "blur" }
+        ],
+        email: [
+          {
+            type: "email",
+            message: "请输入邮箱地址",
+            trigger: "change"
+          }
+        ],
+        pwd: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 50,
+            message: "长度在 6 到 50 个字符",
+            trigger: "blur"
+          },
+          { validator: validatePass, trigger: "blur" }
+        ],
+        re_pwd: [
+          { required: true, message: "请再次输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 50,
+            message: "长度在 6 到 50 个字符",
+            trigger: "blur"
+          },
+          { validator: reValidatePass, trigger: "blur" }
+        ]
       }
     };
   },
@@ -145,31 +197,36 @@ export default {
       return str;
     }, //删除项目用户
     createUser() {
-      this.$refs.form.resetFields();
-      return;
-      this.$http
-        .post(
-          this.apiAddress + "/user/create",
-          {
-            ...this.form
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.getUserList();
-              this.$message.success("成功！~");
-            } else {
-              this.$message.error(response.msg);
-            }
-            this.dialogFormVisible = false;
-          },
-          () => {
-            this.$message.error("操作失败!");
-          }
-        );
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.$http
+            .post(
+              this.apiAddress + "/user/create",
+              {
+                ...this.form
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.getUserList();
+                  this.$message.success("成功！~");
+                } else {
+                  this.$message.error(response.msg);
+                }
+                this.dialogFormVisible = false;
+                this.$refs.form.resetFields();
+              },
+              () => {
+                this.$message.error("操作失败!");
+              }
+            );
+        } else {
+          return false;
+        }
+      });
     },
     //删除项目用户
     delUser(id) {
