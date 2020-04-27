@@ -28,6 +28,30 @@ export default {
   created() {},
 
   data() {
+    let route = [
+      {
+        title: "项目列表",
+        route: "",
+        clild: "",
+        isClick: true
+      },
+      {
+        title: "个人中心",
+        route: "myCenter",
+        clild: "",
+        isClick: false
+      }
+    ];
+
+    if (this.$store.state.userInfo.type == 2) {
+      route.push({
+        title: "用户管理",
+        route: "userManager",
+        clild: "",
+        isClick: false
+      });
+    }
+
     return {
       projectList: {},
       pageSize: 5,
@@ -36,26 +60,7 @@ export default {
       updateData: null,
       itemCount: 0,
       hideShade: true,
-      insideRoute: [
-        {
-          title: "项目列表",
-          route: "",
-          clild: "",
-          isClick: true
-        },
-        {
-          title: "个人中心",
-          route: "myCenter",
-          clild: "",
-          isClick: false
-        },
-        {
-          title: "用户管理",
-          route: "userManager",
-          clild: "",
-          isClick: false
-        }
-      ]
+      insideRoute: route
     };
   },
   components: {

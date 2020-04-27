@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use app\behaviors\UserVerify;
-use app\models\User;
 use app\models\UserInfo;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -16,9 +15,9 @@ class UserController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
-            'actions' => ['list', 'update-status', 'get-user-info', 'update-nickname', 'update-pwd','create'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
+            'actions' => ['list', 'update-status', 'get-user-info', 'update-nickname', 'update-pwd', 'create','init-pwd'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
-            'projectPermission' => ['update-status','update-nickname','date-pwd']
+            'projectPermission' => ['update-status', 'update-nickname', 'date-pwd','init-pwd']
         ];
         return $behaviors;
     }
@@ -122,7 +121,7 @@ class UserController extends BaseController
          * 4.邮箱
          */
 
-        if($this->userInfo->type != UserInfo::USER_TYPE['admin'][0]){
+        if ($this->userInfo->type != UserInfo::USER_TYPE['admin'][0]) {
             return $this->failed('普通用户不能进行用户创建');
         }
 
@@ -165,16 +164,15 @@ class UserController extends BaseController
      */
     public function actionUpdateStatus()
     {
+        if ($this->userInfo->type != UserInfo::USER_TYPE['admin'][0]) {
+            return $this->failed('非管理员不能操作');
+        }
+
         $userId = Yii::$app->request->post('userId', null);
         $sate = Yii::$app->request->post('state', null);
         $is_deleted = Yii::$app->request->post('is_deleted', null);
         if (!$userId || !is_numeric($userId)) {
             return $this->failed('userId不能为空或userId错误');
-        }
-
-        //不能更改自己
-        if ($this->userInfo->id == $userId) {
-            return $this->failed('不能对自己进行操作');
         }
 
         if (!$is_deleted && !$sate) {
@@ -261,7 +259,7 @@ class UserController extends BaseController
         //查找用户信息
         $res = UserInfo::findOne(['id' => $this->userInfo->id, 'pwd' => $user->pwd, 'is_deleted' => UserInfo::IS_DELETED['no']]);
         if (!$res) {
-            return $this->failed('获取用户信息失败,可能是密码错误');
+            return $this->failed('获取用户信息失败');
         }
 
         $res->pwd = $user->re_pwd;
@@ -270,6 +268,31 @@ class UserController extends BaseController
         }
 
         return $this->success();
+    }
+
+    /**
+     * 初始化密码
+     * @return array
+     */
+    public function actionInitPwd()
+    {
+        $userId = Yii::$app->request->post('userId', '');
+        if (!$userId) {
+            return $this->failed('用户id不能为空');
+        }
+
+        //查找用户信息
+        $res = UserInfo::findOne(['id' => $userId,  'is_deleted' => UserInfo::IS_DELETED['no']]);
+        if (!$res) {
+            return $this->failed('获取用户信息失败');
+        }
+
+        $res->pwd = '123456';
+        if (!$res->save()) {
+            return $this->failed(current($res->getFirstErrors()));
+        }
+
+        return $this->success([],'密码重置为 123456');
     }
 
     /**

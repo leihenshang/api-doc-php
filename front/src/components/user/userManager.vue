@@ -14,16 +14,16 @@
       <el-dialog title="新建用户" :visible.sync="dialogFormVisible" width="30%">
         <el-form :model="form" label-width="80px" ref="form" :rules="rules">
           <el-form-item label="登录名" prop="name">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-input v-model="form.name" autocomplete="off" placeholder="登录名"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
-            <el-input v-model="form.email" autocomplete="off"></el-input>
+            <el-input v-model="form.email" autocomplete="off" placeholder="邮箱"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="pwd">
             <el-input v-model="form.pwd" autocomplete="off" type="password" placeholder="密码"></el-input>
           </el-form-item>
           <el-form-item label="重复密码" prop="re_pwd">
-            <el-input v-model="form.re_pwd" autocomplete="off" type="password"></el-input>
+            <el-input v-model="form.re_pwd" autocomplete="off" type="password" placeholder="重复密码"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -49,12 +49,14 @@
         <el-table-column prop="last_login_ip" label="最后登录ip"></el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template slot-scope="scope">
-            <el-dropdown :hide-on-click="false" trigger="click">
+            <el-dropdown :hide-on-click="false" trigger="click" @command="handleCommand">
               <el-button type="text" size="small">编辑</el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>删除用户</el-dropdown-item>
-                <el-dropdown-item>禁用用户</el-dropdown-item>
-                <el-dropdown-item>初始化密码</el-dropdown-item>
+                <el-dropdown-item :command="{action:'del',data:scope.row}">删除用户</el-dropdown-item>
+                <el-dropdown-item
+                  :command="{action:'updateState',data:scope.row}"
+                >{{ scope.row.state == 2 || scope.row.state == 3 ? "启用用户" : "禁用用户" }}</el-dropdown-item>
+                <el-dropdown-item :command="{action:'initPwd',data:scope.row}">初始化密码</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -159,6 +161,26 @@ export default {
     this.getUserList();
   },
   methods: {
+    //处理下拉列表命令
+    handleCommand(command) {
+      switch (command.action) {
+        case "del":
+          this.delUser(command.data.id);
+          break;
+        case "updateState":
+          command.data.state == 2 || command.data.state == 3
+            ? this.updateState(command.data.id, 1)
+            : this.updateState(command.data.id, 2);
+
+          break;
+        case "initPwd":
+          this.initPwd(command.data.id);
+          break;
+
+        default:
+          break;
+      }
+    },
     //计算用户类型
     userType(val) {
       let str;
@@ -228,73 +250,109 @@ export default {
         }
       });
     },
-    //删除项目用户
-    delUser(id) {
-      if (!window.confirm("确认删除用户?")) {
-        return;
-      }
-
-      this.$http
-        .post(
-          this.apiAddress + "/user/update-status",
-          {
-            is_deleted: IS_DELETED,
-            userId: id,
-            token: this.$store.state.userInfo.token
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.getUserList();
-              this.$message.error("成功！~");
-            }
-          },
-          res => {
-            let response = res.body;
-            this.$message.error(
-              "操作失败!" + !response.msg ? response.msg : ""
+    updateState(id, state) {
+      this.$confirm("此操作将改变用户状态, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$http
+            .post(
+              this.apiAddress + "/user/update-status",
+              {
+                state,
+                userId: id
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.getUserList();
+                  this.$message.success("成功！~");
+                } else {
+                  this.$message.error(response.msg);
+                }
+              },
+              () => {
+                this.$message.error("请求失败!");
+              }
             );
-          }
-        );
+        })
+        .catch(() => {});
     },
-    //启用/禁用用户
-    enableOrdisabledUser(id, state) {
-      if (!window.confirm("确认修改用户状态?")) {
-        return;
-      }
-
-      if ([2, 1].indexOf(state) === -1) {
-        this.$message.error("参数错误");
-        return;
-      }
-
-      this.$http
-        .post(
-          this.apiAddress + "/user/update-status",
-          {
-            state: state,
-            userId: id
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.getUserList();
-              this.$message.success("成功！~");
-            }
-          },
-          () => {
-            this.$message.error("操作失败!");
-          }
-        );
+    //初始化用户密码
+    delUser(id) {
+      this.$confirm("此操作将删除该用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$http
+            .post(
+              this.apiAddress + "/user/update-status",
+              {
+                is_deleted: IS_DELETED,
+                userId: id
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.getUserList();
+                  this.$message.success("成功！~");
+                } else {
+                  this.$message.error(response.msg);
+                }
+              },
+              () => {
+                this.$message.error("请求失败!");
+              }
+            );
+        })
+        .catch(() => {});
     },
+    initPwd(id) {
+      this.$confirm("此操作将重置用户密码, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$http
+            .post(
+              this.apiAddress + "/user/init-pwd",
+              {
+                userId: id
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.getUserList();
+                  this.$message.success("成功:" + response.msg);
+                } else {
+                  this.$message.error(response.msg);
+                }
+              },
+              () => {
+                this.$message.error("请求失败!");
+              }
+            );
+        })
+        .catch(() => {});
+    },
+
     //获取用户列表
     getUserList(cp) {
+      this.loading = true;
       if (!cp) {
         cp = this.cp;
       }
