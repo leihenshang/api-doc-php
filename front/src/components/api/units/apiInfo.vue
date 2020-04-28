@@ -1,6 +1,86 @@
 <template>
   <div class="api-info-box">
     <div class="info">
+      <el-form :model="apiInfo" :rules="rules" ref="form" label-width="100px">
+        <el-form-item label="分组" prop="group_id">
+          <el-select v-model="apiInfo.group_id" placeholder="分组">
+            <el-option
+              v-for="item in groupList"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="请求协议" prop="protocol_type">
+          <el-select v-model="apiInfo.protocol_type" placeholder="选择请求协议">
+            <el-option
+              v-for="item in propertyList.http_protocol"
+              :key="item.id"
+              :label="item.tag_name"
+              :value="item.tag_name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="请求方式" prop="http_method_type">
+          <el-select v-model="apiInfo.http_method_type" placeholder="选择请求方式">
+            <el-option
+              v-for="item in propertyList.http_method"
+              :key="item.id"
+              :label="item.tag_name"
+              :value="item.tag_name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="返回类型" prop="http_return_type">
+          <el-select v-model="apiInfo.http_return_type" placeholder="选择返回类型">
+            <el-option
+              v-for="item in propertyList.http_return"
+              :key="item.id"
+              :label="item.description"
+              :value="item.tag_name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="url" prop="url">
+          <el-input v-model="apiInfo.url"></el-input>
+        </el-form-item>
+
+        <el-form-item label="名称" prop="url">
+          <el-input v-model="apiInfo.api_name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="根对象名" prop="url">
+          <el-input v-model="apiInfo.object_name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="方法" prop="url">
+          <el-input v-model="apiInfo.function_name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="开发语言" prop="develop_language">
+          <el-select v-model="apiInfo.develop_language" placeholder="选择开发语言">
+            <el-option
+              v-for="item in propertyList.api_language"
+              :key="item.id"
+              :label="item.tag_name"
+              :value="item.tag_name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="info">
       <ValidationObserver ref="form" tag="div">
         <dl>
           <dd>
@@ -109,6 +189,7 @@ export default {
   },
   data() {
     return {
+      rules: {},
       apiInfo: {
         group_id: this.groupId, //分组
         project_id: 0, //项目Id
@@ -167,14 +248,14 @@ export default {
             break;
 
           case "http_protocol":
-               this.apiInfo.protocol_type = val[item][0].tag_name;
+            this.apiInfo.protocol_type = val[item][0].tag_name;
             break;
 
           case "http_return":
-               this.apiInfo.http_return_type = val[item][0].tag_name;
+            this.apiInfo.http_return_type = val[item][0].tag_name;
             break;
           case "api_language":
-               this.apiInfo.develop_language = val[item][0].tag_name;
+            this.apiInfo.develop_language = val[item][0].tag_name;
             break;
         }
       }
