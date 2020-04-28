@@ -222,11 +222,11 @@ export default {
                 let response = res.body;
                 if (response.code !== CODE_OK) {
                   this.$message.error(response.msg);
-                  this.dialogFormVisible = false;
-                  this.$refs.form.resetFields();
                 } else {
                   this.$message.success("success");
                   this.getUserInfo();
+                  this.dialogFormVisible = false;
+                  this.$refs.form.resetFields();
                 }
               },
               () => {

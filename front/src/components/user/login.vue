@@ -82,20 +82,19 @@ export default {
                 Vue.prototype.userInfo = userInfo;
                 this.$store.commit("saveUserInfo", userInfo);
                 localStorage.setItem("userInfo", JSON.stringify(userInfo));
-                this.$router.push("/");
+                this.$router
+                  .push("/")
+                  .catch()
+                  .catch(() => {});
               } else {
                 this.$message.error("登录错误！" + response.msg);
                 localStorage.removeItem("userInfo");
                 Vue.prototype.userInfo = null;
-                this.$router.push("/login");
+                this.$router.push("/login").catch(() => {});
               }
             },
-            res => {
-              let response = res.body;
-              this.$message.error(
-                "操作失败!" + !response.msg ? response.msg : ""
-              );
-              return;
+            () => {
+              this.$message.error("请求失败!");
             }
           );
       });
