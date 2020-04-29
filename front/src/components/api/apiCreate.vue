@@ -28,7 +28,7 @@
       :propertyList="propertyList"
       :groupId="groupId"
       v-on:update:apiInfo="apiInfo = $event"
-      v-on:error="errors = $event"
+      ref="apiInfo"
     />
     <requestParams
       :propertyList="propertyList"
@@ -93,52 +93,51 @@ export default {
     },
     //创建api
     createApi() {
-      if (this.errors.length > 1) {
-        this.$message.error(this.errors);
-        return;
-      }
+      let res = this.$refs.apiInfo.$refs.form.validate(validate => {
+        if (validate) {
+          //loading
+          let loadingInstance = this.$loading({ fullscreen: true });
+          let data = Object.assign(this.finalData, this.apiInfo);
+          data = Object.assign(data, this.apiData);
 
-      //loading
-      let loadingInstance = this.$loading({ fullscreen: true });
-
-      let data = Object.assign(this.finalData, this.apiInfo);
-      data = Object.assign(data, this.apiData);
-
-      this.$http
-        .post(
-          this.apiAddress + "/api/create",
-          {
-            group_id: data.group_id,
-            project_id: this.$route.params.id,
-            data: JSON.stringify(data)
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.$message.success("保存api成功!");
-              // this.$router.push({ name: "apiPage" });
-              //跳转携带分组参数
-              this.$router.push({
-                name: "apiList",
-                params: { groupId: this.groupId }
-              });
-            } else {
-              this.$message.error("  保存api失败 ： " + response.msg);
-            }
-            this.$nextTick(() => {
-              loadingInstance.close();
-            });
-          },
-          () => {
-            this.$message.error("操作失败");
-            this.$nextTick(() => {
-              loadingInstance.close();
-            });
-          }
-        );
+          this.$http
+            .post(
+              this.apiAddress + "/api/create",
+              {
+                group_id: data.group_id,
+                project_id: this.$route.params.id,
+                data: JSON.stringify(data)
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.$message.success("保存api成功!");
+                  //跳转携带分组参数
+                  this.$router.push({
+                    name: "apiList",
+                    params: { groupId: this.groupId }
+                  });
+                } else {
+                  this.$message.error("  保存api失败 ： " + response.msg);
+                }
+                this.$nextTick(() => {
+                  loadingInstance.close();
+                });
+              },
+              () => {
+                this.$message.error("操作失败");
+                this.$nextTick(() => {
+                  loadingInstance.close();
+                });
+              }
+            );
+        } else {
+          return false;
+        }
+      });
     },
 
     //获取分组信息
