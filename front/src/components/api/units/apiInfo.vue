@@ -1,68 +1,77 @@
 <template>
   <div class="api-info-box">
     <div class="info">
-      <el-form :model="apiInfo" :rules="rules" ref="form" label-width="100px">
-        <el-form-item label="分组" prop="group_id">
-          <el-select v-model="apiInfo.group_id" placeholder="分组">
-            <el-option
-              v-for="item in groupList"
-              :key="item.id"
-              :label="item.title"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+      <el-form :model="apiInfo" :rules="rules" ref="form" size="small">
+        <el-form-item>
+          <el-col :span="5">
+            <el-form-item prop="group_id" label="分组" label-width="80px">
+              <el-select v-model="apiInfo.group_id" placeholder="分组">
+                <el-option
+                  v-for="item in groupList"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="5">
+            <el-form-item label="请求协议" prop="protocol_type" label-width="80px">
+              <el-select v-model="apiInfo.protocol_type" placeholder="选择请求协议">
+                <el-option
+                  v-for="item in propertyList.http_protocol"
+                  :key="item.id"
+                  :label="item.tag_name"
+                  :value="item.tag_name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="5">
+            <el-form-item label="请求方式" prop="http_method_type" label-width="80px">
+              <el-select v-model="apiInfo.http_method_type" placeholder="选择请求方式">
+                <el-option
+                  v-for="item in propertyList.http_method"
+                  :key="item.id"
+                  :label="item.tag_name"
+                  :value="item.tag_name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="返回类型" prop="http_return_type" label-width="80px">
+              <el-select v-model="apiInfo.http_return_type" placeholder="选择返回类型">
+                <el-option
+                  v-for="item in propertyList.http_return"
+                  :key="item.id"
+                  :label="item.description"
+                  :value="item.tag_name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-form-item>
 
-        <el-form-item label="请求协议" prop="protocol_type">
-          <el-select v-model="apiInfo.protocol_type" placeholder="选择请求协议">
-            <el-option
-              v-for="item in propertyList.http_protocol"
-              :key="item.id"
-              :label="item.tag_name"
-              :value="item.tag_name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="请求方式" prop="http_method_type">
-          <el-select v-model="apiInfo.http_method_type" placeholder="选择请求方式">
-            <el-option
-              v-for="item in propertyList.http_method"
-              :key="item.id"
-              :label="item.tag_name"
-              :value="item.tag_name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="返回类型" prop="http_return_type">
-          <el-select v-model="apiInfo.http_return_type" placeholder="选择返回类型">
-            <el-option
-              v-for="item in propertyList.http_return"
-              :key="item.id"
-              :label="item.description"
-              :value="item.tag_name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="url" prop="url">
+        <el-form-item label="url" prop="url" label-width="80px">
           <el-input v-model="apiInfo.url"></el-input>
         </el-form-item>
 
-        <el-form-item label="名称" prop="url">
+        <el-form-item label="名称" prop="api_name" label-width="80px">
           <el-input v-model="apiInfo.api_name"></el-input>
         </el-form-item>
 
-        <el-form-item label="根对象名" prop="url">
+        <el-form-item label="根对象名" prop="object_name" label-width="80px">
           <el-input v-model="apiInfo.object_name"></el-input>
         </el-form-item>
 
-        <el-form-item label="方法" prop="url">
+        <el-form-item label="方法" prop="function_name" label-width="80px">
           <el-input v-model="apiInfo.function_name"></el-input>
         </el-form-item>
 
-        <el-form-item label="开发语言" prop="develop_language">
+        <el-form-item label="开发语言" prop="develop_language" label-width="80px">
           <el-select v-model="apiInfo.develop_language" placeholder="选择开发语言">
             <el-option
               v-for="item in propertyList.api_language"
@@ -72,15 +81,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
       </el-form>
     </div>
 
-    <div class="info">
+    <!-- <div class="info">
       <ValidationObserver ref="form" tag="div">
         <dl>
           <dd>
@@ -172,7 +176,7 @@
           </dd>
         </dl>
       </ValidationObserver>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -189,9 +193,28 @@ export default {
   },
   data() {
     return {
-      rules: {},
+      rules: {
+        group_id: [{ required: true, message: "请选择分组", trigger: "blur" }],
+        protocol_type: [
+          { required: true, message: "请选择协议类型", trigger: "blur" }
+        ],
+        http_method_type: [
+          { required: true, message: "请选择分组", trigger: "blur" }
+        ],
+        http_return_type: [
+          { required: true, message: "请选择分组", trigger: "blur" }
+        ],
+
+        url: [{ required: true, message: "请输入url", trigger: "blur" }],
+        api_name: [
+          { required: true, message: "请输入api名称", trigger: "blur" }
+        ],
+        develop_language: [
+          { required: true, message: "请选择开发语言", trigger: "blur" }
+        ]
+      },
       apiInfo: {
-        group_id: this.groupId, //分组
+        group_id: this.groupId == 0 ? null : this.groupId, //分组
         project_id: 0, //项目Id
         protocol_type: "", //协议
         http_method_type: "", //http请求方法
@@ -210,36 +233,36 @@ export default {
     apiData: function() {
       this.apiInfo = this.apiData;
     },
-    apiInfo: {
-      handler: function(newdata) {
-        this.isFirstUpdate++;
-        //处理更新时第一次
-        if (
-          this.isFirstUpdate === 1 ||
-          this.isFirstUpdate === 2 ||
-          this.isFirstUpdate === 3
-        ) {
-          this.$refs.form.reset();
-          this.$emit("error", "");
-          return;
-        }
+    // apiInfo: {
+    //   handler: function(newdata) {
+    //     this.isFirstUpdate++;
+    //     //处理更新时第一次
+    //     if (
+    //       this.isFirstUpdate === 1 ||
+    //       this.isFirstUpdate === 2 ||
+    //       this.isFirstUpdate === 3
+    //     ) {
+    //       this.$refs.form.reset();
+    //       this.$emit("error", "");
+    //       return;
+    //     }
 
-        this.$refs.form.validate().then(success => {
-          if (!success) {
-            this.$emit("error", "信息填写错误");
-            return;
-          }
+    //     this.$refs.form.validate().then(success => {
+    //       if (!success) {
+    //         this.$emit("error", "信息填写错误");
+    //         return;
+    //       }
 
-          this.$emit("error", "");
-          this.$emit("update:apiInfo", newdata);
-          // Wait until the models are updated in the UI
-          this.$nextTick(() => {
-            this.$refs.form.reset();
-          });
-        });
-      },
-      deep: true
-    },
+    //       this.$emit("error", "");
+    //       this.$emit("update:apiInfo", newdata);
+    //       // Wait until the models are updated in the UI
+    //       this.$nextTick(() => {
+    //         this.$refs.form.reset();
+    //       });
+    //     });
+    //   },
+    //   deep: true
+    // },
     propertyList: function(val) {
       for (let item in val) {
         switch (item) {
@@ -278,9 +301,10 @@ dl dd div {
 
 .info {
   border: 1px solid #dddddd;
-  padding: 10px 10px 30px 10px;
+  padding: 20px 10px 0 0;
   position: relative;
   background-color: #fff;
+  box-sizing: border-box;
 }
 
 .info em {
