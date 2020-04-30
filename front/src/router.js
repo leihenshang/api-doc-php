@@ -35,8 +35,9 @@ const router = new VueRouter({
     {
       path: "/",
       component: Home,
+      redirect: "projectList",
       children: [
-        { path: "", component: ProjectList, name: "projectList" },
+        { path: "projectList", component: ProjectList, name: "projectList" },
         {
           path: "myCenter",
           component: MyCenter,

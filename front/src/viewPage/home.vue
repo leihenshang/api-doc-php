@@ -5,7 +5,12 @@
     </div>
     <div class="content">
       <div class="left">
-        <leftMenu :menuList="insideRoute" />
+        <el-menu :default-active="$route.path" :router="true" ref="menu" class="el-menu">
+          <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
+            <i class="el-icon-setting"></i>
+            <span slot="title">{{item.title}}</span>
+          </el-menu-item>
+        </el-menu>
       </div>
       <div class="right">
         <transition name="el-fade-in-linear" mode="out-in" appear>
@@ -18,7 +23,6 @@
 
 <script>
 import TopBar from "../components/common/topBar";
-import LeftMenu from "../components/common/leftMenu";
 
 const CODE_OK = 200;
 const PAGE_SIZE = 5;
@@ -31,24 +35,18 @@ export default {
     let route = [
       {
         title: "项目列表",
-        route: "",
-        clild: "",
-        isClick: true
+        route: "/projectList"
       },
       {
         title: "个人中心",
-        route: "myCenter",
-        clild: "",
-        isClick: false
+        route: "/myCenter"
       }
     ];
 
     if (this.$store.state.userInfo.type == 2) {
       route.push({
         title: "用户管理",
-        route: "userManager",
-        clild: "",
-        isClick: false
+        route: "/userManager"
       });
     }
 
@@ -64,8 +62,7 @@ export default {
     };
   },
   components: {
-    topBar: TopBar,
-    leftMenu: LeftMenu
+    topBar: TopBar
   },
   methods: {
     jump(route) {
@@ -118,16 +115,6 @@ export default {
     },
     detail(id) {
       this.$router.push("/detail/" + id);
-    },
-    routeChange() {
-      this.insideRoute = [
-        // {
-        //   title: "用户管理",
-        //   route: "userManagement",
-        //   clild: "",
-        //   isClick: false
-        // }
-      ];
     }
   },
   watch: {}
@@ -137,6 +124,10 @@ export default {
 <style scoped>
 .project {
   width: 100%;
+  height: 100%;
+}
+
+.el-menu {
   height: 100%;
 }
 </style>

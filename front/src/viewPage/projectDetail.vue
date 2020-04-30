@@ -5,7 +5,17 @@
     </div>
     <div class="content">
       <div class="left">
-        <leftMenu :menuList="indesideRoute" />
+        <el-menu
+          :default-active="$route.redirectedFrom ? $route.redirectedFrom : $route.path"
+          :router="true"
+          ref="menu"
+          class="el-menu"
+        >
+          <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
+            <i class="el-icon-setting"></i>
+            <span slot="title">{{item.title}}</span>
+          </el-menu-item>
+        </el-menu>
       </div>
       <div class="right">
         <transition name="el-fade-in-linear" mode="out-in" appear>
@@ -17,7 +27,6 @@
 </template>
 
 <script>
-import LeftMenu from "../components/common/leftMenu";
 import TopBar from "../components/common/topBar";
 
 export default {
@@ -29,26 +38,24 @@ export default {
   data() {
     return {
       projectData: {},
-      indesideRoute: [
-        { title: "项目概况", route: "detail", child: "", isClick: true },
+      insideRoute: [
+        {
+          title: "项目概况",
+          route: "/detail/" + this.$route.params.id
+        },
         {
           title: "API接口",
-          route: "detail",
-          child: "apiPage",
-          isClick: false
+          route: "/detail/" + this.$route.params.id + "/apiPage"
         },
         {
           title: "项目文档",
-          route: "detail",
-          child: "projectDoc",
-          isClick: false
+          route: "/detail/" + this.$route.params.id + "/projectDoc"
         }
       ]
     };
   },
   methods: {},
   components: {
-    leftMenu: LeftMenu,
     topBar: TopBar
   }
 };
@@ -64,5 +71,9 @@ export default {
   padding: 0 10px;
   box-sizing: border-box;
   overflow-x: hidden;
+}
+
+.el-menu {
+  height: 100%;
 }
 </style>
