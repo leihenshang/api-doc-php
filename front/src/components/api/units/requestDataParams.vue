@@ -322,9 +322,13 @@ export default {
   margin: 0;
   padding: 0;
   outline: none;
-  border-left: none;
   border-bottom: none;
 }
+
+.request-box button.req-btn:last-child {
+  border-left: none;
+}
+
 
 /* tab切换按钮颜色 */
 div.item-head .tab-change-btn-bg {

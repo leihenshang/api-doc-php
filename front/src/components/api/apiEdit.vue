@@ -28,8 +28,8 @@
       v-if="showDescription === false"
       :groupList="groupList"
       :propertyList="propertyList"
-      v-on:update:apiInfo="apiInfo = $event"
       :apiData="apiData"
+      ref="apiInfo"
     />
 
     <!-- 请求参数 -->
@@ -141,37 +141,43 @@ export default {
     },
     //更新api
     updateApi() {
-      this.$http
-        .post(
-          this.apiAddress + "/api/update",
-          {
-            id: this.apiId,
-            group_id: this.apiData.group_id,
-            project_id: this.$route.params.id,
-            data: JSON.stringify(this.apiData)
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          response => {
-            response = response.body;
-            if (response.code === CODE_OK) {
-              this.$message({
-                message: "更新数据成功！",
-                type: "success"
-              });
-              this.$router.go(-1);
-            } else {
-              this.$message({
-                message: "保存失败!" + !response.msg ? response.msg : "",
-                type: "error"
-              });
-            }
-          },
-          () => {
-            this.$message.error("保存失败!");
-          }
-        );
+      this.$refs.apiInfo.$refs.form.validate(validate => {
+        if (validate) {
+          this.$http
+            .post(
+              this.apiAddress + "/api/update",
+              {
+                id: this.apiId,
+                group_id: this.apiData.group_id,
+                project_id: this.$route.params.id,
+                data: JSON.stringify(this.apiData)
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  this.$message({
+                    message: "更新数据成功！",
+                    type: "success"
+                  });
+                  this.$router.go(-1);
+                } else {
+                  this.$message({
+                    message: !response.msg ? response.msg : "",
+                    type: "error"
+                  });
+                }
+              },
+              () => {
+                this.$message.error("保存失败!");
+              }
+            );
+        } else {
+          return false;
+        }
+      });
     },
     //获取分组数据
     getGroup() {

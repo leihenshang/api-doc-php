@@ -8,30 +8,22 @@
           <span>my-doc</span>
         </div>
         <div class="login-box">
-          <ValidationObserver ref="form" vid="form">
-            <validation-provider
-              rules="required"
-              v-slot="{ errors }"
-              vid="username"
-              name="username"
-            >
-              <input type="text" name="username" placeholder="请输入用户名" v-model="username" />
-              <span>{{ errors[0] }}</span>
-            </validation-provider>
-            <validation-provider rules="required" v-slot="{ errors }" vid="pwd" name="pwd">
-              <input type="password" name="pwd" placeholder="请输入密码" v-model="pwd" />
-              <span>{{ errors[0] }}</span>
-            </validation-provider>
-            <button @click="login()">
-              <span class="login-text">登陆</span>
-              <i class="el-icon-arrow-right"></i>
-            </button>
-          </ValidationObserver>
+          <el-form :inline="true" :model="form" size="small" :rules="rules" ref="form">
+            <el-form-item prop="name">
+              <el-input v-model="form.name" placeholder="用户名" style="width:240px"></el-input>
+            </el-form-item>
+            <el-form-item prop="pwd">
+              <el-input v-model="form.pwd" type="password" placeholder="密码" style="width:240px"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="login()" icon="el-icon-arrow-left">登录</el-button>
+            </el-form-item>
+          </el-form>
         </div>
-        <div class="remember">
+        <!-- <div class="remember">
           <input type="checkbox" name="remember" id="remember" />
           <label for="remember">记住密码</label>
-        </div>
+        </div>-->
       </div>
     </div>
     <homeFooter />
@@ -53,50 +45,52 @@ export default {
   },
   data() {
     return {
-      username: "",
-      pwd: ""
+      form: {
+        name: "",
+        pwd: ""
+      },
+      rules: {
+        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        pwd: [{ required: true, message: "请输入密码", trigger: "blur" }]
+      }
     };
   },
   methods: {
     //用户登录
     login() {
-      this.$refs.form.validate().then(res => {
-        if (!res) {
-          return;
-        }
-
-        this.$http
-          .post(
-            this.apiAddress + "/user/login",
-            {
-              name: this.username,
-              pwd: this.pwd
-            },
-            { emulateJSON: true }
-          )
-          .then(
-            response => {
-              response = response.body;
-              if (response.code === CODE_OK) {
-                let userInfo = response.data;
-                Vue.prototype.userInfo = userInfo;
-                this.$store.commit("saveUserInfo", userInfo);
-                localStorage.setItem("userInfo", JSON.stringify(userInfo));
-                this.$router
-                  .push("/")
-                  .catch()
-                  .catch(() => {});
-              } else {
-                this.$message.error("登录错误！" + response.msg);
-                localStorage.removeItem("userInfo");
-                Vue.prototype.userInfo = null;
-                this.$router.push("/login").catch(() => {});
+      this.$refs.form.validate(validate => {
+        if (validate) {
+          this.$http
+            .post(
+              this.apiAddress + "/user/login",
+              {
+                ...this.form
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              response => {
+                response = response.body;
+                if (response.code === CODE_OK) {
+                  let userInfo = response.data;
+                  Vue.prototype.userInfo = userInfo;
+                  this.$store.commit("saveUserInfo", userInfo);
+                  localStorage.setItem("userInfo", JSON.stringify(userInfo));
+                  this.$router.push("/").catch(() => {});
+                } else {
+                  this.$message.error(response.msg);
+                  localStorage.removeItem("userInfo");
+                  Vue.prototype.userInfo = null;
+                  this.$router.push("/login").catch(() => {});
+                }
+              },
+              () => {
+                this.$message.error("请求失败!");
               }
-            },
-            () => {
-              this.$message.error("请求失败!");
-            }
-          );
+            );
+        } else {
+          return false;
+        }
       });
     },
     //通过localStorage登录
@@ -137,52 +131,8 @@ export default {
   text-align: center;
 }
 
-.login-box span {
-  color: red;
-}
-
 span.login-text {
   color: white;
-}
-
-.login-box {
-  /* overflow: hidden; */
-  height: 32px;
-}
-
-.login-box input {
-  outline: none;
-  height: 30px;
-  width: 200px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  padding-left: 5px;
-  margin-right: 5px;
-}
-
-.login-box input:hover {
-  border-color: #43a047;
-}
-
-.login-box button {
-  box-sizing: border-box;
-  background-color: #4caf50;
-  color: #fff;
-  border: 1px solid #43a047;
-  width: 225px;
-  height: 32px;
-  border-radius: 3px;
-  text-align: left;
-  text-indent: 10px;
-  vertical-align: bottom;
-  cursor: pointer;
-  line-height: 32px;
-}
-
-.login-box button:hover {
-  border: 1px solid #4caf50;
-  background-color: #43a047;
-  color: #fff;
 }
 
 .remember {

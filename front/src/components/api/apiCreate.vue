@@ -93,7 +93,7 @@ export default {
     },
     //创建api
     createApi() {
-      let res = this.$refs.apiInfo.$refs.form.validate(validate => {
+     this.$refs.apiInfo.$refs.form.validate(validate => {
         if (validate) {
           //loading
           let loadingInstance = this.$loading({ fullscreen: true });

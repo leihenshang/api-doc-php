@@ -110,7 +110,6 @@ export default {
         http_return_type: [
           { required: true, message: "请选择分组", trigger: "blur" }
         ],
-
         url: [{ required: true, message: "请输入url", trigger: "blur" }],
         api_name: [
           { required: true, message: "请输入api名称", trigger: "blur" }
