@@ -1,15 +1,15 @@
 <template>
   <div class="top-bar">
     <ul>
-      <li class="t-link">
-        <a href="#">my-doc</a>
+      <li class="t-link" @click="$router.push('/projectList');">
+        <a href="javascript:void(0)">my-doc</a>
       </li>
       <li class="name">
         <span></span>
       </li>
       <li>
         <span>
-          <router-link :to="{path:'/'}" v-show="$route.fullPath !== '/'">首页</router-link>
+          <router-link :to="{path:'/'}" v-show="$route.fullPath !== '/projectList'">首页</router-link>
           {{showTitle}}
         </span>
       </li>
@@ -39,7 +39,7 @@ export default {
   props: {},
   computed: {
     showTitle: function() {
-      if (this.$route.fullPath === "/") {
+      if (this.$route.fullPath === "/projectList") {
         return;
       }
 

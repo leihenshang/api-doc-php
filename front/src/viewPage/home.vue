@@ -35,11 +35,13 @@ export default {
     let route = [
       {
         title: "项目列表",
-        route: "/projectList"
+        route: "/projectList",
+        icon: ""
       },
       {
         title: "个人中心",
-        route: "/myCenter"
+        route: "/myCenter",
+        icon: ""
       }
     ];
 
