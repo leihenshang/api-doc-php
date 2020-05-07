@@ -93,7 +93,8 @@ export default {
           .post(this.apiAddress + "/doc/create", {
             title: this.title,
             content: this.content,
-            group_id: this.groupId
+            group_id: this.groupId,
+            project_id:this.$route.params.id
           })
           .then(res => {
             res = res.body;

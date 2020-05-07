@@ -77,7 +77,7 @@ class Doc extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['group_id', 'title', 'content'];
+        $scenarios[self::SCENARIO_CREATE] = ['group_id', 'title', 'content','project_id'];
         $scenarios[self::SCENARIO_DELETE] = ['id'];
         $scenarios[self::SCENARIO_UPDATE] = ['state', 'title', 'content', 'group_id', 'id'];
         $scenarios[self::SCENARIO_LIST] = ['project_id', 'group_id',];
