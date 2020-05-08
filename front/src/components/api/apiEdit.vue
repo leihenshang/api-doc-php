@@ -19,13 +19,13 @@
     </div>
     <!-- 详细说明 -->
     <detailDescription
-      v-if="showDescription"
+      v-show="showDescription"
       :description="apiData.description"
       v-on:update="apiData.description=$event"
     />
     <!-- api信息 -->
     <apiInfo
-      v-if="showDescription === false"
+      v-show="showDescription === false"
       :groupList="groupList"
       :propertyList="propertyList"
       :apiData="apiData"
@@ -185,7 +185,7 @@ export default {
         .get(this.apiAddress + "/group/list", {
           params: {
             projectId: this.$route.params.id,
-            token: this.$store.state.userInfo.token
+            type: 1
           }
         })
         .then(

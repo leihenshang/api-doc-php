@@ -31,7 +31,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="page" v-show="docList.length > 0 && !$route.query.keyword">
+    <div class="page" v-show=" !$route.query.keyword">
       <el-pagination
         background
         layout="total,prev, pager, next"
@@ -127,7 +127,7 @@ export default {
           this.$http
             .post(this.apiAddress + "/doc/delete", {
               id: id,
-              projectId:this.$route.params.id
+              projectId: this.$route.params.id
             })
             .then(
               response => {

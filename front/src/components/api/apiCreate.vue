@@ -18,12 +18,12 @@
       </div>
     </div>
     <detailDescription
-      v-if="showDescription"
+      v-show="showDescription"
       :description="description"
       v-on:update="description=$event"
     />
     <apiInfo
-      v-if="showDescription === false"
+      v-show="showDescription === false"
       :groupList="groupList"
       :propertyList="propertyList"
       :groupId="groupId"
@@ -145,7 +145,8 @@ export default {
       this.$http
         .get(this.apiAddress + "/group/list", {
           params: {
-            projectId: this.$route.params.id
+            projectId: this.$route.params.id,
+            type:1
           }
         })
         .then(
