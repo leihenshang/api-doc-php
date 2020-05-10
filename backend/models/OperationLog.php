@@ -21,13 +21,15 @@ class OperationLog extends BaseModel
         'delete' => ['delete', '删除'],
         'update' => ['update', '更新'],
         'query' => ['query', '查询'],
+        'restore' => ['restore', '恢复'],
     ];
 
     const OBJECT_TYPE = [
-        'project' => [1,'项目'],
-        'group' => [2,'分组'],
-        'api' => [3,'api'],
-        'user' => [4,'用户'],
+        'project' => [1, '项目'],
+        'group' => [2, '分组'],
+        'api' => [3, 'api'],
+        'user' => [4, '用户'],
+        'doc' => [5, '文档'],
     ];
 
 
@@ -45,9 +47,9 @@ class OperationLog extends BaseModel
     public function rules()
     {
         return [
-            [['is_deleted', 'user_id', 'object_id','type','project_id'], 'integer'],
+            [['is_deleted', 'user_id', 'object_id', 'type', 'project_id'], 'integer'],
             [['create_time'], 'safe'],
-            [['action','project_id'], 'required'],
+            [['action', 'project_id'], 'required'],
             [['action'], 'string', 'max' => 100],
             [['content'], 'string', 'max' => 500],
         ];
@@ -56,7 +58,7 @@ class OperationLog extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['user_id', 'object_id', 'action', 'content','type','project_id'];
+        $scenarios[self::SCENARIO_CREATE] = ['user_id', 'object_id', 'action', 'content', 'type', 'project_id'];
         return $scenarios;
     }
 
@@ -78,7 +80,7 @@ class OperationLog extends BaseModel
 
     /**
      * 保存操作日志
-     * @param int $project_id
+     * @param int $projectId
      * @param int $userId
      * @param int $objectId
      * @param string $action
@@ -86,14 +88,14 @@ class OperationLog extends BaseModel
      * @param int $type 类型
      * @return bool|mixed
      */
-    public static function createLog(int $projectId, int $userId = 0, int $objectId = 0, string $action = 'unknown', string $content = '默认操作',int $type = 0)
+    public static function createLog(int $projectId, int $userId = 0, int $objectId = 0, string $action = 'unknown', string $content = '默认操作', int $type = 0)
     {
         $arr = [
             'project_id' => $projectId,
             'user_id' => $userId,
             'object_id' => $objectId,
             'action' => $action,
-            'content' =>(self::ACTION[$action][1]. $content ?: $content),
+            'content' => (self::ACTION[$action][1] . $content ?: $content),
             'type' => $type
         ];
 

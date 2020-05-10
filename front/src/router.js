@@ -33,24 +33,6 @@ const router = new VueRouter({
     { path: "/register", component: Register, name: "register" },
     { path: "/login", name: "userLogin", component: Login },
     {
-      path: "/",
-      component: Home,
-      redirect: "projectList",
-      children: [
-        { path: "projectList", component: ProjectList, name: "projectList" },
-        {
-          path: "myCenter",
-          component: MyCenter,
-          name: "myCenter",
-        },
-        {
-          path: "userManager",
-          component: UserManager,
-          name: "userManager",
-        },
-      ],
-    },
-    {
       path: "/detail/:id",
       component: Detail,
       props: true,
@@ -136,6 +118,24 @@ const router = new VueRouter({
               meta: { requiresAuth: true },
             },
           ],
+        },
+      ],
+    },
+    {
+      path: "/",
+      component: Home,
+      redirect: "projectList",
+      children: [
+        { path: "projectList", component: ProjectList, name: "projectList" },
+        {
+          path: "myCenter",
+          component: MyCenter,
+          name: "myCenter",
+        },
+        {
+          path: "userManager",
+          component: UserManager,
+          name: "userManager",
         },
       ],
     },

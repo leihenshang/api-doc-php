@@ -1,9 +1,18 @@
 <template>
   <div class="api-list">
     <div class="api-box">
-      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading" border>
+      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading" border >
         <el-table-column prop="api_name" label="名称" width="180"></el-table-column>
-        <el-table-column prop="http_method_type" label="请求方法" width="80"></el-table-column>
+        <el-table-column label="请求方法" width="80">
+          <template slot-scope="scope">
+            <el-tag
+              type="success"
+              v-if="scope.row.http_method_type === 'POST'"
+            >{{scope.row.http_method_type}}</el-tag>
+            <el-tag v-else-if="scope.row.http_method_type === 'GET'">{{scope.row.http_method_type}}</el-tag>
+            <el-tag type="warning" v-else>{{scope.row.http_method_type}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="url" label="url"></el-table-column>
         <el-table-column prop="protocol_type" label="协议"></el-table-column>
         <el-table-column prop="develop_language" label="开发语言"></el-table-column>

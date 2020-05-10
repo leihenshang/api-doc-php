@@ -172,8 +172,6 @@ class Api extends BaseModel
 
         //记录操作日志
         OperationLog::createLog($this->project_id, UserInfo::$staticUserInfo->id, $this->id, OperationLog::ACTION['create'][0], '接口:' . $this->api_name, OperationLog::OBJECT_TYPE['api'][0]);
-
-
         return $this;
     }
 

@@ -6,6 +6,7 @@ use app\behaviors\UserVerify;
 use app\models\Api;
 use app\models\Doc;
 use app\models\Group;
+use app\models\OperationLog;
 use Throwable;
 use Yii;
 use yii\base\Exception;
@@ -20,7 +21,7 @@ class ApiController extends BaseController
             'class' => UserVerify::class,
             'actions' => ['*'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证,
-            'projectPermission' => ['update', 'del', 'create','restore']
+            'projectPermission' => ['update', 'del', 'create', 'restore']
         ];
         return $behaviors;
     }
@@ -66,7 +67,7 @@ class ApiController extends BaseController
         $projectId = Yii::$app->request->get('projectId', 0);
         $groupId = Yii::$app->request->get('groupId', 0);
         $isDeleted = Yii::$app->request->get('isDeleted', 0);
-        $keyword =  Yii::$app->request->get('keyword', 0);
+        $keyword = Yii::$app->request->get('keyword', 0);
         if (!$projectId) {
             return ['code' => 22, 'msg' => '没有projectId'];
         }
@@ -76,7 +77,7 @@ class ApiController extends BaseController
         }
 
         $res = new Api(['scenario' => Api::SCENARIO_LIST]);
-        $res = $res->dataList($projectId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), $groupId, $isDeleted,$keyword);
+        $res = $res->dataList($projectId, Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), $groupId, $isDeleted, $keyword);
         return $this->success($res);
     }
 
@@ -142,6 +143,8 @@ class ApiController extends BaseController
             $trans->rollBack();
             return $this->failed($t->getMessage());
         }
+
+        OperationLog::createLog($res->project_id, $this->userInfo->id, $res->id, OperationLog::ACTION['restore'][0], '接口:' . $res->api_name, OperationLog::OBJECT_TYPE['api'][0]);
 
         return $this->success();
     }
