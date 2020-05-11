@@ -68,6 +68,10 @@
       </table>
     </div>
     <div class="box3">
+      <span class="box3-copy" @click="copyAsPostman(apiData.http_request_params)">生成postman参数</span>
+      <el-dialog title="选择并复制" :visible.sync="dialogFormVisible" width="30%">
+        <el-input type="textarea" v-model="copyStr" :rows="8"></el-input>
+      </el-dialog>
       <div class="item-head">
         <ul>
           <li>
@@ -192,6 +196,8 @@ export default {
   },
   data() {
     return {
+      dialogFormVisible: false,
+      copyStr: "",
       loading: true,
       groupList: [],
       apiData: {
@@ -219,6 +225,20 @@ export default {
     };
   },
   methods: {
+    //复制为postman参数
+    copyAsPostman(item) {
+      if (!item) {
+        return;
+      }
+
+      let str = "";
+      for (let value of item) {
+        str +=
+          value.name + ":" + (value.example ? value.example : "unknown") + "\r\n";
+      }
+      this.copyStr = str;
+      this.dialogFormVisible = true;
+    },
     updateApi() {
       this.$router.push({ name: "apiEdit", params: { apiId: this.apiId } });
     },
@@ -416,6 +436,7 @@ select {
 .box3 {
   margin-top: 10px;
   font-size: 14px;
+  position: relative;
 }
 
 .box3 ul {
@@ -591,5 +612,17 @@ em i {
 .create-api table tr:hover td,
 .create-api table tr:hover input {
   background-color: rgba(164, 219, 132, 0.103);
+}
+
+.box3 .box3-copy {
+  display: inline-block;
+  position: absolute;
+  right: 4px;
+  top: 5px;
+  font-size: 12px;
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 1px;
+  z-index: 1;
 }
 </style>
