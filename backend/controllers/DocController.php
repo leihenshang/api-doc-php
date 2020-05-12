@@ -32,6 +32,9 @@ class DocController extends BaseController
     {
         $doc = new Doc(['scenario' => Doc::SCENARIO_CREATE]);
         $doc->attributes = Yii::$app->request->post();
+        if (!$doc->validate()) {
+            return $this->failed(current($doc->getFirstErrors()));
+        }
         $doc->user_id = $this->userInfo->id;
         $res = $doc->createData();
         if (is_string($res)) {

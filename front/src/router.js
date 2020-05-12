@@ -1,11 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-//api
+//项目相关
 import Home from "./viewPage/home";
 import Detail from "./viewPage/projectDetail";
 // import Msg from "./viewPage/msg";
 import ProjectList from "./components/project/projectList";
+import FieldMapping from "./components/project/fieldMapping";
+
+//api相关操作
 import ApiPage from "./components/api/apiPage";
 import apiCreate from "./components/api/apiCreate";
 import DetailPage from "./components/project/detailPage";
@@ -41,6 +44,13 @@ const router = new VueRouter({
           path: "",
           name: "detailPage",
           component: DetailPage,
+          meta: { requiresAuth: true },
+          props: true,
+        },
+        {
+          path: "fieldMapping",
+          name: "fieldMapping",
+          component: FieldMapping,
           meta: { requiresAuth: true },
           props: true,
         },

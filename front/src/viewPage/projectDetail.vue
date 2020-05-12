@@ -50,6 +50,10 @@ export default {
         {
           title: "项目文档",
           route: "/detail/" + this.$route.params.id + "/projectDoc"
+        },
+        {
+          title: "字段映射",
+          route: "/detail/" + this.$route.params.id + "/fieldMapping"
         }
       ]
     };

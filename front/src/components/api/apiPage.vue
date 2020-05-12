@@ -50,10 +50,6 @@ export default {
       apiList: {},
       curr: 1,
       pageSize: 100,
-      indesideRoute: [
-        { title: "项目概况", route: "detail" },
-        { title: "API接口", route: "api" }
-      ],
       showCreateGroup: false,
       keyword: ""
     };
