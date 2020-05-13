@@ -76,6 +76,7 @@ Vue.http.interceptors.push((request) => {
       request.body.projectId = store.state.project.id;
     }
 
+
     if (request.emulateJSON !== true) {
       request.emulateJSON = true;
     }

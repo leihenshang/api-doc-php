@@ -55,7 +55,7 @@ class FieldMappingController extends BaseController
         }
 
         $res = $model->updateData();
-        if (!is_string($res)) {
+        if (is_string($res)) {
             return $this->failed('失败');
         }
 
@@ -88,7 +88,7 @@ class FieldMappingController extends BaseController
         }
 
         $res = $model->deleteData();
-        if (!is_string($res)) {
+        if (is_string($res)) {
             return $this->failed('失败');
         }
 
