@@ -38,7 +38,7 @@
             @change="addProjectUser($event)"
           >
             <el-option
-              v-for="item in searchUserList"
+              v-for="item in searchUserList.list"
               :key="item.id"
               :label="item.nick_name"
               :value="item"

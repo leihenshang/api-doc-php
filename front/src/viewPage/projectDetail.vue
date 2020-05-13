@@ -12,7 +12,7 @@
           class="el-menu"
         >
           <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
-            <i class="el-icon-setting"></i>
+               <i :class="item.icon ? item.icon :'el-icon-setting'"></i>
             <span slot="title">{{item.title}}</span>
           </el-menu-item>
         </el-menu>
@@ -41,19 +41,23 @@ export default {
       insideRoute: [
         {
           title: "项目概况",
-          route: "/detail/" + this.$route.params.id
+          route: "/detail/" + this.$route.params.id,
+          icon: "el-icon-s-platform"
         },
         {
           title: "API接口",
-          route: "/detail/" + this.$route.params.id + "/apiPage"
+          route: "/detail/" + this.$route.params.id + "/apiPage",
+          icon: "el-icon-s-promotion"
         },
         {
           title: "项目文档",
-          route: "/detail/" + this.$route.params.id + "/projectDoc"
+          route: "/detail/" + this.$route.params.id + "/projectDoc",
+          icon: "el-icon-reading"
         },
         {
           title: "字段映射",
-          route: "/detail/" + this.$route.params.id + "/fieldMapping"
+          route: "/detail/" + this.$route.params.id + "/fieldMapping",
+          icon: "el-icon-coin"
         }
       ]
     };
