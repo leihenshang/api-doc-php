@@ -26,11 +26,7 @@
         "hyperf/process": "~1.1.0",
         "hyperf/redis": "~1.1.0",
         "hyperf/constants": "~1.1.0",
-        "hyperf/async-queue": "~1.1.0",
-        "hyperf/amqp": "~1.1.0",
-        "hyperf/model-cache": "~1.1.0",
-        "hyperf/elasticsearch": "~1.1.0",
-        "hyperf/tracer": "~1.1.0"
+        "hyperf/model-cache": "~1.1.0"
     },
     "require-dev": {
         "swoft/swoole-ide-helper": "^4.2",
