@@ -145,7 +145,6 @@ class ApiController extends BaseController
         }
 
         OperationLog::createLog($res->project_id, $this->userInfo->id, $res->id, OperationLog::ACTION['restore'][0], '接口:' . $res->api_name, OperationLog::OBJECT_TYPE['api'][0]);
-
         return $this->success();
     }
 }

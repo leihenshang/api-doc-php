@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\behaviors\UserVerify;
 use app\models\BaseModel;
+use app\models\Notification;
 use app\models\Project;
 use app\models\UserInfo;
 use app\models\UserProject;
@@ -189,6 +190,11 @@ class ProjectController extends BaseController
             return $this->failed(current($userProject->getFirstErrors()));
         }
 
+        $project = Project::findOne($userProject->project_id);
+        if (!$project) {
+            return $this->failed('没有找到项目');
+        }
+
         //检查重复添加
         $res = UserProject::find()->where([
             'user_id' => $userProject->user_id,
@@ -210,29 +216,11 @@ class ProjectController extends BaseController
                 return $this->failed(current($userProject->getFirstErrors()));
             }
         }
-
+        //创建消息提示
+        Notification::createNotice($userProject->user_id, '已经被邀请到项目:' . $project->title . '中,请进入项目列表中查看', '项目邀请');
         return $this->success();
     }
 
-    /**
-     * 删除项目用户
-     * @return array
-     */
-    public function actionDelUser()
-    {
-        $params = Yii::$app->request->post('ids', null);
-        $ids = explode(',', $params);
-        if (!$ids) {
-            return $this->failed('失败');
-        }
-
-        $res = UserProject::updateAll(['is_deleted' => UserProject::IS_DELETED['yes']], ['Id' => $ids]);
-        if ($res) {
-            return $this->success();
-        }
-
-        return $this->failed('更新失败');
-    }
 
     /**
      * 设置团队leader
@@ -258,6 +246,11 @@ class ProjectController extends BaseController
             return $this->failed('没有找到要设置的用户');
         }
 
+        $project = Project::findOne($projectId);
+        if (!$project) {
+            return $this->failed('没有找到项目');
+        }
+
         if (intval($cancel) === 1) {
             $userProject->is_leader = UserProject::IS_LEADER['no'];
         } else {
@@ -268,6 +261,8 @@ class ProjectController extends BaseController
             return $this->failed('设置团队leader失败');
         }
 
+        //创建消息提示
+        Notification::createNotice($userProject->user_id, '已经被设置为项目:' . $project->title . '管理者,请进入项目列表中查看', '项目通知');
         return $this->success('成功');
     }
 
@@ -299,11 +294,17 @@ class ProjectController extends BaseController
             return $this->failed('没有找到要设置的用户');
         }
 
+        $project = Project::findOne($projectId);
+        if (!$project) {
+            return $this->failed('没有找到项目');
+        }
+
         $userProject->is_deleted = UserProject::IS_DELETED['yes'];
         if (!$userProject->save()) {
             return $this->failed('退出项目失败');
         }
 
+        Notification::createNotice($userProject->user_id, '已经被管理员移出项目:' . $project->title . '', '项目通知');
         return $this->success([]);
     }
 
@@ -342,10 +343,17 @@ class ProjectController extends BaseController
             return $this->failed('没有找到要设置的用户');
         }
 
+        $project = Project::findOne($projectId);
+        if (!$project) {
+            return $this->failed('没有找到项目');
+        }
+
         $userProject->permission = $permission;
         if (!$userProject->save()) {
             return $this->failed('设置权限失败');
         }
+
+        Notification::createNotice($userProject->user_id, '对项目:' . $project->title . '的权限已经修改为' . $permission, '项目通知');
 
         return $this->success([]);
     }

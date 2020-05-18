@@ -145,11 +145,11 @@
             <input type="text" placeholder v-model="item.objectName" readonly />
           </td>
           <td>
-            <input type="text" placeholder="参数名" v-model="item.decription" readonly />
+            <input type="text" placeholder="参数名" v-model="item.description" readonly />
           </td>
           <td>
-            <em v-if="item.required">是</em>
-            <em v-else>否</em>
+            <em v-if="item.required" style="font-style:normal;">是</em>
+            <em v-else style="font-style:normal;">否</em>
           </td>
           <td>
             <span>{{item.type}}</span>

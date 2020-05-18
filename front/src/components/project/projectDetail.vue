@@ -22,7 +22,9 @@
         </li>
         <li @click="jump()" class="api-detail">
           <p>api接口</p>
-          <p><el-link type="danger">点击查看详情</el-link></p>
+          <p>
+            <el-link type="danger">点击查看详情</el-link>
+          </p>
         </li>
       </ul>
       <div class="user-wrapper">
@@ -105,10 +107,6 @@ export default {
       loading: false,
       keyword: "",
       projectData: {},
-      indesideRoute: [
-        { title: "项目概况", route: "detail", child: "detailPage" },
-        { title: "API接口", route: "detail", child: "apiPage" }
-      ],
       userList: [],
       searchUserList: []
     };
@@ -558,9 +556,7 @@ export default {
   background-color: #f3f3f3;
 }
 
-
 .right-l ul li.api-detail p:last-child {
-  color:red;
+  color: red;
 }
-
 </style>

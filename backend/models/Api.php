@@ -165,6 +165,30 @@ class Api extends BaseModel
             return $a;
         }, $tmp);
 
+        //字段映射处理
+        $httpReturnParams = $tmp['http_return_params'] ?? [];
+        if ($httpReturnParams) {
+            $httpReturnParams = json_decode($httpReturnParams, true);
+            if ($httpReturnParams) {
+                $field = FieldMapping::find()->where(['project_id' => $this->project_id])->asArray()->all();
+                if ($field) {
+                    $field = array_combine(array_column($field, 'field'), $field);
+                }
+
+                foreach ($httpReturnParams as &$item) {
+                    if (isset($field[$item['fieldName']])) {
+                        $item['description'] = empty($item['description']) ? $field[$item['fieldName']]['description'] : '';
+                        $item['type'] = $field[$item['fieldName']]['type'];
+                    }
+                }
+            }
+        }
+
+        if(is_array($httpReturnParams)){
+            $httpReturnParams = json_encode($httpReturnParams,JSON_UNESCAPED_UNICODE);
+        }
+
+        $tmp['http_return_params'] = $httpReturnParams;
         $this->attributes = $tmp;
         if (!$this->save()) {
             return current($this->getFirstErrors());

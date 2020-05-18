@@ -7,7 +7,7 @@
       <div class="left">
         <el-menu :default-active="$route.path" :router="true" ref="menu" class="el-menu">
           <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
-            <i class="el-icon-setting"></i>
+            <i :class="item.icon ? item.icon :'el-icon-setting'"></i>
             <span slot="title">{{item.title}}</span>
           </el-menu-item>
         </el-menu>
@@ -36,19 +36,20 @@ export default {
       {
         title: "项目列表",
         route: "/projectList",
-        icon: ""
+        icon: "el-icon-s-fold"
       },
       {
         title: "个人中心",
         route: "/myCenter",
-        icon: ""
+        icon: "el-icon-s-operation"
       }
     ];
 
     if (this.$store.state.userInfo.type == 2) {
       route.push({
         title: "用户管理",
-        route: "/userManager"
+        route: "/userManager",
+        icon: "el-icon-user"
       });
     }
 
