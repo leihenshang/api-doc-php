@@ -15,4 +15,6 @@ use Hyperf\HttpServer\Router\Router;
 Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@index');
 
 //属性
-Router::addRoute(['GET', 'POST', 'HEAD'], '/property', 'App\Controller\PropertyController@index');
+//Router::addGroup('/property/',function (){
+//    Router::get('list','App\Controller\PropertyController@list');
+//});

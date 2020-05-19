@@ -13,19 +13,39 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Helper\Helper;
+use App\Model\Property;
 use Hyperf\DbConnection\Db;
+use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 
+/**
+ * Class PropertyController
+ * @package App\Controller
+ * @Controller()
+ */
 class PropertyController extends AbstractController
 {
-    public function index()
+    /**
+     * 属性列表
+     * @return array
+     * @RequestMapping(path="list",methods="get")
+     */
+    public function list()
     {
         $tag = $this->request->input('tag');
-        $sql = 'SELECT * FROM property';
-        if(!$tag){
-            $res = Db::select($sql);
-        }else {
-            $res = Db::select($sql.' WHERE tag = ?;',[$tag]);
-        }
+//        $sql = 'SELECT * FROM property';
+//        if (!$tag) {
+//            $res = Db::select($sql);
+//        } else {
+//            $res = Db::select($sql . ' WHERE tag = ?;', [$tag]);
+//        }
+
+       $res =  Property::query();
+       if($tag){
+        $res->where('tag',$tag);
+       }
+
+       $res = $res->get();
 
         return Helper::success($res);
     }
