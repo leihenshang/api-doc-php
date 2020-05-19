@@ -26,7 +26,8 @@
         "hyperf/process": "~1.1.0",
         "hyperf/redis": "~1.1.0",
         "hyperf/constants": "~1.1.0",
-        "hyperf/model-cache": "~1.1.0"
+        "hyperf/model-cache": "~1.1.0",
+        "hyperf/validation": "^1.1"
     },
     "require-dev": {
         "swoft/swoole-ide-helper": "^4.2",

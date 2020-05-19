@@ -14,7 +14,6 @@ namespace App\Controller;
 
 use App\Helper\Helper;
 use App\Model\Property;
-use Hyperf\DbConnection\Db;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
@@ -33,19 +32,25 @@ class PropertyController extends AbstractController
     public function list()
     {
         $tag = $this->request->input('tag');
-//        $sql = 'SELECT * FROM property';
-//        if (!$tag) {
-//            $res = Db::select($sql);
-//        } else {
-//            $res = Db::select($sql . ' WHERE tag = ?;', [$tag]);
-//        }
+        $group = $this->request->input('group', false);
+        $res = Property::query();
+        if ($tag) {
+            $res->where('tag', $tag);
+        }
 
-       $res =  Property::query();
-       if($tag){
-        $res->where('tag',$tag);
-       }
-
-       $res = $res->get();
+        $res = $res->get()->toArray();
+        if (boolval($group) === true) {
+            $key = array_unique(array_column($res, 'tag'));
+            $key = array_combine($key, array_fill(0, count($key), []));
+            foreach ($key as $k => &$item) {
+                foreach ($res as $value) {
+                    if ($k === $value['tag']) {
+                        $item[] = $value;
+                    }
+                }
+            }
+            $res = $key;
+        }
 
         return Helper::success($res);
     }
