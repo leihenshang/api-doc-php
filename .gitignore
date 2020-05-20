@@ -34,3 +34,6 @@ tests/_support/_generated
 
 #node modules
 node_modules
+
+#屏蔽文件上传
+file
