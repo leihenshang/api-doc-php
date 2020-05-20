@@ -14,9 +14,9 @@ namespace App\Controller;
 
 use App\Helper\Helper;
 use App\Model\Property;
-use Hyperf\DbConnection\Db;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class PropertyController
@@ -27,26 +27,27 @@ class PropertyController extends AbstractController
 {
     /**
      * 属性列表
-     * @return array
+     * @return ResponseInterface
      * @RequestMapping(path="list",methods="get")
      */
     public function list()
     {
         $tag = $this->request->input('tag');
-//        $sql = 'SELECT * FROM property';
-//        if (!$tag) {
-//            $res = Db::select($sql);
-//        } else {
-//            $res = Db::select($sql . ' WHERE tag = ?;', [$tag]);
-//        }
+        $res = Property::query();
+        if ($tag) {
+            $res->where('tag', $tag);
+        }
 
-       $res =  Property::query();
-       if($tag){
-        $res->where('tag',$tag);
-       }
+        $res = $res->get();
+        return $this->toJson($res);
+    }
 
-       $res = $res->get();
-
-        return Helper::success($res);
+    /**
+     * @return ResponseInterface
+     * @RequestMapping(path="index",methods="get,post")
+     */
+    public function index()
+    {
+        return $this->failedToJson();
     }
 }

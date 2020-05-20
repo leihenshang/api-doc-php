@@ -19,6 +19,7 @@ class Helper
      */
     public static function success($data = null, int $code = 0, string $msg = '')
     {
+
         return [
             'msg' => $msg,
             'code' => $code,

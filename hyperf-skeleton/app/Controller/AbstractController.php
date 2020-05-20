@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Helper\Helper;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
@@ -36,4 +37,14 @@ abstract class AbstractController
      * @var ResponseInterface
      */
     protected $response;
+
+    public function toJson($data = null, int $code = 0, string $msg = '')
+    {
+        return $this->response->json(Helper::success(...func_get_args()));
+    }
+
+    public function failedToJson(string $msg = '', int $code = 1, $data = null)
+    {
+        return $this->response->json(Helper::failed(...func_get_args()));
+    }
 }
