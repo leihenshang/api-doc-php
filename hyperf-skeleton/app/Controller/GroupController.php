@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Helper\Helper;
+use App\Model\Group;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
@@ -38,7 +39,6 @@ class GroupController extends AbstractController
      */
     public function list()
     {
-
         $validator = $this->validationFactory->make(
             $this->request->all(),
             [
@@ -50,12 +50,11 @@ class GroupController extends AbstractController
         );
 
         if ($validator->fails()) {
-            // Handle exception
             $errorMessage = $validator->errors()->first();
             return Helper::failed($errorMessage);
         }
-
-
-        return Helper::success();
+        $reqData = $validator->validated();
+        $group = Group::query()->where(['project_id' => $reqData['projectId'], 'type' => $reqData['type']])->get();
+        return Helper::success($group);
     }
 }

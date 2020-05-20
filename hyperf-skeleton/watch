@@ -27,7 +27,7 @@ const START_COMMAND = [ENTRY_POINT_FILE, 'start'];
 # PID File Path PID文件路径
 const PID_FILE_PATH = __DIR__ . '/runtime/hyperf.pid';
 # Scan Interval 扫描间隔（毫秒，默认2000）
-const SCAN_INTERVAL = 2000;
+const SCAN_INTERVAL = 1000;
 
 if (!function_exists('exec')) {
     echo '[x] 请在php.ini配置中取消禁用exec方法' . PHP_EOL;
