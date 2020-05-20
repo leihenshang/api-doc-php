@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import App from "./App.vue";
 import router from "./router";
 import VueResource from "vue-resource";
-import "./validate";
+
 
 //markdown组件
 import mavonEditor from "mavon-editor";
