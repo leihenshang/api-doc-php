@@ -20,6 +20,7 @@ class IndexController extends AbstractController
         $method = $this->request->getMethod();
 
         return [
+            'test' => '这是一个测试的api,欢迎使用！',
             'method' => $method,
             'message' => "Hello {$user}.",
         ];

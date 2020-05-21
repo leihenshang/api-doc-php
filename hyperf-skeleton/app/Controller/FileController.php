@@ -34,26 +34,22 @@ class FileController extends AbstractController
     protected $validationFactory;
 
     /**
-     * @RequestMapping(path="index",methods="get,post")
+     * @RequestMapping(path="upload",methods="get,post")
      * @param Filesystem $filesystem
      * @return mixed
      */
-    public function index(Filesystem $filesystem)
+    public function upload(Filesystem $filesystem)
     {
         $file = $this->request->file('upload');
-        if (!$file->isFile()) {
-            return $this->failedToJson('请选择文件');
-        }
 
         $validator = $this->validationFactory->make(
             ['upload' => $file],
             [
-                'upload' => 'required|image|min:1|max:5000000',
+                'upload' => 'required|image|min:1|max:2000000',
             ]
         );
 
         if ($validator->fails()) {
-            // Handle exception
             $errorMessage = $validator->errors()->first();
             return $this->failedToJson($errorMessage);
         }
@@ -72,7 +68,6 @@ class FileController extends AbstractController
             ]);
         }
 
-
         $stream = fopen($file->getRealPath(), 'r+');
         try {
             $filesystem->writeStream(
@@ -85,8 +80,7 @@ class FileController extends AbstractController
 
 
         fclose($stream);
-        return $this->toJson([
-            'path' => $relativePath
-        ]);
+        return $this->toJson();
     }
+
 }
