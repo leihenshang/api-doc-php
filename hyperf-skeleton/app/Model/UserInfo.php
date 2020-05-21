@@ -21,8 +21,14 @@ use Hyperf\DbConnection\Model\Model;
  * @property string $token 
  * @property string $token_expire_time 
  */
-class UserInfo extends Model
+class UserInfo extends BaseModel
 {
+    //1普通用户2管理员
+    const USER_TYPE =[
+        'admin' => 2,
+        'normal' => 1
+    ];
+
     /**
      * The table associated with the model.
      *

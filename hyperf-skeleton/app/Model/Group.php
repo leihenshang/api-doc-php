@@ -1,18 +1,20 @@
 <?php
 
 declare (strict_types=1);
+
 namespace App\Model;
 
 use Hyperf\DbConnection\Model\Model;
+
 /**
- * @property int $id 
- * @property int $p_id 
- * @property int $project_id 
- * @property string $title 
- * @property int $is_deleted 
- * @property string $create_time 
- * @property int $priority 
- * @property int $type 
+ * @property int $id
+ * @property int $p_id
+ * @property int $project_id
+ * @property string $title
+ * @property int $is_deleted
+ * @property string $create_time
+ * @property int $priority
+ * @property int $type
  */
 class Group extends Model
 {
@@ -34,4 +36,11 @@ class Group extends Model
      * @var array
      */
     protected $casts = ['id' => 'integer', 'p_id' => 'integer', 'project_id' => 'integer', 'is_deleted' => 'integer', 'priority' => 'integer', 'type' => 'integer'];
+
+    public $timestamps = false;
+
+    const IS_DELETED = [
+        'yes' => 1,
+        'no' => 0
+    ];
 }
