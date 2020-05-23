@@ -13,7 +13,7 @@ use Hyperf\DbConnection\Model\Model;
  * @property string $create_time 
  * @property int $project_id 
  */
-class FieldMapping extends Model
+class FieldMapping extends BaseModel
 {
     /**
      * The table associated with the model.

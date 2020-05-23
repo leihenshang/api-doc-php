@@ -12,4 +12,6 @@ class BaseModel extends Model
         'yes' => 1,
         'no' => 0
     ];
+
+    public $timestamps = false;
 }

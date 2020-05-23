@@ -16,7 +16,7 @@ use Hyperf\DbConnection\Model\Model;
  * @property int $priority
  * @property int $type
  */
-class Group extends Model
+class Group extends BaseModel
 {
     /**
      * The table associated with the model.
@@ -37,10 +37,4 @@ class Group extends Model
      */
     protected $casts = ['id' => 'integer', 'p_id' => 'integer', 'project_id' => 'integer', 'is_deleted' => 'integer', 'priority' => 'integer', 'type' => 'integer'];
 
-    public $timestamps = false;
-
-    const IS_DELETED = [
-        'yes' => 1,
-        'no' => 0
-    ];
 }
