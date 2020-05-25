@@ -1,113 +1,129 @@
 <template>
   <div>
-    <el-button size="mini" @click="showAddWindow = true">新增</el-button>
-    <el-dialog title="添加映射字段" :visible.sync="showAddWindow" :show-close="false">
-      <el-form :model="fieldMapping" label-width="80px" ref="form" :rules="rules" size="small">
-        <el-form-item label="字段名" prop="field">
-          <el-input v-model="fieldMapping.field" autocomplete="off" placeholder="字段名"></el-input>
-        </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-select
-            v-model="fieldMapping.type"
-            placeholder="请选择类型"
-            size="small"
-            v-if="propertyList.var_type"
-          >
-            <el-option-group
-              v-for="(group,index) in propertyList.var_type"
-              :key="group.label"
-              :label="index"
+    <div class="btn-wrapper">
+      <el-button size="mini" @click="showAddWindow = true">新增</el-button>
+      <el-dialog title="添加映射字段" :visible.sync="showAddWindow" :show-close="false">
+        <el-form :model="fieldMapping" label-width="80px" ref="form" :rules="rules" size="small">
+          <el-form-item label="字段名" prop="field">
+            <el-input v-model="fieldMapping.field" autocomplete="off" placeholder="字段名"></el-input>
+          </el-form-item>
+          <el-form-item label="类型" prop="type">
+            <el-select
+              v-model="fieldMapping.type"
+              placeholder="请选择类型"
+              size="small"
+              v-if="propertyList.var_type"
             >
-              <el-option
-                v-for="item in group"
-                :key="item.tag_name"
-                :label="item.tag_name"
-                :value="item.tag_name"
-              ></el-option>
-            </el-option-group>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="描述" prop="description">
-          <el-input
-            type="textarea"
-            :rows="4"
-            v-model="fieldMapping.description"
-            autocomplete="off"
-            placeholder="版本号"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="showAddWindow = false">取 消</el-button>
-        <el-button type="primary" @click="saveFieldMapping()">确 定</el-button>
-      </div>
-    </el-dialog>
+              <el-option-group
+                v-for="(group,index) in propertyList.var_type"
+                :key="group.label"
+                :label="index"
+              >
+                <el-option
+                  v-for="item in group"
+                  :key="item.tag_name"
+                  :label="item.tag_name"
+                  :value="item.tag_name"
+                ></el-option>
+              </el-option-group>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="描述" prop="description">
+            <el-input
+              type="textarea"
+              :rows="4"
+              v-model="fieldMapping.description"
+              autocomplete="off"
+              placeholder="版本号"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="showAddWindow = false" size="small">取 消</el-button>
+          <el-button type="primary" @click="saveFieldMapping()" size="small">确 定</el-button>
+        </div>
+      </el-dialog>
 
-    <el-dialog title="修改映射字段" :visible.sync="dialogFormVisibleUpdate" :show-close="false">
-      <el-form :model="updateData" label-width="80px" ref="formUpdate" :rules="rules" size="small">
-        <el-form-item label="字段名" prop="field">
-          <el-input v-model="updateData.field" autocomplete="off" placeholder="字段名"></el-input>
-        </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-select
-            v-model="updateData.type"
-            placeholder="请选择类型"
-            size="small"
-            v-if="propertyList.var_type"
-          >
-            <el-option-group
-              v-for="(group,index) in propertyList.var_type"
-              :key="group.label"
-              :label="index"
+      <el-dialog title="修改映射字段" :visible.sync="dialogFormVisibleUpdate" :show-close="false">
+        <el-form
+          :model="updateData"
+          label-width="80px"
+          ref="formUpdate"
+          :rules="rules"
+          size="small"
+        >
+          <el-form-item label="字段名" prop="field">
+            <el-input v-model="updateData.field" autocomplete="off" placeholder="字段名"></el-input>
+          </el-form-item>
+          <el-form-item label="类型" prop="type">
+            <el-select
+              v-model="updateData.type"
+              placeholder="请选择类型"
+              size="small"
+              v-if="propertyList.var_type"
             >
-              <el-option
-                v-for="item in group"
-                :key="item.tag_name"
-                :label="item.tag_name"
-                :value="item.tag_name"
-              ></el-option>
-            </el-option-group>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="描述" prop="description">
-          <el-input
-            type="textarea"
-            :rows="4"
-            v-model="updateData.description"
-            autocomplete="off"
-            placeholder="版本号"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisibleUpdate = false">取 消</el-button>
-        <el-button type="primary" @click="updateFieldMapping()">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-table :data="fieldList" stripe style="width: 100%" v-loading="loading" height="650">
-      <el-table-column prop="field" label="字段名" width="180"></el-table-column>
-      <el-table-column prop="type" label="类型"></el-table-column>
-      <el-table-column prop="description" label="描述"></el-table-column>
-      <el-table-column prop="create_time" label="创建时间"></el-table-column>
-      <el-table-column prop label="操作">
-        <template slot-scope="scope">
-          <el-button
-            slot="reference"
-            v-show="$store.state.userInfo.type == 2"
-            @click="del(scope.row.id)"
-            size="mini"
-          >删除</el-button>
-          <el-button
-            type="warning"
-            plain
-            @click="updateData = scope.row;dialogFormVisibleUpdate = true; "
-            v-show="$store.state.userInfo.type == 2"
-            size="mini"
-          >编辑</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+              <el-option-group
+                v-for="(group,index) in propertyList.var_type"
+                :key="group.label"
+                :label="index"
+              >
+                <el-option
+                  v-for="item in group"
+                  :key="item.tag_name"
+                  :label="item.tag_name"
+                  :value="item.tag_name"
+                ></el-option>
+              </el-option-group>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="描述" prop="description">
+            <el-input
+              type="textarea"
+              :rows="4"
+              v-model="updateData.description"
+              autocomplete="off"
+              placeholder="版本号"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisibleUpdate = false" size="small">取 消</el-button>
+          <el-button type="primary" @click="updateFieldMapping()" size="small">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+    <div class="table-wrapper">
+      <el-table
+        :data="fieldList"
+        stripe
+        style="width: 100%"
+        v-loading="loading"
+        height="650"
+        border
+      >
+        <el-table-column prop="field" label="字段名" width="180"></el-table-column>
+        <el-table-column prop="type" label="类型"></el-table-column>
+        <el-table-column prop="description" label="描述"></el-table-column>
+        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+        <el-table-column prop label="操作">
+          <template slot-scope="scope">
+            <el-button
+              slot="reference"
+              v-show="$store.state.userInfo.type == 2"
+              @click="del(scope.row.id)"
+              size="mini"
+            >删除</el-button>
+            <el-button
+              type="warning"
+              plain
+              @click="updateData = scope.row;dialogFormVisibleUpdate = true; "
+              v-show="$store.state.userInfo.type == 2"
+              size="mini"
+            >编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -286,4 +302,7 @@ export default {
 </script>
 
 <style>
+.btn-wrapper {
+  margin: 10px 0;
+}
 </style>
