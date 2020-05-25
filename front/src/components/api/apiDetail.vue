@@ -48,7 +48,7 @@
       <div class="item-head">
         <ul>
           <li>
-            <button>请求头部</button>
+            <button class="tab-button">请求头部</button>
           </li>
         </ul>
       </div>
@@ -68,14 +68,30 @@
       </table>
     </div>
     <div class="box3">
-      <span class="box3-copy" @click="copyAsPostman(apiData.http_request_params)">生成postman参数</span>
-      <el-dialog title="选择并复制" :visible.sync="dialogFormVisible" width="30%">
-        <el-input type="textarea" v-model="copyStr" :rows="8"></el-input>
+      <span class="box3-copy" @click="copyAsPostman()">
+        <button>生成调试参数</button>
+      </span>
+      <el-dialog title="复制到剪贴板" :visible.sync="dialogFormVisible" width="30%">
+        <el-form size="small">
+          <el-form-item label="分隔符">
+            <el-select v-model="delimiter" @change="generateStrParams()">
+              <el-option label="冒号(:)" value=":"></el-option>
+              <el-option label="逗号(,)" value=","></el-option>
+              <el-option label="空格( )" value=" "></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-input type="textarea" v-model="copyStr" :rows="8"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="copyToClipboard()">复制</el-button>
+          </el-form-item>
+        </el-form>
       </el-dialog>
       <div class="item-head">
         <ul>
           <li>
-            <button>请求参数</button>
+            <button class="tab-button">请求参数</button>
           </li>
         </ul>
       </div>
@@ -124,7 +140,7 @@
       <div class="item-head">
         <ul>
           <li>
-            <button>返回参数</button>
+            <button class="tab-button">返回参数</button>
           </li>
         </ul>
       </div>
@@ -160,8 +176,8 @@
     <div class="box5">
       <div class="res-btn">
         <div class="btn-wrap">
-          <button @click="box5=0" :class="{'tab-change-btn-bg' : box5==0}">成功</button>
-          <button @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
+          <button class="tab-button" @click="box5=0" :class="{'tab-change-btn-bg' : box5==0}">成功</button>
+          <button class="tab-button" @click="box5=1" :class="{'tab-change-btn-bg' : box5==1}">失败</button>
         </div>
       </div>
       <div class="box5-show">
@@ -196,6 +212,7 @@ export default {
   },
   data() {
     return {
+      delimiter: ":",
       dialogFormVisible: false,
       copyStr: "",
       loading: true,
@@ -225,19 +242,27 @@ export default {
     };
   },
   methods: {
+    copyToClipboard() {
+      if (this.$clipboard(this.copyStr) === true) {
+        this.$message.success("复制成功，使用ctrl + v粘贴");
+        this.dialogFormVisible = !this.dialogFormVisible;
+      }
+    },
     //复制为postman参数
-    copyAsPostman(item) {
-      if (!item) {
-        return;
-      }
-
-      let str = "";
-      for (let value of item) {
-        str +=
-          value.name + ":" + (value.example ? value.example : "unknown") + "\r\n";
-      }
-      this.copyStr = str;
+    copyAsPostman() {
+      this.generateStrParams();
       this.dialogFormVisible = true;
+    },
+    //生成参数字符串
+    generateStrParams() {
+      this.copyStr = "";
+      for (let value of this.apiData.http_request_params) {
+        this.copyStr +=
+          value.name +
+          this.delimiter +
+          (value.example ? value.example : "unknown") +
+          "\r\n";
+      }
     },
     updateApi() {
       this.$router.push({ name: "apiEdit", params: { apiId: this.apiId } });
@@ -330,7 +355,9 @@ export default {
   justify-content: space-between;
 }
 
-button {
+button.tab-button,
+.btn-group-1 button,
+.btn-group-2 button {
   background-color: #efefef;
   border: 1px solid #dddddd;
   width: 90px;
@@ -598,13 +625,12 @@ select {
 
 em i {
   font-style: normal;
-  border: 1px solid rgb(64, 165, 110);
-  background-color: #4caf4f96;
+  background-color: #4caf4fc7;
   color: white;
-  padding: 4px 5px;
+  padding: 5px 6px;
   margin-left: 5px;
   border-radius: 4px;
-  width: 50px;
+  /* width: 50px; */
   display: inline-block;
   text-align: center;
 }
@@ -618,11 +644,24 @@ em i {
   display: inline-block;
   position: absolute;
   right: 4px;
-  top: 5px;
-  font-size: 12px;
-  border: 1px solid;
+  border: 1px solid gray;
   border-radius: 4px;
   padding: 1px;
   z-index: 1;
+}
+
+.box3 .box3-copy button {
+  background-color: #efefef;
+  border: 1px solid #dddddd;
+  width: 90px;
+  height: 24px;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+.box3 .box3-copy button:hover {
+  background-color: #d1cdcd;
 }
 </style>

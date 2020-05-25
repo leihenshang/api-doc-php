@@ -3,6 +3,9 @@ import Vuex from "vuex";
 import App from "./App.vue";
 import router from "./router";
 import VueResource from "vue-resource";
+import VueClipboard from "vue2-clipboard";
+
+
 
 
 //markdown组件
@@ -23,10 +26,11 @@ Vue.use(VueResource);
 Vue.use(Vuex);
 Vue.use(mavonEditor);
 Vue.use(ElementUI);
+Vue.use(VueClipboard);
 
 //扩展指令，设置焦点
 Vue.directive("focus", {
-  inserted: function(el) {
+  inserted: function (el) {
     el.focus();
   },
 });
