@@ -5,17 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-</head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
+    </style>
+</head>
+<div class="title">XXX聊天室</div>
+<div class="main">
+    <div class="left-bar">
+        <h4>在线用户:</h4>
+        <div class="user-list">
+            <ul>
+                <li>
+                    <span>用户1</span>
+                </li>
+                <li>
+                    <span>用户1</span>
+                </li>
+                <li>
+                    <span>用户1</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="middle">
+        <div class="chat-board">
+            <div class="system-msg">系统消息</div>
+            <div class="left">别人的话</div>
+            <div class="right">我的话</div>
+        </div>
+        <div class="input-box">
+            <textarea rows="3"></textarea>
+            <button>发送</button>
+        </div>
+    </div>
+    <div class="right-bar">
+        <div class="avatar"></div>
+        <dl>
+            <dd>用户名：xxx</dd>
+        </dl>
+    </div>
+</div>
 <body>
-    test
+
 </body>
 <script>
 
     let name = Math.random();
 
     // Create WebSocket connection.
-    const socket = new WebSocket('ws://localhost:9502/'+name);
+    const socket = new WebSocket('ws://localhost:9502/' + name);
 
     // Connection opened
     socket.addEventListener('open', function (event) {
