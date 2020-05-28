@@ -186,10 +186,10 @@
 <script src="conf.js"></script>
 
 <script>
-    var name = prompt('请输入用户名');
+    let name = prompt('请输入用户名');
   
-    if (name !== null) {
-        console.log('test')
+    if (name) {
+        console.log('test',name)
         axios.get(URL + '/user-info/login?name=' + name
         )
             .then(function (response) {
@@ -206,7 +206,7 @@
 
 
 
-    function initShow() {
+    function initShow(name) {
         let status = document.querySelector('#status');
         let username = document.querySelector('#username');
         if (!name && status) {
