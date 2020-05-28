@@ -173,7 +173,7 @@
         <div class="right-bar container-div">
             <div class="avatar"></div>
             <dl>
-                <dd>用户名：xxx</dd>
+                <dd>用户名：<span id="username">xxx</span></dd>
             </dl>
         </div>
     </div>
@@ -182,17 +182,46 @@
 <body>
 
 </body>
+<script src="axios.min.js"></script>
+<script src="conf.js"></script>
+
 <script>
-    let name = prompt('请输入用户名');
-    let status = document.querySelector('#status');
-    let sendBtn = document.querySelector('#send-btn');
-    if (!name && status) {
-        status.innerText = '未连接';
-    } else {
-        status.innerText = '已连接';
-        status.style.color = 'black';
+    var name = prompt('请输入用户名');
+  
+    if (name !== null) {
+        console.log('test')
+        axios.get(URL + '/user-info/login?name=' + name
+        )
+            .then(function (response) {
+                if (response.status == HTTP_OK) {
+                    console.log(response);
+                }
+
+                initShow();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
+
+
+    function initShow() {
+        let status = document.querySelector('#status');
+        let username = document.querySelector('#username');
+        if (!name && status) {
+            status.innerText = '未连接';
+        } else {
+            status.innerText = '已连接';
+            status.style.color = 'black';
+            username.innerText = name;
+        }
+    }
+
+
+
+
+    let sendBtn = document.querySelector('#send-btn');
     sendBtn.addEventListener('click', function () {
         alert("测试发送按钮");
     })
