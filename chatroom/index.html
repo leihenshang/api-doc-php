@@ -11,63 +11,206 @@
             padding: 0;
         }
 
+        body {
+            width: 100%;
+        }
+
+        .main {
+            width: 1200px;
+            height: 900px;
+            margin: 0 auto;
+            border: 1px solid;
+        }
+
+        .title {
+            line-height: 40px;
+            height: 40px;
+            text-align: center;
+            border: 1px solid;
+
+        }
+
+        .container {
+            width: 100%;
+            height: 858px;
+            overflow: hidden;
+        }
+
+        .container-div {
+            float: left;
+            border: 1px solid;
+            height: 100%;
+        }
+
+        .left-bar {
+            width: 198px;
+        }
+
+        .left-bar h4 {
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            border-bottom: 1px solid;
+            text-align: center;
+        }
+
+        .left-bar ul {
+            list-style: none;
+            margin: 10px 5px;
+        }
+
+        .left-bar ul li {
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        .middle {
+            width: 798px;
+            position: relative;
+        }
+
+        .middle .chat-board {
+            height: 70%;
+            border-bottom: 1px solid;
+            overflow: hidden;
+        }
+
+        .middle .chat-board .system-msg {
+            height: 80px;
+            /* line-height: 50px; */
+            overflow-y: scroll;
+            width: 100%;
+            border-bottom: 1px solid;
+        }
+
+        .middle .chat-board .chat-wrapper {
+            height: 515px;
+            overflow-y: scroll;
+        }
+
+        .chat-wrapper .left {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: rgba(39, 133, 78, 0.418);
+        }
+
+        .chat-wrapper .right {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: rgba(109, 186, 231, 0.39);
+        }
+
+        .middle .input-box textarea {
+            resize: none;
+            width: 99%;
+            margin: 5px auto;
+            box-sizing: border-box;
+            height: 200px;
+            padding: 5px;
+            display: block;
+        }
+
+        .middle .input-box button {
+            width: 80px;
+            height: 30px;
+            position: absolute;
+            right: 5px;
+            bottom: 10px;
+        }
+
+        .right-bar {
+            width: 198px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            margin: 40px auto;
+            background-color: plum;
+        }
+
+        .right-bar dl dd {
+            text-align: center;
+        }
     </style>
 </head>
-<div class="title">XXX聊天室</div>
 <div class="main">
-    <div class="left-bar">
-        <h4>在线用户:</h4>
-        <div class="user-list">
-            <ul>
-                <li>
-                    <span>用户1</span>
-                </li>
-                <li>
-                    <span>用户1</span>
-                </li>
-                <li>
-                    <span>用户1</span>
-                </li>
-            </ul>
+    <div class="title">XXX聊天室 <span id="status" style="color: red;">未连接</span></div>
+    <div class="container">
+        <div class="left-bar container-div">
+            <h4>在线用户</h4>
+            <div class="user-list">
+                <ul>
+                    <li>
+                        <span>用户1</span>
+                    </li>
+                    <li>
+                        <span>用户1</span>
+                    </li>
+                    <li>
+                        <span>用户1</span>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="middle">
-        <div class="chat-board">
-            <div class="system-msg">系统消息</div>
-            <div class="left">别人的话</div>
-            <div class="right">我的话</div>
+        <div class="middle container-div">
+            <div class="chat-board">
+                <div class="system-msg">系统消息</div>
+                <div class="chat-wrapper">
+                    <div class="left">别人的话</div>
+                    <div class="right">我的话</div>
+                    <div class="left">别人的话</div>
+                    <div class="right">我的话</div>
+                    <div class="left">别人的话</div>
+                    <div class="right">我的话</div>
+                </div>
+            </div>
+            <div class="input-box">
+                <textarea rows="3"></textarea>
+                <button id="send-btn">发送</button>
+            </div>
         </div>
-        <div class="input-box">
-            <textarea rows="3"></textarea>
-            <button>发送</button>
+        <div class="right-bar container-div">
+            <div class="avatar"></div>
+            <dl>
+                <dd>用户名：xxx</dd>
+            </dl>
         </div>
-    </div>
-    <div class="right-bar">
-        <div class="avatar"></div>
-        <dl>
-            <dd>用户名：xxx</dd>
-        </dl>
     </div>
 </div>
+
 <body>
 
 </body>
 <script>
+    let name = prompt('请输入用户名');
+    let status = document.querySelector('#status');
+    let sendBtn = document.querySelector('#send-btn');
+    if (!name && status) {
+        status.innerText = '未连接';
+    } else {
+        status.innerText = '已连接';
+        status.style.color = 'black';
+    }
 
-    let name = Math.random();
+    sendBtn.addEventListener('click', function () {
+        alert("测试发送按钮");
+    })
 
-    // Create WebSocket connection.
-    const socket = new WebSocket('ws://localhost:9502/' + name);
+    // let name = Math.random();
 
-    // Connection opened
-    socket.addEventListener('open', function (event) {
-        socket.send('Hello Server!');
-    });
+    // // Create WebSocket connection.
+    // const socket = new WebSocket('ws://localhost:9502/' + name);
 
-    // Listen for messages
-    socket.addEventListener('message', function (event) {
-        console.log('Message from server ', event.data);
-    });
+    // // Connection opened
+    // socket.addEventListener('open', function (event) {
+    //     socket.send('Hello Server!');
+    // });
+
+    // // Listen for messages
+    // socket.addEventListener('message', function (event) {
+    //     console.log('Message from server ', event.data);
+    // });
 
 
 </script>
