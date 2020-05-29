@@ -100,6 +100,12 @@
             background-color: rgba(109, 186, 231, 0.39);
         }
 
+        .chat-wrapper .sys {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: gray;
+        }
+
         .middle .input-box textarea {
             resize: none;
             width: 99%;
@@ -156,17 +162,11 @@
         <div class="middle container-div">
             <div class="chat-board">
                 <div class="system-msg">系统消息</div>
-                <div class="chat-wrapper">
-                    <div class="left">别人的话</div>
-                    <div class="right">我的话</div>
-                    <div class="left">别人的话</div>
-                    <div class="right">我的话</div>
-                    <div class="left">别人的话</div>
-                    <div class="right">我的话</div>
+                <div class="chat-wrapper" id="chatWrapper">
                 </div>
             </div>
             <div class="input-box">
-                <textarea rows="3"></textarea>
+                <textarea id="sayText"></textarea>
                 <button id="send-btn">发送</button>
             </div>
         </div>
@@ -182,34 +182,78 @@
 <body>
 
 </body>
-<script src="axios.min.js"></script>
-<script src="conf.js"></script>
+<script src="/static/axios.min.js"></script>
+<script src="/static/conf.js"></script>
 
 <script>
     let name = prompt('请输入用户名');
-  
+
     if (name) {
-        console.log('test',name)
-        axios.get(URL + '/user-info/login?name=' + name
+
+        axios.post(URL + '/user-info/login', {
+                name
+            }
         )
             .then(function (response) {
-                if (response.status == HTTP_OK) {
-                    console.log(response);
-                }
+                if (response.data.code === REQ_OK) {
+                    // Create WebSocket connection.
+                    const socket = new WebSocket('ws://localhost:9502/' + name);
+                    if (socket) {
+                        clickSend(socket);
+                    }
 
-                initShow();
+                    // Connection opened
+                    socket.addEventListener('open', function (event) {
+                        // socket.send('Hello Server!');
+                        initShow(name);
+                    });
+
+                    // Listen for messages
+                    socket.addEventListener('message', function (event) {
+                        let data = JSON.parse(event.data);
+                        switch (data.type) {
+                            case 1 :
+                                sysSay(data.msg, data.time);
+                                break;
+                            case 2 :
+                                otherSay(data.msg, data.name, data.time);
+                                break;
+                        }
+
+
+                        // console.log('Message from server ', event.data);
+                    });
+
+
+                } else {
+                    alert('连接错误');
+                }
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
 
+    function clickSend(socket) {
+
+        let sendBtn = document.querySelector('#send-btn');
+
+        sendBtn.addEventListener('click', function () {
+            let sayText = document.querySelector('#sayText').value;
+            if (sayText.length > 0) {
+                iSay(sayText);
+                socket.send(sayText);
+                sayText.value = '';
+            }
+
+        });
+    }
 
 
     function initShow(name) {
         let status = document.querySelector('#status');
         let username = document.querySelector('#username');
-        if (!name && status) {
+        if (!name) {
             status.innerText = '未连接';
         } else {
             status.innerText = '已连接';
@@ -219,27 +263,32 @@
     }
 
 
+    function iSay(msg) {
+        let chatWrapper = document.querySelector('#chatWrapper');
+        let div = document.createElement('div');
+        div.className = 'right';
+        div.appendChild(document.createTextNode('我说: ' + msg));
+        chatWrapper.appendChild(div);
+        chatWrapper.scrollTop += 100;
+    }
 
+    function otherSay(msg, name, time) {
+        let chatWrapper = document.querySelector('#chatWrapper');
+        let div = document.createElement('div');
+        div.className = 'left';
+        div.appendChild(document.createTextNode(name + '说: ' + msg + ' ' + time));
+        chatWrapper.appendChild(div);
+        chatWrapper.scrollTop += 100;
+    }
 
-    let sendBtn = document.querySelector('#send-btn');
-    sendBtn.addEventListener('click', function () {
-        alert("测试发送按钮");
-    })
-
-    // let name = Math.random();
-
-    // // Create WebSocket connection.
-    // const socket = new WebSocket('ws://localhost:9502/' + name);
-
-    // // Connection opened
-    // socket.addEventListener('open', function (event) {
-    //     socket.send('Hello Server!');
-    // });
-
-    // // Listen for messages
-    // socket.addEventListener('message', function (event) {
-    //     console.log('Message from server ', event.data);
-    // });
+    function sysSay(msg, time) {
+        let chatWrapper = document.querySelector('#chatWrapper');
+        let div = document.createElement('div');
+        div.className = 'sys';
+        div.appendChild(document.createTextNode(time + ' 系统消息:' + msg));
+        chatWrapper.appendChild(div);
+        chatWrapper.scrollTop += 100;
+    }
 
 
 </script>
