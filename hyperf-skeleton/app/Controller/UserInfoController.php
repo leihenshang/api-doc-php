@@ -13,9 +13,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Middleware\CorsMiddleware;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\RequestMapping;
+use Hyperf\Redis\Redis;
+use Hyperf\WebSocketServer\Context;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -26,15 +29,27 @@ use Psr\Http\Message\ResponseInterface;
 class UserInfoController extends AbstractController
 {
     /**
+     * @Inject()
+     * @var Redis
+     */
+    public $redis;
+
+    /**
      * 属性列表
      * @return ResponseInterface
      * @Middleware(CorsMiddleware::class)
-     * @RequestMapping(path="login",methods="post,get,OPTIONS")
+     * @RequestMapping(path="login",methods="post,get")
      */
     public function login()
     {
-        var_dump('test');
+
         $name = $this->request->input('name');
+        $saveKey = Context::get($name);;
+        if($saveKey){
+            return $this->failedToJson('登录失败,用户名已存在');
+        }else {
+            Context::set($name,'unknown');
+        }
         return $this->toJson($name);
     }
 

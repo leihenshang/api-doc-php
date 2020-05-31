@@ -29,7 +29,10 @@
         "hyperf/model-cache": "~1.1.0",
         "hyperf/validation": "^1.1",
         "hyperf/filesystem": "^1.1",
-        "hyperf/websocket-server": "^1.1"
+        "hyperf/websocket-server": "^1.1",
+        "hyperf/view": "^1.1",
+        "hyperf/task": "^1.1",
+        "duncan3dc/blade": "^4.8"
     },
     "require-dev": {
         "swoft/swoole-ide-helper": "^4.2",
