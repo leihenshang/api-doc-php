@@ -1,4 +1,6 @@
 # apiDoc
+- github:https://github.com/leihenshang/apiDoc
+- gitee:https://gitee.com/leihenshang/apiDoc
 
 #### Description
 api文档，练习项目

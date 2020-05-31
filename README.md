@@ -1,4 +1,6 @@
 # apiDoc
+- github:https://github.com/leihenshang/apiDoc
+- gitee:https://gitee.com/leihenshang/apiDoc
 
 #### 介绍
 api文档，练习项目,用于记录api文档，方便前后台协作.
