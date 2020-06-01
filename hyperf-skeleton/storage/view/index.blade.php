@@ -247,6 +247,8 @@
             }
 
         });
+
+
     }
 
 
@@ -288,6 +290,10 @@
         div.appendChild(document.createTextNode(time + ' 系统消息:' + msg));
         chatWrapper.appendChild(div);
         chatWrapper.scrollTop += 100;
+    }
+
+    function updateUserList(userList){
+
     }
 
 

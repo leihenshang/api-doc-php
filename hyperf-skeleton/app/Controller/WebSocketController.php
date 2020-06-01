@@ -22,7 +22,9 @@ class WebSocketController implements OnMessageInterface, OnOpenInterface, OnClos
     const MSG_TYPE = [
         'sys' => 1,
         'user' => 2,
+        'userList' => 3
     ];
+
 
     /**
      * @Inject()
@@ -48,13 +50,19 @@ class WebSocketController implements OnMessageInterface, OnOpenInterface, OnClos
     {
         $msg = $frame->data;
 //        $server->push($frame->fd, $msg);
-        $this->broadcast($server, $this->sendMsg(self::MSG_TYPE['user'], $msg, Context::get('ws-' . $frame->fd)),$frame->fd);
+        $this->broadcast($server, $this->sendMsg(self::MSG_TYPE['user'], $msg, Context::get('ws-' . $frame->fd)), $frame->fd);
     }
 
     public function onOpen(WebSocketServer $server, Request $request): void
     {
         Context::set('ws-' . $request->fd, $this->req->route('name'));
+        $userList = ['test1', 'test', 'test45'];
+
         $this->broadcast($server, $this->sendMsg(self::MSG_TYPE['sys'], '新用户' . Context::get('ws-' . $request->fd) . '加入'));
+        $this->broadcast($server,
+            $this->sendMsg(self::MSG_TYPE['userList'],
+                json_encode($userList, JSON_UNESCAPED_UNICODE),
+                ''));
     }
 
     /**
@@ -91,7 +99,7 @@ class WebSocketController implements OnMessageInterface, OnOpenInterface, OnClos
             'type' => $type,
             'msg' => $msg,
             'name' => $name,
-            'time' => date('Y-m-d H:i:s', time())
+            'time' => date('Y-m-d H:i:s', time()),
         ], JSON_UNESCAPED_UNICODE);
     }
 }
