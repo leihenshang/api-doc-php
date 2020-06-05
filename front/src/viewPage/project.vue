@@ -30,7 +30,7 @@
 import TopBar from "../components/common/topBar";
 
 export default {
-  name: "projectDetail",
+  name: "project",
   props: {
     id: String
   },
@@ -76,7 +76,6 @@ export default {
 }
 
 .detail .right {
-  padding: 0 10px;
   box-sizing: border-box;
   overflow-x: hidden;
 }

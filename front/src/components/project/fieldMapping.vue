@@ -301,8 +301,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .btn-wrapper {
-  margin: 10px 0;
+  padding:10px 0;
 }
 </style>

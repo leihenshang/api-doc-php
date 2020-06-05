@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 
 //项目相关
 import Home from "./viewPage/home";
-import Detail from "./viewPage/projectDetail";
+import Detail from "./viewPage/project";
 // import Msg from "./viewPage/msg";
 import ProjectList from "./components/project/projectList";
 import FieldMapping from "./components/project/fieldMapping";

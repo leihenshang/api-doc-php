@@ -82,13 +82,12 @@ export default {
 .top-bar {
   height: 50px;
   line-height: 50px;
-  border-bottom: 1px solid #e5e5e5;
   font-size: 14px;
+  background-color: #409eff;
 }
 
 .top-bar ul {
   overflow: hidden;
-  /* width: 100%; */
 }
 
 .top-bar li {
@@ -98,7 +97,7 @@ export default {
 
 .top-bar .t-r {
   float: right;
-  border-left: 1px solid #e5e5e5;
+  color: white;
 }
 
 .top-bar .t-r span {
@@ -107,11 +106,10 @@ export default {
 
 .top-bar .t-link {
   padding: 0 15px;
-  border-right: 1px solid #e5e5e5;
 }
 
 .top-bar .t-link a {
-  color: #999;
+  color: white;
   font-weight: 700;
 }
 
@@ -121,9 +119,8 @@ export default {
 }
 
 .top-bar span {
-  color: #999;
+  color:white;
   display: inline-block;
-  /* width: 100px; */
 }
 
 .top-bar em {
@@ -134,7 +131,7 @@ export default {
 
 .top-bar em:hover {
   color: white;
-  background-color: #4caf50;
+  background-color: #66b1ff;
 }
 
 .user-lay {
@@ -144,7 +141,6 @@ export default {
   background-color: #fff;
   position: absolute;
   right: 0;
-  /* margin: 5px 0; */
   z-index: 9999;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
   display: none;
