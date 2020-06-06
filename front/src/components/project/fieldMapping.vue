@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="field-wrapper">
     <div class="btn-wrapper">
       <el-button size="mini" @click="showAddWindow = true">新增</el-button>
       <el-dialog title="添加映射字段" :visible.sync="showAddWindow" :show-close="false">
@@ -93,14 +93,7 @@
       </el-dialog>
     </div>
     <div class="table-wrapper">
-      <el-table
-        :data="fieldList"
-        stripe
-        style="width: 100%"
-        v-loading="loading"
-        height="650"
-        border
-      >
+      <el-table :data="fieldList" stripe v-loading="loading" border>
         <el-table-column prop="field" label="字段名" width="180"></el-table-column>
         <el-table-column prop="type" label="类型"></el-table-column>
         <el-table-column prop="description" label="描述"></el-table-column>
@@ -303,6 +296,15 @@ export default {
 
 <style scoped>
 .btn-wrapper {
-  padding:10px 0;
+  padding: 10px 0;
+}
+
+.table-wrapper {
+  padding: 0 0;
+}
+
+.field-wrapper {
+  box-sizing: border-box;
+  padding-right: 10px;
 }
 </style>

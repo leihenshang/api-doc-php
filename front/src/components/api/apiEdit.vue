@@ -239,9 +239,7 @@ export default {
 </script>
 
 <style scoped>
-.create-api {
-  background-color: #f8f8f8;
-}
+
 
 /* 第一行按钮 */
 .box1 {
