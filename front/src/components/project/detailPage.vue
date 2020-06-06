@@ -22,7 +22,9 @@
         </li>
         <li @click="jump()" class="api-detail">
           <p>api接口</p>
-          <p><el-link type="danger">点击查看详情</el-link></p>
+          <p>
+            <el-link type="danger">点击查看详情</el-link>
+          </p>
         </li>
       </ul>
       <div class="user-wrapper">
@@ -555,12 +557,13 @@ export default {
 .right-r {
   width: 50%;
   height: 100%;
-  background-color: #f3f3f3;
+  border-left: solid 1px #e6e6e6;
+  box-sizing: border-box;
+  padding-left: 5px;
+  overflow-y: scroll;
 }
-
 
 .right-l ul li.api-detail p:last-child {
-  color:red;
+  color: red;
 }
-
 </style>

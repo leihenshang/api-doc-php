@@ -30,11 +30,13 @@ button {
 
 .left {
   width: 240px;
+  box-sizing: border-box;
+  margin-right:10px;
+
 }
 
 .right {
   flex: 1;
-  height: 100%;
-  background-color: #f8f8f8;
   overflow-y: auto;
+  box-sizing: border-box;
 }

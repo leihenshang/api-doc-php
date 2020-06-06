@@ -65,7 +65,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .message ul {
-  margin: 15px;
   min-height: 800px;
 }
 

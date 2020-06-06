@@ -165,7 +165,6 @@ export default {
 .btn {
   width: 100%;
   display: flex;
-  margin: 0 10px;
 }
 
 .btn .right {
