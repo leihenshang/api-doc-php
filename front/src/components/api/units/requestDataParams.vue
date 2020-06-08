@@ -2,14 +2,8 @@
   <div class="request-box">
     <div class="request">
       <div class="item-head">
-        <ul>
-          <li>
-            <button @click="show=0" :class="{'tab-change-btn-bg' : show==0}" class="req-btn">请求头部</button>
-          </li>
-          <li>
-            <button @click="show=1" :class="{'tab-change-btn-bg' : show==1}" class="req-btn">请求参数</button>
-          </li>
-        </ul>
+        <button @click="show=0" :class="{'tab-change-btn-bg' : show==0}" class="req-btn req-btn-first">请求头部</button>
+        <button @click="show=1" :class="{'tab-change-btn-bg' : show==1}" class="req-btn">请求参数</button>
       </div>
       <table v-show="show==0">
         <tr>
@@ -313,7 +307,7 @@ export default {
   width: 80%;
 }
 
-.request-box button.req-btn {
+button.req-btn {
   background-color: #efefef;
   border: 1px solid #dddddd;
   width: 90px;
@@ -325,10 +319,9 @@ export default {
   border-bottom: none;
 }
 
-.request-box button.req-btn:last-child {
-  border-left: none;
+button.req-btn-first {
+  border-right: none;
 }
-
 
 /* tab切换按钮颜色 */
 div.item-head .tab-change-btn-bg {

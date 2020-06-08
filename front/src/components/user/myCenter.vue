@@ -12,17 +12,7 @@
           </li>
           <li class="nick-name-li">
             <em>昵称：</em>
-            <p v-if="editNickName === false">{{userInfo.nick_name}}</p>
-            <input v-else type="text" v-model="newNickname" />
-            <button
-              v-if=" editNickName === false "
-              @click="editNickName = !editNickName; newNickname = userInfo.nick_name "
-            >修改昵称</button>
-            <button v-if=" editNickName === true " @click="updateNickName()">确定</button>
-            <button
-              v-if=" editNickName === true "
-              @click=" editNickName = !editNickName; newNickname = '' "
-            >取消</button>
+            <p>{{userInfo.nick_name}}</p>
           </li>
           <li>
             <em>邮箱：</em>
@@ -47,6 +37,7 @@
         </ul>
         <div class="btn">
           <el-button @click="dialogFormVisible = true" type="primary" size="small">修改密码</el-button>
+          <el-button size="small"  type="primary" @click="updateNickName()">修改昵称</el-button>
         </div>
       </div>
     </div>
@@ -100,7 +91,6 @@ export default {
     return {
       userInfo: {},
       editNickName: false,
-      newNickname: "",
       form: {
         old_pwd: "",
         pwd: "",
@@ -163,41 +153,6 @@ export default {
         }
       );
     },
-    //更新昵称
-    updateNickName() {
-      //验证名字是否一样
-      if (this.newNickname === this.userInfo.nick_name) {
-        this.$message.error("昵称没有修改");
-        return;
-      }
-
-      this.$http
-        .post(
-          this.apiAddress + "/user/update-nickname",
-          {
-            nickname: this.newNickname
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          res => {
-            let response = res.body;
-            if (response.code !== CODE_OK) {
-              this.$message.error("failed:" + response.msg);
-              return;
-            } else {
-              this.getUserInfo();
-              this.userInfo.nick_name = this.newNickname;
-              this.$store.commit("saveUserInfo", this.userInfo);
-            }
-          },
-          () => {
-            this.$message.error("请求发生错误");
-          }
-        );
-
-      this.editNickName = !this.editNickName;
-    },
     //更新密码
     updatePwd() {
       this.$refs.form.validate(valid => {
@@ -237,6 +192,57 @@ export default {
           return false;
         }
       });
+    },
+    updateNickName() {
+      this.$prompt("请修改昵称", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputValue: this.userInfo.nick_name,
+        inputPattern: /.{1,50}/,
+        inputErrorMessage: "昵称不正确"
+      })
+        .then(({ value }) => {
+          //验证名字是否一样
+          if (value === this.userInfo.nick_name) {
+            this.$message.error("昵称没有修改");
+            return;
+          }
+
+          this.$http
+            .post(
+              this.apiAddress + "/user/update-nickname",
+              {
+                nickname: value
+              },
+              { emulateJSON: true }
+            )
+            .then(
+              res => {
+                let response = res.body;
+                if (response.code !== CODE_OK) {
+                  this.$message.error("failed:" + response.msg);
+                  return;
+                } else {
+                  this.getUserInfo();
+                  this.userInfo.nick_name = value;
+                  this.$store.commit("saveUserInfo", this.userInfo);
+                  this.$message({
+                    type: "success",
+                    message: "你的新昵称是: " + value
+                  });
+                }
+              },
+              () => {
+                this.$message.error("请求发生错误");
+              }
+            );
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消输入"
+          });
+        });
     }
   },
   computed: {}

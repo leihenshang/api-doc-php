@@ -381,25 +381,28 @@ export default {
           }
         );
     },
+    //转换状态字符串显示
     transferState(state) {
       state = parseInt(state);
-        let str = "";
+      let str = "";
       //1正常2禁用3未激活
       switch (state) {
         case 1:
-          return "正常";
+          str = "正常";
           break;
         case 2:
-          return "禁用";
+          str = "正常";
           break;
         case 3:
-          return "未激活";
+          str = "正常";
           break;
 
         default:
-          return "未知";
+          str = "正常";
           break;
       }
+
+      return str;
     },
     transferType(type) {
       type = parseInt(type);
