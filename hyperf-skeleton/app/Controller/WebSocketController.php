@@ -8,13 +8,13 @@ use Hyperf\Contract\OnCloseInterface;
 use Hyperf\Contract\OnMessageInterface;
 use Hyperf\Contract\OnOpenInterface;
 use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Redis\Redis;
 use Hyperf\WebSocketServer\Context;
 use Swoole\Http\Request;
 use Swoole\Server;
 use Swoole\Websocket\Frame;
 use Swoole\WebSocket\Server as WebSocketServer;
-use Hyperf\HttpServer\Contract\RequestInterface;
 
 class WebSocketController implements OnMessageInterface, OnOpenInterface, OnCloseInterface
 {
@@ -42,8 +42,9 @@ class WebSocketController implements OnMessageInterface, OnOpenInterface, OnClos
 
     public function onClose(Server $server, int $fd, int $reactorId): void
     {
-        Context::destroy(Context::get('ws-' . $fd));
-        var_dump('closed', '退出', Context::get('ws-' . $fd));
+        var_dump('用户退出', Context::get('ws-' . $fd));
+        $this->redis->sRem('userList', Context::get('ws-' . $fd));
+        Context::destroy('ws-' . $fd);
     }
 
     public function onMessage(WebSocketServer $server, Frame $frame): void
@@ -55,10 +56,16 @@ class WebSocketController implements OnMessageInterface, OnOpenInterface, OnClos
 
     public function onOpen(WebSocketServer $server, Request $request): void
     {
-        Context::set('ws-' . $request->fd, $this->req->route('name'));
-        $userList = ['test1', 'test', 'test45'];
+        $name = $this->req->route('name');
 
-        $this->broadcast($server, $this->sendMsg(self::MSG_TYPE['sys'], '新用户' . Context::get('ws-' . $request->fd) . '加入'));
+        $exist = $this->redis->sIsMember('userList', $name);
+        if (!$exist) {
+                $this->redis->sAdd('userList',$name);
+        }
+
+        Context::set('ws-' . $request->fd, $name);
+        $userList = $this->redis->sMembers('userList');
+        $this->broadcast($server, $this->sendMsg(self::MSG_TYPE['sys'], '新用户 ' . Context::get('ws-' . $request->fd) . ' 加入了群聊'));
         $this->broadcast($server,
             $this->sendMsg(self::MSG_TYPE['userList'],
                 json_encode($userList, JSON_UNESCAPED_UNICODE),

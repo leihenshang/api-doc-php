@@ -93,7 +93,7 @@ export default {
     },
     //创建api
     createApi() {
-     this.$refs.apiInfo.$refs.form.validate(validate => {
+      this.$refs.apiInfo.$refs.form.validate(validate => {
         if (validate) {
           //loading
           let loadingInstance = this.$loading({ fullscreen: true });
@@ -146,7 +146,7 @@ export default {
         .get(this.apiAddress + "/group/list", {
           params: {
             projectId: this.$route.params.id,
-            type:1
+            type: 1
           }
         })
         .then(
@@ -191,10 +191,6 @@ export default {
 </script>
 
 <style scoped>
-.create-api {
-  background-color: #f8f8f8;
-}
-
 /* 第一行按钮 */
 .box1 {
   margin: 5px 0;

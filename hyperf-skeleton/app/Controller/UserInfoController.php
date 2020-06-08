@@ -44,11 +44,9 @@ class UserInfoController extends AbstractController
     {
 
         $name = $this->request->input('name');
-        $saveKey = Context::get($name);;
+        $saveKey = $this->redis->sIsMember('userList',$name);
         if($saveKey){
             return $this->failedToJson('登录失败,用户名已存在');
-        }else {
-            Context::set($name,'unknown');
         }
         return $this->toJson($name);
     }

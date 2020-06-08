@@ -342,11 +342,7 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.create-api {
-  background-color: #f8f8f8;
-}
 
 /* 第一行按钮 */
 .box1 {

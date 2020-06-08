@@ -76,15 +76,16 @@
         }
 
         .middle .chat-board .system-msg {
-            height: 80px;
+            height: 120px;
             /* line-height: 50px; */
             overflow-y: scroll;
             width: 100%;
-            border-bottom: 1px solid;
+            border-bottom: 1px solid gray;
+            color: white;
         }
 
         .middle .chat-board .chat-wrapper {
-            height: 515px;
+            height: 475px;
             overflow-y: scroll;
         }
 
@@ -100,9 +101,10 @@
             background-color: rgba(109, 186, 231, 0.39);
         }
 
-        .chat-wrapper .sys {
-            margin-bottom: 5px;
-            padding: 5px;
+        .system-msg .sys {
+            margin-bottom: 2px;
+            padding: 2px;
+            font-size: 12px;
             background-color: gray;
         }
 
@@ -146,22 +148,13 @@
         <div class="left-bar container-div">
             <h4>在线用户</h4>
             <div class="user-list">
-                <ul>
-                    <li>
-                        <span>用户1</span>
-                    </li>
-                    <li>
-                        <span>用户1</span>
-                    </li>
-                    <li>
-                        <span>用户1</span>
-                    </li>
+                <ul id="userList">
                 </ul>
             </div>
         </div>
         <div class="middle container-div">
             <div class="chat-board">
-                <div class="system-msg">系统消息</div>
+                <div class="system-msg" id="sysMsgWrapper"></div>
                 <div class="chat-wrapper" id="chatWrapper">
                 </div>
             </div>
@@ -218,6 +211,9 @@
                             case 2 :
                                 otherSay(data.msg, data.name, data.time);
                                 break;
+                            case 3 :
+                                updateUserList(data.msg);
+                                break;
                         }
 
 
@@ -269,7 +265,7 @@
         let chatWrapper = document.querySelector('#chatWrapper');
         let div = document.createElement('div');
         div.className = 'right';
-        div.appendChild(document.createTextNode('我说: ' + msg));
+        div.appendChild(document.createTextNode('我说: ' + msg+ ' ' + time));
         chatWrapper.appendChild(div);
         chatWrapper.scrollTop += 100;
     }
@@ -284,15 +280,29 @@
     }
 
     function sysSay(msg, time) {
-        let chatWrapper = document.querySelector('#chatWrapper');
+        let chatWrapper = document.querySelector('#sysMsgWrapper');
         let div = document.createElement('div');
         div.className = 'sys';
-        div.appendChild(document.createTextNode(time + ' 系统消息:' + msg));
+        div.appendChild(document.createTextNode( msg + '   ' +time));
         chatWrapper.appendChild(div);
         chatWrapper.scrollTop += 100;
     }
 
-    function updateUserList(userList){
+    function updateUserList(userList) {
+        const list = document.querySelector('#userList');
+        for (const item of list.children) {
+            list.removeChild(item);
+        }
+
+        userList = JSON.parse(userList);
+        for (const key in userList) {
+            let li = document.createElement('li');
+            let span = document.createElement('span');
+            span.appendChild(document.createTextNode(userList[key]));
+            li.appendChild(span);
+            list.appendChild(li);
+        }
+
 
     }
 
