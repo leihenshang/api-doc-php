@@ -28,6 +28,9 @@ $config = [
                 //如果是gii 代码生成器则不进行格式化
                 if (strstr(Yii::$app->request->getPathInfo(), 'gii') === false) {
                     $event->sender->headers->add('Access-Control-Allow-Origin', '*');
+                    $event->sender->headers->add("Access-Control-Allow-Methods", "POST,GET");
+                    $event->sender->headers->add("Access-Control-Allow-Headers", "x-requested-with,content-type");
+
                     $response = $event->sender;
                     //设置响应状态码为200
                     $response->statusCode = 200;
@@ -39,10 +42,8 @@ $config = [
                         'data' => !isset($response->data['data']) ? [] : $response->data['data'],
                     ];
                 }
-
             }
-        ]
-        ,
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
