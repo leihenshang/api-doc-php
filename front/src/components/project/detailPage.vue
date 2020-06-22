@@ -70,7 +70,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   :command="{action:'setLeader',data:item}"
-                >设为{{item.is_leader == 2 ? '管理员' : '普通用户' }}</el-dropdown-item>
+                >设为{{item.is_leader == 0 ? '管理员' : '普通用户' }}</el-dropdown-item>
                 <el-dropdown-item :command="{action:'updateNickname',data:item}">修改昵称</el-dropdown-item>
                 <el-dropdown-item :command="{action:'quit',data:item}">移出项目</el-dropdown-item>
                 <el-dropdown-item

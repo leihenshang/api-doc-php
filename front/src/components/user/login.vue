@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import Vue from "vue";
 import homeHeader from "../common/units/homeHeader";
 import homeFooter from "../common/units/homeFooter";
 
@@ -88,14 +87,12 @@ export default {
                 response = response.body;
                 if (response.code === CODE_OK) {
                   let userInfo = response.data;
-                  Vue.prototype.userInfo = userInfo;
                   this.$store.commit("saveUserInfo", userInfo);
                   localStorage.setItem("userInfo", JSON.stringify(userInfo));
                   this.$router.push("/").catch(() => {});
                 } else {
                   this.$message.error(response.msg);
                   localStorage.removeItem("userInfo");
-                  Vue.prototype.userInfo = null;
                   this.$router.push("/login").catch(() => {});
                 }
                 // this.loading = false;
@@ -117,7 +114,6 @@ export default {
         let expireTime = new Date(Date.parse(userInfo1.token_expire_time));
         if (expireTime > currDate) {
           this.$store.commit("saveUserInfo", userInfo1);
-          Vue.prototype.userInfo = userInfo1;
           this.$router.push("/");
         } else {
           localStorage.removeItem("userInfo");

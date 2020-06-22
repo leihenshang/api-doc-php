@@ -31,8 +31,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 export default {
   name: "topBar",
   created() {},
@@ -62,7 +60,6 @@ export default {
     //退出登录
     loginOut() {
       localStorage.removeItem("userInfo");
-      Vue.prototype.userInfo = null;
       this.$store.commit("saveUserInfo", {});
       this.$router.push("/login");
     },
@@ -119,7 +116,7 @@ export default {
 }
 
 .top-bar span {
-  color:white;
+  color: white;
   display: inline-block;
 }
 

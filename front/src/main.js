@@ -5,9 +5,6 @@ import router from "./router";
 import VueResource from "vue-resource";
 import VueClipboard from "vue2-clipboard";
 
-
-
-
 //markdown组件
 import mavonEditor from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
@@ -18,7 +15,6 @@ import "element-ui/lib/theme-chalk/index.css";
 
 // Vue.prototype.apiAddress = "http://120.27.241.94:50682";
 Vue.prototype.apiAddress = "http://localhost:1000";
-Vue.prototype.userInfo = null;
 
 Vue.config.productionTip = false;
 
@@ -28,12 +24,11 @@ Vue.use(mavonEditor);
 Vue.use(ElementUI);
 Vue.use(VueClipboard);
 
-//扩展指令，设置焦点
-Vue.directive("focus", {
-  inserted: function (el) {
-    el.focus();
-  },
-});
+//从localStorage中获取用户信息
+function getUserInfoByLocalStorage() {
+  return JSON.parse(localStorage.getItem("userInfo"));
+}
+
 
 const store = new Vuex.Store({
   state: {
@@ -63,28 +58,35 @@ const store = new Vuex.Store({
 
 //vue-resource拦截器拦截请求,添加token
 Vue.http.interceptors.push((request) => {
-  if (request.method === "GET") {
-    if (!request.params.token) {
-      request.params.token = store.state.userInfo.token;
-    }
-    //附加项目id
-    if (!request.params.projectId && store.state.project) {
-      request.params.projectId = store.state.project.id;
-    }
-  } else if (request.method === "POST") {
-    if (!request.body.token) {
-      request.body.token = store.state.userInfo.token;
-    }
-    //附加项目id
-    if (!request.body.projectId && store.state.project) {
-      request.body.projectId = store.state.project.id;
-    }
+  let userInfo = getUserInfoByLocalStorage();
+
+  if (userInfo) {
+    if (request.method === "GET") {
+      if (!request.params.token) {
+        request.params.token = userInfo.token;
+      }
+
+      //附加项目id
+      if (!request.params.projectId && store.state.project) {
+        request.params.projectId = store.state.project.id;
+      }
+    } else if (request.method === "POST") {
+      if (!request.body.token) {
+        request.body.token = userInfo.token;
+      }
+
+      //附加项目id
+      if (!request.body.projectId && store.state.project) {
+        request.body.projectId = store.state.project.id;
+      }
 
 
-    if (request.emulateJSON !== true) {
-      request.emulateJSON = true;
+      if (request.emulateJSON !== true) {
+        request.emulateJSON = true;
+      }
     }
   }
+
   return (response) => {
     if (response.body.code && response.body.code === 34) {
       Vue.prototype.$message.error("超时,重新登录");
@@ -94,54 +96,40 @@ Vue.http.interceptors.push((request) => {
   };
 });
 
-//http请求前置操作
 router.beforeEach((to, from, next) => {
+
+  let userInfo = getUserInfoByLocalStorage();
+
   if (
-    to.matched.some((record) => record.meta.requiresAuth) &&
-    Vue.prototype.userInfo
+    to.matched.some((record) => record.meta.requiresAuth)
   ) {
-    Vue.http
-      .get(
-        Vue.prototype.apiAddress + "/project/get-project-operation-permission",
-        {
-          params: {
-            token: Vue.prototype.userInfo.token,
-            projectId: 22,
-          },
+    Vue.http.get(Vue.prototype.apiAddress + "/project/get-project-operation-permission").then(
+      (response) => {
+        response = response.body;
+        if (response.code === 200) {
+          store.commit("saveProjectPermission", response.data);
         }
-      )
-      .then(
-        (response) => {
-          response = response.body;
-          if (response.code === 200) {
-            store.commit("saveProjectPermission", response.data);
-          }
-        },
-        (res) => {
-          let response = res.body;
-          Vue.$message.error(
-            "获取项目信息-操作失败!" + !response.msg ? response.msg : ""
-          );
-        }
-      );
+      },
+      (res) => {
+        let response = res.body;
+        Vue.$message.error(
+          "获取项目权限信息失败!" + !response.msg ? response.msg : ""
+        );
+      }
+    );
   }
 
-  if (to.name !== "register") {
-    let routerArr = ["userLogin", "register"];
-    if (routerArr.indexOf(to.name) === 0) {
-      next();
-    } else {
-      if (!Vue.prototype.userInfo) {
-        next("/login");
-      } else {
-        next();
-      }
-    }
-  } else {
-    next();
+  let routerArr = ["userLogin", "register"];
+  if (routerArr.indexOf(to.name) === -1 && !userInfo) {
+    next("/login");
   }
+
+  next();
 });
 
+
+
+//实例化Vue
 new Vue({
   router,
   store,

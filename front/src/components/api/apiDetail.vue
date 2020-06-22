@@ -343,7 +343,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* 第一行按钮 */
 .box1 {
   margin: 5px 0;
@@ -614,11 +613,6 @@ select {
   left: 0;
 }
 
-/* tab切换按钮颜色 */
-.tab-change-btn-bg {
-  background-color: #fff;
-}
-
 em i {
   font-style: normal;
   background-color: #4caf4fc7;
@@ -659,5 +653,10 @@ em i {
 
 .box3 .box3-copy button:hover {
   background-color: #d1cdcd;
+}
+
+/* tab切换按钮颜色 */
+.box5 .tab-change-btn-bg {
+  background-color: #fff;
 }
 </style>
