@@ -13,9 +13,10 @@ import "mavon-editor/dist/css/index.css";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
-// Vue.prototype.apiAddress = "http://120.27.241.94:50682";
-Vue.prototype.apiAddress = "http://localhost:1000";
+//导入个人配置
+import conf from "../public/conf.js";
 
+Vue.prototype.apiAddress = conf.apiAddr;
 Vue.config.productionTip = false;
 
 Vue.use(VueResource);
