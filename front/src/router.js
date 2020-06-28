@@ -7,6 +7,8 @@ import Detail from "./viewPage/project";
 // import Msg from "./viewPage/msg";
 import ProjectList from "./components/project/projectList";
 import FieldMapping from "./components/project/fieldMapping";
+import CommonlyParams from "./components/project/commonlyParams";
+import EnvConf from "./components/project/envConf";
 
 //api相关操作
 import ApiPage from "./components/api/apiPage";
@@ -28,6 +30,13 @@ import Login from "./components/user/login";
 import Register from "./components/user/register";
 import MyCenter from "./components/user/myCenter";
 import UserManager from "./components/user/userManager";
+
+import store from "./store/main";
+
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 Vue.use(VueRouter);
 
@@ -51,6 +60,20 @@ const router = new VueRouter({
           path: "fieldMapping",
           name: "fieldMapping",
           component: FieldMapping,
+          meta: { requiresAuth: true },
+          props: true,
+        },
+        {
+          path: "commonlyParams",
+          name: "commonlyParams",
+          component: CommonlyParams,
+          meta: { requiresAuth: true },
+          props: true,
+        },
+        {
+          path: "envConf",
+          name: "envConf",
+          component: EnvConf,
           meta: { requiresAuth: true },
           props: true,
         },
@@ -152,6 +175,42 @@ const router = new VueRouter({
   ],
 });
 
+
+
+
+router.beforeEach((to, from, next) => {
+
+  let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  if (userInfo && from.fullPath === '/') {
+    store.commit("saveUserInfo", userInfo);
+  }
+
+  if (
+    to.matched.some((record) => record.meta.requiresAuth) && userInfo
+  ) {
+    Vue.http.get(Vue.prototype.apiAddress + "/project/get-project-operation-permission").then(
+      (response) => {
+        response = response.body;
+        if (response.code === 200) {
+          store.commit("saveProjectPermission", response.data);
+        }
+      },
+      (res) => {
+        let response = res.body;
+        Vue.$message.error(
+          "获取项目权限信息失败!" + !response.msg ? response.msg : ""
+        );
+      }
+    );
+  }
+
+  let routerArr = ["userLogin", "register"];
+  if (routerArr.indexOf(to.name) === -1 && !userInfo) {
+    next("/login");
+  }
+
+  next();
+});
 
 
 export default router;

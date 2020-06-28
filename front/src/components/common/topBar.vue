@@ -14,7 +14,7 @@
         </span>
       </li>
       <li class="t-r">
-        <em>hello, {{nickName}}</em>
+        <em>{{nickName ? nickName : 'null'}}</em>
         <div class="user-lay" id="user-lay">
           <ul>
             <li>

@@ -58,6 +58,16 @@ export default {
           title: "字段映射",
           route: "/detail/" + this.$route.params.id + "/fieldMapping",
           icon: "el-icon-coin"
+        },
+         {
+          title: "公共参数",
+          route: "/detail/" + this.$route.params.id + "/commonlyParams",
+          icon: "el-icon-thumb"
+        },
+         {
+          title: "环境配置",
+          route: "/detail/" + this.$route.params.id + "/envConf",
+          icon: "el-icon-sort"
         }
       ]
     };
@@ -82,5 +92,9 @@ export default {
 
 .el-menu {
   height: 100%;
+}
+
+.right {
+  margin-left:10px;
 }
 </style>

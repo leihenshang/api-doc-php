@@ -490,7 +490,7 @@ export default {
 .right-l {
   width: 50%;
   height: 100%;
-  padding: 5px;
+  padding: 5px 5px 5px 0;
   box-sizing: border-box;
   border-radius: 3px;
   overflow: hidden;

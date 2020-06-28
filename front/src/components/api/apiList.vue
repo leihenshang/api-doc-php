@@ -30,7 +30,7 @@
             >
               <el-button
                 slot="reference"
-                v-show="$store.state.projectPermission == 6"
+                v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
                 size="mini"
               >还原</el-button>
             </el-popconfirm>
@@ -44,7 +44,7 @@
             >
               <el-button
                 slot="reference"
-                v-show="$store.state.projectPermission == 6"
+                v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
                 size="mini"
               >删除</el-button>
             </el-popconfirm>
@@ -53,7 +53,7 @@
               type="warning"
               plain
               @click="jumpPage('edit',scope.row.id)"
-              v-show="$store.state.projectPermission == 6"
+              v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
               size="mini"
             >编辑</el-button>
           </template>

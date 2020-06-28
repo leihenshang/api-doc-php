@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import store from './store/main';
 import App from "./App.vue";
 import router from "./router";
 import VueResource from "vue-resource";
@@ -13,14 +13,13 @@ import "mavon-editor/dist/css/index.css";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
-//导入个人配置
+//导入配置
 import conf from "../public/conf.js";
 
 Vue.prototype.apiAddress = conf.apiAddr;
 Vue.config.productionTip = false;
 
 Vue.use(VueResource);
-Vue.use(Vuex);
 Vue.use(mavonEditor);
 Vue.use(ElementUI);
 Vue.use(VueClipboard);
@@ -30,32 +29,6 @@ function getUserInfoByLocalStorage() {
   return JSON.parse(localStorage.getItem("userInfo"));
 }
 
-
-const store = new Vuex.Store({
-  state: {
-    count: 0,
-    userInfo: {},
-    project: {},
-    projectPermission: 4,
-  },
-  mutations: {
-    increment(state) {
-      state.count++;
-    },
-    //用户信息
-    saveUserInfo(state, user) {
-      state.userInfo = user;
-    },
-    //项目信息
-    saveProject(state, project) {
-      state.project = project;
-    },
-    //用户对项目的操作权限
-    saveProjectPermission(state, permission) {
-      state.projectPermission = permission;
-    },
-  },
-});
 
 //vue-resource拦截器拦截请求,添加token
 Vue.http.interceptors.push((request) => {
@@ -95,37 +68,6 @@ Vue.http.interceptors.push((request) => {
       router.push("/login");
     }
   };
-});
-
-router.beforeEach((to, from, next) => {
-
-  let userInfo = getUserInfoByLocalStorage();
-
-  if (
-    to.matched.some((record) => record.meta.requiresAuth)
-  ) {
-    Vue.http.get(Vue.prototype.apiAddress + "/project/get-project-operation-permission").then(
-      (response) => {
-        response = response.body;
-        if (response.code === 200) {
-          store.commit("saveProjectPermission", response.data);
-        }
-      },
-      (res) => {
-        let response = res.body;
-        Vue.$message.error(
-          "获取项目权限信息失败!" + !response.msg ? response.msg : ""
-        );
-      }
-    );
-  }
-
-  let routerArr = ["userLogin", "register"];
-  if (routerArr.indexOf(to.name) === -1 && !userInfo) {
-    next("/login");
-  }
-
-  next();
 });
 
 

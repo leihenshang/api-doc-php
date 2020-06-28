@@ -1,7 +1,7 @@
 <template>
   <div class="api-page">
     <div class="btn-wrapper">
-      <div class="btn" v-show="$store.state.projectPermission == 6">
+      <div class="btn" v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2">
         <button @click="addApi()">+创建api</button>
         <button @click="showCreateGroup = !showCreateGroup">+新建分组</button>
       </div>
