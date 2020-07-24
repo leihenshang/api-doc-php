@@ -67,6 +67,7 @@ $config = [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'except' => ['yii\base\UserException']
                 ],
             ],
         ],
