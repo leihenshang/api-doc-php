@@ -76,7 +76,7 @@ class Api extends BaseModel
             [['id', 'data'], 'required'],
             [['group_id', 'project_id', 'is_deleted', 'group_id_second'], 'integer'],
             [['data', 'create_time', 'update_time'], 'safe'],
-            [['group_id', 'project_id'], 'required', 'on' => self::SCENARIO_CREATE],
+            [['group_id', 'project_id','api_name'], 'required', 'on' => self::SCENARIO_CREATE],
             [['description', 'api_name'], 'string', 'max' => 1000],
             [['protocol_type', 'http_method_type', 'object_name', 'function_name', 'develop_language'], 'string', 'max' => 20000],
             [['url', 'http_request_header', 'http_request_params', 'http_return_type', 'http_return_sample', 'http_return_params'], 'string', 'max' => 20000],

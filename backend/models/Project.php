@@ -33,7 +33,6 @@ class Project extends BaseModel
             ['id', 'required'],
             ['id', 'number'],
             [['title', 'version', 'type'], 'required'],
-            ['title', 'unique'],
             ['title', 'string', 'length' => [1, 100]],
             ['description', 'string', 'length' => [1, 100]],
         ];
@@ -62,6 +61,16 @@ class Project extends BaseModel
     {
         if (!$this->validate()) {
             return current($this->getFirstErrors());
+        }
+
+        //检查项目名是否重复
+        $project = self::find()->where([
+            'title' => $this->title,
+            'is_deleted' => self::IS_DELETED['no']
+        ])->one();
+
+        if($project){
+            return '项目名不能重复';
         }
 
         if (!$this->save()) {

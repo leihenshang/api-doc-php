@@ -68,6 +68,11 @@ export default {
           title: "环境配置",
           route: "/detail/" + this.$route.params.id + "/envConf",
           icon: "el-icon-sort"
+        },
+           {
+          title: "BUG管理",
+          route: "/detail/" + this.$route.params.id + "/bugHome",
+          icon: "el-icon-sort"
         }
       ]
     };

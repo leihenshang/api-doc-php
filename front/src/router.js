@@ -31,6 +31,9 @@ import Register from "./components/user/register";
 import MyCenter from "./components/user/myCenter";
 import UserManager from "./components/user/userManager";
 
+//bug
+import BugHome from "./components/bug/home";
+
 import store from "./store/main";
 
 const originalPush = VueRouter.prototype.push
@@ -49,10 +52,18 @@ const router = new VueRouter({
       component: Detail,
       props: true,
       children: [
+
         {
           path: "",
           name: "detailPage",
           component: DetailPage,
+          meta: { requiresAuth: true },
+          props: true,
+        },
+        {
+          path: "bugHome",
+          name: "bugHome",
+          component: BugHome,
           meta: { requiresAuth: true },
           props: true,
         },
@@ -207,9 +218,10 @@ router.beforeEach((to, from, next) => {
   let routerArr = ["userLogin", "register"];
   if (routerArr.indexOf(to.name) === -1 && !userInfo) {
     next("/login");
+  } else {
+    next();
   }
 
-  next();
 });
 
 

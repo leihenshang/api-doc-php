@@ -1,6 +1,6 @@
 <template>
   <div class="bottom">
-    <p>该开源网站由api doc提供技术支持，开源协议遵循MIT，如需获取最新的api doc开源版以及相关资讯，请点击这里</p>
+    <p>这个是由api-doc提供的页面~</p>
   </div>
 </template>
 

@@ -4,7 +4,7 @@
       <li>
         <a href="#" style="color:#4caf50">首页</a>
       </li>
-      <li>
+      <!-- <li>
         <a href="#">官方网站</a>
       </li>
       <li>
@@ -15,7 +15,7 @@
       </li>
       <li>
         <a href="#">用户讨论群</a>
-      </li>
+      </li> -->
       <li class="li-r" @click="toLogin()" v-if="$route.name == 'register'">
         <a href="javascript:void(0)">登陆</a>
       </li>
