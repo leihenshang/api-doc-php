@@ -26,7 +26,8 @@
         "predis/predis": "^1.1"
     },
     "require-dev": {
-        "yiisoft/yii2-gii": "~2.1.0"
+        "yiisoft/yii2-gii": "~2.1.0",
+        "yiisoft/yii2-debug": "~2.1.0"
     },
     "config": {
         "process-timeout": 1800,
