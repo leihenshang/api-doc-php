@@ -5,7 +5,11 @@
         <el-form-item>
           <el-col :span="5">
             <el-form-item prop="group_id" label="分组" label-width="80px">
-              <el-select v-model="apiInfo.group_id" placeholder="分组" style="width:90%">
+              <el-select
+                v-model="apiInfo.group_id"
+                placeholder="分组"
+                style="width: 90%"
+              >
                 <el-option
                   v-for="item in groupList"
                   :key="item.id"
@@ -17,8 +21,16 @@
           </el-col>
 
           <el-col :span="5">
-            <el-form-item label="请求协议" prop="protocol_type" label-width="80px">
-              <el-select v-model="apiInfo.protocol_type" placeholder="选择请求协议" style="width:90%">
+            <el-form-item
+              label="请求协议"
+              prop="protocol_type"
+              label-width="80px"
+            >
+              <el-select
+                v-model="apiInfo.protocol_type"
+                placeholder="选择请求协议"
+                style="width: 90%"
+              >
                 <el-option
                   v-for="item in propertyList.http_protocol"
                   :key="item.id"
@@ -30,8 +42,16 @@
           </el-col>
 
           <el-col :span="5">
-            <el-form-item label="请求方式" prop="http_method_type" label-width="80px">
-              <el-select v-model="apiInfo.http_method_type" placeholder="选择请求方式" style="width:90%">
+            <el-form-item
+              label="请求方式"
+              prop="http_method_type"
+              label-width="80px"
+            >
+              <el-select
+                v-model="apiInfo.http_method_type"
+                placeholder="选择请求方式"
+                style="width: 90%"
+              >
                 <el-option
                   v-for="item in propertyList.http_method"
                   :key="item.id"
@@ -64,15 +84,28 @@
         </el-form-item>
 
         <el-form-item label="根对象名" prop="object_name" label-width="80px">
-          <el-input v-model="apiInfo.object_name" placeholder="非必填"></el-input>
+          <el-input
+            v-model="apiInfo.object_name"
+            placeholder="非必填"
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="方法" prop="function_name" label-width="80px">
-          <el-input v-model="apiInfo.function_name" placeholder="非必填"></el-input>
+          <el-input
+            v-model="apiInfo.function_name"
+            placeholder="非必填"
+          ></el-input>
         </el-form-item>
 
-        <el-form-item label="开发语言" prop="develop_language" label-width="80px">
-          <el-select v-model="apiInfo.develop_language" placeholder="选择开发语言">
+        <el-form-item
+          label="开发语言"
+          prop="develop_language"
+          label-width="80px"
+        >
+          <el-select
+            v-model="apiInfo.develop_language"
+            placeholder="选择开发语言"
+          >
             <el-option
               v-for="item in propertyList.api_language"
               :key="item.id"
@@ -93,7 +126,7 @@ export default {
     groupList: Array,
     propertyList: [Array, Object],
     apiData: Object,
-    groupId: [String, Number]
+    groupId: [String, Number],
   },
   methods: {},
 
@@ -102,21 +135,21 @@ export default {
       rules: {
         group_id: [{ required: true, message: "请选择分组", trigger: "blur" }],
         protocol_type: [
-          { required: true, message: "请选择协议类型", trigger: "blur" }
+          { required: true, message: "请选择协议类型", trigger: "blur" },
         ],
         http_method_type: [
-          { required: true, message: "请选择分组", trigger: "blur" }
+          { required: true, message: "请选择分组", trigger: "blur" },
         ],
         http_return_type: [
-          { required: true, message: "请选择分组", trigger: "blur" }
+          { required: true, message: "请选择分组", trigger: "blur" },
         ],
         url: [{ required: true, message: "请输入url", trigger: "blur" }],
         api_name: [
-          { required: true, message: "请输入api名称", trigger: "blur" }
+          { required: true, message: "请输入api名称", trigger: "blur" },
         ],
         develop_language: [
-          { required: true, message: "请选择开发语言", trigger: "blur" }
-        ]
+          { required: true, message: "请选择开发语言", trigger: "blur" },
+        ],
       },
       apiInfo: {
         group_id: this.groupId == 0 ? null : this.groupId, //分组
@@ -128,44 +161,47 @@ export default {
         api_name: "", //接口名称
         object_name: "", //根对象名
         function_name: "", //程序内部方法名
-        develop_language: "" //接口开发语言
-      }
+        develop_language: "", //接口开发语言
+        id: "",
+      },
     };
   },
   watch: {
-    apiData: function() {
+    apiData: function () {
       this.apiInfo = this.apiData;
     },
     apiInfo: {
-      handler: function(newdata) {
+      handler: function (newdata) {
         this.$emit("update:apiInfo", newdata);
       },
-      deep: true
+      deep: true,
     },
-    propertyList: function(val) {
-      for (let item in val) {
-        switch (item) {
-          case "http_method":
-            this.apiInfo.http_method_type = val[item][0].tag_name;
-            break;
+    propertyList: function (val) {
+      if (this.apiInfo.id <= 0) {
+        for (let item in val) {
+          switch (item) {
+            case "http_method":
+              this.apiInfo.http_method_type = val[item][0].tag_name;
+              break;
 
-          case "http_protocol":
-            this.apiInfo.protocol_type = val[item][0].tag_name;
-            break;
+            case "http_protocol":
+              this.apiInfo.protocol_type = val[item][0].tag_name;
+              break;
 
-          case "http_return":
-            this.apiInfo.http_return_type = val[item][0].tag_name;
-            break;
-          case "api_language":
-            this.apiInfo.develop_language = val[item][0].tag_name;
-            break;
+            case "http_return":
+              this.apiInfo.http_return_type = val[item][0].tag_name;
+              break;
+            case "api_language":
+              this.apiInfo.develop_language = val[item][0].tag_name;
+              break;
+          }
         }
       }
-    }
+    },
   },
 
   components: {},
-  created() {}
+  created() {},
 };
 </script>
 
