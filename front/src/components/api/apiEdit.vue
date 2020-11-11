@@ -87,7 +87,7 @@ export default {
         project_id: 0, //项目Id
         protocol_type: "HTTP", //协议
         description: "", //说明和备注
-        requestMethod: "GET", //http请求方法
+        http_method_type: "GET", //http请求方法
         http_return_type: 1, //返回值类型
         url: "", //http请求URL
         api_name: "", //接口名称
