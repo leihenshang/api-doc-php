@@ -42,7 +42,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="返回类型" prop="http_return_type" label-width="80px">
+            <!-- <el-form-item label="返回类型" prop="http_return_type" label-width="80px">
               <el-select v-model="apiInfo.http_return_type" placeholder="选择返回类型" style="width:90%">
                 <el-option
                   v-for="item in propertyList.http_return"
@@ -51,7 +51,7 @@
                   :value="item.tag_name"
                 ></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
           </el-col>
         </el-form-item>
 

@@ -2,10 +2,10 @@
   <div class="api-page">
     <div class="btn-wrapper">
       <div class="btn" v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2">
-        <button @click="addApi()">+创建api</button>
         <button @click="showCreateGroup = !showCreateGroup">+新建分组</button>
       </div>
-      <div class="input">
+      <div class="input" v-show=" $route.name != 'apiCreate' && $route.name != 'apiEdit' ">
+        <el-button size="small" style="margin:0 10px;" @click="addApi()" v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2">+创建api</el-button>
         <el-input
           placeholder="请输入标题"
           v-model="keyword"
@@ -13,7 +13,7 @@
           style="width:300px"
           size="small"
         >
-          <el-button slot="append" icon="el-icon-search" @click="searchApi()"></el-button>
+          <el-button size="" slot="append" icon="el-icon-search" @click="searchApi()"></el-button>
         </el-input>
       </div>
     </div>
@@ -41,7 +41,8 @@ import group from "../project/group";
 export default {
   name: "apiPage",
   props: {},
-  created() {},
+  created() {
+  },
   data() {
     return {
       type: 1,
@@ -108,6 +109,7 @@ export default {
 .input {
   float: left;
 }
+
 
 .btn button {
   width: 87px;
