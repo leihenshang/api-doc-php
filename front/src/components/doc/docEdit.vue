@@ -101,7 +101,7 @@ export default {
             id: this.docId
           })
           .then(res => {
-            res = res.body;
+            res = res.data;
             if (res.code === CODE_OK) {
               this.$message.success("更新成功!");
               this.$router.go(-1);
@@ -121,7 +121,7 @@ export default {
         })
         .then(
           res => {
-            let response = res.body;
+            let response = res.data;
             if (response.code === CODE_OK) {
               this.doc = response.data;
             } else {

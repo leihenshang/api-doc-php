@@ -134,7 +134,7 @@ export default {
             })
             .then(
               res => {
-                let response = res.body;
+                let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
                   this.getProjectList(this.currPage, this.pageSize);
@@ -176,7 +176,7 @@ export default {
             )
             .then(
               res => {
-                let response = res.body;
+                let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!" + response.msg);
                   this.getProjectList(this.currPage, this.pageSize);
@@ -207,7 +207,7 @@ export default {
             )
             .then(
               res => {
-                let response = res.body;
+                let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
                   this.dialogFormVisibleUpdate = false;

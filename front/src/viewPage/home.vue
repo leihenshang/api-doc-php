@@ -85,14 +85,13 @@ export default {
         .post(
           this.apiAddress + "/project/del",
           {
-            id: id,
-            token: this.$store.state.userInfo.token
+            id: id
           },
          
         )
         .then(
           res => {
-            let response = res.body;
+            let response = res.data;
             if (response.code === CODE_OK) {
               this.$message.error("成功!" + response.msg);
               this.getProjectList(this.currPage, this.pageSize);
@@ -101,7 +100,7 @@ export default {
             }
           },
           res => {
-            let response = res.body;
+            let response = res.data;
             this.$message.error("操作失败!" + response.msg);
           }
         );

@@ -94,7 +94,7 @@ export default {
             }
           },
           res => {
-            let response = res.body;
+            let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
             );
@@ -118,8 +118,7 @@ export default {
             .post(
               this.apiAddress + "/group/del",
               {
-                id: id,
-                token: this.$store.state.userInfo.token
+                id: id
               },
              
             )
@@ -178,7 +177,7 @@ export default {
                 this.getGroup(this.pageSize, this.curr, this.$route.params.id);
               },
               res => {
-                let response = res.body;
+                let response = res.data;
                 this.$message.error(
                   "获取数据-操作失败!" + !response.msg ? response.msg : ""
                 );
@@ -220,7 +219,7 @@ export default {
                 // this.showCreateGroup =
               },
               res => {
-                let response = res.body;
+                let response = res.data;
                 this.$message.error(
                   "获取数据-操作失败!" + !response.msg ? response.msg : ""
                 );

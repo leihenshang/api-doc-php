@@ -183,7 +183,7 @@ export default {
             }
           },
           res => {
-            let response = res.body;
+            let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
             );

@@ -148,7 +148,7 @@ export default {
             }
           },
           res => {
-            let response = res.body;
+            let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
             );
@@ -362,8 +362,7 @@ export default {
       this.$http
         .get(this.apiAddress + "/project/detail", {
           params: {
-            id: this.$route.params.id,
-            token: this.$store.state.userInfo.token
+            id: this.$route.params.id
           }
         })
         .then(
@@ -377,7 +376,7 @@ export default {
             }
           },
           res => {
-            let response = res.body;
+            let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
             );

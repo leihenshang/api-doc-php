@@ -178,7 +178,7 @@ export default {
             })
             .then(
               res => {
-                let response = res.body;
+                let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
                   this.getFieldList();
@@ -202,7 +202,7 @@ export default {
             })
             .then(
               res => {
-                let response = res.body;
+                let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
                   this.getFieldList();
@@ -232,7 +232,7 @@ export default {
             })
             .then(
               res => {
-                let response = res.body;
+                let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
                   this.getFieldList();

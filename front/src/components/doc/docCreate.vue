@@ -97,7 +97,7 @@ export default {
             project_id:this.$route.params.id
           })
           .then(res => {
-            res = res.body;
+            res = res.data;
             if (res.code === CODE_OK) {
               this.$message.success("创建成功！");
 

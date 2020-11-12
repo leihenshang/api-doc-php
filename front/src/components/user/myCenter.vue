@@ -141,7 +141,7 @@ export default {
     getUserInfo() {
       this.$http.get(this.apiAddress + "/user/get-user-info").then(
         res => {
-          let response = res.body;
+          let response = res.data;
           if (response.code === CODE_OK) {
             this.userInfo = response.data;
           } else {
@@ -174,7 +174,7 @@ export default {
             )
             .then(
               res => {
-                let response = res.body;
+                let response = res.data;
                 if (response.code !== CODE_OK) {
                   this.$message.error(response.msg);
                 } else {
@@ -218,7 +218,7 @@ export default {
             )
             .then(
               res => {
-                let response = res.body;
+                let response = res.data;
                 if (response.code !== CODE_OK) {
                   this.$message.error("failed:" + response.msg);
                   return;
