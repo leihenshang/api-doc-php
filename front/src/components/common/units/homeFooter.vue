@@ -1,6 +1,6 @@
 <template>
   <div class="bottom">
-    <p>这个是由api-doc提供的页面~</p>
+    <p>From my api-doc</p>
   </div>
 </template>
 

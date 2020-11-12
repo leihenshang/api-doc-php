@@ -1,6 +1,6 @@
 
 <template>
-  <div class="login-page" >
+  <div class="login-page">
     <homeHeader />
     <div class="middle">
       <div class="login-page-content">
@@ -17,19 +17,28 @@
             @submit.native.prevent
           >
             <el-form-item prop="name">
-              <el-input v-model="form.name" placeholder="用户名" style="width:240px"></el-input>
+              <el-input
+                v-model="form.name"
+                placeholder="用户名"
+                style="width: 240px"
+              ></el-input>
             </el-form-item>
             <el-form-item prop="pwd">
               <el-input
                 v-model="form.pwd"
                 type="password"
                 placeholder="密码"
-                style="width:240px"
+                style="width: 240px"
                 @keyup.enter.native="login()"
               ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="login()" icon="el-icon-arrow-left">登录</el-button>
+              <el-button
+                type="primary"
+                @click="login()"
+                icon="el-icon-arrow-left"
+                >登录</el-button
+              >
             </el-form-item>
           </el-form>
         </div>
@@ -59,31 +68,31 @@ export default {
     return {
       form: {
         name: "",
-        pwd: ""
+        pwd: "",
       },
       rules: {
         name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-        pwd: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        pwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
       },
-      loading: false
+      loading: false,
     };
   },
   methods: {
     //用户登录
     login() {
-      this.loading = true;
-      this.$refs.form.validate(validate => {
+      this.$refs.form.validate((validate) => {
         if (validate) {
+          this.loading = true;
           this.$http
             .post(
               this.apiAddress + "/user/login",
               {
-                ...this.form
+                ...this.form,
               },
               { emulateJSON: true }
             )
             .then(
-              response => {
+              (response) => {
                 response = response.body;
                 if (response.code === CODE_OK) {
                   let userInfo = response.data;
@@ -95,7 +104,7 @@ export default {
                   localStorage.removeItem("userInfo");
                   this.$router.push("/login").catch(() => {});
                 }
-                // this.loading = false;
+                this.loading = false;
               },
               () => {
                 this.$message.error("请求失败!");
@@ -119,12 +128,12 @@ export default {
           localStorage.removeItem("userInfo");
         }
       }
-    }
+    },
   },
   components: {
     homeHeader,
-    homeFooter
-  }
+    homeFooter,
+  },
 };
 </script>
 <style>

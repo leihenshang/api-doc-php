@@ -1,9 +1,9 @@
 <template>
   <div class="login-page-top">
     <ul>
-      <li>
+      <!-- <li>
         <a href="#" style="color:#4caf50">首页</a>
-      </li>
+      </li> -->
       <!-- <li>
         <a href="#">官方网站</a>
       </li>

@@ -83,14 +83,14 @@
           <el-input v-model="apiInfo.api_name"></el-input>
         </el-form-item>
 
-        <el-form-item label="根对象名" prop="object_name" label-width="80px">
+        <el-form-item label="对象名" prop="object_name" label-width="80px">
           <el-input
             v-model="apiInfo.object_name"
             placeholder="非必填"
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="方法" prop="function_name" label-width="80px">
+        <el-form-item label="方法名" prop="function_name" label-width="80px">
           <el-input
             v-model="apiInfo.function_name"
             placeholder="非必填"
@@ -159,7 +159,7 @@ export default {
         http_return_type: "", //返回值类型
         url: "", //http请求URL
         api_name: "", //接口名称
-        object_name: "", //根对象名
+        object_name: "", //对象名
         function_name: "", //程序内部方法名
         develop_language: "", //接口开发语言
         id: "",

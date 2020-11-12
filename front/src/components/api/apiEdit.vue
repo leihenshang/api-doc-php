@@ -91,7 +91,7 @@ export default {
         http_return_type: 1, //返回值类型
         url: "", //http请求URL
         api_name: "", //接口名称
-        object_name: "", //根对象名
+        object_name: "", //对象名
         function_name: "", //程序内部方法名
         develop_language: "", //接口开发语言
         http_request_header: [], //请求头
