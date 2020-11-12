@@ -103,7 +103,7 @@ export default {
         }
         this.$http
           .post(
-            this.apiAddress + "/user/reg",
+             "/user/reg",
             {
               ...this.userInfo
             },

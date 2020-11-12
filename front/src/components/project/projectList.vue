@@ -103,7 +103,7 @@ export default {
     getProjectList(curr, pageSize) {
       this.loading = true;
       this.$http
-        .get(this.apiAddress + "/project/list", {
+        .get( "/project/list", {
           params: {
             cp: curr,
             ps: pageSize
@@ -129,7 +129,7 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.$http
-            .post(this.apiAddress + "/project/create", {
+            .post( "/project/create", {
               ...this.form
             })
             .then(
@@ -168,7 +168,7 @@ export default {
         .then(() => {
           this.$http
             .post(
-              this.apiAddress + "/project/del",
+               "/project/del",
               {
                 id
               },
@@ -198,7 +198,7 @@ export default {
         if (valid) {
           this.$http
             .post(
-              this.apiAddress + "/project/update",
+               "/project/update",
               {
                 id: this.updateData.id,
                 ...this.updateData

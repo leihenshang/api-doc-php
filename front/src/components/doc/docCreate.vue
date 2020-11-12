@@ -47,7 +47,7 @@ export default {
     //获取分组列表
     getGroup(pageSize = 10, curr = 1, projectId) {
       this.$http
-        .get(this.apiAddress + "/group/list", {
+        .get( "/group/list", {
           params: {
             cp: curr,
             type: 3,
@@ -90,7 +90,7 @@ export default {
         type: "warning"
       }).then(() => {
         this.$http
-          .post(this.apiAddress + "/doc/create", {
+          .post( "/doc/create", {
             title: this.title,
             content: this.content,
             group_id: this.groupId,

@@ -34,7 +34,7 @@ export default {
     //获取操作日志
     getOperationLog() {
       this.$http
-        .get(this.apiAddress + "/operation-log/list", {
+        .get( "/operation-log/list", {
           params: {
             object_id: this.$route.params.id,
             type: '1,2,3,4',

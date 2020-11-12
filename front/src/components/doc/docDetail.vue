@@ -60,7 +60,7 @@ export default {
     },
     getDocDetail() {
       this.$http
-        .get(this.apiAddress + "/doc/detail", {
+        .get( "/doc/detail", {
           params: {
             id: this.docId
           }

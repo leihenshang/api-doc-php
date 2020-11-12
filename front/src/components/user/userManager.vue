@@ -223,7 +223,7 @@ export default {
         if (valid) {
           this.$http
             .post(
-              this.apiAddress + "/user/create",
+               "/user/create",
               {
                 ...this.form
               },
@@ -259,7 +259,7 @@ export default {
         .then(() => {
           this.$http
             .post(
-              this.apiAddress + "/user/update-status",
+               "/user/update-status",
               {
                 state,
                 userId: id
@@ -293,7 +293,7 @@ export default {
         .then(() => {
           this.$http
             .post(
-              this.apiAddress + "/user/update-status",
+               "/user/update-status",
               {
                 is_deleted: IS_DELETED,
                 userId: id
@@ -326,7 +326,7 @@ export default {
         .then(() => {
           this.$http
             .post(
-              this.apiAddress + "/user/init-pwd",
+               "/user/init-pwd",
               {
                 userId: id
               },
@@ -358,7 +358,7 @@ export default {
       }
 
       this.$http
-        .get(this.apiAddress + "/user/list", {
+        .get( "/user/list", {
           params: {
             keyword: this.keyword,
             project_id: this.$route.params.id,

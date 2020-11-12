@@ -73,7 +73,7 @@ export default {
     //获取分组列表
     getGroup(pageSize, curr, projectId) {
       this.$http
-        .get(this.apiAddress + "/group/list", {
+        .get( "/group/list", {
           params: {
             cp: curr,
             type: this.type,
@@ -116,7 +116,7 @@ export default {
         .then(() => {
           this.$http
             .post(
-              this.apiAddress + "/group/del",
+               "/group/del",
               {
                 id: id
               },
@@ -157,7 +157,7 @@ export default {
         .then(({ value }) => {
           this.$http
             .post(
-              this.apiAddress + "/group/update",
+               "/group/update",
               {
                 title: value,
                 id: data.id,
@@ -198,7 +198,7 @@ export default {
         .then(({ value }) => {
           this.$http
             .post(
-              this.apiAddress + "/group/create",
+               "/group/create",
               {
                 title: value,
                 project_id: this.$route.params.id,

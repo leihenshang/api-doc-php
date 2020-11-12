@@ -111,7 +111,7 @@ export default {
     //获取api详情
     getApiDetail() {
       this.$http
-        .get(this.apiAddress + "/api/detail", {
+        .get( "/api/detail", {
           params: {
             id: this.apiId
           }
@@ -145,7 +145,7 @@ export default {
         if (validate) {
           this.$http
             .post(
-              this.apiAddress + "/api/update",
+               "/api/update",
               {
                 id: this.apiId,
                 group_id: this.apiData.group_id,
@@ -182,7 +182,7 @@ export default {
     //获取分组数据
     getGroup() {
       this.$http
-        .get(this.apiAddress + "/group/list", {
+        .get( "/group/list", {
           params: {
             projectId: this.$route.params.id,
             type: 1
@@ -205,7 +205,7 @@ export default {
     //获取通用属性
     getProperty() {
       this.$http
-        .get(this.apiAddress + "/property/list", {
+        .get( "/property/list", {
           params: {}
         })
         .then(

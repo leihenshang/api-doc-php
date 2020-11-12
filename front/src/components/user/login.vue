@@ -85,7 +85,7 @@ export default {
           this.loading = true;
           this.$http
             .post(
-              this.apiAddress + "/user/login",
+               "/user/login",
               {
                 ...this.form,
               },

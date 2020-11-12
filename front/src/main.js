@@ -31,6 +31,9 @@ function getUserInfoByLocalStorage() {
   return JSON.parse(localStorage.getItem("userInfo"));
 }
 
+//设置默认url
+Vue.axios.defaults.baseURL = Vue.prototype.apiAddress
+
 //vue-resource拦截器拦截请求,添加token
 Vue.axios.interceptors.request.use( config => {
   let userInfo = getUserInfoByLocalStorage();
@@ -75,6 +78,7 @@ Vue.axios.interceptors.response.use(response => {
 }, function (error) {
   return Promise.reject(error);
 });
+
 
 
 

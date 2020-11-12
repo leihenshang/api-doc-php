@@ -273,7 +273,7 @@ export default {
     //获取api详情
     getApiDetail() {
       this.$http
-        .get(this.apiAddress + "/api/detail", {
+        .get( "/api/detail", {
           params: {
             id: this.apiId
           }
@@ -302,7 +302,7 @@ export default {
     //获取分组信息
     getGroup() {
       this.$http
-        .get(this.apiAddress + "/group/list", {
+        .get( "/group/list", {
           params: {
             projectId: this.$route.params.id
           }

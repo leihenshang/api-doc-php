@@ -145,7 +145,7 @@ export default {
       })
         .then(() => {
           this.$http
-            .post(this.apiAddress + "/api/restore", {
+            .post( "/api/restore", {
               id: id,
             })
             .then(
@@ -168,7 +168,7 @@ export default {
     //获取api列表
     getApiList(ps, cp, projectId, groupId, keyword) {
       this.$http
-        .get(this.apiAddress + "/api/list", {
+        .get( "/api/list", {
           params: {
             cp: cp,
             ps: ps,
@@ -206,7 +206,7 @@ export default {
     delApi(id) {
       this.loading = true;
       this.$http
-        .post(this.apiAddress + "/api/del", {
+        .post( "/api/del", {
           id: id
         })
         .then(

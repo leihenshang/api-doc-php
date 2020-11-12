@@ -102,7 +102,7 @@ export default {
 
           this.$http
             .post(
-              this.apiAddress + "/api/create",
+               "/api/create",
               {
                 group_id: data.group_id,
                 project_id: this.$route.params.id,
@@ -143,7 +143,7 @@ export default {
     //获取分组信息
     getGroup() {
       this.$http
-        .get(this.apiAddress + "/group/list", {
+        .get( "/group/list", {
           params: {
             projectId: this.$route.params.id,
             type: 1
@@ -164,7 +164,7 @@ export default {
     //获取创建api的默认属性
     getProperty() {
       this.$http
-        .get(this.apiAddress + "/property/list", {
+        .get( "/property/list", {
           params: {}
         })
         .then(

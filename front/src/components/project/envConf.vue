@@ -173,7 +173,7 @@ export default {
       })
         .then(() => {
           this.$http
-            .post(this.apiAddress + "/field-mapping/delete", {
+            .post( "/field-mapping/delete", {
               id
             })
             .then(
@@ -197,7 +197,7 @@ export default {
       this.$refs.formUpdate.validate(valid => {
         if (valid) {
           this.$http
-            .post(this.apiAddress + "/field-mapping/update", {
+            .post( "/field-mapping/update", {
               ...this.updateData
             })
             .then(
@@ -226,7 +226,7 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.$http
-            .post(this.apiAddress + "/field-mapping/create", {
+            .post( "/field-mapping/create", {
               ...this.fieldMapping,
               project_id: this.id
             })
@@ -255,7 +255,7 @@ export default {
     getFieldList() {
       this.loading = true;
       this.$http
-        .get(this.apiAddress + "/field-mapping/list", {
+        .get( "/field-mapping/list", {
           params: {}
         })
         .then(
@@ -275,7 +275,7 @@ export default {
     //获取创建api的默认属性
     getProperty() {
       this.$http
-        .get(this.apiAddress + "/property/list", {
+        .get( "/property/list", {
           params: {}
         })
         .then(

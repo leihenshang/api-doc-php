@@ -82,7 +82,7 @@ export default {
       })
         .then(() => {
           this.$http
-            .post(this.apiAddress + "/doc/restore", {
+            .post( "/doc/restore", {
               id: id
             })
             .then(
@@ -125,7 +125,7 @@ export default {
       })
         .then(() => {
           this.$http
-            .post(this.apiAddress + "/doc/delete", {
+            .post( "/doc/delete", {
               id: id,
               projectId: this.$route.params.id
             })
@@ -163,7 +163,7 @@ export default {
       }
 
       this.$http
-        .get(this.apiAddress + "/doc/list", {
+        .get( "/doc/list", {
           params: {
             group_id: groupId,
             project_id: projectId,

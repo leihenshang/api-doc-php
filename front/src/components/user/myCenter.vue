@@ -139,7 +139,7 @@ export default {
   methods: {
     //获取用户信息
     getUserInfo() {
-      this.$http.get(this.apiAddress + "/user/get-user-info").then(
+      this.$http.get( "/user/get-user-info").then(
         res => {
           let response = res.data;
           if (response.code === CODE_OK) {
@@ -164,7 +164,7 @@ export default {
 
           this.$http
             .post(
-              this.apiAddress + "/user/update-pwd",
+               "/user/update-pwd",
               {
                 oldPwd: this.form.old_pwd,
                 newPwd: this.form.pwd,
@@ -210,7 +210,7 @@ export default {
 
           this.$http
             .post(
-              this.apiAddress + "/user/update-nickname",
+               "/user/update-nickname",
               {
                 nickname: value
               },

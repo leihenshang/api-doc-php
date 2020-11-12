@@ -83,7 +83,7 @@ export default {
     del(id) {
       this.$http
         .post(
-          this.apiAddress + "/project/del",
+           "/project/del",
           {
             id: id
           },

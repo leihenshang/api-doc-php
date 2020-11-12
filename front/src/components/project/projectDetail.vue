@@ -135,7 +135,7 @@ export default {
     //获取项目用户列表
     getProjectUserList() {
       this.$http
-        .get(this.apiAddress + "/project/project-user", {
+        .get( "/project/project-user", {
           params: {
             id: this.$route.params.id
           }
@@ -169,7 +169,7 @@ export default {
         .then(() => {
           this.$http
             .post(
-              this.apiAddress + "/project/add-user",
+               "/project/add-user",
               {
                 user_id: val.id,
                 project_id: this.$route.params.id
@@ -206,7 +206,7 @@ export default {
         .then(() => {
           this.$http
             .post(
-              this.apiAddress + "/project/set-permission",
+               "/project/set-permission",
               {
                 userId: val.id,
                 permission: userPermission,
@@ -245,7 +245,7 @@ export default {
         .then(() => {
           this.$http
             .post(
-              this.apiAddress + "/project/set-leader",
+               "/project/set-leader",
               {
                 userId: val.id,
                 projectId: this.$route.params.id,
@@ -282,7 +282,7 @@ export default {
         .then(({ value }) => {
           this.$http
             .post(
-              this.apiAddress + "/user/update-nickname",
+               "/user/update-nickname",
               {
                 userId: val.id,
                 nickname: value
@@ -315,7 +315,7 @@ export default {
         .then(() => {
           this.$http
             .post(
-              this.apiAddress + "/project/quit-project",
+               "/project/quit-project",
               {
                 userId: val.id,
                 projectId: this.$route.params.id
@@ -360,7 +360,7 @@ export default {
     //获取项目详情
     getDetail() {
       this.$http
-        .get(this.apiAddress + "/project/detail", {
+        .get( "/project/detail", {
           params: {
             id: this.$route.params.id
           }
@@ -390,7 +390,7 @@ export default {
       }
 
       this.$http
-        .get(this.apiAddress + "/user/list", {
+        .get( "/user/list", {
           params: {
             keyword,
             project_id: this.$route.params.id

@@ -200,7 +200,7 @@ router.beforeEach((to, from, next) => {
   if (
     to.matched.some((record) => record.meta.requiresAuth) && userInfo
   ) {
-    Vue.axios.get(Vue.prototype.apiAddress + "/project/get-project-operation-permission", {
+    Vue.axios.get("/project/get-project-operation-permission", {
       params: {
         token: ""
       }

@@ -51,7 +51,7 @@ export default {
     //获取分组列表
     getGroup(pageSize = 10, curr = 1, projectId) {
       this.$http
-        .get(this.apiAddress + "/group/list", {
+        .get( "/group/list", {
           params: {
             cp: curr,
             type: 3,
@@ -94,7 +94,7 @@ export default {
         type: "warning"
       }).then(() => {
         this.$http
-          .post(this.apiAddress + "/doc/update", {
+          .post( "/doc/update", {
             title: this.doc.title,
             content: this.doc.content,
             group_id: this.doc.group_id,
@@ -114,7 +114,7 @@ export default {
     //获取文档详情
     getDocDetail() {
       this.$http
-        .get(this.apiAddress + "/doc/detail", {
+        .get( "/doc/detail", {
           params: {
             id: this.docId
           }
