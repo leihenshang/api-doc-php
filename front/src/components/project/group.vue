@@ -83,7 +83,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               if (response.data) {
                 for (const key in response.data) {
@@ -121,10 +121,10 @@ export default {
                 id: id,
                 token: this.$store.state.userInfo.token
               },
-              { emulateJSON: true }
+             
             )
             .then(response => {
-              response = response.body;
+              response = response.data;
               if (response.code === CODE_OK) {
                 this.$message.success("成功!");
               } else {
@@ -164,11 +164,11 @@ export default {
                 id: data.id,
                 type: this.type
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("更新成功!");
                 } else {
@@ -205,11 +205,11 @@ export default {
                 project_id: this.$route.params.id,
                 type: this.type
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("创建成功!");
                 } else {

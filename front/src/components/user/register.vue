@@ -107,11 +107,11 @@ export default {
             {
               ...this.userInfo
             },
-            { emulateJSON: true }
+           
           )
           .then(
             response => {
-              response = response.body;
+              response = response.data;
               if (response.code === CODE_OK) {
                 this.$message.success("注册成功！");
                 this.$router.push("/login");

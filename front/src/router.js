@@ -189,6 +189,7 @@ const router = new VueRouter({
 
 
 
+
 router.beforeEach((to, from, next) => {
 
   let userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -199,18 +200,16 @@ router.beforeEach((to, from, next) => {
   if (
     to.matched.some((record) => record.meta.requiresAuth) && userInfo
   ) {
-    Vue.http.get(Vue.prototype.apiAddress + "/project/get-project-operation-permission").then(
+    Vue.axios.get(Vue.prototype.apiAddress + "/project/get-project-operation-permission", {
+      params: {
+        token: ""
+      }
+    }).then(
       (response) => {
-        response = response.body;
+        response = response.data;
         if (response.code === 200) {
           store.commit("saveProjectPermission", response.data);
         }
-      },
-      (res) => {
-        let response = res.body;
-        Vue.$message.error(
-          "获取项目权限信息失败!" + !response.msg ? response.msg : ""
-        );
       }
     );
   }

@@ -88,7 +88,7 @@ export default {
             id: id,
             token: this.$store.state.userInfo.token
           },
-          { emulateJSON: true }
+         
         )
         .then(
           res => {

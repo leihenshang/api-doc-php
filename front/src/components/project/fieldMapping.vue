@@ -260,7 +260,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.fieldList = response.data;
             }
@@ -280,7 +280,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.propertyList = response.data;
             }

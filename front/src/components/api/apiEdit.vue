@@ -118,7 +118,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.apiData = response.data;
               this.http_request_params = this.apiData.http_request_params;
@@ -152,11 +152,11 @@ export default {
                 project_id: this.$route.params.id,
                 data: JSON.stringify(this.apiData)
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message({
                     message: "更新数据成功！",
@@ -190,7 +190,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.groupList = response.data;
             } else {
@@ -210,7 +210,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.propertyList = response.data;
             } else {

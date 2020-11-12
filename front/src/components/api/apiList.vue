@@ -1,61 +1,97 @@
 <template>
   <div class="api-list">
     <div class="api-box">
-      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading" border >
-        <el-table-column prop="api_name" label="名称" width="180"></el-table-column>
+      <el-table
+        :data="apiList.resItem"
+        stripe
+        style="width: 100%"
+        v-loading="loading"
+        border
+      >
+        <el-table-column
+          prop="api_name"
+          label="名称"
+          width="180"
+        ></el-table-column>
         <el-table-column label="请求方法" width="80">
           <template slot-scope="scope">
             <el-tag
               type="success"
               v-if="scope.row.http_method_type === 'POST'"
-            >{{scope.row.http_method_type}}</el-tag>
-            <el-tag v-else-if="scope.row.http_method_type === 'GET'">{{scope.row.http_method_type}}</el-tag>
-            <el-tag type="warning" v-else>{{scope.row.http_method_type}}</el-tag>
+              >{{ scope.row.http_method_type }}</el-tag
+            >
+            <el-tag v-else-if="scope.row.http_method_type === 'GET'">{{
+              scope.row.http_method_type
+            }}</el-tag>
+            <el-tag type="warning" v-else>{{
+              scope.row.http_method_type
+            }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="url" label="url"></el-table-column>
         <el-table-column prop="protocol_type" label="协议"></el-table-column>
-        <el-table-column prop="develop_language" label="开发语言"></el-table-column>
+        <el-table-column
+          prop="develop_language"
+          label="开发语言"
+        ></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop label="操作" fixed="right">
           <template slot-scope="scope">
-            <el-button type="success" plain @click="jumpPage('detail',scope.row.id)" size="mini">详情</el-button>
+            <el-button
+              type="success"
+              plain
+              @click="jumpPage('detail', scope.row.id)"
+              size="mini"
+              >详情</el-button
+            >
 
             <el-popconfirm
               v-if="scope.row.is_deleted == 1"
               title="确定要还原这个api?"
               placement="top"
-              @onConfirm="restoreApi(scope.row.id)"
+              @confirm="restoreApi(scope.row.id)"
               width="200"
             >
               <el-button
                 slot="reference"
-                v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
+                v-show="
+                  $store.state.projectPermission == 6 ||
+                  $store.state.userInfo.type === 2
+                "
                 size="mini"
-              >还原</el-button>
+                >还原</el-button
+              >
             </el-popconfirm>
 
             <el-popconfirm
               v-else
               title="确定要删除这个api?"
               placement="top"
-              @onConfirm="delApi(scope.row.id)"
+              @confirm="delApi(scope.row.id)"
               width="200"
             >
               <el-button
                 slot="reference"
-                v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
+                v-show="
+                  $store.state.projectPermission == 6 ||
+                  $store.state.userInfo.type === 2
+                "
                 size="mini"
-              >删除</el-button>
+                >删除</el-button
+              >
             </el-popconfirm>
 
             <el-button
               type="warning"
               plain
-              @click="jumpPage('edit',scope.row.id)"
-              v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
+              @click="jumpPage('edit', scope.row.id)"
+              v-show="
+                $store.state.projectPermission == 6 ||
+                $store.state.userInfo.type === 2
+              "
               size="mini"
-            >编辑</el-button>
+              >编辑</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -81,7 +117,7 @@ const CODE_OK = 200;
 export default {
   name: "apiList",
   props: {
-    showEdit: Number
+    showEdit: Number,
   },
   created() {
     this.getApiList(
@@ -97,7 +133,7 @@ export default {
       apiList: {},
       ps: 10,
       cp: 1,
-      count: 0
+      count: 0,
     };
   },
   methods: {
@@ -105,34 +141,25 @@ export default {
       this.$confirm("该API将被还原, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
             .post(this.apiAddress + "/api/restore", {
-              id: id
+              id: id,
             })
             .then(
-              response => {
-                response = response.body;
+              (response) => {
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
                   this.$router.push({
                     name: "apiList",
-                    params: { groupId: 0 }
+                    params: { groupId: 0 },
                   });
-                  // this.getApiList(
-                  //   this.ps,
-                  //   this.cp,
-                  //   this.$route.params.id,
-                  //   this.$route.params.groupId
-                  // );
                 } else {
                   this.$message.error("操作失败!");
                 }
-              },
-              () => {
-                this.$message.error("操作失败!");
               }
             );
         })
@@ -148,21 +175,17 @@ export default {
             projectId,
             isDeleted: groupId < 0 ? 1 : 0,
             groupId: groupId,
-            keyword
-          }
+            keyword,
+          },
         })
         .then(
-          response => {
-            response = response.body;
+          (response) => {
+            response = response.data;
             if (response.code === CODE_OK) {
               this.apiList = response.data;
               this.count = parseInt(response.data.resCount);
               this.loading = false;
             }
-          },
-          () => {
-            this.loading = false;
-            this.$message.error("获取数据-操作失败!");
           }
         );
     },
@@ -181,33 +204,28 @@ export default {
       this.cp = event;
     },
     delApi(id) {
+      this.loading = true;
       this.$http
-        .post(
-          this.apiAddress + "/api/del",
-          {
-            id: id,
-            token: this.$store.state.userInfo.token
-          },
-          { emulateJSON: true }
-        )
+        .post(this.apiAddress + "/api/del", {
+          id: id
+        })
         .then(
-          response => {
-            response = response.body;
+          (response) => {
+            response = response.data;
             if (response.code === CODE_OK) {
-              this.$message.success("成功~");
+              this.$message.success("操作成功");
               this.$router.push({
                 name: "apiList",
                 params: { groupId: this.$route.params.groupId },
-                query: { random: Math.random() }
+                query: { random: Math.random() },
               });
             } else {
               this.$message.error("失败:" + response.msg);
             }
-          },
-          () => {
-            this.$message.error("失败~");
           }
-        );
+        ).catch(error => {
+          this.loading = false;
+        });
     },
     jumpPage(name, id) {
       id = parseInt(id);
@@ -223,16 +241,16 @@ export default {
         default:
           break;
       }
-    }
+    },
   },
   computed: {
     getapiId() {
       return this.$route.params.apiId;
-    }
+    },
   },
   components: {},
   watch: {
-    $route: function(to) {
+    $route: function (to) {
       if (to.query.keyword) {
         this.cp = 1;
         this.getApiList(20, 1, to.params.id, 0, to.query.keyword);
@@ -242,8 +260,8 @@ export default {
         this.getApiList(this.ps, this.cp, to.params.id, to.params.groupId);
         this.loading = true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

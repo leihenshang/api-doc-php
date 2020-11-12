@@ -44,7 +44,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.operationLog = response.data;
             } else {

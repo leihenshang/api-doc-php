@@ -87,7 +87,7 @@ export default {
             })
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
                   this.getDocList(
@@ -131,7 +131,7 @@ export default {
             })
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
                   this.getDocList(
@@ -175,7 +175,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.docList = response.data.data;
               this.count = Number.parseInt(response.data.total);

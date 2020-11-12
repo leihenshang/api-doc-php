@@ -280,7 +280,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.apiData = response.data;
               this.loading = false;
@@ -309,7 +309,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.groupList = response.data;
             }

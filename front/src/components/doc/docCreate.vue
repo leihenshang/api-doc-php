@@ -57,7 +57,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               if (response.data) {
                 this.groupList = response.data;

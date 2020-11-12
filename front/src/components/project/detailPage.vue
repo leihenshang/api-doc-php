@@ -146,7 +146,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.userList = response.data;
             }
@@ -178,11 +178,11 @@ export default {
                 user_id: val.id,
                 project_id: this.$route.params.id
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
                   this.$message.success("操作成功");
@@ -216,11 +216,11 @@ export default {
                 permission: userPermission,
                 projectId: this.$route.params.id
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
                   this.$message.success("操作成功!");
@@ -255,11 +255,11 @@ export default {
                 projectId: this.$route.params.id,
                 cancel: val.is_leader == 1 ? 1 : 0
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
                   this.$message.success("成功!");
@@ -291,10 +291,10 @@ export default {
                 userId: val.id,
                 nickname: value
               },
-              { emulateJSON: true }
+             
             )
             .then(response => {
-              response = response.body;
+              response = response.data;
               if (response.code === CODE_OK) {
                 this.$message.success("操作成功!");
                 this.getProjectUserList();
@@ -324,11 +324,11 @@ export default {
                 userId: val.id,
                 projectId: this.$route.params.id
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
                   this.$message.success("成功!");
@@ -372,7 +372,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.projectData = response.data;
               this.$store.commit("saveProject", response.data);
@@ -402,7 +402,7 @@ export default {
           }
         })
         .then(response => {
-          response = response.body;
+          response = response.data;
           if (response.code === CODE_OK) {
             this.searchUserList = response.data;
           }

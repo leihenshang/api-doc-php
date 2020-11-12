@@ -227,11 +227,11 @@ export default {
               {
                 ...this.form
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.getUserList();
                   this.$message.success("成功！~");
@@ -264,11 +264,11 @@ export default {
                 state,
                 userId: id
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.getUserList();
                   this.$message.success("成功！~");
@@ -298,11 +298,11 @@ export default {
                 is_deleted: IS_DELETED,
                 userId: id
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.getUserList();
                   this.$message.success("成功！~");
@@ -330,11 +330,11 @@ export default {
               {
                 userId: id
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.getUserList();
                   this.$message.success("成功:" + response.msg);
@@ -368,7 +368,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.userList = response.data;
             } else {

@@ -111,7 +111,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.projectList = response.data.res;
               this.itemCount = Number(response.data.count);
@@ -172,7 +172,7 @@ export default {
               {
                 id
               },
-              { emulateJSON: true }
+             
             )
             .then(
               res => {
@@ -203,7 +203,7 @@ export default {
                 id: this.updateData.id,
                 ...this.updateData
               },
-              { emulateJSON: true }
+             
             )
             .then(
               res => {

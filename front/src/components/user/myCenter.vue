@@ -170,7 +170,7 @@ export default {
                 newPwd: this.form.pwd,
                 rePwd: this.form.re_pwd
               },
-              { emulateJSON: true }
+             
             )
             .then(
               res => {
@@ -214,7 +214,7 @@ export default {
               {
                 nickname: value
               },
-              { emulateJSON: true }
+             
             )
             .then(
               res => {

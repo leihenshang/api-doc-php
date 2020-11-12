@@ -89,11 +89,11 @@ export default {
               {
                 ...this.form,
               },
-              { emulateJSON: true }
+             
             )
             .then(
               (response) => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   let userInfo = response.data;
                   this.$store.commit("saveUserInfo", userInfo);

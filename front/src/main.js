@@ -2,8 +2,10 @@ import Vue from "vue";
 import store from './store/main';
 import App from "./App.vue";
 import router from "./router";
-import VueResource from "vue-resource";
 import VueClipboard from "vue2-clipboard";
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
 
 //markdown组件
 import mavonEditor from "mavon-editor";
@@ -19,7 +21,7 @@ import conf from "../public/conf.js";
 Vue.prototype.apiAddress = conf.apiAddr;
 Vue.config.productionTip = false;
 
-Vue.use(VueResource);
+Vue.use(VueAxios, axios)
 Vue.use(mavonEditor);
 Vue.use(ElementUI);
 Vue.use(VueClipboard);
@@ -29,45 +31,49 @@ function getUserInfoByLocalStorage() {
   return JSON.parse(localStorage.getItem("userInfo"));
 }
 
-
 //vue-resource拦截器拦截请求,添加token
-Vue.http.interceptors.push((request) => {
+Vue.axios.interceptors.request.use( config => {
   let userInfo = getUserInfoByLocalStorage();
-
   if (userInfo) {
-    if (request.method === "GET") {
-      if (!request.params.token) {
-        request.params.token = userInfo.token;
+    if (config.method === "get" && config.params) {
+      if ( !config.params.token) {
+        config.params.token = userInfo.token;
       }
 
       //附加项目id
-      if (!request.params.projectId && store.state.project) {
-        request.params.projectId = store.state.project.id;
+      if ( config.params && !config.params.projectId && store.state.project) {
+        config.params.projectId = store.state.project.id;
       }
-    } else if (request.method === "POST") {
-      if (!request.body.token) {
-        request.body.token = userInfo.token;
+    } else if (config.method === "post" && config.data) {
+      if (!config.data.token) {
+        config.data.token = userInfo.token;
       }
 
       //附加项目id
-      if (!request.body.projectId && store.state.project) {
-        request.body.projectId = store.state.project.id;
-      }
-
-
-      if (request.emulateJSON !== true) {
-        request.emulateJSON = true;
+      if (!config.data.projectId && store.state.project) {
+        config.data.projectId = store.state.project.id;
       }
     }
   }
 
-  return (response) => {
-    if (response.body.code && response.body.code === 34) {
-      Vue.prototype.$message.error("超时,重新登录");
-      localStorage.removeItem("userInfo");
-      router.push("/login");
-    }
-  };
+  return config;
+
+},error =>{
+  return Promise.reject(error);
+});
+
+
+Vue.axios.interceptors.response.use(response => {
+    let code = response.data.code;
+  if (code === 34) {
+    Vue.prototype.$message.error("超时,重新登录");
+    localStorage.removeItem("userInfo");
+    router.push("/login");
+  }
+
+  return response;
+}, function (error) {
+  return Promise.reject(error);
 });
 
 

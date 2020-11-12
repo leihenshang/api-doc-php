@@ -108,11 +108,11 @@ export default {
                 project_id: this.$route.params.id,
                 data: JSON.stringify(data)
               },
-              { emulateJSON: true }
+             
             )
             .then(
               response => {
-                response = response.body;
+                response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("保存api成功!");
                   //跳转携带分组参数
@@ -151,7 +151,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.groupList = response.data;
             }
@@ -169,7 +169,7 @@ export default {
         })
         .then(
           response => {
-            response = response.body;
+            response = response.data;
             if (response.code === CODE_OK) {
               this.propertyList = response.data;
             }
