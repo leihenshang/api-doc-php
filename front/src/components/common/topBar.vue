@@ -1,4 +1,6 @@
 <template>
+
+
   <div class="top-bar">
     <ul class="top-bar-ul">
       <li class="t-link" @click="$router.push('/projectList')">
@@ -91,11 +93,11 @@ export default {
         route: "/projectList",
         icon: "el-icon-s-fold",
       },
-      {
-        title: "个人中心",
-        route: "/myCenter",
-        icon: "el-icon-s-operation",
-      },
+      // {
+      //   title: "个人中心",
+      //   route: "/myCenter",
+      //   icon: "el-icon-s-operation",
+      // },
     ];
 
     if (this.$store.state.userInfo.type == 2) {

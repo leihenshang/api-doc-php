@@ -48,7 +48,7 @@ export default {
 
 .login-page-top {
   height: 60px;
-  border-bottom: 1px solid #ededed;
+  /* border-bottom: 1px solid #ededed; */
 }
 
 .login-page-top ul {

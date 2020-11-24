@@ -100,8 +100,7 @@ export default {
 }
 
 .middle-menu {
-  height: 50px;
+  height: auto;
   width: 100%;
-  background-color: red;
 }
 </style>
