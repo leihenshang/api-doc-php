@@ -7,11 +7,9 @@
  -->
 <template>
   <div id="app">
-              <div class="top" v-show="
-                  $store.state.userInfo.id > 0
-                ">
+      <div class="top" v-show=" $store.state.userInfo.id > 0 ">
       <topBar />
-    </div>
+     </div>
     <transition name="el-fade-in-linear" mode="out-in" appear>
       <div class="app-full">
       <router-view></router-view>
@@ -49,6 +47,9 @@ export default {
   height: 100%;
 }
 
+.top{
+  background-color: rgb(64, 158, 255);
+}
 .app-full {
   width:85%;
   margin:0 auto;

@@ -1,50 +1,23 @@
 <template>
-
-
   <div class="top-bar">
-    <ul class="top-bar-ul">
-      <li class="t-link" @click="$router.push('/projectList')">
-        <a href="javascript:void(0)">my-doc</a>
-      </li>
-      <li class="li-menu">
-
-        <el-menu
-          :default-active="$route.path"
-          :router="true"
-          ref="menu"
-          class="el-menu"
-          background-color="#409eff"
-          text-color="#fff"
-          active-text-color="#ffd04b"
-        >
-          <el-menu-item
-            :index="item.route"
-            v-for="item in insideRoute"
-            :key="item.id"
-          >
-            <!-- <i :class="item.icon ? item.icon : 'el-icon-setting'"></i> -->
-            <span slot="title">{{ item.title }}</span>
-          </el-menu-item>
-        </el-menu>
-      </li>
-      <li class="t-r" style="position: relative">
-        <div class="avatar"><el-avatar> user </el-avatar></div>
-      </li>
-
-      <li class="t-r">
-        <em>{{ nickName ? nickName : "null" }}</em>
-        <div class="user-lay" id="user-lay">
-          <ul>
-            <li>
-              <a href="#" @click="loginOut()">退出登陆</a>
-            </li>
-            <li @click="goToUserCenter()">
-              <a href="javascript:void(0)">个人中心</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
+    <div class="top-bar-title">api-doc</div>
+    <div class="top-bar-nav">
+      <el-menu :default-active="$route.path" mode="horizontal" :router="true" ref="menu"
+        class="el-menu" background-color="#409eff" ext-color="#fff"
+        active-text-color="#ffd04b"
+      >
+        <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id" >
+          <i :class="item.icon ? item.icon : 'el-icon-setting'"></i>
+          <span slot="title">{{ item.title }}</span>
+        </el-menu-item>
+      </el-menu>
+    </div>
+    <div class="top-bar-avatar">
+      <div class="avatar"><el-avatar> user </el-avatar></div>
+      <em>{{ nickName ? nickName : "null" }}</em>
+      <!-- <a href="#" @click="loginOut()">退出登陆</a>
+      <a href="javascript:void" @click="goToUserCenter()">个人中心</a> -->
+    </div>
   </div>
 </template>
 
@@ -116,8 +89,30 @@ export default {
 </script>
 
 <style scoped>
-/* <!-- 头部导航栏开始 --> */
 .top-bar {
+  display: flex;
+  width: 85%;
+  margin: 0 auto;
+  position: relative;
+}
+.top-bar .top-bar-title{
+  margin: 0 20px 0 10px;
+  display: flex;
+  align-items: center;
+
+}
+.top-bar .top-bar-avatar{
+  height: 61px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 10px;
+}
+/* .top-bar div {
+  flex: 1;
+} */
+
+/* .top-bar {
   height: 61px;
   line-height: 61px;
   font-size: 14px;
@@ -226,5 +221,5 @@ div.avatar {
   position: absolute;
   top: 9px;
   right: 90px;
-}
+} */
 </style>
