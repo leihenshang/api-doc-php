@@ -1,17 +1,6 @@
 <template>
   <div class="project">
-    <div class="top">
-      <topBar />
-    </div>
     <div class="content">
-      <div class="left">
-        <el-menu :default-active="$route.path" :router="true" ref="menu" class="el-menu">
-          <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
-            <i :class="item.icon ? item.icon :'el-icon-setting'"></i>
-            <span slot="title">{{item.title}}</span>
-          </el-menu-item>
-        </el-menu>
-      </div>
       <div class="right">
         <transition name="el-fade-in-linear" mode="out-in" appear>
           <router-view></router-view>
@@ -22,8 +11,6 @@
 </template>
 
 <script>
-import TopBar from "../components/common/topBar";
-
 const CODE_OK = 200;
 const PAGE_SIZE = 5;
 
@@ -32,26 +19,7 @@ export default {
   created() {},
 
   data() {
-    let route = [
-      {
-        title: "项目列表",
-        route: "/projectList",
-        icon: "el-icon-s-fold"
-      },
-      {
-        title: "个人中心",
-        route: "/myCenter",
-        icon: "el-icon-s-operation"
-      }
-    ];
 
-    if (this.$store.state.userInfo.type == 2) {
-      route.push({
-        title: "用户管理",
-        route: "/userManager",
-        icon: "el-icon-user"
-      });
-    }
 
     return {
       projectList: {},
@@ -61,11 +29,7 @@ export default {
       updateData: null,
       itemCount: 0,
       hideShade: true,
-      insideRoute: route
     };
-  },
-  components: {
-    topBar: TopBar
   },
   methods: {
     jump(route) {
@@ -82,15 +46,11 @@ export default {
     //删除项目
     del(id) {
       this.$http
-        .post(
-           "/project/del",
-          {
-            id: id
-          },
-         
-        )
+        .post("/project/del", {
+          id: id,
+        })
         .then(
-          res => {
+          (res) => {
             let response = res.data;
             if (response.code === CODE_OK) {
               this.$message.error("成功!" + response.msg);
@@ -99,7 +59,7 @@ export default {
               this.$message.error("失败!" + response.msg);
             }
           },
-          res => {
+          (res) => {
             let response = res.data;
             this.$message.error("操作失败!" + response.msg);
           }
@@ -117,9 +77,9 @@ export default {
     },
     detail(id) {
       this.$router.push("/detail/" + id);
-    }
+    },
   },
-  watch: {}
+  watch: {},
 };
 </script>
 

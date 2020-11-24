@@ -2,7 +2,12 @@
   <div class="user-center">
     <div class="user-content">
       <div class="avatar">
-        <img src="../../assets/logo.png" width="100" />
+        <el-avatar :size="100" :src="avatarUrl">头像</el-avatar>
+      </div>
+      <div class="btn-change-avatar">
+          <el-button size="mini" type="primary" @click="changeAvatar()"
+            >更换头像</el-button
+          >
       </div>
       <div class="info">
         <ul>
@@ -47,6 +52,7 @@
           <el-button size="small" type="primary" @click="updateNickName()"
             >修改昵称</el-button
           >
+          
         </div>
       </div>
     </div>
@@ -113,6 +119,7 @@ export default {
     };
 
     return {
+      avatarUrl: "",
       userInfo: {},
       editNickName: false,
       form: {
@@ -270,15 +277,12 @@ export default {
 </script>
 
 <style scoped>
-.user-center {
-  width: 100%;
-  height: 100%;
-}
 
 .user-content {
   border: 1px solid rgb(195, 195, 195);
   width: 40%;
-  margin: 100px auto;
+  margin: 0 auto;
+  margin-top:100px;
   padding: 50px 0;
   position: relative;
   background-color: #fff;
@@ -335,4 +339,10 @@ export default {
 .btn button {
   display: inline-block;
 }
+
+.btn-change-avatar {
+  text-align: center;
+  margin:10px 0;
+}
+
 </style>

@@ -1,20 +1,36 @@
 <template>
   <div class="top-bar">
-    <ul>
-      <li class="t-link" @click="$router.push('/projectList');">
+    <ul class="top-bar-ul">
+      <li class="t-link" @click="$router.push('/projectList')">
         <a href="javascript:void(0)">my-doc</a>
       </li>
-      <li class="name">
-        <span></span>
+      <li class="li-menu">
+
+        <el-menu
+          :default-active="$route.path"
+          :router="true"
+          ref="menu"
+          class="el-menu"
+          background-color="#409eff"
+          text-color="#fff"
+          active-text-color="#ffd04b"
+        >
+          <el-menu-item
+            :index="item.route"
+            v-for="item in insideRoute"
+            :key="item.id"
+          >
+            <!-- <i :class="item.icon ? item.icon : 'el-icon-setting'"></i> -->
+            <span slot="title">{{ item.title }}</span>
+          </el-menu-item>
+        </el-menu>
       </li>
-      <li>
-        <span>
-          <router-link :to="{path:'/'}" v-show="$route.fullPath !== '/projectList'">首页</router-link>
-          {{showTitle}}
-        </span>
+      <li class="t-r" style="position: relative">
+        <div class="avatar"><el-avatar> user </el-avatar></div>
       </li>
+
       <li class="t-r">
-        <em>{{nickName ? nickName : 'null'}}</em>
+        <em>{{ nickName ? nickName : "null" }}</em>
         <div class="user-lay" id="user-lay">
           <ul>
             <li>
@@ -36,7 +52,7 @@ export default {
   created() {},
   props: {},
   computed: {
-    showTitle: function() {
+    showTitle: function () {
       if (this.$route.fullPath === "/projectList") {
         return;
       }
@@ -52,9 +68,9 @@ export default {
       }
       return routerStr;
     },
-    nickName: function() {
+    nickName: function () {
       return this.$store.state.userInfo.nick_name;
-    }
+    },
   },
   methods: {
     //退出登录
@@ -66,30 +82,63 @@ export default {
     //到个人中心
     goToUserCenter() {
       this.$router.push({ name: "myCenter" }).catch(() => {});
-    }
+    },
   },
-  data: function() {
-    return {};
-  }
+  data: function () {
+    let route = [
+      {
+        title: "项目列表",
+        route: "/projectList",
+        icon: "el-icon-s-fold",
+      },
+      {
+        title: "个人中心",
+        route: "/myCenter",
+        icon: "el-icon-s-operation",
+      },
+    ];
+
+    if (this.$store.state.userInfo.type == 2) {
+      route.push({
+        title: "用户管理",
+        route: "/userManager",
+        icon: "el-icon-user",
+      });
+    }
+
+    return {
+      insideRoute: route,
+    };
+  },
 };
 </script>
 
 <style scoped>
 /* <!-- 头部导航栏开始 --> */
 .top-bar {
-  height: 50px;
-  line-height: 50px;
+  height: 61px;
+  line-height: 61px;
   font-size: 14px;
   background-color: #409eff;
 }
 
-.top-bar ul {
+.top-bar-ul {
   overflow: hidden;
+  width: 85%;
+  margin: 0 auto;
 }
 
 .top-bar li {
   float: left;
   list-style: none;
+}
+
+.top-bar li.li-menu {
+  width: 800px;
+}
+
+.el-menu {
+  border-right:none;
 }
 
 .top-bar .t-r {
@@ -121,7 +170,7 @@ export default {
 }
 
 .top-bar em {
-  display: block;
+  display: inline-block;
   padding: 0 14px;
   font-style: normal;
 }
@@ -137,7 +186,7 @@ export default {
   height: 200px;
   background-color: #fff;
   position: absolute;
-  right: 0;
+  right: 10%;
   z-index: 9999;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
   display: none;
@@ -169,5 +218,11 @@ export default {
 
 .top .t-r:hover .user-lay {
   display: block;
+}
+
+div.avatar {
+  position: absolute;
+  top: 9px;
+  right: 90px;
 }
 </style>

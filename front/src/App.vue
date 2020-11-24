@@ -7,16 +7,27 @@
  -->
 <template>
   <div id="app">
+              <div class="top">
+      <topBar />
+    </div>
     <transition name="el-fade-in-linear" mode="out-in" appear>
+      <div class="app-full">
       <router-view></router-view>
+      </div>
     </transition>
   </div>
 </template>
 
 <script>
+
+import TopBar from "./components/common/topBar";
+
 export default {
   name: "app",
-  created() {}
+  created() {},
+   components: {
+    topBar: TopBar
+  },
 };
 </script>
 
@@ -33,4 +44,10 @@ export default {
   width: 100%;
   height: 100%;
 }
+
+.app-full {
+  width:85%;
+  margin:0 auto;
+}
+
 </style>
