@@ -3,25 +3,25 @@
     <div class="box1">
       <div class="btn-group-1">
         <button @click="returnApiPage">↩ 接口列表</button>
+        <!-- <button
+          @click="showDescription = false"
+          v-bind:class="{ 'btn-group-1-btn-change': showDescription == false }"
+        >
+          基础信息
+        </button>
         <button
-          @click="showDescription=false"
-          v-bind:class="{ 'btn-group-1-btn-change' : showDescription==false}"
-        >基础信息</button>
-        <button
-          @click="showDescription=true"
-          v-bind:class="{ 'btn-group-1-btn-change' : showDescription==true}"
-        >详细说明</button>
+          @click="showDescription = true"
+          v-bind:class="{ 'btn-group-1-btn-change': showDescription == true }"
+        >
+          详细说明
+        </button> -->
       </div>
       <div class="btn-group-1">
         <!-- <button>继续添加</button> -->
         <button @click="createApi()">保存</button>
       </div>
     </div>
-    <detailDescription
-      v-show="showDescription"
-      :description="description"
-      v-on:update="description=$event"
-    />
+  
     <apiInfo
       v-show="showDescription === false"
       :groupList="groupList"
@@ -30,21 +30,29 @@
       v-on:update:apiInfo="apiInfo = $event"
       ref="apiInfo"
     />
+
+ <detailDescription
+      :description="description"
+      v-on:update="description = $event"
+    />
+    
+
     <requestParams
       :propertyList="propertyList"
-      v-on:update:header="apiData.http_request_header=$event"
-      v-on:update:param="apiData.http_request_params=$event"
+      v-on:update:header="apiData.http_request_header = $event"
+      v-on:update:param="apiData.http_request_params = $event"
     />
-    <returnParams :propertyList="propertyList" v-on:update="apiData.http_return_params=$event" />
-    <textBox
-      v-on:update:success="apiData.http_return_sample.returnDataSuccess = $event"
-      v-on:update:failed="apiData.http_return_sample.returnDataFailed = $event"
+    <returnParams
+      :propertyList="propertyList"
+      v-on:update="apiData.http_return_params = $event"
     />
+
+ 
+
   </div>
 </template>
 
 <script>
-import textBox from "./units/returnDataTextBox.vue";
 import returnParams from "./units/returnDataParams.vue";
 import requestParams from "./units/requestDataParams.vue";
 import apiInfo from "./units/apiInfo.vue";
@@ -54,7 +62,7 @@ const CODE_OK = 200;
 export default {
   name: "apiCreate",
   props: {
-    groupId: [Number, String]
+    groupId: [Number, String],
   },
   created() {
     this.getGroup();
@@ -75,12 +83,12 @@ export default {
         http_return_params: [], //返回参数
         http_return_sample: {
           returnDataSuccess: "", //返回数据成功
-          returnDataFailed: "" //返回数据失败
-        }
+          returnDataFailed: "", //返回数据失败
+        },
       },
       finalData: {},
       showDescription: false,
-      errors: "信息填写错误"
+      errors: "信息填写错误",
     };
   },
   methods: {
@@ -93,7 +101,7 @@ export default {
     },
     //创建api
     createApi() {
-      this.$refs.apiInfo.$refs.form.validate(validate => {
+      this.$refs.apiInfo.$refs.form.validate((validate) => {
         if (validate) {
           //loading
           let loadingInstance = this.$loading({ fullscreen: true });
@@ -101,24 +109,20 @@ export default {
           data = Object.assign(data, this.apiData);
 
           this.$http
-            .post(
-               "/api/create",
-              {
-                group_id: data.group_id,
-                project_id: this.$route.params.id,
-                data: JSON.stringify(data)
-              },
-             
-            )
+            .post("/api/create", {
+              group_id: data.group_id,
+              project_id: this.$route.params.id,
+              data: JSON.stringify(data),
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("保存api成功!");
                   //跳转携带分组参数
                   this.$router.push({
                     name: "apiList",
-                    params: { groupId: this.groupId }
+                    params: { groupId: this.groupId },
                   });
                 } else {
                   this.$message.error("  保存api失败 ： " + response.msg);
@@ -143,14 +147,14 @@ export default {
     //获取分组信息
     getGroup() {
       this.$http
-        .get( "/group/list", {
+        .get("/group/list", {
           params: {
             projectId: this.$route.params.id,
-            type: 1
-          }
+            type: 1,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.groupList = response.data;
@@ -164,11 +168,11 @@ export default {
     //获取创建api的默认属性
     getProperty() {
       this.$http
-        .get( "/property/list", {
-          params: {}
+        .get("/property/list", {
+          params: {},
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.propertyList = response.data;
@@ -178,15 +182,14 @@ export default {
             this.$message.error("获取数据失败");
           }
         );
-    }
+    },
   },
   components: {
-    textBox,
     returnParams,
     requestParams,
     apiInfo,
-    detailDescription
-  }
+    detailDescription,
+  },
 };
 </script>
 

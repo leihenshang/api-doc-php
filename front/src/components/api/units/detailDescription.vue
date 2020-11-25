@@ -1,6 +1,9 @@
 <template>
   <div class="detail-description">
     <div class="description">
+      <div class="item-head">
+        <button class="req-btn req-btn-first">说明</button>
+      </div>
       <textarea name id cols="30" rows="10" v-model="newDescription"></textarea>
     </div>
   </div>
@@ -12,26 +15,30 @@ export default {
   props: {
     description: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
   data() {
     return {
-      newDescription: this.description
+      newDescription: this.description,
     };
   },
   watch: {
-    newDescription: function(val) {
+    newDescription: function (val) {
       this.$emit("update", val);
     },
-    description: function() {
+    description: function () {
       this.newDescription = this.description;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
+.description {
+  padding-top: 10px;
+}
+
 .description textarea {
   width: 100%;
   height: 100%;

@@ -10,7 +10,6 @@
         class="el-menu"
         background-color="#409eff"
         text-color="#fff"
-        active-text-color="#ffd04b"
       >
         <el-menu-item
           :index="item.route"
@@ -140,5 +139,13 @@ export default {
   align-items: center;
   position: absolute;
   right: 10px;
+}
+
+.top-bar .top-bar-avatar .avatar {
+  margin-right:10px;
+}
+
+.top-bar .el-menu.el-menu--horizontal {
+  border-bottom: none;
 }
 </style>
