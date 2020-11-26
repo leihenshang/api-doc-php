@@ -7,7 +7,7 @@
  -->
 <template>
   <div id="app">
-      <div class="top" v-show=" $store.state.userInfo.id > 0 ">
+      <div class="top" v-show=" $store.state.userInfo && $store.state.userInfo.id > 0 ">
       <topBar />
      </div>
     <transition name="el-fade-in-linear" mode="out-in" appear>

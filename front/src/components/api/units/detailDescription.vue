@@ -1,9 +1,7 @@
 <template>
   <div class="detail-description">
     <div class="description">
-      <div class="item-head">
-        <button class="req-btn req-btn-first">说明</button>
-      </div>
+      <button class="req-btn">说明</button>
       <textarea name id cols="30" rows="10" v-model="newDescription"></textarea>
     </div>
   </div>
@@ -42,9 +40,10 @@ export default {
 .description textarea {
   width: 100%;
   height: 100%;
-  border-radius: 5px;
   resize: none;
   outline: none;
+  padding: 5px;
+  box-sizing: border-box;
   border: 1px solid rgb(204, 203, 203);
 }
 </style>
