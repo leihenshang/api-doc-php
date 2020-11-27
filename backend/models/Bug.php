@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $project_id 项目id
- * @property int $to_user 处理的人
+ * @property int $to_user_id 处理人id
  * @property string $title 标题
  * @property string $content 内容
  * @property string|null $comment 备注
@@ -19,9 +19,8 @@ use Yii;
  * @property string|null $create_time 创建时间
  * @property string|null $update_time
  */
-class Bug extends \yii\db\ActiveRecord
+class Bug extends BaseModel
 {
-    const SCENARIO_CREATE = 'create';
 
     /**
      * {@inheritdoc}
@@ -38,7 +37,7 @@ class Bug extends \yii\db\ActiveRecord
     {
         return [
             [['project_id', 'title', 'content', 'level'], 'required'],
-            [['project_id', 'to_user', 'status', 'level'], 'integer'],
+            [['project_id', 'to_user_id', 'status', 'level'], 'integer'],
             [['content'], 'string'],
             [['create_time', 'update_time'], 'safe'],
             [['title', 'is_deleted'], 'string', 'max' => 100],
@@ -54,7 +53,7 @@ class Bug extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'project_id' => '项目id',
-            'to_user' => '处理的人',
+            'to_user_id' => '处理人id',
             'title' => '标题',
             'content' => '内容',
             'comment' => '备注',

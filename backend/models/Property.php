@@ -12,7 +12,7 @@ use Yii;
  * @property string $tag_name 标记名
  * @property string $description 描述
  */
-class Property extends \yii\db\ActiveRecord
+class Property extends BaseModel
 {
     /**
      * {@inheritdoc}
