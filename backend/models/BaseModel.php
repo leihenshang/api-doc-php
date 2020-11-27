@@ -40,6 +40,11 @@ class BaseModel extends ActiveRecord
         return ($this->cp - 1) * $this->ps;
     }
 
+    public static function getOffsetByPageParam(int $ps,int $cp)
+    {
+        return ($cp - 1) * $ps;
+    }
+
     /**
      * 成功
      * @param mixed $data 数据
