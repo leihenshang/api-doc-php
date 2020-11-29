@@ -25,7 +25,6 @@ import TopBar from "./components/common/topBar";
 export default {
   name: "app",
   created() {
-    console.log(this.$store.state.userInfo.id)
   },
    components: {
     topBar: TopBar
