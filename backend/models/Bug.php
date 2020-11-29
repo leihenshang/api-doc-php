@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use yii\db\Exception;
+
 /**
  * This is the model class for table "{{%bug}}".
  *
@@ -176,21 +178,70 @@ class Bug extends BaseModel
     /**
      * 更新数据
      * @param int $id
+     * @param int $userId
      * @return array
+     * @throws \yii\base\Exception
      */
-    public function updateData(int $id)
+    public function updateData(int $id,int $userId)
     {
         $record = self::findOne($id);
         if (!$record) {
             return ['没有找到数据', null];
         }
 
+        $changeToUser = $changeStatus = null;
+
+        //如果更改了to_user_id以及status则添加指派记录
+        if ($record->to_user_id != $this->to_user_id) {
+            $changeToUser = $this->to_user_id;
+        }
+
+        if ($record->status != $this->status) {
+            $changeStatus = $this->status;
+        }
+
         $record->setScenario(self::SCENARIO_UPDATE);
-        $record->attributes = $this->attributes;
-        if (!$record->save()) {
-            return [current($record->getFirstErrors()), null];
+
+        //没有更改了to_user_id以及status
+        if ($changeStatus === null && $changeToUser === null ) {
+            $record->attributes = $this->attributes;
+            if (!$record->save()) {
+                return [current($record->getFirstErrors()), null];
+            }
+
+        }
+
+        if ($changeToUser !== null || $changeStatus !== null) {
+
+            $db = $this->getDb();
+            $trans = $db->beginTransaction();
+            try {
+                $bugAssignModel = new BugAssign();
+                $bugAssignModel->from_user_id = $userId;
+                $bugAssignModel->to_user_id = intval($this->to_user_id > 0 ?: 0) ;
+                $bugAssignModel->bug_id = $record->id;
+                $bugAssignModel->status = $this->status;
+                $bugAssignModel->comment = $this->comment;
+
+                if(!$bugAssignModel->save()) {
+                    throw new \yii\base\Exception('保存指派记录失败-'.current($bugAssignModel->getFirstErrors()));
+                }
+
+                $record->attributes = $this->attributes;
+                if (!$record->save()) {
+                throw new \yii\base\Exception('保存记录失败');
+                }
+
+                $trans->commit();
+            }catch (Exception $e) {
+                $trans->rollBack();
+                return [$e->getMessage(), null];
+            }
+
         }
 
         return [null, $record];
     }
+
+
 }

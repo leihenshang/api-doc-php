@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\behaviors\UserVerify;
 use app\models\Api;
 use app\models\Bug;
+use app\models\BugAssign;
 use Yii;
 use yii\base\DynamicModel;
 use yii\validators\NumberValidator;
@@ -47,6 +48,7 @@ class BugController extends BaseController
     /**
      * 更新数据
      * @return array
+     * @throws
      */
     public function actionUpdate()
     {
@@ -62,13 +64,53 @@ class BugController extends BaseController
             return $this->failed(current($bug->getFirstErrors()));
         }
 
-        [$err, $res] = $bug->updateData($id);
+        [$err, $res] = $bug->updateData($id,$this->userInfo->id);
         if ($err) {
             return $this->failed($err);
         }
 
         return $this->success($res);
     }
+
+    /**
+     * 指派bug
+     * @return array
+     */
+    public function actionAssign()
+    {
+        $request = Yii::$app->request->post();
+        $bugId = $request['bug_id'] ?? 0;
+        if(!(new  NumberValidator())->validate($bugId,$err) || $bugId <= 0){
+            return $this->failed('bug_id错误');
+        }
+
+        $toUserId = $request['to_user_id'] ?? 0;
+        if(!(new  NumberValidator())->validate($toUserId,$err)){
+            return $this->failed('to_user_id错误');
+        }
+
+        $comment = $request['comment'] ?? '';
+
+        $status = $request['status'] ?? 0;
+        if(!(new  NumberValidator())->validate($status,$err)){
+            return $this->failed('status错误');
+        }
+
+        $bugAssign = new BugAssign(['scenario' => BugAssign::SCENARIO_CREATE]);
+        $bugAssign->attributes = $request;
+
+        if (!$bugAssign->validate()) {
+            return $this->failed(current($bugAssign->getFirstErrors()));
+        }
+
+        [$err, $res] = $bugAssign->assign($this->userInfo->id,$bugId,$toUserId,$status,$comment);
+        if ($err) {
+            return $this->failed($err);
+        }
+
+        return $this->success($res);
+    }
+
 
     /**
      * 列表
@@ -96,6 +138,28 @@ class BugController extends BaseController
             intval($level),
             intval($toUserId),
             intval($isDeleted),
+            $sortType,
+            $orderBy,
+            intval($cp),
+            intval($ps)
+        );
+        return $this->success($res);
+    }
+
+    public function actionAssignList()
+    {
+        $sortType = Yii::$app->request->get('sortType', 'ASC');
+        $orderBy = Yii::$app->request->get('orderBy', 'create_time');
+        $ps = Yii::$app->request->get('ps', 10);
+        $cp = Yii::$app->request->get('cp', 1);
+        $bugId = Yii::$app->request->get('bugId', 0);
+        if (!$bugId) {
+            return ['code' => 22, 'msg' => '没有projectId'];
+        }
+
+        $res = new BugAssign();
+        $res = $res->dataList(
+            intval($bugId),
             $sortType,
             $orderBy,
             intval($cp),
