@@ -49,6 +49,7 @@ class Bug extends BaseModel
         return [
             [['project_id', 'title', 'content', 'level'], 'required','on' => self::SCENARIO_CREATE],
             [['project_id', 'to_user_id', 'status', 'level'], 'integer'],
+            [['project_id', 'to_user_id', 'status', 'level'], 'default','value' => 0],
             [['content'], 'string'],
             [['create_time', 'update_time'], 'safe'],
             [['title', 'is_deleted'], 'string', 'max' => 100],

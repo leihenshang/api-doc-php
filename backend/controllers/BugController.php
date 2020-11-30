@@ -40,7 +40,7 @@ class BugController extends BaseController
         $bug->attributes = Yii::$app->request->post();
         $res = $bug->save();
         if ($res) {
-            return $this->success($res);
+            return $this->success();
         }
         return $this->failed(current($bug->getFirstErrors()));
     }
