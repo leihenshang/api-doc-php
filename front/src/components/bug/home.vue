@@ -112,17 +112,26 @@
     </div>
     <div class="dialog-content">
       <el-dialog title="bug详情" :visible.sync="dialogContentFormVisible">
+        
         <ul>
-        <li><span>{{ currentRow.id }}</span></li>
-        <li><span>{{ currentRow.to_user_id }}</span></li>
-        <li><span>{{ currentRow.title }}</span></li>
-        <li><span>{{ currentRow.content }}</span></li>
-        <li><span>{{ currentRow.comment }}</span></li>
-        <li><span>{{ currentRow.status }}</span></li>
-        <li><span>{{ currentRow.level }}</span></li>
-        <li><span>{{ currentRow.create_time }}</span></li>
-        <li><span>{{ currentRow.update_time }}</span></li>
+        <li><em>bugId:</em><span>{{ currentRow.id }}</span></li>
+        <li><em>处理者:</em><span>{{ currentRow.to_user_id }}</span></li>
+        <li><em>标题:</em><span>{{ currentRow.title }}</span></li>
+        <li><em>描述:</em><span>{{ currentRow.content }}</span></li>
+        <li><em>备注:</em><span>{{ currentRow.comment }}</span></li>
+        <li><em>状态:</em><span>{{ currentRow.status }}</span></li>
+        <li><em>等级:</em><span>{{ currentRow.level }}</span></li>
+        <li><em>创建时间:</em><span>{{ currentRow.create_time }}</span></li>
+        <li><em>最后更新:</em><span>{{ currentRow.update_time }}</span></li>
           </ul>
+          <div class="detail-btn">
+            <el-button type="primary"
+            >指 派</el-button
+          >
+            <el-button type="primary"
+            >更 新</el-button
+          >
+          </div>
       </el-dialog>
     </div>
   </div>
@@ -241,6 +250,20 @@ export default {
 
   .content-page {
     text-align: center;
+  }
+
+  .dialog-content {
+    ul {
+      list-style: none;
+      li {
+          margin:10px 0;
+          em {
+            font-style: normal;
+            padding-right:10px;
+            font-weight: bold;
+          }
+      }
+    }
   }
 
   .bar {
