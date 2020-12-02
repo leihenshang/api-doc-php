@@ -1,5 +1,6 @@
 <template>
   <div class="bug-home">
+    <!-- 表格筛选-开始 -->
     <div class="bar">
       <el-form ref="contentFilterRef" :model="contentFilter" :inline="true">
         <el-form-item label="处理者" prop="toUserId">
@@ -27,11 +28,14 @@
         <el-form-item>
           <el-button type="primary" @click="searchBug()">查询?</el-button>
           <el-button type="primary" @click="searchBug('contentFilterRef')">重置x</el-button>
-          <el-button type="primary" @click="dialogFormVisible = true">新增+</el-button>
+          <el-button type="primary" @click="dialogFormVisible = true;">新增+</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <div class="dialog">
+    <!-- 表格筛选-结束 -->
+
+    <!-- 创建bug-开始 -->
+    <div class="dialog-create-bug">
       <el-dialog title="新建bug" :visible.sync="dialogFormVisible">
         <el-form :model="form" ref="bugForm" :rules="rules">
           <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
@@ -77,11 +81,61 @@
               dialogFormVisible = false;
             "
           >取 消</el-button>
-          <el-button type="primary" @click="createBug('bugForm')">确 定</el-button>
+          <el-button type="primary" @click="saveBug('bugForm')">确 定</el-button>
         </div>
       </el-dialog>
     </div>
+    <!-- 创建bug-结束 -->
+    <!-- 更新bug-结束 -->
+    <div class="dialog-update-bug">
+      <el-dialog title="编辑bug" :visible.sync="dialogFormUpdateVisible">
+        <el-form :model="formUpdate" ref="bugFormUpdate" :rules="rules">
+          <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
+            <el-input v-model="formUpdate.title" autocomplete="off"></el-input>
+          </el-form-item>
 
+          <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+            <el-select v-model="formUpdate.status" placeholder="请选择状态">
+              <el-option label="待处理" value="1"></el-option>
+              <el-option label="已处理" value="2"></el-option>
+              <el-option label="不处理" value="3"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="等级" :label-width="formLabelWidth" prop="level">
+            <el-select v-model="formUpdate.level" placeholder="请选择等级">
+              <el-option label="低" value="1"></el-option>
+              <el-option label="中" value="2"></el-option>
+              <el-option label="高" value="3"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="描述" :label-width="formLabelWidth" prop="content">
+            <el-input type="textarea" :rows="5" v-model="formUpdate.content" autocomplete="off"></el-input>
+          </el-form-item>
+
+          <el-form-item label="备注" :label-width="formLabelWidth" prop="comment">
+            <el-input type="textarea" :rows="5" v-model="formUpdate.comment" autocomplete="off"></el-input>
+          </el-form-item>
+
+          <el-form-item label="指派至:" :label-width="formLabelWidth" prop="to_user_id">
+            <el-select v-model="formUpdate.to_user_id" placeholder="请选择用户">
+              <el-option label="xiaobai" value="1"></el-option>
+              <el-option label="xiaoxi" value="2"></el-option>
+              <el-option label="xiaohua" value="3"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="
+              dialogFormUpdateVisible = false;
+            ">取 消</el-button>
+          <el-button type="primary" @click="saveBug('bugFormUpdate')">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+    <!-- 更新BUG-结束 -->
+    <!-- 表格-开始 -->
     <div class="content" v-loading="loading">
       <el-table :data="tableData.res" border stripe style="width: 100%" @cell-click="rowClick">
         <el-table-column prop="title" label="标题"></el-table-column>
@@ -99,11 +153,13 @@
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop label="操作">
           <template slot-scope="scope">
-            <el-button @click.stop="updateBug('edit', scope.row.id)" size="small">编 辑</el-button>
+            <el-button @click.stop="updateBug(scope.row)">编 辑</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <!-- 表格-结束 -->
+    <!-- 表格分页-开始 -->
     <div class="content-page">
       <el-pagination
         background
@@ -114,10 +170,12 @@
         @current-change="changePage($event)"
       ></el-pagination>
     </div>
-    <div class="dialog-content">
+    <!-- 表格分页-结束 -->
+    <!-- bug详情-开始 -->
+    <div class="dialog-bug-detail">
       <el-dialog title="bug详情" :visible.sync="dialogContentFormVisible" width="70%">
-        <div class="dialog-content-handle"> 
-           <!-- 嵌套表单-开始 -->
+        <div class="dialog-bug-detail-handle">
+          <!-- 嵌套表单-开始 -->
           <el-dialog title="bug处理" :visible.sync="dialogHandleFormVisible" append-to-body>
             <el-form :model="formHandle" ref="bugFormHandle" :rules="handleRules">
               <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
@@ -140,13 +198,13 @@
                 </el-select>
               </el-form-item>
             </el-form>
-          
+
             <div class="detail-btn">
               <el-button type="primary" @click="bugAssign('bugFormHandle')">确 认</el-button>
               <el-button type="primary" @click="dialogHandleFormVisible = false">取 消</el-button>
             </div>
           </el-dialog>
-             <!-- 嵌套表单-结束 -->
+          <!-- 嵌套表单-结束 -->
         </div>
 
         <!-- bug详情-开始 -->
@@ -188,29 +246,29 @@
             <span>{{ currentRow.update_time }}</span>
           </li>
         </ul>
-         <!-- bug详情-结束 -->
+        <!-- bug详情-结束 -->
         <div class="detail-btn">
           <el-button type="primary" @click="dialogHandleFormVisible = true">处 理</el-button>
           <!-- <el-button type="primary" @click="dialogContentFormVisible = false">取 消</el-button> -->
         </div>
         <!-- 指派列表-开始 -->
-        <div class="detail-table-content" style="margin-top:10px;">
-               <el-table :data="assignListData.res" border stripe style="width: 100%" >
-        <el-table-column prop="from_user_id" label="指派者"></el-table-column>
-        <el-table-column prop="to_user_id" label="处理者"></el-table-column>
-        <el-table-column label="状态">
-          <template slot-scope="scope">
-            <span>{{ convertStatus(scope.row.status) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="comment" label="备注"></el-table-column>
-        <el-table-column prop="create_time" label="创建时间"></el-table-column>
-      </el-table>
-        <!-- 指派列表-结束 -->
-
+        <div class="dialog-bug-detail-assign" style="margin-top:10px;">
+          <el-table :data="assignListData.res" border stripe style="width: 100%">
+            <el-table-column prop="from_user_id" label="指派者"></el-table-column>
+            <el-table-column prop="to_user_id" label="处理者"></el-table-column>
+            <el-table-column label="状态">
+              <template slot-scope="scope">
+                <span>{{ convertStatus(scope.row.status) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="comment" label="备注"></el-table-column>
+            <el-table-column prop="create_time" label="创建时间"></el-table-column>
+          </el-table>
+          <!-- 指派列表-结束 -->
         </div>
       </el-dialog>
     </div>
+    <!-- bug详情-结束 -->
   </div>
 </template>
 
@@ -231,6 +289,7 @@ export default {
       },
       projectId: 0,
       dialogFormVisible: false,
+      dialogFormUpdateVisible: false,
       dialogContentFormVisible: false,
       dialogHandleFormVisible: false,
       formHandle: {
@@ -238,6 +297,7 @@ export default {
         comment: "",
         status: null,
       },
+      formUpdate: {},
       form: {
         project_id: this.$route.params.id,
         to_user_id: null,
@@ -246,6 +306,7 @@ export default {
         comment: "",
         status: null,
         level: null,
+        id: null,
       },
       detailForm: null,
       formLabelWidth: "140px",
@@ -310,14 +371,15 @@ export default {
         status: null,
         level: null,
       },
-      assignListData:{
+      assignListData: {
         count: 0,
         res: [],
-      }
+      },
     };
   },
   created() {
     this.bugList(this.$route.params.id, this.ps, this.cp);
+    this.formBak = JSON.parse(JSON.stringify(this.form));
   },
 
   methods: {
@@ -346,24 +408,31 @@ export default {
       this.currentRow = row;
       this.assignList(this.currentRow.id);
     },
-    createBug(formName) {
+    saveBug(formName) {
+      let url = "bug/create";
+      let data = this.form;
+      if (this.formUpdate.id) {
+        url = "bug/update";
+        data = this.formUpdate;
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$http
-            .post("bug/create", {
-              ...this.form,
+            .post(url, {
+              ...data,
             })
             .then((response) => {
               let data = response.data;
               if (data.code === 200) {
                 this.$message.success("保存成功");
-                this.resetForm("bugForm");
+                this.resetForm(formName);
                 this.bugList(this.$route.params.id, this.ps, this.cp);
               } else {
                 this.$message.error(data.msg);
               }
             });
           this.dialogFormVisible = false;
+          this.dialogFormUpdateVisible = false;
         } else {
           return false;
         }
@@ -383,9 +452,7 @@ export default {
       );
     },
     resetForm(formName) {
-      this.$nextTick(() => {
-        this.$refs[formName].resetFields();
-      });
+      this.$refs[formName].resetFields();
     },
     changePage(event) {
       this.cp = event;
@@ -430,8 +497,9 @@ export default {
         }
       });
     },
-    updateBug(type, id) {
-      console.log(type, id);
+    updateBug(old) {
+      this.dialogFormUpdateVisible = true;
+      this.formUpdate = old;
     },
     convertStatus(status) {
       let convertStatus = "";
@@ -452,7 +520,7 @@ export default {
       }
       return convertStatus;
     },
-      convertLevel(level) {
+    convertLevel(level) {
       let convertLevel = "";
       switch (level) {
         case 1:
@@ -471,16 +539,16 @@ export default {
       }
       return convertLevel;
     },
-    assignList(bugId){
+    assignList(bugId) {
       if (!bugId) {
-          return;
+        return;
       }
 
       this.$http
         .get("bug/assign-list", {
           params: {
             bugId,
-            ps:1000
+            ps: 1000,
           },
         })
         .then((response) => {
@@ -488,7 +556,7 @@ export default {
           this.assignListData.count = data.resCount;
           this.assignListData.res = data.resItem;
         });
-    }
+    },
   },
   computed: {},
 };
@@ -504,7 +572,7 @@ export default {
     text-align: center;
   }
 
-  .dialog-content {
+  .dialog-bug-detail {
     ul {
       list-style: none;
 
