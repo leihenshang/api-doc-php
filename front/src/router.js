@@ -8,7 +8,6 @@ import Detail from "./viewPage/project";
 import ProjectList from "./components/project/projectList";
 import FieldMapping from "./components/project/fieldMapping";
 import CommonlyParams from "./components/project/commonlyParams";
-import EnvConf from "./components/project/envConf";
 
 //api相关操作
 import ApiPage from "./components/api/apiPage";
@@ -78,13 +77,6 @@ const router = new VueRouter({
           path: "commonlyParams",
           name: "commonlyParams",
           component: CommonlyParams,
-          meta: { requiresAuth: true },
-          props: true,
-        },
-        {
-          path: "envConf",
-          name: "envConf",
-          component: EnvConf,
           meta: { requiresAuth: true },
           props: true,
         },

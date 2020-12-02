@@ -68,8 +68,12 @@ class FieldMappingController extends BaseController
      */
     public function actionList()
     {
+        $projectId = Yii::$app->request->get('projectId');
+        if (!$projectId) {
+            return $this->failed('projectId不能为空');
+        }
         $res = new FieldMapping();
-        $res = $res->dataList();
+        $res = $res->dataList($projectId);
         return $this->success($res);
     }
 

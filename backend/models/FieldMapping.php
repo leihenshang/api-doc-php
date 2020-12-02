@@ -89,9 +89,9 @@ class FieldMapping extends BaseModel
      * @return array|ActiveRecord[]
      * @throws
      */
-    public function dataList()
+    public function dataList(int $projectId)
     {
-        return self::find()->where(['is_deleted' => self::IS_DELETED['no']])->orderBy('create_time desc')->all();
+        return self::find()->where(['is_deleted' => self::IS_DELETED['no'],'project_id' => $projectId])->orderBy('create_time desc')->all();
     }
 
     /**
