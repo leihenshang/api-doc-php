@@ -115,7 +115,7 @@
       ></el-pagination>
     </div>
     <div class="dialog-content">
-      <el-dialog title="bug详情" :visible.sync="dialogContentFormVisible">
+      <el-dialog title="bug详情" :visible.sync="dialogContentFormVisible" width="70%">
         <div class="dialog-content-handle"> 
            <!-- 嵌套表单-开始 -->
           <el-dialog title="bug处理" :visible.sync="dialogHandleFormVisible" append-to-body>
@@ -191,7 +191,23 @@
          <!-- bug详情-结束 -->
         <div class="detail-btn">
           <el-button type="primary" @click="dialogHandleFormVisible = true">处 理</el-button>
-          <el-button type="primary" @click="dialogContentFormVisible = false">取 消</el-button>
+          <!-- <el-button type="primary" @click="dialogContentFormVisible = false">取 消</el-button> -->
+        </div>
+        <!-- 指派列表-开始 -->
+        <div class="detail-table-content" style="margin-top:10px;">
+               <el-table :data="assignListData.res" border stripe style="width: 100%" >
+        <el-table-column prop="from_user_id" label="指派者"></el-table-column>
+        <el-table-column prop="to_user_id" label="处理者"></el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <span>{{ convertStatus(scope.row.status) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="comment" label="备注"></el-table-column>
+        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+      </el-table>
+        <!-- 指派列表-结束 -->
+
         </div>
       </el-dialog>
     </div>
@@ -294,6 +310,10 @@ export default {
         status: null,
         level: null,
       },
+      assignListData:{
+        count: 0,
+        res: [],
+      }
     };
   },
   created() {
@@ -324,6 +344,7 @@ export default {
     rowClick(row) {
       this.dialogContentFormVisible = true;
       this.currentRow = row;
+      this.assignList(this.currentRow.id);
     },
     createBug(formName) {
       this.$refs[formName].validate((valid) => {
@@ -450,6 +471,24 @@ export default {
       }
       return convertLevel;
     },
+    assignList(bugId){
+      if (!bugId) {
+          return;
+      }
+
+      this.$http
+        .get("bug/assign-list", {
+          params: {
+            bugId,
+            ps:1000
+          },
+        })
+        .then((response) => {
+          let data = response.data.data;
+          this.assignListData.count = data.resCount;
+          this.assignListData.res = data.resItem;
+        });
+    }
   },
   computed: {},
 };
