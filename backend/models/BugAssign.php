@@ -15,7 +15,6 @@ use Yii;
  * @property int $status 1待解决2已解决3不处理
  * @property string $is_deleted 0正常1删除
  * @property string|null $create_time 创建时间
- * @property string|null $update_time
  */
 class BugAssign extends BaseModel
 {
@@ -35,7 +34,7 @@ class BugAssign extends BaseModel
         return [
             [['bug_id'], 'required'],
             [['bug_id', 'from_user_id', 'to_user_id', 'status'], 'integer'],
-            [['create_time', 'update_time'], 'safe'],
+            [['create_time'], 'safe'],
             [['comment'], 'string', 'max' => 1000],
             [['is_deleted'], 'string', 'max' => 100],
         ];
@@ -55,7 +54,6 @@ class BugAssign extends BaseModel
             'status' => '1待解决2已解决3不处理',
             'is_deleted' => '0正常1删除',
             'create_time' => '创建时间',
-            'update_time' => 'Update Time',
         ];
     }
 
@@ -83,6 +81,18 @@ class BugAssign extends BaseModel
      */
     public function assign(int $userId, int $bugId, int $toUserId, int $status, string $comment = null)
     {
+        //修改bug实体状态
+        $bug = Bug::findOne($bugId);
+        if(!$bug){
+            return ['没有找到bug数据', null];
+        }
+
+        if ($bug->status != $status) {
+            $bug->status = $status;
+             if(!$bug->save()){
+                 return ['保存bug数据失败', null];
+             }
+        }
 
         $this->from_user_id = $userId;
         $this->to_user_id = $toUserId;

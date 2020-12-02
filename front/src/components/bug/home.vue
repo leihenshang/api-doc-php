@@ -86,8 +86,16 @@
       <el-table :data="tableData.res" border stripe style="width: 100%" @cell-click="rowClick">
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="to_user_id" label="处理者"></el-table-column>
-        <el-table-column prop="status" label="状态"></el-table-column>
-        <el-table-column prop="level" label="等级"></el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <span>{{ convertStatus(scope.row.status) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="等级">
+          <template slot-scope="scope">
+            <span>{{ convertLevel(scope.row.level) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop label="操作">
           <template slot-scope="scope">
@@ -108,11 +116,12 @@
     </div>
     <div class="dialog-content">
       <el-dialog title="bug详情" :visible.sync="dialogContentFormVisible">
-        <div class="dialog-content-handle">
+        <div class="dialog-content-handle"> 
+           <!-- 嵌套表单-开始 -->
           <el-dialog title="bug处理" :visible.sync="dialogHandleFormVisible" append-to-body>
-            <el-form :model="form" ref="bugForm" :rules="rules">
+            <el-form :model="formHandle" ref="bugFormHandle" :rules="handleRules">
               <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-                <el-select v-model="form.status" placeholder="请选择状态">
+                <el-select v-model="formHandle.status" placeholder="请选择状态">
                   <el-option label="待处理" value="1"></el-option>
                   <el-option label="已处理" value="2"></el-option>
                   <el-option label="不处理" value="3"></el-option>
@@ -120,24 +129,27 @@
               </el-form-item>
 
               <el-form-item label="备注" :label-width="formLabelWidth" prop="comment">
-                <el-input type="textarea" :rows="5" v-model="form.comment" autocomplete="off"></el-input>
+                <el-input type="textarea" :rows="5" v-model="formHandle.comment" autocomplete="off"></el-input>
               </el-form-item>
 
               <el-form-item label="指派至:" :label-width="formLabelWidth" prop="to_user_id">
-                <el-select v-model="form.to_user_id" placeholder="请选择用户">
+                <el-select v-model="formHandle.to_user_id" placeholder="请选择用户">
                   <el-option label="xiaobai" value="1"></el-option>
                   <el-option label="xiaoxi" value="2"></el-option>
                   <el-option label="xiaohua" value="3"></el-option>
                 </el-select>
               </el-form-item>
             </el-form>
+          
             <div class="detail-btn">
-              <el-button type="primary">确 认</el-button>
+              <el-button type="primary" @click="bugAssign('bugFormHandle')">确 认</el-button>
               <el-button type="primary" @click="dialogHandleFormVisible = false">取 消</el-button>
             </div>
           </el-dialog>
+             <!-- 嵌套表单-结束 -->
         </div>
 
+        <!-- bug详情-开始 -->
         <ul>
           <li>
             <em>bugId:</em>
@@ -161,11 +173,11 @@
           </li>
           <li>
             <em>状态:</em>
-            <span>{{ currentRow.status }}</span>
+            <span>{{ convertStatus(currentRow.status) }}</span>
           </li>
           <li>
             <em>等级:</em>
-            <span>{{ currentRow.level }}</span>
+            <span>{{ convertLevel(currentRow.level) }}</span>
           </li>
           <li>
             <em>创建时间:</em>
@@ -176,9 +188,10 @@
             <span>{{ currentRow.update_time }}</span>
           </li>
         </ul>
+         <!-- bug详情-结束 -->
         <div class="detail-btn">
           <el-button type="primary" @click="dialogHandleFormVisible = true">处 理</el-button>
-          <el-button type="primary" @click="dialogContentFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="dialogContentFormVisible = false">取 消</el-button>
         </div>
       </el-dialog>
     </div>
@@ -204,6 +217,11 @@ export default {
       dialogFormVisible: false,
       dialogContentFormVisible: false,
       dialogHandleFormVisible: false,
+      formHandle: {
+        to_user_id: null,
+        comment: "",
+        status: null,
+      },
       form: {
         project_id: this.$route.params.id,
         to_user_id: null,
@@ -250,6 +268,23 @@ export default {
           {
             required: true,
             message: "请选择等级",
+            trigger: "blur",
+          },
+        ],
+      },
+      handleRules: {
+        to_user_id: [
+          {
+            required: true,
+            message: "请选择指派",
+            trigger: "blur",
+          },
+        ],
+        comment: [],
+        status: [
+          {
+            required: true,
+            message: "请选择状态",
             trigger: "blur",
           },
         ],
@@ -333,13 +368,90 @@ export default {
     },
     changePage(event) {
       this.cp = event;
-      this.bugList(this.$route.params.id, this.ps, this.cp);
+      this.bugList(
+        this.$route.params.id,
+        this.ps,
+        this.cp,
+        this.contentFilter.toUserId,
+        this.contentFilter.status,
+        this.contentFilter.level
+      );
     },
-    handleBug() {},
-    updateBug(type,id) {
-      console.log(type,id)
-    }
+    bugAssign(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$http
+            .post("bug/assign", {
+              ...this.formHandle,
+              bug_id: this.currentRow.id,
+            })
+            .then((response) => {
+              let data = response.data;
+              if (data.code === 200) {
+                this.$message.success("指派成功");
+                this.resetForm(formName);
+                this.bugList(
+                  this.$route.params.id,
+                  this.ps,
+                  this.cp,
+                  this.contentFilter.toUserId,
+                  this.contentFilter.status,
+                  this.contentFilter.level
+                );
+              } else {
+                this.$message.error(data.msg);
+              }
+            });
+
+          this.dialogHandleFormVisible = false;
+        } else {
+          return false;
+        }
+      });
+    },
+    updateBug(type, id) {
+      console.log(type, id);
+    },
+    convertStatus(status) {
+      let convertStatus = "";
+      switch (status) {
+        case 1:
+          convertStatus = "待解决";
+          break;
+        case 2:
+          convertStatus = "已解决";
+          break;
+        case 3:
+          convertStatus = "不处理";
+          break;
+
+        default:
+          convertStatus = "unknown";
+          break;
+      }
+      return convertStatus;
+    },
+      convertLevel(level) {
+      let convertLevel = "";
+      switch (level) {
+        case 1:
+          convertLevel = "低";
+          break;
+        case 2:
+          convertLevel = "中";
+          break;
+        case 3:
+          convertLevel = "高";
+          break;
+
+        default:
+          convertLevel = "unknown";
+          break;
+      }
+      return convertLevel;
+    },
   },
+  computed: {},
 };
 </script>
 
