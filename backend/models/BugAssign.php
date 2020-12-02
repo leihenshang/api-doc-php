@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%bug_assign}}".
@@ -123,7 +124,25 @@ class BugAssign extends BaseModel
         $query = self::find()->where(['bug_id' => $bugId])->orderBy([$orderBy => $sort])->limit($ps)->offset(self::getOffsetByPageParam($ps, $cp));
 
         $count = $query->count();
-        $res = $query->all();
+        $res = $query->asArray()->all();
+
+        //获取userid
+        $userId = array_unique(ArrayHelper::getColumn($res,'from_user_id') + ArrayHelper::getColumn($res,'to_user_id'));
+        $userInfo = $userId ? UserInfo::find()->select('nick_name,id')->where(['id' => $userId])->indexBy('id') ->all() : null;
+
+        foreach ($res as &$v) {
+            if (isset($userInfo[$v['from_user_id']])) {
+                $v['from_user_info'] = $userInfo[$v['from_user_id']];
+            } else {
+                $v['from_user_info'] = null;
+            }
+
+            if (isset($userInfo[$v['to_user_id']])) {
+                $v['to_user_info'] = $userInfo[$v['to_user_id']];
+            } else {
+                $v['to_user_info'] = null;
+            }
+        }
 
         return ['resCount' => $count, 'resItem' => $res];
     }

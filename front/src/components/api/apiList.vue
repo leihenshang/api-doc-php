@@ -1,49 +1,33 @@
 <template>
   <div class="api-list">
     <div class="api-box">
-      <el-table
-        :data="apiList.resItem"
-        stripe
-        style="width: 100%"
-        v-loading="loading"
-        border
-      >
-        <el-table-column
-          prop="api_name"
-          label="名称"
-          width="180"
-        ></el-table-column>
+      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading" border>
+        <el-table-column prop="api_name" label="名称" width="180"></el-table-column>
         <el-table-column label="请求方法" width="80">
           <template slot-scope="scope">
             <el-tag
               type="success"
               v-if="scope.row.http_method_type === 'POST'"
-              >{{ scope.row.http_method_type }}</el-tag
-            >
-            <el-tag v-else-if="scope.row.http_method_type === 'GET'">{{
+            >{{ scope.row.http_method_type }}</el-tag>
+            <el-tag v-else-if="scope.row.http_method_type === 'GET'">
+              {{
               scope.row.http_method_type
-            }}</el-tag>
-            <el-tag type="warning" v-else>{{
+              }}
+            </el-tag>
+            <el-tag type="warning" v-else>
+              {{
               scope.row.http_method_type
-            }}</el-tag>
+              }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="url" label="url"></el-table-column>
         <el-table-column prop="protocol_type" label="协议"></el-table-column>
-        <el-table-column
-          prop="develop_language"
-          label="开发语言"
-        ></el-table-column>
+        <el-table-column prop="develop_language" label="开发语言"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
-        <el-table-column prop label="操作" fixed="right">
+        <el-table-column prop label="操作" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="success"
-              plain
-              @click="jumpPage('detail', scope.row.id)"
-              size="mini"
-              >详情</el-button
-            >
+            <el-button type="success" plain @click="jumpPage('detail', scope.row.id)" size="mini">详情</el-button>
 
             <el-popconfirm
               v-if="scope.row.is_deleted == 1"
@@ -59,8 +43,7 @@
                   $store.state.userInfo.type === 2
                 "
                 size="mini"
-                >还原</el-button
-              >
+              >还原</el-button>
             </el-popconfirm>
 
             <el-popconfirm
@@ -77,8 +60,7 @@
                   $store.state.userInfo.type === 2
                 "
                 size="mini"
-                >删除</el-button
-              >
+              >删除</el-button>
             </el-popconfirm>
 
             <el-button
@@ -90,8 +72,7 @@
                 $store.state.userInfo.type === 2
               "
               size="mini"
-              >编辑</el-button
-            >
+            >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -145,30 +126,28 @@ export default {
       })
         .then(() => {
           this.$http
-            .post( "/api/restore", {
+            .post("/api/restore", {
               id: id,
             })
-            .then(
-              (response) => {
-                response = response.data;
-                if (response.code === CODE_OK) {
-                  this.$message.success("成功!");
-                  this.$router.push({
-                    name: "apiList",
-                    params: { groupId: 0 },
-                  });
-                } else {
-                  this.$message.error("操作失败!");
-                }
+            .then((response) => {
+              response = response.data;
+              if (response.code === CODE_OK) {
+                this.$message.success("成功!");
+                this.$router.push({
+                  name: "apiList",
+                  params: { groupId: 0 },
+                });
+              } else {
+                this.$message.error("操作失败!");
               }
-            );
+            });
         })
         .catch(() => {});
     },
     //获取api列表
     getApiList(ps, cp, projectId, groupId, keyword) {
       this.$http
-        .get( "/api/list", {
+        .get("/api/list", {
           params: {
             cp: cp,
             ps: ps,
@@ -178,16 +157,14 @@ export default {
             keyword,
           },
         })
-        .then(
-          (response) => {
-            response = response.data;
-            if (response.code === CODE_OK) {
-              this.apiList = response.data;
-              this.count = parseInt(response.data.resCount);
-              this.loading = false;
-            }
+        .then((response) => {
+          response = response.data;
+          if (response.code === CODE_OK) {
+            this.apiList = response.data;
+            this.count = parseInt(response.data.resCount);
+            this.loading = false;
           }
-        );
+        });
     },
     //翻页
     changePage(event) {
@@ -206,26 +183,25 @@ export default {
     delApi(id) {
       this.loading = true;
       this.$http
-        .post( "/api/del", {
-          id: id
+        .post("/api/del", {
+          id: id,
         })
-        .then(
-          (response) => {
-            response = response.data;
-            if (response.code === CODE_OK) {
-              this.$message.success("操作成功");
-              this.$router.push({
-                name: "apiList",
-                params: { groupId: this.$route.params.groupId },
-                query: { random: Math.random() },
-              });
-            } else {
-              this.$message.error("失败:" + response.msg);
-            }
+        .then((response) => {
+          response = response.data;
+          if (response.code === CODE_OK) {
+            this.$message.success("操作成功");
+            this.$router.push({
+              name: "apiList",
+              params: { groupId: this.$route.params.groupId },
+              query: { random: Math.random() },
+            });
+          } else {
+            this.$message.error("失败:" + response.msg);
           }
-        ).catch(error => {
+        })
+        .catch((error) => {
           this.loading = false;
-          console.log(error)
+          console.log(error);
         });
     },
     jumpPage(name, id) {

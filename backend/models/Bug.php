@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\db\Exception;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%bug}}".
@@ -155,7 +156,19 @@ class Bug extends BaseModel
         }
 
         $count = $query->count();
-        $res = $query->all();
+        $res = $query->asArray()->all();
+
+        //获取userid
+        $userId = array_unique(ArrayHelper::getColumn($res,'to_user_id'));
+        $userInfo = $userId ? UserInfo::find()->select('nick_name,id')->where(['id' => $userId])->indexBy('id') ->all() : null;
+
+        foreach ($res as &$v) {
+            if (isset($userInfo[$v['to_user_id']])) {
+                $v['to_user_info'] = $userInfo[$v['to_user_id']];
+            } else {
+                $v['to_user_info'] = null;
+            }
+        }
 
         return ['resCount' => $count, 'resItem' => $res];
     }

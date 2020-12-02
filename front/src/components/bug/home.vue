@@ -139,7 +139,11 @@
     <div class="content" v-loading="loading">
       <el-table :data="tableData.res" border stripe style="width: 100%" @cell-click="rowClick">
         <el-table-column prop="title" label="标题"></el-table-column>
-        <el-table-column prop="to_user_id" label="处理者"></el-table-column>
+        <el-table-column label="处理者">
+          <template slot-scope="scope">
+            <span>{{ scope.row.to_user_info ? scope.row.to_user_info.nick_name : 'unknown'}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
             <span>{{ convertStatus(scope.row.status) }}</span>
@@ -151,9 +155,18 @@
           </template>
         </el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
-        <el-table-column prop label="操作">
+        <el-table-column  label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click.stop="updateBug(scope.row)">编 辑</el-button>
+
+            <el-popconfirm
+              title="确定要删除这个bug?"
+              placement="top"
+              @confirm="deleteBug(scope.row)"
+              width="200"
+            >
+              <el-button slot="reference" @click.stop>删 除</el-button>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -207,7 +220,7 @@
           <!-- 嵌套表单-结束 -->
         </div>
 
-        <!-- bug详情-开始 -->
+        <!-- bug详情展示-开始 -->
         <ul>
           <li>
             <em>bugId:</em>
@@ -246,7 +259,7 @@
             <span>{{ currentRow.update_time }}</span>
           </li>
         </ul>
-        <!-- bug详情-结束 -->
+        <!-- bug详情展示-结束 -->
         <div class="detail-btn">
           <el-button type="primary" @click="dialogHandleFormVisible = true">处 理</el-button>
           <!-- <el-button type="primary" @click="dialogContentFormVisible = false">取 消</el-button> -->
@@ -254,8 +267,16 @@
         <!-- 指派列表-开始 -->
         <div class="dialog-bug-detail-assign" style="margin-top:10px;">
           <el-table :data="assignListData.res" border stripe style="width: 100%">
-            <el-table-column prop="from_user_id" label="指派者"></el-table-column>
-            <el-table-column prop="to_user_id" label="处理者"></el-table-column>
+            <el-table-column label="指派者">
+              <template slot-scope="scope">
+                <span>{{ scope.row.from_user_info ? scope.row.from_user_info.nick_name : 'unknown'}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="处理者">
+              <template slot-scope="scope">
+                <span>{{ scope.row.to_user_info ? scope.row.to_user_info.nick_name : 'unknown'}}</span>
+              </template>
+            </el-table-column>
             <el-table-column label="状态">
               <template slot-scope="scope">
                 <span>{{ convertStatus(scope.row.status) }}</span>
@@ -501,9 +522,29 @@ export default {
       this.dialogFormUpdateVisible = true;
       this.formUpdate = old;
     },
+    deleteBug(old) {
+      if (!old.id) {
+        this.$message.error("操作失败");
+        return;
+      }
+
+      this.$http
+        .post("bug/delete", {
+          id: old.id,
+        })
+        .then((response) => {
+          let data = response.data;
+          if (data.code === 200) {
+            this.$message.success("操作成功");
+            this.bugList(this.$route.params.id, this.ps, this.cp);
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+    },
     convertStatus(status) {
       let convertStatus = "";
-      switch (status) {
+      switch (parseInt(status)) {
         case 1:
           convertStatus = "待解决";
           break;
@@ -522,7 +563,7 @@ export default {
     },
     convertLevel(level) {
       let convertLevel = "";
-      switch (level) {
+      switch (parseInt(level)) {
         case 1:
           convertLevel = "低";
           break;

@@ -8,6 +8,8 @@ use app\models\Bug;
 use app\models\BugAssign;
 use Yii;
 use yii\base\DynamicModel;
+use yii\base\Exception;
+use yii\db\StaleObjectException;
 use yii\validators\NumberValidator;
 
 /**
@@ -182,12 +184,44 @@ class BugController extends BaseController
             [['id'], 'integer', 'integerOnly' => true, 'min' => 1],
         ]);
         if (!$validate->validate()) {
-            return $this->failed('id或projectId错误');
+            return $this->failed('id错误');
         }
 
         $res = (new Bug())->detail($id);
         return $this->success($res);
     }
 
+    /**
+     * 删除数据
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionDelete()
+    {
+        $id = Yii::$app->request->post('id', 0);
+        $validate = DynamicModel::validateData(['id' => $id], [
+            [['id'], 'required'],
+            [['id'], 'integer', 'integerOnly' => true, 'min' => 1],
+        ]);
+        if (!$validate->validate()) {
+            return $this->failed('id错误');
+        }
+
+        $res = Bug::findOne($id);
+        if(!$res) {
+            return $this->failed('没有找到要删除的数据');
+        }
+
+        try {
+            if (!$res->delete()) {
+            throw new Exception('删除失败');
+            }
+        } catch (StaleObjectException $e) {
+        } catch (\Throwable $e) {
+            return $this->failed('删除失败');
+        }
+
+        return $this->success();
+    }
 
 }
