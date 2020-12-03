@@ -361,9 +361,9 @@ export default {
         .get( "/user/list", {
           params: {
             keyword: this.keyword,
-            project_id: this.$route.params.id,
             ps: this.ps,
-            cp: cp
+            cp: cp,
+            all:true
           }
         })
         .then(

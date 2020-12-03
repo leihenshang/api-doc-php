@@ -6,9 +6,8 @@
         v-show="$store.state.userInfo.type == 2"
         size="mini"
       >+新增项目</el-button>
-      <!-- <button>+导入项目</button>
-      <button>+开启SDK提交项目</button>-->
     </div>
+    <!-- 项目列表-开始 -->
     <div class="project-list-content">
       <el-table :data="projectList" stripe style="width: 100%" v-loading="loading" height="650">
         <el-table-column prop="title" label="项目名称" width="180"></el-table-column>
@@ -35,9 +34,18 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 项目列表-结束 -->
     <div class="page-wrapper">
-      <page :curr="currPage" :itemCount="itemCount" :pageSize="pageSize" v-on:jump-page="jumpPage" />
+      <el-pagination
+        background
+        layout="total,prev, pager, next"
+        :total="parseInt(itemCount)"
+        :page-size="pageSize"
+        :current-page="currPage"
+        @current-change="jumpPage($event)"
+      ></el-pagination>
     </div>
+    <!-- 添加项目-开始 -->
     <el-dialog title="添加项目" :visible.sync="dialogFormVisible" width="40%">
       <el-form :model="form" label-width="80px" ref="form" :rules="rules" size="small">
         <el-form-item label="项目名称" prop="title">
@@ -61,7 +69,8 @@
         <el-button type="primary" @click=" action=='create' ? create() : update()">确 定</el-button>
       </div>
     </el-dialog>
-
+    <!-- 添加项目-结束 -->
+    <!-- 编辑项目-开始 -->
     <el-dialog title="编辑项目" :visible.sync="dialogFormVisibleUpdate" width="40%">
       <el-form :model="updateData" label-width="80px" ref="updateData" :rules="rules" size="small">
         <el-form-item label="项目名称" prop="title">
@@ -85,11 +94,11 @@
         <el-button type="primary" @click="update()">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 编辑项目-结束 -->
   </div>
 </template>
 
 <script>
-import page from "../common/page";
 const CODE_OK = 200;
 const PAGE_SIZE = 5;
 
@@ -103,14 +112,14 @@ export default {
     getProjectList(curr, pageSize) {
       this.loading = true;
       this.$http
-        .get( "/project/list", {
+        .get("/project/list", {
           params: {
             cp: curr,
-            ps: pageSize
-          }
+            ps: pageSize,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.projectList = response.data.res;
@@ -126,14 +135,14 @@ export default {
     },
     //创建项目
     create() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.$http
-            .post( "/project/create", {
-              ...this.form
+            .post("/project/create", {
+              ...this.form,
             })
             .then(
-              res => {
+              (res) => {
                 let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
@@ -163,19 +172,15 @@ export default {
       this.$confirm("此操作将删除该分组, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post(
-               "/project/del",
-              {
-                id
-              },
-             
-            )
+            .post("/project/del", {
+              id,
+            })
             .then(
-              res => {
+              (res) => {
                 let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!" + response.msg);
@@ -194,19 +199,15 @@ export default {
 
     //更新
     update() {
-      this.$refs.updateData.validate(valid => {
+      this.$refs.updateData.validate((valid) => {
         if (valid) {
           this.$http
-            .post(
-               "/project/update",
-              {
-                id: this.updateData.id,
-                ...this.updateData
-              },
-             
-            )
+            .post("/project/update", {
+              id: this.updateData.id,
+              ...this.updateData,
+            })
             .then(
-              res => {
+              (res) => {
                 let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
@@ -232,7 +233,7 @@ export default {
     },
     detail(id) {
       this.$router.push("/detail/" + id);
-    }
+    },
   },
   created() {
     this.getProjectList(this.currPage, this.pageSize);
@@ -252,12 +253,17 @@ export default {
         title: "",
         version: "",
         type: "",
-        description: ""
+        description: "",
       },
       rules: {
         title: [
           { required: true, message: "请输入名称", trigger: "blur" },
-          { min: 2, max: 50, message: "长度在 2 到 50 个字符", trigger: "blur" }
+          {
+            min: 2,
+            max: 50,
+            message: "长度在 2 到 50 个字符",
+            trigger: "blur",
+          },
         ],
         type: [{ required: true, message: "请选择类型", trigger: "blur" }],
         description: [
@@ -265,8 +271,8 @@ export default {
             min: 2,
             max: 50,
             message: "长度在 2 到 50 个字符",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         version: [
           { required: true, message: "请输入版本号", trigger: "blur" },
@@ -274,15 +280,13 @@ export default {
             min: 1,
             max: 50,
             message: "长度在 6 到 50 个字符",
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
-  components: {
-    page
-  }
+  components: {},
 };
 </script>
 
@@ -309,6 +313,7 @@ export default {
 }
 
 .page-wrapper {
-  margin: 20px 0;
+  text-align: center;
+  margin: 10px 0;
 }
 </style>

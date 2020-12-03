@@ -7,10 +7,7 @@
  -->
 <template>
   <div id="app">
-    <div
-      class="top"
-      v-show="$store.state.userInfo && $store.state.userInfo.id > 0"
-    >
+    <div class="top" v-show="showTopBar">
       <topBar />
     </div>
     <transition name="el-fade-in-linear" mode="out-in" appear>
@@ -27,6 +24,16 @@ import TopBar from "./components/common/topBar";
 export default {
   name: "app",
   created() {},
+  computed: {
+    showTopBar() {
+      let userInfo = this.$store.state.userInfo;
+      if (userInfo && userInfo.id > 0 && this.$route.name != "userLogin") {
+        return true;
+      }
+
+      return false;
+    },
+  },
   components: {
     topBar: TopBar,
   },

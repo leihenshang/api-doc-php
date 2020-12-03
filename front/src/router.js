@@ -7,7 +7,6 @@ import Detail from "./viewPage/project";
 // import Msg from "./viewPage/msg";
 import ProjectList from "./components/project/projectList";
 import FieldMapping from "./components/project/fieldMapping";
-import CommonlyParams from "./components/project/commonlyParams";
 
 //api相关操作
 import ApiPage from "./components/api/apiPage";
@@ -70,13 +69,6 @@ const router = new VueRouter({
           path: "fieldMapping",
           name: "fieldMapping",
           component: FieldMapping,
-          meta: { requiresAuth: true },
-          props: true,
-        },
-        {
-          path: "commonlyParams",
-          name: "commonlyParams",
-          component: CommonlyParams,
           meta: { requiresAuth: true },
           props: true,
         },

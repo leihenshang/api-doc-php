@@ -62,11 +62,6 @@ export default {
           icon: "el-icon-coin",
         },
         {
-          title: "公共参数",
-          route: "/detail/" + this.$route.params.id + "/commonlyParams",
-          icon: "el-icon-thumb",
-        },
-        {
           title: "BUG管理",
           route: "/detail/" + this.$route.params.id + "/bugHome",
           icon: "el-icon-sort",
