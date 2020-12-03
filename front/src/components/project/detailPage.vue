@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import Message from "./message";
+import Message from "./operationLog";
 
 const CODE_OK = 200;
 export default {

@@ -1,5 +1,5 @@
 <template>
-  <div class="message">
+  <div class="message" v-loading="loading">
     <el-timeline>
       <el-timeline-item
         v-for="(item, index) in operationLog"
@@ -14,7 +14,7 @@
 const CODE_OK = 200;
 
 export default {
-  name: "message",
+  name: "operationLog",
   created() {
     this.getOperationLog();
   },

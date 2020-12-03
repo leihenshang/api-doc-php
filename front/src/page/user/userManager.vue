@@ -51,7 +51,7 @@
         <el-table-column fixed="right" label="操作" width="100">
           <template slot-scope="scope">
             <el-dropdown :hide-on-click="false" trigger="click" @command="handleCommand">
-              <el-button type="text" >编辑</el-button>
+              <el-button type="text">编辑</el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="{action:'del',data:scope.row}">删除用户</el-dropdown-item>
                 <el-dropdown-item
@@ -79,9 +79,6 @@
   </div>
 </template>
 <script>
-import Schema from "async-validator";
-Schema.warning = function () {};
-
 const CODE_OK = 200;
 const IS_DELETED = 1;
 

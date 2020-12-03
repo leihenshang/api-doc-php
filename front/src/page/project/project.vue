@@ -10,22 +10,16 @@
         ref="menu"
         class="el-menu"
       >
-        <el-menu-item
-          :index="item.route"
-          v-for="item in insideRoute"
-          :key="item.id"
-        >
+        <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
           <i :class="item.icon ? item.icon : 'el-icon-setting'"></i>
           <span slot="title">{{ item.title }}</span>
         </el-menu-item>
       </el-menu>
     </div>
-    <div class="content">
-      <div class="right">
-        <transition name="el-fade-in-linear" mode="out-in" appear>
-          <router-view></router-view>
-        </transition>
-      </div>
+    <div class="content-wrap">
+      <transition name="el-fade-in-linear" mode="out-in" appear>
+        <router-view></router-view>
+      </transition>
     </div>
   </div>
 </template>
@@ -75,22 +69,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.detail {
-  width: 100%;
-  height: 100%;
-}
-
-.detail .right {
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-.right {
-  margin-left: 10px;
-}
-
-.middle-menu {
-  height: auto;
-  width: 100%;
-}
 </style>

@@ -8,20 +8,9 @@
           <span>my-doc</span>
         </div>
         <div class="login-box" v-loading="loading">
-          <el-form
-            :inline="true"
-            :model="form"
-            
-            :rules="rules"
-            ref="form"
-            @submit.native.prevent
-          >
+          <el-form :inline="true" :model="form" :rules="rules" ref="form" @submit.native.prevent>
             <el-form-item prop="name">
-              <el-input
-                v-model="form.name"
-                placeholder="用户名"
-                style="width: 240px"
-              ></el-input>
+              <el-input v-model="form.name" placeholder="用户名" style="width: 240px"></el-input>
             </el-form-item>
             <el-form-item prop="pwd">
               <el-input
@@ -33,12 +22,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button
-                type="primary"
-                @click="login()"
-                icon="el-icon-arrow-left"
-                >登录</el-button
-              >
+              <el-button type="primary" @click="login()" icon="el-icon-arrow-left">登录</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -53,8 +37,8 @@
 </template>
 
 <script>
-import homeHeader from "../common/units/homeHeader";
-import homeFooter from "../common/units/homeFooter";
+import homeHeader from "../../components/common/units/homeHeader";
+import homeFooter from "../../components/common/units/homeFooter";
 
 const CODE_OK = 200;
 // const NO_ACTIVATE = 3;
@@ -84,13 +68,9 @@ export default {
         if (validate) {
           this.loading = true;
           this.$http
-            .post(
-               "/user/login",
-              {
-                ...this.form,
-              },
-             
-            )
+            .post("/user/login", {
+              ...this.form,
+            })
             .then(
               (response) => {
                 response = response.data;

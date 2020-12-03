@@ -70,8 +70,8 @@
   </div>
 </template>
 <script>
-import homeHeader from "../common/units/homeHeader";
-import homeFooter from "../common/units/homeFooter";
+import homeHeader from "../../components/common/units/homeHeader";
+import homeFooter from "../../components/common/units/homeFooter";
 
 const CODE_OK = 200;
 export default {
@@ -83,34 +83,30 @@ export default {
         re_pwd: "",
         name: "",
         email: "",
-        code: ""
+        code: "",
       },
       userInfoDefault: {
         pwd: "",
         re_pwd: "",
         name: "",
-        email: ""
-      }
+        email: "",
+      },
     };
   },
   methods: {
     //用户注册
     register() {
       //执行验证
-      this.$refs.form.validate().then(res => {
+      this.$refs.form.validate().then((res) => {
         if (!res) {
           return;
         }
         this.$http
-          .post(
-             "/user/reg",
-            {
-              ...this.userInfo
-            },
-           
-          )
+          .post("/user/reg", {
+            ...this.userInfo,
+          })
           .then(
-            response => {
+            (response) => {
               response = response.data;
               if (response.code === CODE_OK) {
                 this.$message.success("注册成功！");
@@ -124,12 +120,12 @@ export default {
             }
           );
       });
-    }
+    },
   },
   components: {
     homeHeader,
-    homeFooter
-  }
+    homeFooter,
+  },
 };
 </script>
 <style lang="scss" scoped>

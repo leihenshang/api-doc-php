@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 //项目相关
-import Detail from "./page/project";
+import Detail from "./page/project/project";
 import ProjectList from "./components/project/projectList";
 import FieldMapping from "./components/project/fieldMapping";
 
@@ -22,10 +22,10 @@ import DocDetail from "./components/doc/docDetail";
 import DocList from "./components/doc/docList";
 
 //用户相关操作
-import Login from "./components/user/login";
-import Register from "./components/user/register";
-import MyCenter from "./components/user/myCenter";
-import UserManager from "./components/user/userManager";
+import Login from "./page/user/login";
+import Register from "./page/user/register";
+import MyCenter from "./page/user/myCenter";
+import UserManager from "./page/user/userManager";
 
 //bug
 import BugHome from "./components/bug/home";
