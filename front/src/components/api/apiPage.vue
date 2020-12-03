@@ -4,10 +4,15 @@
       <div
         class="btn"
         v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
+        style="display:inline-block"
       >
         <el-button @click="showCreateGroup = !showCreateGroup">+新建分组</el-button>
       </div>
-      <div class="input" v-show=" $route.name != 'apiCreate' && $route.name != 'apiEdit' ">
+      <div
+        class="input"
+        v-show=" $route.name != 'apiCreate' && $route.name != 'apiEdit' "
+        style="display:inline-block"
+      >
         <el-button
           style="margin:0 10px;"
           @click="addApi()"
@@ -103,12 +108,7 @@ export default {
 }
 
 .btn {
-  width: 15%;
-  float: left;
-}
-
-.input {
-  float: left;
+  width: 260px;
 }
 
 .api-content {
@@ -116,18 +116,17 @@ export default {
   height: calc(100% - 21px);
   margin-bottom: 20px;
   display: flex;
-  border: 1px solid #e5e5e5;
 }
 
 .group-wrapper {
-  width: 15%;
+  width: 260px;
   height: auto;
-  border-right: 1px solid #e5e5e5;
+  border: 1px solid #e5e5e5;
 }
 
 .api-wrapper {
   flex: 1;
   overflow-y: scroll;
-  padding: 10px;
+  padding-left: 10px;
 }
 </style>

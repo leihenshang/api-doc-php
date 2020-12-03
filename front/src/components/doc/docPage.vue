@@ -1,21 +1,21 @@
 <template>
   <div class="doc-page">
     <div class="btn-wrapper">
-      <div class="btn" v-show="$store.state.projectPermission == 6">
-        <el-button @click="showCreateGroup = !showCreateGroup" >+新建分组</el-button>
+      <div class="btn" style="display:inline-block">
+        <el-button
+          @click="showCreateGroup = !showCreateGroup"
+          v-show="$store.state.projectPermission == 6"
+        >+新建分组</el-button>
       </div>
-      <div class="input">
-        <el-button @click="addDoc()"  style="margin-right:5px">创建文档</el-button>
+      <div class="input" style="display:inline-block;">
+        <el-button @click="addDoc()" style="margin-right:5px">创建文档</el-button>
         <el-input
           placeholder="请输入标题"
           v-model="keyword"
           class="input-with-select"
           style="width:300px"
-          
-        >
-         
-        </el-input>
-         <el-button icon="el-icon-search" @click="searchDoc()" style="margin-left:5px;"> 搜索</el-button>
+        ></el-input>
+        <el-button icon="el-icon-search" @click="searchDoc()" style="margin-left:5px;">搜索</el-button>
       </div>
     </div>
 
@@ -99,39 +99,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .btn-wrapper {
- padding:10px 0;
- overflow: hidden;
+  padding: 10px 0;
+  overflow: hidden;
 }
 
 .doc-content {
   width: 100%;
   height: calc(100% - 21px);
   margin-bottom: 20px;
-
   display: flex;
-  border: 1px solid #e5e5e5;
 }
 
 .group-wrapper {
-  width: 15%;
+  width: 260px;
   height: auto;
-  border-right: 1px solid #e5e5e5;
+  border: 1px solid #e5e5e5;
 }
 
 .doc-wrapper {
   flex: 1;
   overflow-y: scroll;
-  padding: 10px;
+  padding-left: 10px;
 }
 
 .btn {
-  width: 15%;
-    float: left;
-}
-
-.input {
- float: left;
+  width: 260px;
 }
 </style>
