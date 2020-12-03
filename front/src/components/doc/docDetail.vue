@@ -2,7 +2,7 @@
   <div class="doc-wrapper">
     <div class="btn">
       <div class="left">
-        <el-button plain  @click="$router.go(-1)">
+        <el-button plain @click="$router.go(-1)">
           <i class="el-icon-arrow-left"></i> 文档列表
         </el-button>
       </div>
@@ -10,7 +10,6 @@
         <el-button
           type="success"
           plain
-          
           @click="updateDoc()"
           :loading="btnLoading"
           v-show="$store.state.projectPermission == 6"
@@ -46,12 +45,12 @@ const CODE_OK = 200;
 export default {
   name: "docDetail",
   props: {
-    docId: [Number, String]
+    docId: [Number, String],
   },
   data() {
     return {
       btnLoading: true,
-      doc: Object
+      doc: Object,
     };
   },
   methods: {
@@ -60,13 +59,13 @@ export default {
     },
     getDocDetail() {
       this.$http
-        .get( "/doc/detail", {
+        .get("/doc/detail", {
           params: {
-            id: this.docId
-          }
+            id: this.docId,
+          },
         })
         .then(
-          res => {
+          (res) => {
             let response = res.data;
             if (response.code === CODE_OK) {
               this.doc = response.data;
@@ -77,11 +76,11 @@ export default {
             this.$message.error("获取数据失败");
           }
         );
-    }
+    },
   },
   created() {
     this.getDocDetail();
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -89,12 +88,8 @@ export default {
   margin: 10px auto;
   background-color: #fff;
   height: 100%;
-  min-height: 800px;
-}
+  min-height: 620px;
 
-.doc-detail .title {
-  margin: 30px 0;
-  text-align: center;
 }
 
 .doc-detail .info span {
@@ -103,12 +98,8 @@ export default {
   color: gray;
 }
 
-.doc-detail .info {
-  margin-left: 30px;
-}
-
 .doc-content .v-note-wrapper {
-  margin: 10px;
+  margin: 10px 0;
   height: 1000px;
 }
 
@@ -119,11 +110,11 @@ export default {
 .btn {
   width: 100%;
   display: flex;
-  margin: 0 10px;
 }
 
 .btn .right {
-  text-align: right;
-  padding-right: 20px;
+  padding-left: 20px;
 }
+
+
 </style>

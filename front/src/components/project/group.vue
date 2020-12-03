@@ -19,7 +19,7 @@
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
         <div class="btn-group" v-show="showIsEdit === true">
-          <el-dropdown  placement="left-start" @command="handleCommand" trigger="click">
+          <el-dropdown placement="left-start" @command="handleCommand" trigger="click">
             <span class="el-icon-s-unfold"></span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item :command="{action:'del',data:item}">删除</el-dropdown-item>
@@ -40,12 +40,12 @@ export default {
     showCreateGroup: Boolean,
     showIsEdit: {
       type: Boolean,
-      default: false
+      default: false,
     },
     type: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   created() {
     if (this.group.length < 1) {
@@ -59,7 +59,7 @@ export default {
       isEdit: false,
       visible: false,
       curr: 1,
-      pageSize: 100
+      pageSize: 100,
     };
   },
   methods: {
@@ -73,16 +73,16 @@ export default {
     //获取分组列表
     getGroup(pageSize, curr, projectId) {
       this.$http
-        .get( "/group/list", {
+        .get("/group/list", {
           params: {
             cp: curr,
             type: this.type,
             ps: pageSize,
-            projectId: projectId ? projectId : 0
-          }
+            projectId: projectId ? projectId : 0,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               if (response.data) {
@@ -93,7 +93,7 @@ export default {
               }
             }
           },
-          res => {
+          (res) => {
             let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
@@ -111,18 +111,14 @@ export default {
       this.$confirm("该分组将被删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post(
-               "/group/del",
-              {
-                id: id
-              },
-             
-            )
-            .then(response => {
+            .post("/group/del", {
+              id: id,
+            })
+            .then((response) => {
               response = response.data;
               if (response.code === CODE_OK) {
                 this.$message.success("成功!");
@@ -152,21 +148,17 @@ export default {
         cancelButtonText: "取消",
         inputPattern: /.{2,100}/,
         inputValue: data.title,
-        inputErrorMessage: "组名格式不正确"
+        inputErrorMessage: "组名格式不正确",
       })
         .then(({ value }) => {
           this.$http
-            .post(
-               "/group/update",
-              {
-                title: value,
-                id: data.id,
-                type: this.type
-              },
-             
-            )
+            .post("/group/update", {
+              title: value,
+              id: data.id,
+              type: this.type,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("更新成功!");
@@ -176,7 +168,7 @@ export default {
 
                 this.getGroup(this.pageSize, this.curr, this.$route.params.id);
               },
-              res => {
+              (res) => {
                 let response = res.data;
                 this.$message.error(
                   "获取数据-操作失败!" + !response.msg ? response.msg : ""
@@ -185,29 +177,25 @@ export default {
             );
         })
         .catch(() => {});
-    }
+    },
   },
   watch: {
-    showCreateGroup: function() {
+    showCreateGroup: function () {
       this.$prompt("请输入分组名", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /.{2,100}/,
-        inputErrorMessage: "组名格式不正确"
+        inputErrorMessage: "组名格式不正确",
       })
         .then(({ value }) => {
           this.$http
-            .post(
-               "/group/create",
-              {
-                title: value,
-                project_id: this.$route.params.id,
-                type: this.type
-              },
-             
-            )
+            .post("/group/create", {
+              title: value,
+              project_id: this.$route.params.id,
+              type: this.type,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("创建成功!");
@@ -218,7 +206,7 @@ export default {
                 this.getGroup(this.pageSize, this.curr, this.$route.params.id);
                 // this.showCreateGroup =
               },
-              res => {
+              (res) => {
                 let response = res.data;
                 this.$message.error(
                   "获取数据-操作失败!" + !response.msg ? response.msg : ""
@@ -230,13 +218,13 @@ export default {
           this.getGroup(this.pageSize, this.curr, this.$route.params.id);
         });
     },
-    $route: function(to) {
+    $route: function (to) {
       if (to.params.groupId == 0) {
         this.getGroup(this.pageSize, this.curr, this.$route.params.id);
       }
-    }
+    },
   },
-  components: {}
+  components: {},
 };
 </script>
 
@@ -259,6 +247,11 @@ export default {
 
 .group h4 span {
   display: inline-block;
+}
+
+.group ul {
+  margin:0;
+  padding:0;
 }
 
 .group ul li {

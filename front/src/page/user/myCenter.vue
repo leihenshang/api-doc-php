@@ -1,6 +1,5 @@
 <template>
   <div class="user-center">
-    <div class="user-content">
       <div class="avatar">
         <el-avatar :size="100" :src="avatarUrl">头像</el-avatar>
       </div>
@@ -53,7 +52,6 @@
             >修改昵称</el-button
           >
           
-        </div>
       </div>
     </div>
     <el-dialog title="新建用户" :visible.sync="dialogFormVisible" width="30%">
@@ -278,7 +276,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.user-content {
+.user-center {
   border: 1px solid rgb(195, 195, 195);
   width: 40%;
   margin: 0 auto;
@@ -296,12 +294,16 @@ export default {
 .info ul {
   width: 350px;
   margin: 0 auto;
+  padding:0;
 }
 
 .info ul li {
-  margin: 10px 0;
   border-bottom: 1px dashed gray;
   padding-bottom: 10px;
+}
+
+.info ul li:last-child {
+  margin-bottom:10px;
 }
 
 .nick-name-li p {

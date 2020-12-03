@@ -126,4 +126,7 @@ export default {
 .btn {
   width: 260px;
 }
+.input {
+  margin-left: 10px;
+}
 </style>

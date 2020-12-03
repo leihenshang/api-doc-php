@@ -1,32 +1,35 @@
 <template>
   <div class="detailPage">
     <div class="right-l">
-      <div class="title">
-        <span>{{projectData.title}}</span>
+      <div class="info-box">
+        <div class="title">
+          <span>{{projectData.title}}</span>
+        </div>
+        <div class="desc">
+          <span>{{projectData.description}}</span>
+        </div>
+        <ul>
+          <li>
+            <p>项目类型</p>
+            <p>{{projectData.type}}</p>
+          </li>
+          <li>
+            <p>项目版本</p>
+            <p>{{projectData.version}}</p>
+          </li>
+          <li>
+            <p>创建时间</p>
+            <p>{{projectData.create_time}}</p>
+          </li>
+          <li @click="jump()" class="api-detail">
+            <p>api接口</p>
+            <p>
+              <el-link type="danger">点击查看详情</el-link>
+            </p>
+          </li>
+        </ul>
       </div>
-      <div class="desc">
-        <p>{{projectData.description}}</p>
-      </div>
-      <ul>
-        <li>
-          <p>项目类型</p>
-          <p>{{projectData.type}}</p>
-        </li>
-        <li>
-          <p>项目版本</p>
-          <p>{{projectData.version}}</p>
-        </li>
-        <li>
-          <p>创建时间</p>
-          <p>{{projectData.create_time}}</p>
-        </li>
-        <li @click="jump()" class="api-detail">
-          <p>api接口</p>
-          <p>
-            <el-link type="danger">点击查看详情</el-link>
-          </p>
-        </li>
-      </ul>
+
       <div class="user-wrapper">
         <div class="user-search">
           <el-select
@@ -36,7 +39,6 @@
             placeholder="输入昵称或邮箱添加成员"
             :remote-method="getUserList"
             :loading="loading"
-            
             @change="addProjectUser($event)"
           >
             <el-option
@@ -60,7 +62,6 @@
             </div>
 
             <el-dropdown
-              
               placement="bottom"
               trigger="click"
               @command="handleCommand"
@@ -403,8 +404,6 @@ export default {
 <style lang="scss" scoped>
 .detailPage {
   display: flex;
-  width: 100%;
-  height: 100%;
 }
 
 .user-search {
@@ -424,7 +423,6 @@ export default {
 .user-box {
   background-color: #fff;
   margin-top: 8px;
-  /* border: 1px solid #e5e5e5; */
   display: flex;
 }
 
@@ -433,7 +431,7 @@ export default {
   position: absolute;
   right: 0;
   bottom: 0;
-  padding: 10px;
+  padding: 20px;
 }
 
 .user-item {
@@ -443,7 +441,6 @@ export default {
   padding: 10px;
   box-sizing: border-box;
 }
-
 
 .user-item .info {
   float: left;
@@ -474,31 +471,34 @@ export default {
 
 .right-l .title {
   height: 100px;
-  border-top: 1px solid #e5e5e5;
-  border-left: 1px solid #e5e5e5;
-  border-right: 1px solid #e5e5e5;
+  border: 1px solid #e5e5e5;
   line-height: 100px;
+  box-sizing: border-box;
   padding-left: 20px;
   font-weight: 700;
   font-size: 2em;
   color: #4caf50;
-  background-color: #fff;
 }
 
 .desc {
   border-bottom: 1px solid #e5e5e5;
   border-left: 1px solid #e5e5e5;
   border-right: 1px solid #e5e5e5;
-  padding: 0 0 10px 20px;
   font-size: 18px;
   color: #7e7d7d;
-  background-color: #fff;
+}
+
+.desc span {
+  display: block;
+  padding: 8px 6px;
+  font-size: 12px;
 }
 
 .right-l ul {
   width: 100%;
   display: flex;
-  background-color: #fff;
+  margin: 0;
+  padding: 0;
 }
 
 .right-l ul.two {
@@ -530,7 +530,7 @@ export default {
 }
 
 .right-r {
-  margin-top:5px;
+  margin-top: 5px;
   box-sizing: border-box;
   width: 50%;
   height: 100%;
