@@ -74,7 +74,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .detail {
   width: 100%;
   height: 100%;

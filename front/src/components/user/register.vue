@@ -132,7 +132,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .register .middle {
   border: 1px solid rgb(175, 175, 175);
   width: 50%;

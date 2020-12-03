@@ -1,7 +1,7 @@
 <template>
   <div class="api-info-box">
     <div class="info">
-      <el-form :model="apiInfo" :rules="rules" ref="form" size="small">
+      <el-form :model="apiInfo" :rules="rules" ref="form" >
         <el-form-item>
           <el-col :span="5">
             <el-form-item prop="group_id" label="分组" label-width="80px">
@@ -205,7 +205,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 dl dd div {
   display: inline-block;
   width: 95%;

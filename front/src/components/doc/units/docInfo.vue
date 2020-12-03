@@ -3,13 +3,13 @@
     <ul>
       <li>
         <span class="span-label">分组:</span>
-        <el-select v-model="content.groupId" size="small" placeholder="请选择">
+        <el-select v-model="content.groupId"  placeholder="请选择">
           <el-option v-for="item in groupList" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </li>
       <li>
         <span class="span-label">标题:</span>
-        <el-input v-model="content.title" size="small" placeholder="请输入标题" style="width:90%"></el-input>
+        <el-input v-model="content.title"  placeholder="请输入标题" style="width:90%"></el-input>
       </li>
     </ul>
   </div>
@@ -19,29 +19,29 @@
 export default {
   props: {
     groupList: [Array, Object],
-    doc: Object
+    doc: Object,
   },
   data() {
     return {
       content: {
         groupId: "",
-        title: ""
-      }
+        title: "",
+      },
     };
   },
   created() {},
   watch: {
     content: {
-      handler: function(val) {
+      handler: function (val) {
         this.$emit("update-info", val);
       },
-      deep: true
+      deep: true,
     },
-    doc: function(val) {
-      this.content.groupId =  val.group_id;
+    doc: function (val) {
+      this.content.groupId = val.group_id;
       this.content.title = val.title;
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

@@ -2,11 +2,11 @@
   <div class="doc-create">
     <div class="btn">
       <div class="left">
-        <el-button plain size="mini" @click="$router.go(-1)">&lt; 文档列表</el-button>
+        <el-button plain  @click="$router.go(-1)">&lt; 文档列表</el-button>
       </div>
       <div class="right">
-        <el-button type="success" plain size="mini" @click="createDoc()">保存文档</el-button>
-        <el-button type="success" plain size="mini" @click="createDoc(true)">继续添加</el-button>
+        <el-button type="success" plain  @click="createDoc()">保存文档</el-button>
+        <el-button type="success" plain  @click="createDoc(true)">继续添加</el-button>
       </div>
     </div>
     <div class="doc-box">
@@ -118,7 +118,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .doc-box {
   margin: 20px auto;
   min-height: 1200px;

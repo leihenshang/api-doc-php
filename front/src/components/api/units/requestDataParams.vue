@@ -28,7 +28,7 @@
             <el-button
               v-if="item.content.length >= 1"
               icon="el-icon-delete"
-              size="mini"
+              
               @click="apiParamHeaderDelete(index)"
               plain
             ></el-button>
@@ -66,7 +66,7 @@
             <el-select
               v-model="item.type"
               placeholder="请选择类型"
-              size="small"
+              
               v-if="propertyList.var_type"
             >
               <el-option-group
@@ -88,7 +88,7 @@
           </td>
           <td>
             <div v-show="item.name.length >= 1">
-              <el-button icon="el-icon-delete" size="mini" @click="apiParamdelete(index)" plain></el-button>
+              <el-button icon="el-icon-delete"  @click="apiParamdelete(index)" plain></el-button>
             </div>
           </td>
         </tr>

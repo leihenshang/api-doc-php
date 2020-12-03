@@ -2,7 +2,7 @@
   <div class="doc-wrapper">
     <div class="btn">
       <div class="left">
-        <el-button plain size="small" @click="$router.go(-1)">
+        <el-button plain  @click="$router.go(-1)">
           <i class="el-icon-arrow-left"></i> 文档列表
         </el-button>
       </div>
@@ -10,7 +10,7 @@
         <el-button
           type="success"
           plain
-          size="mini"
+          
           @click="updateDoc()"
           :loading="btnLoading"
           v-show="$store.state.projectPermission == 6"
@@ -84,7 +84,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .doc-detail {
   margin: 10px auto;
   background-color: #fff;

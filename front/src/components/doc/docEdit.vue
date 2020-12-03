@@ -8,10 +8,10 @@
     >
       <div class="btn">
         <div class="left">
-          <el-button plain size="mini" @click="$router.go(-1)">&lt; 返回</el-button>
+          <el-button plain  @click="$router.go(-1)">&lt; 返回</el-button>
         </div>
         <div class="right">
-          <el-button type="success" plain size="mini" @click="updateDoc()">保存文档</el-button>
+          <el-button type="success" plain  @click="updateDoc()">保存文档</el-button>
         </div>
       </div>
       <div class="doc-wrapper">
@@ -151,7 +151,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .doc-wrapper {
   margin: 20px auto;
   min-height: 800px;

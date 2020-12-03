@@ -1,9 +1,9 @@
 <template>
   <div class="field-wrapper">
     <div class="btn-wrapper">
-      <el-button size="mini" @click="showAddWindow = true">新增</el-button>
+      <el-button  @click="showAddWindow = true">新增</el-button>
       <el-dialog title="添加映射字段" :visible.sync="showAddWindow" :show-close="false">
-        <el-form :model="fieldMapping" label-width="80px" ref="form" :rules="rules" size="small">
+        <el-form :model="fieldMapping" label-width="80px" ref="form" :rules="rules" >
           <el-form-item label="字段名" prop="field">
             <el-input v-model="fieldMapping.field" autocomplete="off" placeholder="字段名"></el-input>
           </el-form-item>
@@ -11,7 +11,7 @@
             <el-select
               v-model="fieldMapping.type"
               placeholder="请选择类型"
-              size="small"
+              
               v-if="propertyList.var_type"
             >
               <el-option-group
@@ -39,8 +39,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="showAddWindow = false" size="small">取 消</el-button>
-          <el-button type="primary" @click="saveFieldMapping()" size="small">确 定</el-button>
+          <el-button @click="showAddWindow = false" >取 消</el-button>
+          <el-button type="primary" @click="saveFieldMapping()" >确 定</el-button>
         </div>
       </el-dialog>
 
@@ -50,7 +50,7 @@
           label-width="80px"
           ref="formUpdate"
           :rules="rules"
-          size="small"
+          
         >
           <el-form-item label="字段名" prop="field">
             <el-input v-model="updateData.field" autocomplete="off" placeholder="字段名"></el-input>
@@ -59,7 +59,7 @@
             <el-select
               v-model="updateData.type"
               placeholder="请选择类型"
-              size="small"
+              
               v-if="propertyList.var_type"
             >
               <el-option-group
@@ -87,8 +87,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisibleUpdate = false" size="small">取 消</el-button>
-          <el-button type="primary" @click="updateFieldMapping()" size="small">确 定</el-button>
+          <el-button @click="dialogFormVisibleUpdate = false" >取 消</el-button>
+          <el-button type="primary" @click="updateFieldMapping()" >确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -104,14 +104,14 @@
               slot="reference"
               v-show="$store.state.userInfo.type == 2"
               @click="del(scope.row.id)"
-              size="mini"
+              
             >删除</el-button>
             <el-button
               type="warning"
               plain
               @click="updateData = scope.row;dialogFormVisibleUpdate = true; "
               v-show="$store.state.userInfo.type == 2"
-              size="mini"
+              
             >编辑</el-button>
           </template>
         </el-table-column>
@@ -294,7 +294,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .btn-wrapper {
   padding: 10px 0;
 }

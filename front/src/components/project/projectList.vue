@@ -1,11 +1,7 @@
 <template>
   <div class="project-list">
-    <div class="project-list-btn">
-      <el-button
-        @click="dialogFormVisible = true; "
-        v-show="$store.state.userInfo.type == 2"
-        size="mini"
-      >+新增项目</el-button>
+    <div class="project-list-bar">
+      <el-button @click="dialogFormVisible = true; " v-show="$store.state.userInfo.type == 2">+新增项目</el-button>
     </div>
     <!-- 项目列表-开始 -->
     <div class="project-list-content">
@@ -20,16 +16,16 @@
               slot="reference"
               v-show="$store.state.userInfo.type == 2"
               @click="del(scope.row.id)"
-              size="mini"
+              
             >删除</el-button>
             <el-button
               type="warning"
               plain
               @click="updateData = scope.row;dialogFormVisibleUpdate = true; "
               v-show="$store.state.userInfo.type == 2"
-              size="mini"
+              
             >编辑</el-button>
-            <el-button type="success" plain @click="detail(scope.row.id)" size="mini">详情</el-button>
+            <el-button type="success" plain @click="detail(scope.row.id)" >详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -46,8 +42,8 @@
       ></el-pagination>
     </div>
     <!-- 添加项目-开始 -->
-    <el-dialog title="添加项目" :visible.sync="dialogFormVisible" width="40%">
-      <el-form :model="form" label-width="80px" ref="form" :rules="rules" size="small">
+    <el-dialog title="添加项目" :visible.sync="dialogFormVisible">
+      <el-form :model="form" label-width="80px" ref="form" :rules="rules" >
         <el-form-item label="项目名称" prop="title">
           <el-input v-model="form.title" autocomplete="off" placeholder="项目名称"></el-input>
         </el-form-item>
@@ -71,8 +67,8 @@
     </el-dialog>
     <!-- 添加项目-结束 -->
     <!-- 编辑项目-开始 -->
-    <el-dialog title="编辑项目" :visible.sync="dialogFormVisibleUpdate" width="40%">
-      <el-form :model="updateData" label-width="80px" ref="updateData" :rules="rules" size="small">
+    <el-dialog title="编辑项目" :visible.sync="dialogFormVisibleUpdate">
+      <el-form :model="updateData" label-width="80px" ref="updateData" :rules="rules" >
         <el-form-item label="项目名称" prop="title">
           <el-input v-model="updateData.title" autocomplete="off" placeholder="项目名称"></el-input>
         </el-form-item>
@@ -100,7 +96,6 @@
 
 <script>
 const CODE_OK = 200;
-const PAGE_SIZE = 5;
 
 export default {
   name: "projectList",
@@ -196,7 +191,6 @@ export default {
         })
         .catch(() => {});
     },
-
     //更新
     update() {
       this.$refs.updateData.validate((valid) => {
@@ -229,7 +223,7 @@ export default {
     },
     jumpPage(page) {
       this.currPage = page;
-      this.getProjectList(page, PAGE_SIZE);
+      this.getProjectList(page, 5);
     },
     detail(id) {
       this.$router.push("/detail/" + id);
@@ -290,26 +284,14 @@ export default {
 };
 </script>
 
-<style scoped>
-.isHide {
-  display: none;
-}
-
-.project-list {
-  width: 100%;
-  height: auto;
-}
-
-.project-list-btn {
-  margin: 10px;
-  text-align: left;
+<style lang="scss" scoped>
+.project-list-bar {
+  margin: 10px 0;
 }
 
 .project-list-content {
   border: 1px solid #e5e5e5;
-  margin: 10px;
   min-height: 600px;
-  background-color: #fff;
 }
 
 .page-wrapper {

@@ -115,7 +115,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .top-bar {
   display: flex;
   width: 85%;

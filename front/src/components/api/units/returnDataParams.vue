@@ -7,7 +7,7 @@
       <header>
         <el-button
           @click="dialogFormVisible = true"
-          size="mini"
+          
           type="primary"
           style="margin-left:5px"
         >导入json</el-button>
@@ -50,7 +50,7 @@
             <el-select
               v-model="item.type"
               placeholder="请选择类型"
-              size="small"
+              
               v-if="propertyList.var_type"
             >
               <el-option-group
@@ -69,7 +69,7 @@
           </td>
           <td>
             <div v-show="item.fieldName.length >= 1">
-              <el-button icon="el-icon-delete" size="mini" @click="dataDelete(index)" plain></el-button>
+              <el-button icon="el-icon-delete"  @click="dataDelete(index)" plain></el-button>
             </div>
           </td>
         </tr>
@@ -207,7 +207,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .data-params {
   font-size: 14px;
   margin-top: 10px;

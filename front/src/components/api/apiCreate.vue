@@ -193,7 +193,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /* 第一行按钮 */
 .box1 {
   margin: 5px 0;

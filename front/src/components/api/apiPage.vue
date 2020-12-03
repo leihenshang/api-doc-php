@@ -1,19 +1,25 @@
 <template>
   <div class="api-page">
     <div class="btn-wrapper">
-      <div class="btn" v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2">
+      <div
+        class="btn"
+        v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
+      >
         <button @click="showCreateGroup = !showCreateGroup">+新建分组</button>
       </div>
       <div class="input" v-show=" $route.name != 'apiCreate' && $route.name != 'apiEdit' ">
-        <el-button size="small" style="margin:0 10px;" @click="addApi()" v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2">+创建api</el-button>
+        <el-button
+          style="margin:0 10px;"
+          @click="addApi()"
+          v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
+        >+创建api</el-button>
         <el-input
           placeholder="请输入标题"
           v-model="keyword"
           class="input-with-select"
           style="width:300px"
-          size="small"
         >
-          <el-button size="" slot="append" icon="el-icon-search" @click="searchApi()"></el-button>
+          <el-button size slot="append" icon="el-icon-search" @click="searchApi()"></el-button>
         </el-input>
       </div>
     </div>
@@ -41,8 +47,7 @@ import group from "../project/group";
 export default {
   name: "apiPage",
   props: {},
-  created() {
-  },
+  created() {},
   data() {
     return {
       type: 1,
@@ -52,7 +57,7 @@ export default {
       curr: 1,
       pageSize: 100,
       showCreateGroup: false,
-      keyword: ""
+      keyword: "",
     };
   },
   methods: {
@@ -61,7 +66,7 @@ export default {
         .push({
           name: "apiList",
           params: { groupId: 0 },
-          query: { keyword: this.keyword }
+          query: { keyword: this.keyword },
         })
         .catch(() => {});
     },
@@ -81,24 +86,20 @@ export default {
     //调整添加api
     addApi() {
       this.$router.push({
-        name: "apiCreate"
+        name: "apiCreate",
       });
-    }
+    },
   },
   components: {
-    group
-  }
+    group,
+  },
 };
 </script>
 
-<style scoped>
-.api-page {
-  height: calc(100% - 48px);
-}
-
+<style lang="scss" scoped>
 .btn-wrapper {
-  height: 48px;
-  line-height: 48px;
+  padding:10px 0;
+  overflow: hidden;
 }
 
 .btn {
@@ -109,7 +110,6 @@ export default {
 .input {
   float: left;
 }
-
 
 .btn button {
   width: 87px;

@@ -36,7 +36,7 @@
             placeholder="输入昵称或邮箱添加成员"
             :remote-method="getUserList"
             :loading="loading"
-            size="small"
+            
             @change="addProjectUser($event)"
           >
             <el-option
@@ -60,7 +60,7 @@
             </div>
 
             <el-dropdown
-              size="small"
+              
               placement="bottom"
               trigger="click"
               @command="handleCommand"
@@ -84,7 +84,7 @@
       <!-- 右侧内容结束 -->
     </div>
     <div class="right-r">
-      <message />
+      <message></message>
     </div>
   </div>
 </template>
@@ -96,7 +96,7 @@ const CODE_OK = 200;
 export default {
   name: "detailPage",
   props: {
-    id: String
+    id: String,
   },
   created() {
     this.getDetail();
@@ -109,10 +109,10 @@ export default {
       projectData: {},
       indesideRoute: [
         { title: "项目概况", route: "detail", child: "detailPage" },
-        { title: "API接口", route: "detail", child: "apiPage" }
+        { title: "API接口", route: "detail", child: "apiPage" },
       ],
       userList: [],
-      searchUserList: []
+      searchUserList: [],
     };
   },
   methods: {
@@ -139,19 +139,19 @@ export default {
     //获取项目用户列表
     getProjectUserList() {
       this.$http
-        .get( "/project/project-user", {
+        .get("/project/project-user", {
           params: {
-            id: this.$route.params.id
-          }
+            id: this.$route.params.id,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.userList = response.data;
             }
           },
-          res => {
+          (res) => {
             let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
@@ -167,21 +167,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           this.$http
-            .post(
-               "/project/add-user",
-              {
-                user_id: val.id,
-                project_id: this.$route.params.id
-              },
-             
-            )
+            .post("/project/add-user", {
+              user_id: val.id,
+              project_id: this.$route.params.id,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
@@ -205,21 +201,17 @@ export default {
       this.$confirm("将用户" + val.nick_name + "修改权限, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post(
-               "/project/set-permission",
-              {
-                userId: val.id,
-                permission: userPermission,
-                projectId: this.$route.params.id
-              },
-             
-            )
+            .post("/project/set-permission", {
+              userId: val.id,
+              permission: userPermission,
+              projectId: this.$route.params.id,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
@@ -243,22 +235,18 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           this.$http
-            .post(
-               "/project/set-leader",
-              {
-                userId: val.id,
-                projectId: this.$route.params.id,
-                cancel: val.is_leader == 1 ? 1 : 0
-              },
-             
-            )
+            .post("/project/set-leader", {
+              userId: val.id,
+              projectId: this.$route.params.id,
+              cancel: val.is_leader == 1 ? 1 : 0,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
@@ -281,19 +269,15 @@ export default {
         cancelButtonText: "取消",
         inputPattern: /.{2,20}/,
         inputErrorMessage: "昵称不正确",
-        inputValue: val.nick_name
+        inputValue: val.nick_name,
       })
         .then(({ value }) => {
           this.$http
-            .post(
-               "/user/update-nickname",
-              {
-                userId: val.id,
-                nickname: value
-              },
-             
-            )
-            .then(response => {
+            .post("/user/update-nickname", {
+              userId: val.id,
+              nickname: value,
+            })
+            .then((response) => {
               response = response.data;
               if (response.code === CODE_OK) {
                 this.$message.success("操作成功!");
@@ -313,21 +297,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           this.$http
-            .post(
-               "/project/quit-project",
-              {
-                userId: val.id,
-                projectId: this.$route.params.id
-              },
-             
-            )
+            .post("/project/quit-project", {
+              userId: val.id,
+              projectId: this.$route.params.id,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
@@ -350,13 +330,13 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {});
@@ -364,13 +344,13 @@ export default {
     //获取项目详情
     getDetail() {
       this.$http
-        .get( "/project/detail", {
+        .get("/project/detail", {
           params: {
-            id: this.$route.params.id
-          }
+            id: this.$route.params.id,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.projectData = response.data;
@@ -379,7 +359,7 @@ export default {
               this.$message.error("failed:" + response.msg);
             }
           },
-          res => {
+          (res) => {
             let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
@@ -394,13 +374,13 @@ export default {
       }
 
       this.$http
-        .get( "/user/list", {
+        .get("/user/list", {
           params: {
             keyword,
-            project_id: this.$route.params.id
-          }
+            project_id: this.$route.params.id,
+          },
         })
-        .then(response => {
+        .then((response) => {
           response = response.data;
           if (response.code === CODE_OK) {
             this.searchUserList = response.data;
@@ -410,17 +390,17 @@ export default {
     jump() {
       this.$router.push({
         name: "apiPage",
-        params: { projectId: this.id, groupId: 0 }
+        params: { projectId: this.id, groupId: 0 },
       });
-    }
+    },
   },
   components: {
-    message: Message
-  }
+    message: Message,
+  },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .detailPage {
   display: flex;
   width: 100%;
@@ -459,15 +439,11 @@ export default {
 .user-item {
   flex: 0.33;
   position: relative;
-  /* border-right: 1px solid #e5e5e5; */
   border: 1px solid #e5e5e5;
   padding: 10px;
   box-sizing: border-box;
 }
 
-/* .user-item:last-child {
-  border: none;
-} */
 
 .user-item .info {
   float: left;
@@ -554,11 +530,14 @@ export default {
 }
 
 .right-r {
+  box-sizing: border-box;
   width: 50%;
   height: 100%;
   border-left: solid 1px #e6e6e6;
+  border-bottom: solid 1px #e6e6e6;
+  border-top: solid 1px #e6e6e6;
   box-sizing: border-box;
-  padding-left: 5px;
+  padding: 10px;
   overflow-y: scroll;
 }
 

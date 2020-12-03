@@ -11,7 +11,7 @@
           <el-form
             :inline="true"
             :model="form"
-            size="small"
+            
             :rules="rules"
             ref="form"
             @submit.native.prevent

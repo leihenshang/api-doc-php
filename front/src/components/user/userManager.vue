@@ -7,10 +7,10 @@
         clearable
         style="width:20%;margin-right:8px"
         @clear="keyword='';getUserList();"
-        size="small"
       ></el-input>
-      <el-button icon="el-icon-search" type="primary" plain size="small" @click="getUserList()">搜索</el-button>
-      <el-button size="small" icon="el-icon-plus" @click="dialogFormVisible = true">用户</el-button>
+      <el-button icon="el-icon-search" type="primary" plain @click="getUserList()">搜索</el-button>
+      <el-button icon="el-icon-plus" @click="dialogFormVisible = true">用户</el-button>
+      <!-- 新增用户 -->
       <el-dialog title="新建用户" :visible.sync="dialogFormVisible" width="30%">
         <el-form :model="form" label-width="80px" ref="form" :rules="rules">
           <el-form-item label="登录名" prop="name">
@@ -31,6 +31,7 @@
           <el-button type="primary" @click="createUser()">确 定</el-button>
         </div>
       </el-dialog>
+      <!-- 新增用户-结束 -->
     </div>
     <div class="all-user" v-loading="loading">
       <el-table :data="userList.list" stripe style="width: 100%" border>
@@ -50,7 +51,7 @@
         <el-table-column fixed="right" label="操作" width="100">
           <template slot-scope="scope">
             <el-dropdown :hide-on-click="false" trigger="click" @command="handleCommand">
-              <el-button type="text" size="small">编辑</el-button>
+              <el-button type="text" >编辑</el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="{action:'del',data:scope.row}">删除用户</el-dropdown-item>
                 <el-dropdown-item
@@ -79,7 +80,7 @@
 </template>
 <script>
 import Schema from "async-validator";
-Schema.warning = function() {};
+Schema.warning = function () {};
 
 const CODE_OK = 200;
 const IS_DELETED = 1;
@@ -120,19 +121,24 @@ export default {
         name: "",
         email: "",
         pwd: "",
-        re_pwd: ""
+        re_pwd: "",
       },
       rules: {
         name: [
           { required: true, message: "请输入登录名称", trigger: "blur" },
-          { min: 2, max: 50, message: "长度在 2 到 50 个字符", trigger: "blur" }
+          {
+            min: 2,
+            max: 50,
+            message: "长度在 2 到 50 个字符",
+            trigger: "blur",
+          },
         ],
         email: [
           {
             type: "email",
             message: "请输入邮箱地址",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         pwd: [
           { required: true, message: "请输入密码", trigger: "blur" },
@@ -140,9 +146,9 @@ export default {
             min: 6,
             max: 50,
             message: "长度在 6 到 50 个字符",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { validator: validatePass, trigger: "blur" }
+          { validator: validatePass, trigger: "blur" },
         ],
         re_pwd: [
           { required: true, message: "请再次输入密码", trigger: "blur" },
@@ -150,11 +156,11 @@ export default {
             min: 6,
             max: 50,
             message: "长度在 6 到 50 个字符",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { validator: reValidatePass, trigger: "blur" }
-        ]
-      }
+          { validator: reValidatePass, trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -219,18 +225,14 @@ export default {
       return str;
     }, //删除项目用户
     createUser() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.$http
-            .post(
-               "/user/create",
-              {
-                ...this.form
-              },
-             
-            )
+            .post("/user/create", {
+              ...this.form,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getUserList();
@@ -254,20 +256,16 @@ export default {
       this.$confirm("此操作将改变用户状态, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post(
-               "/user/update-status",
-              {
-                state,
-                userId: id
-              },
-             
-            )
+            .post("/user/update-status", {
+              state,
+              userId: id,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getUserList();
@@ -288,20 +286,16 @@ export default {
       this.$confirm("此操作将删除该用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post(
-               "/user/update-status",
-              {
-                is_deleted: IS_DELETED,
-                userId: id
-              },
-             
-            )
+            .post("/user/update-status", {
+              is_deleted: IS_DELETED,
+              userId: id,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getUserList();
@@ -321,19 +315,15 @@ export default {
       this.$confirm("此操作将重置用户密码, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post(
-               "/user/init-pwd",
-              {
-                userId: id
-              },
-             
-            )
+            .post("/user/init-pwd", {
+              userId: id,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getUserList();
@@ -358,16 +348,16 @@ export default {
       }
 
       this.$http
-        .get( "/user/list", {
+        .get("/user/list", {
           params: {
             keyword: this.keyword,
             ps: this.ps,
             cp: cp,
-            all:true
-          }
+            all: true,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.userList = response.data;
@@ -421,29 +411,22 @@ export default {
       }
 
       return str;
-    }
-  }
+    },
+  },
 };
 </script>
-<style scoped>
-.user {
-  font-size: 14px;
-}
-
-.user {
-  height: 100%;
-}
-
+<style lang="scss" scoped>
 .text-box {
-  padding: 10px 10px;
+  margin: 10px 0;
 }
 
 .all-user {
-  padding: 0 10px;
+  border: 1px solid #e5e5e5;
   min-height: 600px;
 }
 
 .page {
+  margin: 10px 0;
   text-align: center;
 }
 </style>

@@ -2,19 +2,20 @@
   <div class="doc-page">
     <div class="btn-wrapper">
       <div class="btn" v-show="$store.state.projectPermission == 6">
-        <el-button @click="addDoc()" size="small">创建文档</el-button>
-        <el-button @click="showCreateGroup = !showCreateGroup" size="small">+新建分组</el-button>
+        <el-button @click="showCreateGroup = !showCreateGroup" >+新建分组</el-button>
       </div>
       <div class="input">
+        <el-button @click="addDoc()"  style="margin-right:5px">创建文档</el-button>
         <el-input
           placeholder="请输入标题"
           v-model="keyword"
           class="input-with-select"
           style="width:300px"
-          size="small"
+          
         >
-          <el-button slot="append" icon="el-icon-search" @click="searchDoc()"></el-button>
+         
         </el-input>
+         <el-button icon="el-icon-search" @click="searchDoc()" style="margin-left:5px;"> 搜索</el-button>
       </div>
     </div>
 
@@ -44,7 +45,7 @@ import group from "../project/group";
 export default {
   name: "docPage",
   props: {
-    id: String
+    id: String,
   },
   created() {},
   //默认数据
@@ -54,15 +55,13 @@ export default {
       groupList: [],
       docData: {},
       type: 3,
-      // curr: 1,
-      // pageSize: 100,
       indesideRoute: [
         { title: "项目概况", route: "detail" },
-        { title: "API接口", route: "api" }
+        { title: "API接口", route: "api" },
       ],
       showCreateGroup: false,
       groupId: 0,
-      isCreate: false
+      isCreate: false,
     };
   },
   methods: {
@@ -71,7 +70,7 @@ export default {
         .push({
           name: "docList",
           params: { groupId: 0 },
-          query: { keyword: this.keyword }
+          query: { keyword: this.keyword },
         })
         .catch(() => {});
     },
@@ -91,26 +90,22 @@ export default {
     addDoc() {
       this.isCreate = true;
       this.$router.push({ name: "docCreate" });
-    }
+    },
   },
   components: {
-    group
-  }
+    group,
+  },
 };
 </script>
 
-<style scoped>
-.doc-page {
-  height: calc(100% - 48px);
-}
+<style lang="scss" scoped>
 
 .btn-wrapper {
-  height: 48px;
-  line-height: 48px;
+ padding:10px 0;
+ overflow: hidden;
 }
 
 .doc-content {
-  box-sizing: border-box;
   width: 100%;
   height: calc(100% - 21px);
   margin-bottom: 20px;
@@ -133,10 +128,10 @@ export default {
 
 .btn {
   width: 15%;
+    float: left;
 }
 
-.input,
-.btn {
-  float: left;
+.input {
+ float: left;
 }
 </style>

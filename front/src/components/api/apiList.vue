@@ -22,13 +22,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="url" label="url"></el-table-column>
-        <el-table-column prop="protocol_type" label="协议"></el-table-column>
+        <el-table-column prop="protocol_type" label="协议" width="80"></el-table-column>
         <el-table-column prop="develop_language" label="开发语言"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="success" plain @click="jumpPage('detail', scope.row.id)" size="mini">详情</el-button>
-
+            <el-button type="success" plain @click="jumpPage('detail', scope.row.id)">详情</el-button>
             <el-popconfirm
               v-if="scope.row.is_deleted == 1"
               title="确定要还原这个api?"
@@ -42,7 +41,6 @@
                   $store.state.projectPermission == 6 ||
                   $store.state.userInfo.type === 2
                 "
-                size="mini"
               >还原</el-button>
             </el-popconfirm>
 
@@ -59,7 +57,6 @@
                   $store.state.projectPermission == 6 ||
                   $store.state.userInfo.type === 2
                 "
-                size="mini"
               >删除</el-button>
             </el-popconfirm>
 
@@ -71,7 +68,6 @@
                 $store.state.projectPermission == 6 ||
                 $store.state.userInfo.type === 2
               "
-              size="mini"
             >编辑</el-button>
           </template>
         </el-table-column>
@@ -242,7 +238,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .api-list {
   background-color: #fff;
   height: auto;

@@ -5,7 +5,7 @@
         <el-avatar :size="100" :src="avatarUrl">头像</el-avatar>
       </div>
       <div class="btn-change-avatar">
-          <el-button size="mini" type="primary" @click="changeAvatar()"
+          <el-button  type="primary" @click="changeAvatar()"
             >更换头像</el-button
           >
       </div>
@@ -46,10 +46,10 @@
           <el-button
             @click="dialogFormVisible = true"
             type="primary"
-            size="small"
+            
             >修改密码</el-button
           >
-          <el-button size="small" type="primary" @click="updateNickName()"
+          <el-button  type="primary" @click="updateNickName()"
             >修改昵称</el-button
           >
           
@@ -276,7 +276,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .user-content {
   border: 1px solid rgb(195, 195, 195);

@@ -72,7 +72,7 @@
         <button>生成调试参数</button>
       </span>
       <el-dialog title="复制到剪贴板" :visible.sync="dialogFormVisible" width="30%">
-        <el-form size="small">
+        <el-form >
           <el-form-item label="分隔符">
             <el-select v-model="delimiter" @change="generateStrParams()">
               <el-option label="冒号(:)" value=":"></el-option>
@@ -342,7 +342,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /* 第一行按钮 */
 .box1 {
   margin: 5px 0;

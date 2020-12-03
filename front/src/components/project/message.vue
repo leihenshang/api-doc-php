@@ -64,6 +64,7 @@ export default {
 <style lang="scss"  scoped>
 .message {
   padding: 10px 0;
+  height: 700px;
 }
 </style>
 

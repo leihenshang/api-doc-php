@@ -8,21 +8,21 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
-              size="mini"
+              
               @click="jumpPage('docEdit',scope.row.id)"
               v-show="$store.state.projectPermission == 6"
             >编辑</el-button>
-            <el-button size="mini" @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
+            <el-button  @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
             <el-button
               v-if="$route.params.groupId == -1"
-              size="mini"
+              
               type="danger"
               @click="restoreDoc(scope.row.id)"
               v-show="$store.state.projectPermission == 6"
             >还原</el-button>
             <el-button
               v-else
-              size="mini"
+              
               type="danger"
               @click="delDoc(scope.row.id)"
               v-show="$store.state.projectPermission == 6"
@@ -54,12 +54,12 @@ export default {
     id: String,
     groupId: {
       type: [Number, String],
-      default: 0
+      default: 0,
     },
     projectId: {
       type: [Number, String],
-      default: 0
-    }
+      default: 0,
+    },
   },
   created() {
     this.getDocList(this.ps, this.cp, this.groupId, this.$route.params.id);
@@ -70,7 +70,7 @@ export default {
       docList: [],
       cp: 1,
       ps: 10,
-      count: 0
+      count: 0,
     };
   },
   methods: {
@@ -78,15 +78,15 @@ export default {
       this.$confirm("该文档将被还原, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post( "/doc/restore", {
-              id: id
+            .post("/doc/restore", {
+              id: id,
             })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
@@ -121,16 +121,16 @@ export default {
       this.$confirm("该文档将被删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post( "/doc/delete", {
+            .post("/doc/delete", {
               id: id,
-              projectId: this.$route.params.id
+              projectId: this.$route.params.id,
             })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
@@ -163,18 +163,18 @@ export default {
       }
 
       this.$http
-        .get( "/doc/list", {
+        .get("/doc/list", {
           params: {
             group_id: groupId,
             project_id: projectId,
             ps: size,
             cp: curr,
             is_deleted: groupId < 0 ? 1 : 0,
-            keyword: keyword.length > 0 ? keyword : ""
-          }
+            keyword: keyword.length > 0 ? keyword : "",
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.docList = response.data.data;
@@ -182,7 +182,7 @@ export default {
               this.loading = false;
             }
           },
-          res => {
+          (res) => {
             let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
@@ -192,10 +192,10 @@ export default {
     },
     jumpPage(name, docId) {
       this.$router.push({ name, params: { docId: docId } });
-    }
+    },
   },
   watch: {
-    $route: function(to) {
+    $route: function (to) {
       if (to.query.keyword) {
         this.cp = 1;
         this.getDocList(20, 1, 0, to.params.id, to.query.keyword);
@@ -205,12 +205,12 @@ export default {
         this.getDocList(this.ps, this.cp, to.params.groupId, to.params.id);
         this.loading = true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .doc-list-table {
   min-height: 620px;
 }
