@@ -4,7 +4,12 @@
     <div class="bar">
       <el-form ref="contentFilterRef" :model="contentFilter" :inline="true">
         <el-form-item label="处理者" prop="toUserId">
-          <el-select
+          <user-search-select
+            :myTargetObject="contentFilter"
+            :userFilterOptions="userFilterOptions"
+          ></user-search-select>
+
+          <!-- <el-select
             v-model="contentFilter.toUserId"
             filterable
             remote
@@ -19,7 +24,7 @@
               :label="item.nick_name"
               :value="item.id"
             ></el-option>
-          </el-select>
+          </el-select>-->
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
@@ -78,11 +83,7 @@
           </el-form-item>
 
           <el-form-item label="指派至:" :label-width="formLabelWidth" prop="to_user_id">
-            <el-select v-model="form.to_user_id" placeholder="请选择用户">
-              <el-option label="xiaobai" value="1"></el-option>
-              <el-option label="xiaoxi" value="2"></el-option>
-              <el-option label="xiaohua" value="3"></el-option>
-            </el-select>
+            <user-search-select :myTargetObject="form" :userFilterOptions="userFilterOptions"></user-search-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -97,7 +98,7 @@
       </el-dialog>
     </div>
     <!-- 创建bug-结束 -->
-    <!-- 更新bug-结束 -->
+    <!-- 更新bug-开始 -->
     <div class="dialog-update-bug">
       <el-dialog title="编辑bug" :visible.sync="dialogFormUpdateVisible">
         <el-form :model="formUpdate" ref="bugFormUpdate" :rules="rules">
@@ -120,21 +121,12 @@
               <el-option label="高" value="3"></el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item label="描述" :label-width="formLabelWidth" prop="content">
             <el-input type="textarea" :rows="5" v-model="formUpdate.content" autocomplete="off"></el-input>
           </el-form-item>
 
           <el-form-item label="备注" :label-width="formLabelWidth" prop="comment">
             <el-input type="textarea" :rows="5" v-model="formUpdate.comment" autocomplete="off"></el-input>
-          </el-form-item>
-
-          <el-form-item label="指派至:" :label-width="formLabelWidth" prop="to_user_id">
-            <el-select v-model="formUpdate.to_user_id" placeholder="请选择用户">
-              <el-option label="xiaobai" value="1"></el-option>
-              <el-option label="xiaoxi" value="2"></el-option>
-              <el-option label="xiaohua" value="3"></el-option>
-            </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -198,7 +190,7 @@
     <div class="dialog-bug-detail">
       <el-dialog title="bug详情" :visible.sync="dialogContentFormVisible" width="70%">
         <div class="dialog-bug-detail-handle">
-          <!-- 嵌套表单-开始 -->
+          <!-- 嵌套表单-处理-开始 -->
           <el-dialog title="bug处理" :visible.sync="dialogHandleFormVisible" append-to-body>
             <el-form :model="formHandle" ref="bugFormHandle" :rules="handleRules">
               <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
@@ -212,13 +204,11 @@
               <el-form-item label="备注" :label-width="formLabelWidth" prop="comment">
                 <el-input type="textarea" :rows="5" v-model="formHandle.comment" autocomplete="off"></el-input>
               </el-form-item>
-
               <el-form-item label="指派至:" :label-width="formLabelWidth" prop="to_user_id">
-                <el-select v-model="formHandle.to_user_id" placeholder="请选择用户">
-                  <el-option label="xiaobai" value="1"></el-option>
-                  <el-option label="xiaoxi" value="2"></el-option>
-                  <el-option label="xiaohua" value="3"></el-option>
-                </el-select>
+                <user-search-select
+                  :myTargetObject="formHandle"
+                  :userFilterOptions="userFilterOptions"
+                ></user-search-select>
               </el-form-item>
             </el-form>
 
@@ -304,6 +294,8 @@
 </template>
 
 <script>
+import UserSearchSelect from "./userSearchSelect.vue";
+
 export default {
   name: "bugHome",
   props: {
@@ -400,7 +392,7 @@ export default {
         ],
       },
       contentFilter: {
-        toUserId: null,
+        to_user_id: null,
         status: null,
         level: null,
       },
@@ -633,6 +625,9 @@ export default {
     },
   },
   computed: {},
+  components: {
+    UserSearchSelect,
+  },
 };
 </script>
 
