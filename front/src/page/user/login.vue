@@ -2,43 +2,39 @@
 <template>
   <div class="login-page">
     <homeHeader />
-    <div class="middle">
-      <div class="login-page-content">
-        <div class="title">
-          <span>my-doc</span>
-        </div>
-        <div class="login-box" v-loading="loading">
-          <el-form :inline="true" :model="form" :rules="rules" ref="form" @submit.native.prevent>
-            <el-form-item prop="name">
-              <el-input v-model="form.name" placeholder="用户名" style="width: 240px"></el-input>
-            </el-form-item>
-            <el-form-item prop="pwd">
-              <el-input
-                v-model="form.pwd"
-                type="password"
-                placeholder="密码"
-                style="width: 240px"
-                @keyup.enter.native="login()"
-              ></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="login()" icon="el-icon-arrow-left">登录</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-        <!-- <div class="remember">
+    <div class="login-page-content">
+      <div class="title">
+        <span>my-doc</span>
+      </div>
+      <div class="login-box" v-loading="loading">
+        <el-form :inline="true" :model="form" :rules="rules" ref="form" @submit.native.prevent>
+          <el-form-item prop="name">
+            <el-input v-model="form.name" placeholder="用户名" style="width: 240px"></el-input>
+          </el-form-item>
+          <el-form-item prop="pwd">
+            <el-input
+              v-model="form.pwd"
+              type="password"
+              placeholder="密码"
+              style="width: 240px"
+              @keyup.enter.native="login()"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="login()" icon="el-icon-arrow-left">登录</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <!-- <div class="remember">
           <input type="checkbox" name="remember" id="remember" />
           <label for="remember">记住密码</label>
-        </div>-->
-      </div>
+      </div>-->
     </div>
-    <homeFooter />
   </div>
 </template>
 
 <script>
 import homeHeader from "../../components/common/units/homeHeader";
-import homeFooter from "../../components/common/units/homeFooter";
 
 const CODE_OK = 200;
 // const NO_ACTIVATE = 3;
@@ -112,7 +108,6 @@ export default {
   },
   components: {
     homeHeader,
-    homeFooter,
   },
 };
 </script>
