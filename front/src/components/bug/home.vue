@@ -4,10 +4,21 @@
     <div class="bar">
       <el-form ref="contentFilterRef" :model="contentFilter" :inline="true">
         <el-form-item label="处理者" prop="toUserId">
-          <el-select v-model="contentFilter.toUserId" clearable placeholder="请选择">
-            <el-option key="1" label="小白" value="1"></el-option>
-            <el-option key="2" label="小花" value="2"></el-option>
-            <el-option key="3" label="小红" value="3"></el-option>
+          <el-select
+            v-model="contentFilter.toUserId"
+            filterable
+            remote
+            clearable
+            placeholder="请输入昵称"
+            :remote-method="userFilterSearch"
+            :loading="userFilterLoading"
+          >
+            <el-option
+              v-for="item in userFilterOptions"
+              :key="item.id"
+              :label="item.nick_name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
 
@@ -155,17 +166,16 @@
           </template>
         </el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
-        <el-table-column  label="操作" align="center">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click.stop="updateBug(scope.row)">编 辑</el-button>
+            <el-button
+              @click.stop="updateBug(scope.row)"
+              size="medium"
+              style="margin-right:10px;"
+            >编 辑</el-button>
 
-            <el-popconfirm
-              title="确定要删除这个bug?"
-              placement="top"
-              @confirm="deleteBug(scope.row)"
-              width="200"
-            >
-              <el-button slot="reference" @click.stop>删 除</el-button>
+            <el-popconfirm title="确定要删除这个bug?" placement="top" @confirm="deleteBug(scope.row)">
+              <el-button slot="reference" size="medium" @click.stop>删 除</el-button>
             </el-popconfirm>
           </template>
         </el-table-column>
@@ -301,6 +311,8 @@ export default {
   },
   data() {
     return {
+      userFilterOptions: [],
+      userFilterLoading: false,
       loading: false,
       ps: 10,
       cp: 1,
@@ -597,6 +609,27 @@ export default {
           this.assignListData.count = data.resCount;
           this.assignListData.res = data.resItem;
         });
+    },
+    userFilterSearch(query) {
+      if (query !== "") {
+        this.userFilterLoading = true;
+        this.$http
+          .get("/user/list", {
+            params: {
+              query,
+              projectId: this.$route.params.id,
+            },
+          })
+          .then((response) => {
+            response = response.data;
+            if (response.code === 200) {
+              this.userFilterOptions = response.data.list;
+            }
+            this.userFilterLoading = false;
+          });
+      } else {
+        this.userFilterOptions = [];
+      }
     },
   },
   computed: {},

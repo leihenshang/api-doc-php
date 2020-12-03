@@ -51,30 +51,50 @@ class UserController extends BaseController
     public function actionList()
     {
         $params = Yii::$app->request->get();
+        $projectId = $params['projectId'] ?? 0;
         $user = new UserInfo(['scenario' => UserInfo::SCENARIO_QUERY]);
         $user->attributes = $params;
         if (!$user->validate()) {
-            return $this->failed();
+            return $this->failed('参数错误');
         }
 
-        $res = UserInfo::find()->alias('a')->select('a.*');
-        if (UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type == UserInfo::USER_TYPE['admin'][0]) {
-            $whereArr = ['a.is_deleted' => UserInfo::IS_DELETED['no'], 'a.type' => UserInfo::USER_TYPE['normal'][0]];
-        } else {
-            $whereArr = ['a.type' => UserInfo::USER_TYPE['normal'][0], 'a.state' => UserInfo::USER_STATE['normal'][0], 'a.is_deleted' => UserInfo::IS_DELETED['no']];
+        $res = UserInfo::find()->alias('a')->select('
+        a.id,
+        a.name,
+        a.email,
+        a.is_deleted,
+        a.create_time,
+        a.type,
+        a.state,
+        a.mobile_number,
+        a.nick_name,
+        a.last_login_ip,
+        a.last_login_time,
+        a.user_face,
+        ');
+        $res->where(['a.is_deleted' => UserInfo::IS_DELETED['no'], 'a.type' => UserInfo::USER_TYPE['normal'][0]]);
+
+        $isAdmin = false;
+        if(UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type != UserInfo::USER_TYPE['admin'][0]) {
+            $isAdmin = true;
         }
 
-        $res->where($whereArr);
+        if ($isAdmin === false ) {
+            $res->andWhere(['a.state' => UserInfo::USER_STATE['normal'][0]]);
+        }
+
         if ($user->keyword) {
             $res->andWhere(['or',
                 ['like', 'a.nick_name', $user->keyword . '%', false],
-                ['like', 'a.email', $user->keyword . '%', false],
                 ['like', 'a.name', $user->keyword . '%', false]
             ]);
         }
 
-        $recordCount = $res->count();
+        if ($projectId) {
+            $res->innerJoin('user_project b','a.id = b.user_id')->andWhere(['b.project_id' => $projectId]);
+        }
 
+        $recordCount = $res->count();
         $res = $res->limit($user->ps)->offset(($user->cp - 1) * $user->ps)->orderBy('id DESC')->all();
         return $this->success(['count' => $recordCount, 'list' => $res]);
     }

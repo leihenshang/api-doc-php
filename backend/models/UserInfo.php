@@ -85,7 +85,7 @@ class UserInfo extends BaseModel
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
-        $scenarios[self::SCENARIO_QUERY] = ['keyword', 'ps', 'cp'];
+        $scenarios[self::SCENARIO_QUERY] = ['keyword', 'ps', 'cp','type','state'];
         $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'nick_name', 'email'];
         $scenarios[self::SCENARIO_UPDATE_PWD] = ['re_pwd', 'pwd'];
         return $scenarios;
