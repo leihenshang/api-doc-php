@@ -52,6 +52,10 @@ class UserController extends BaseController
     {
         $params = Yii::$app->request->get();
         $projectId = $params['projectId'] ?? 0;
+        $all = $params['all'] ?? false;
+        if(!is_bool($all)) {
+            $all  = false;
+        }
         $user = new UserInfo(['scenario' => UserInfo::SCENARIO_QUERY]);
         $user->attributes = $params;
         if (!$user->validate()) {
@@ -90,7 +94,7 @@ class UserController extends BaseController
             ]);
         }
 
-        if ($projectId) {
+        if ($all === false && $projectId) {
             $res->innerJoin('user_project b','a.id = b.user_id')->andWhere(['b.project_id' => $projectId]);
         }
 
