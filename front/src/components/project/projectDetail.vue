@@ -96,7 +96,7 @@ const CODE_OK = 200;
 export default {
   name: "detailPage",
   props: {
-    id: String
+    id: String,
   },
   created() {
     this.getDetail();
@@ -108,7 +108,7 @@ export default {
       keyword: "",
       projectData: {},
       userList: [],
-      searchUserList: []
+      searchUserList: [],
     };
   },
   methods: {
@@ -135,19 +135,19 @@ export default {
     //获取项目用户列表
     getProjectUserList() {
       this.$http
-        .get( "/project/project-user", {
+        .get("/project/project-user", {
           params: {
-            id: this.$route.params.id
-          }
+            id: this.$route.params.id,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.userList = response.data;
             }
           },
-          res => {
+          (res) => {
             let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
@@ -163,21 +163,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           this.$http
-            .post(
-               "/project/add-user",
-              {
-                user_id: val.id,
-                project_id: this.$route.params.id
-              },
-             
-            )
+            .post("/project/add-user", {
+              user_id: val.id,
+              project_id: this.$route.params.id,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
@@ -201,21 +197,17 @@ export default {
       this.$confirm("将用户" + val.nick_name + "修改权限, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post(
-               "/project/set-permission",
-              {
-                userId: val.id,
-                permission: userPermission,
-                projectId: this.$route.params.id
-              },
-             
-            )
+            .post("/project/set-permission", {
+              userId: val.id,
+              permission: userPermission,
+              projectId: this.$route.params.id,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
@@ -239,22 +231,18 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           this.$http
-            .post(
-               "/project/set-leader",
-              {
-                userId: val.id,
-                projectId: this.$route.params.id,
-                cancel: val.is_leader == 1 ? 1 : 0
-              },
-             
-            )
+            .post("/project/set-leader", {
+              userId: val.id,
+              projectId: this.$route.params.id,
+              cancel: val.is_leader == 1 ? 1 : 0,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
@@ -277,19 +265,15 @@ export default {
         cancelButtonText: "取消",
         inputPattern: /.{2,20}/,
         inputErrorMessage: "昵称不正确",
-        inputValue: val.nick_name
+        inputValue: val.nick_name,
       })
         .then(({ value }) => {
           this.$http
-            .post(
-               "/user/update-nickname",
-              {
-                userId: val.id,
-                nickname: value
-              },
-             
-            )
-            .then(response => {
+            .post("/user/update-nickname", {
+              userId: val.id,
+              nickname: value,
+            })
+            .then((response) => {
               response = response.data;
               if (response.code === CODE_OK) {
                 this.$message.success("操作成功!");
@@ -309,21 +293,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           this.$http
-            .post(
-               "/project/quit-project",
-              {
-                userId: val.id,
-                projectId: this.$route.params.id
-              },
-             
-            )
+            .post("/project/quit-project", {
+              userId: val.id,
+              projectId: this.$route.params.id,
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.getProjectUserList();
@@ -346,13 +326,13 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {});
@@ -360,13 +340,13 @@ export default {
     //获取项目详情
     getDetail() {
       this.$http
-        .get( "/project/detail", {
+        .get("/project/detail", {
           params: {
-            id: this.$route.params.id
-          }
+            id: this.$route.params.id,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.projectData = response.data;
@@ -375,7 +355,7 @@ export default {
               this.$message.error("failed:" + response.msg);
             }
           },
-          res => {
+          (res) => {
             let response = res.data;
             this.$message.error(
               "获取数据-操作失败!" + !response.msg ? response.msg : ""
@@ -390,13 +370,13 @@ export default {
       }
 
       this.$http
-        .get( "/user/list", {
+        .get("/user/list", {
           params: {
             keyword,
-            project_id: this.$route.params.id
-          }
+            project_id: this.$route.params.id,
+          },
         })
-        .then(response => {
+        .then((response) => {
           response = response.data;
           if (response.code === CODE_OK) {
             this.searchUserList = response.data;
@@ -406,17 +386,17 @@ export default {
     jump() {
       this.$router.push({
         name: "apiPage",
-        params: { projectId: this.id, groupId: 0 }
+        params: { projectId: this.id, groupId: 0 },
       });
-    }
+    },
   },
   components: {
-    message: Message
-  }
+    message: Message,
+  },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .detailPage {
   display: flex;
   width: 100%;
@@ -547,12 +527,6 @@ export default {
   font-size: 12px;
   color: gray;
   margin: 10px 15px;
-}
-
-.right-r {
-  width: 50%;
-  height: 100%;
-  background-color: #f3f3f3;
 }
 
 .right-l ul li.api-detail p:last-child {

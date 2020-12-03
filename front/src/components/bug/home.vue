@@ -502,6 +502,7 @@ export default {
               let data = response.data;
               if (data.code === 200) {
                 this.$message.success("指派成功");
+                this.dialogContentFormVisible = false;
                 this.resetForm(formName);
                 this.bugList(
                   this.$route.params.id,

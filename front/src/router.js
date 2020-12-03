@@ -2,9 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 //项目相关
-import Home from "./viewPage/home";
-import Detail from "./viewPage/project";
-// import Msg from "./viewPage/msg";
+import Detail from "./page/project";
 import ProjectList from "./components/project/projectList";
 import FieldMapping from "./components/project/fieldMapping";
 
@@ -150,22 +148,23 @@ const router = new VueRouter({
       ],
     },
     {
+      path: "/projectList",
+      component: ProjectList,
+      name: "projectList"
+    },
+    {
+      path: "/userManager",
+      component: UserManager,
+      name: "userManager"
+    },
+    {
+      path: "/myCenter",
+      component: MyCenter,
+      name: "myCenter"
+    },
+    {
       path: "/",
-      component: Home,
       redirect: "projectList",
-      children: [
-        { path: "projectList", component: ProjectList, name: "projectList" },
-        {
-          path: "myCenter",
-          component: MyCenter,
-          name: "myCenter",
-        },
-        {
-          path: "userManager",
-          component: UserManager,
-          name: "userManager",
-        },
-      ],
     },
   ],
 });
