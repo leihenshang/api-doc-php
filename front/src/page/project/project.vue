@@ -1,6 +1,5 @@
 <template>
   <div class="detail">
-    <div class="middle-menu">
       <el-menu
         mode="horizontal"
         :default-active="
@@ -15,12 +14,9 @@
           <span slot="title">{{ item.title }}</span>
         </el-menu-item>
       </el-menu>
-    </div>
-    <div class="content-wrap">
       <transition name="el-fade-in-linear" mode="out-in" appear>
         <router-view></router-view>
       </transition>
-    </div>
   </div>
 </template>
 

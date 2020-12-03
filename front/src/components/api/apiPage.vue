@@ -5,7 +5,7 @@
         class="btn"
         v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
       >
-        <button @click="showCreateGroup = !showCreateGroup">+新建分组</button>
+        <el-button @click="showCreateGroup = !showCreateGroup">+新建分组</el-button>
       </div>
       <div class="input" v-show=" $route.name != 'apiCreate' && $route.name != 'apiEdit' ">
         <el-button
@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss" scoped>
 .btn-wrapper {
-  padding:10px 0;
+  padding: 10px 0;
   overflow: hidden;
 }
 
@@ -111,23 +111,10 @@ export default {
   float: left;
 }
 
-.btn button {
-  width: 87px;
-  height: 32px;
-  padding: 0 10px;
-  margin-right: 2px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 3px;
-  font-size: 12px;
-}
-
 .api-content {
-  box-sizing: border-box;
   width: 100%;
   height: calc(100% - 21px);
   margin-bottom: 20px;
-
   display: flex;
   border: 1px solid #e5e5e5;
 }

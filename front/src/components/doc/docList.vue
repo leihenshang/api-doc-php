@@ -8,21 +8,18 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
-              
               @click="jumpPage('docEdit',scope.row.id)"
               v-show="$store.state.projectPermission == 6"
             >编辑</el-button>
-            <el-button  @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
+            <el-button @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
             <el-button
               v-if="$route.params.groupId == -1"
-              
               type="danger"
               @click="restoreDoc(scope.row.id)"
               v-show="$store.state.projectPermission == 6"
             >还原</el-button>
             <el-button
               v-else
-              
               type="danger"
               @click="delDoc(scope.row.id)"
               v-show="$store.state.projectPermission == 6"
@@ -212,7 +209,7 @@ export default {
 
 <style lang="scss" scoped>
 .doc-list-table {
-  min-height: 620px;
+  min-height: 600px;
 }
 
 .page {

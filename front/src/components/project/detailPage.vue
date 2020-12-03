@@ -530,6 +530,7 @@ export default {
 }
 
 .right-r {
+  margin-top:5px;
   box-sizing: border-box;
   width: 50%;
   height: 100%;

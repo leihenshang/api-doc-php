@@ -239,27 +239,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.api-list {
-  background-color: #fff;
-  height: auto;
-}
-
 .api-box {
-  min-height: 650px;
+  min-height: 600px;
 }
 
 .api-list .page {
   text-align: center;
   padding: 20px 0;
-}
-
-.span-dot {
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-  border-radius: 10px;
-  background-color: #4caf50;
-  margin-right: 5px;
 }
 
 .api-box button {
