@@ -35,8 +35,7 @@
     </div>
     <div class="all-user" v-loading="loading">
       <el-table :data="userList.list" stripe style="width: 100%" border>
-        <el-table-column prop="id" label="id" width="100"></el-table-column>
-        <el-table-column prop="name" label="登录名" width="180"></el-table-column>
+        <el-table-column prop="name" label="账号" width="180"></el-table-column>
         <el-table-column prop="state" label="状态" width="180">
           <template slot-scope="scope">{{ transferState(scope.row.state) }}</template>
         </el-table-column>
@@ -48,10 +47,10 @@
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop="last_login_time" label="最后登录时间"></el-table-column>
         <el-table-column prop="last_login_ip" label="最后登录ip"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column align="center" label="操作" width="100">
           <template slot-scope="scope">
             <el-dropdown :hide-on-click="false" trigger="click" @command="handleCommand">
-              <el-button type="text">编辑</el-button>
+              <el-button>操作</el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="{action:'del',data:scope.row}">删除用户</el-dropdown-item>
                 <el-dropdown-item
@@ -418,7 +417,6 @@ export default {
 }
 
 .all-user {
-  border: 1px solid #e5e5e5;
   min-height: 600px;
 }
 
