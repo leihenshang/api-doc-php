@@ -47,14 +47,6 @@
       v-on:update="apiData.http_return_params=$event"
       :returnData="http_return_params"
     />
-
-    <!-- 响应模板数据 -->
-    <textBox
-      v-on:update:success="apiData.http_return_sample.returnDataSuccess = $event"
-      v-on:update:failed="apiData.http_return_sample.returnDataFailed = $event"
-      :originSuccess="apiData.http_return_sample.returnDataSuccess"
-      :originFailed="apiData.http_return_sample.returnDataFailed"
-    />
   </div>
 </template>
 
@@ -63,12 +55,11 @@ import returnParams from "./units/returnDataParams.vue";
 import requestParams from "./units/requestDataParams.vue";
 import apiInfo from "./units/apiInfo.vue";
 import detailDescription from "./units/detailDescription.vue";
-import textBox from "./units/returnDataTextBox.vue";
 const CODE_OK = 200;
 export default {
   name: "apiEdit",
   props: {
-    apiId: [Number, String]
+    apiId: [Number, String],
   },
   created() {
     this.getApiDetail();
@@ -79,45 +70,25 @@ export default {
     return {
       showDescription: false,
       loading: true,
-      //说明和备注
       groupList: [],
       propertyList: [],
-      apiData: {
-        group_id: 0, //分组
-        project_id: 0, //项目Id
-        protocol_type: "HTTP", //协议
-        description: "", //说明和备注
-        http_method_type: "GET", //http请求方法
-        http_return_type: 1, //返回值类型
-        url: "", //http请求URL
-        api_name: "", //接口名称
-        object_name: "", //对象名
-        function_name: "", //程序内部方法名
-        develop_language: "", //接口开发语言
-        http_request_header: [], //请求头
-        http_request_params: [], //请求参数
-        http_return_params: [], //返回参数
-        http_return_sample: {
-          returnDataSuccess: "", //返回数据成功
-          returnDataFailed: "" //返回数据失败
-        }
-      },
+      apiData: {},
       http_request_header: [],
       http_request_params: [],
-      http_return_params: []
+      http_return_params: [],
     };
   },
   methods: {
     //获取api详情
     getApiDetail() {
       this.$http
-        .get( "/api/detail", {
+        .get("/api/detail", {
           params: {
-            id: this.apiId
-          }
+            id: this.apiId,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.apiData = response.data;
@@ -141,32 +112,28 @@ export default {
     },
     //更新api
     updateApi() {
-      this.$refs.apiInfo.$refs.form.validate(validate => {
+      this.$refs.apiInfo.$refs.form.validate((validate) => {
         if (validate) {
           this.$http
-            .post(
-               "/api/update",
-              {
-                id: this.apiId,
-                group_id: this.apiData.group_id,
-                project_id: this.$route.params.id,
-                data: JSON.stringify(this.apiData)
-              },
-             
-            )
+            .post("/api/update", {
+              id: this.apiId,
+              group_id: this.apiData.group_id,
+              project_id: this.$route.params.id,
+              data: JSON.stringify(this.apiData),
+            })
             .then(
-              response => {
+              (response) => {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message({
                     message: "更新数据成功！",
-                    type: "success"
+                    type: "success",
                   });
                   this.$router.go(-1);
                 } else {
                   this.$message({
                     message: !response.msg ? response.msg : "",
-                    type: "error"
+                    type: "error",
                   });
                 }
               },
@@ -182,14 +149,14 @@ export default {
     //获取分组数据
     getGroup() {
       this.$http
-        .get( "/group/list", {
+        .get("/group/list", {
           params: {
             projectId: this.$route.params.id,
-            type: 1
-          }
+            type: 1,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.groupList = response.data;
@@ -205,11 +172,11 @@ export default {
     //获取通用属性
     getProperty() {
       this.$http
-        .get( "/property/list", {
-          params: {}
+        .get("/property/list", {
+          params: {},
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.propertyList = response.data;
@@ -221,25 +188,26 @@ export default {
             this.$message.error("获取数据失败");
           }
         );
-    }
+    },
   },
   components: {
-    textBox,
     returnParams,
     requestParams,
     apiInfo,
-    detailDescription
+    detailDescription,
   },
   watch: {
-    apiId: function() {
+    apiId: function () {
       this.getApiDetail();
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-
+.create-api {
+  margin-bottom: 20px;
+}
 
 /* 第一行按钮 */
 .box1 {

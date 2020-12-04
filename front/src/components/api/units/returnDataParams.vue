@@ -5,12 +5,7 @@
         <span>返回参数</span>
       </header>
       <header>
-        <el-button
-          @click="dialogFormVisible = true"
-          
-          type="primary"
-          style="margin-left:5px"
-        >导入json</el-button>
+        <el-button @click="dialogFormVisible = true" size="mini" style="margin-left:5px">导入json</el-button>
         <el-dialog title="填入响应json" :visible.sync="dialogFormVisible" :show-close="false">
           <el-input type="textarea" v-model="jsonData" :rows="15"></el-input>
           <div slot="footer" class="dialog-footer">
@@ -47,12 +42,7 @@
             <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-            <el-select
-              v-model="item.type"
-              placeholder="请选择类型"
-              
-              v-if="propertyList.var_type"
-            >
+            <el-select v-model="item.type" placeholder="请选择类型" v-if="propertyList.var_type">
               <el-option-group
                 v-for="(group,index) in propertyList.var_type"
                 :key="group.label"
@@ -69,7 +59,7 @@
           </td>
           <td>
             <div v-show="item.fieldName.length >= 1">
-              <el-button icon="el-icon-delete"  @click="dataDelete(index)" plain></el-button>
+              <el-button size="mini" icon="el-icon-delete" @click="dataDelete(index)"></el-button>
             </div>
           </td>
         </tr>
@@ -83,9 +73,9 @@ export default {
   name: "returnDataParams",
   props: {
     propertyList: [Object, Array],
-    returnData: Array
+    returnData: Array,
   },
-  data: function() {
+  data: function () {
     return {
       dialogFormVisible: false,
       returnDataItem: [
@@ -96,10 +86,10 @@ export default {
           required: false,
           type: "string",
           handle: true,
-          isAdd: false
-        }
+          isAdd: false,
+        },
       ],
-      jsonData: ""
+      jsonData: "",
     };
   },
   methods: {
@@ -134,7 +124,7 @@ export default {
           required: true,
           type: "string",
           handle: true,
-          isAdd: false
+          isAdd: false,
         });
       }
 
@@ -145,7 +135,7 @@ export default {
         required: true,
         type: "string",
         handle: true,
-        isAdd: false
+        isAdd: false,
       });
     },
     //json解析方法
@@ -183,7 +173,7 @@ export default {
             required: false,
             type: "string",
             handle: true,
-            isAdd: false
+            isAdd: false,
           });
           this.returnDataItem[index].isAdd = true;
         }
@@ -192,18 +182,18 @@ export default {
     //删除
     dataDelete(key) {
       this.returnDataItem.splice(key, 1);
-    }
+    },
   },
   watch: {
-    returnDataItem: function(val) {
+    returnDataItem: function (val) {
       this.$emit("update", val.slice(0, val.length - 1));
     },
-    returnData: function(val) {
+    returnData: function (val) {
       if (val.length) {
         this.returnDataItem = val;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

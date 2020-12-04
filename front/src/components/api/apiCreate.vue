@@ -3,25 +3,12 @@
     <div class="box1">
       <div class="btn-group-1">
         <button @click="returnApiPage">↩ 接口列表</button>
-        <!-- <button
-          @click="showDescription = false"
-          v-bind:class="{ 'btn-group-1-btn-change': showDescription == false }"
-        >
-          基础信息
-        </button>
-        <button
-          @click="showDescription = true"
-          v-bind:class="{ 'btn-group-1-btn-change': showDescription == true }"
-        >
-          详细说明
-        </button> -->
       </div>
       <div class="btn-group-1">
-        <!-- <button>继续添加</button> -->
         <button @click="createApi()">保存</button>
       </div>
     </div>
-  
+
     <apiInfo
       v-show="showDescription === false"
       :groupList="groupList"
@@ -31,24 +18,14 @@
       ref="apiInfo"
     />
 
- <detailDescription
-      :description="description"
-      v-on:update="description = $event"
-    />
-    
+    <detailDescription :description="description" v-on:update="description = $event" />
 
     <requestParams
       :propertyList="propertyList"
       v-on:update:header="apiData.http_request_header = $event"
       v-on:update:param="apiData.http_request_params = $event"
     />
-    <returnParams
-      :propertyList="propertyList"
-      v-on:update="apiData.http_return_params = $event"
-    />
-
- 
-
+    <returnParams :propertyList="propertyList" v-on:update="apiData.http_return_params = $event" />
   </div>
 </template>
 

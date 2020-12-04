@@ -2,7 +2,11 @@
   <div class="request-box">
     <div class="request">
       <div class="item-head">
-        <button @click="show=0" :class="{'tab-change-btn-bg' : show==0}" class="req-btn req-btn-first">请求头部</button>
+        <button
+          @click="show=0"
+          :class="{'tab-change-btn-bg' : show==0}"
+          class="req-btn req-btn-first"
+        >请求头部</button>
         <button @click="show=1" :class="{'tab-change-btn-bg' : show==1}" class="req-btn">请求参数</button>
       </div>
       <table v-show="show==0">
@@ -28,7 +32,6 @@
             <el-button
               v-if="item.content.length >= 1"
               icon="el-icon-delete"
-              
               @click="apiParamHeaderDelete(index)"
               plain
             ></el-button>
@@ -63,12 +66,7 @@
             <input type="checkbox" name id v-model="item.required" />
           </td>
           <td>
-            <el-select
-              v-model="item.type"
-              placeholder="请选择类型"
-              
-              v-if="propertyList.var_type"
-            >
+            <el-select v-model="item.type" placeholder="请选择类型" v-if="propertyList.var_type">
               <el-option-group
                 v-for="(group,index) in propertyList.var_type"
                 :key="group.label"
@@ -88,7 +86,7 @@
           </td>
           <td>
             <div v-show="item.name.length >= 1">
-              <el-button icon="el-icon-delete"  @click="apiParamdelete(index)" plain></el-button>
+              <el-button icon="el-icon-delete" @click="apiParamdelete(index)" size="mini"></el-button>
             </div>
           </td>
         </tr>
@@ -105,20 +103,20 @@ export default {
     propertyList: [Object, Array],
     header: {
       type: [Array, Object],
-      default: function() {
+      default: function () {
         return [
           {
             name: "",
             content: "",
             handle: true,
-            isAdd: false
-          }
+            isAdd: false,
+          },
         ];
-      }
+      },
     },
     params: {
       type: [Array, Object],
-      default: function() {
+      default: function () {
         return [
           {
             name: "",
@@ -127,16 +125,16 @@ export default {
             type: "string",
             example: "",
             handle: true,
-            isAdd: false
-          }
+            isAdd: false,
+          },
         ];
-      }
-    }
+      },
+    },
   },
   computed: {},
 
   created() {},
-  data: function() {
+  data: function () {
     return {
       show: 1,
       apiParamHeaderItem: [
@@ -144,8 +142,8 @@ export default {
           name: "",
           content: "",
           handle: true,
-          isAdd: false
-        }
+          isAdd: false,
+        },
       ],
       apiParamItem: [
         {
@@ -155,24 +153,24 @@ export default {
           type: "string",
           example: "",
           handle: true,
-          isAdd: false
-        }
-      ]
+          isAdd: false,
+        },
+      ],
     };
   },
   watch: {
-    header: function(val) {
+    header: function (val) {
       if (val.length) {
         this.apiParamHeaderItem = JSON.parse(JSON.stringify(val));
         this.apiParamHeaderItem.push({
           name: "",
           content: "",
           handle: true,
-          isAdd: false
+          isAdd: false,
         });
       }
     },
-    params: function(val) {
+    params: function (val) {
       if (val.length) {
         this.apiParamItem = JSON.parse(JSON.stringify(val));
         this.apiParamItem.push({
@@ -182,16 +180,16 @@ export default {
           type: "string",
           example: "",
           handle: true,
-          isAdd: false
+          isAdd: false,
         });
       }
     },
-    apiParamHeaderItem: function(val) {
+    apiParamHeaderItem: function (val) {
       this.$emit("update:header", val.slice(0, val.length - 1));
     },
-    apiParamItem: function(val) {
+    apiParamItem: function (val) {
       this.$emit("update:param", val.slice(0, val.length - 1));
-    }
+    },
   },
   methods: {
     //检测apiParam输入
@@ -206,7 +204,7 @@ export default {
             type: "string",
             example: "",
             handle: true,
-            isAdd: false
+            isAdd: false,
           });
           this.apiParamItem[index].isAdd = true;
         }
@@ -222,7 +220,7 @@ export default {
             name: "",
             content: "",
             handle: true,
-            isAdd: false
+            isAdd: false,
           });
           this.apiParamHeaderItem[index].isAdd = true;
         }
@@ -235,8 +233,8 @@ export default {
     //apiParamheader删除
     apiParamHeaderDelete(key) {
       this.apiParamHeaderItem.splice(key, 1);
-    }
-  }
+    },
+  },
 };
 </script>
 
