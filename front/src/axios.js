@@ -54,6 +54,7 @@ axios.interceptors.response.use(response => {
     Vue.prototype.$message.error("请重新登录");
     localStorage.removeItem("userInfo");
     router.push("/login");
+    return;
   }
 
   return response;
