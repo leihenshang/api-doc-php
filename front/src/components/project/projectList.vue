@@ -5,7 +5,14 @@
     </div>
     <!-- 项目列表-开始 -->
     <div class="project-list-content">
-      <el-table :data="projectList" stripe style="width: 100%" v-loading="loading" height="650">
+      <el-table
+        :data="projectList"
+        stripe
+        style="width: 100%"
+        v-loading="loading"
+        height="650"
+        @cell-click="detail"
+      >
         <el-table-column prop="title" label="项目名称" width="180"></el-table-column>
         <el-table-column prop="version" label="版本号" width="180"></el-table-column>
         <el-table-column prop="type" label="类型"></el-table-column>
@@ -15,17 +22,15 @@
             <el-button
               slot="reference"
               v-show="$store.state.userInfo.type == 2"
-              @click="del(scope.row.id)"
-              
+              @click.stop="delete(scope.row.id)"
             >删除</el-button>
             <el-button
               type="warning"
               plain
-              @click="updateData = scope.row;dialogFormVisibleUpdate = true; "
+              @click.stop="form = scope.row;dialogFormVisible = true; isUpdate = true;"
               v-show="$store.state.userInfo.type == 2"
-              
             >编辑</el-button>
-            <el-button type="success" plain @click="detail(scope.row.id)" >详情</el-button>
+            <el-button type="success" plain @click.stop="detail(scope.row);">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -43,7 +48,7 @@
     </div>
     <!-- 添加项目-开始 -->
     <el-dialog title="添加项目" :visible.sync="dialogFormVisible">
-      <el-form :model="form" label-width="80px" ref="form" :rules="rules" >
+      <el-form :model="form" label-width="80px" ref="form" :rules="rules">
         <el-form-item label="项目名称" prop="title">
           <el-input v-model="form.title" autocomplete="off" placeholder="项目名称"></el-input>
         </el-form-item>
@@ -61,14 +66,17 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false;$refs.form.resetFields()">取 消</el-button>
-        <el-button type="primary" @click=" action=='create' ? create() : update()">确 定</el-button>
+        <el-button @click="dialogFormVisible = false;$refs.form.resetFields();isUpdate = false;">取 消</el-button>
+        <el-button
+          type="primary"
+          @click=" isUpdate ? update(): create() ; "
+        >确 定</el-button>
       </div>
     </el-dialog>
     <!-- 添加项目-结束 -->
     <!-- 编辑项目-开始 -->
-    <el-dialog title="编辑项目" :visible.sync="dialogFormVisibleUpdate">
-      <el-form :model="updateData" label-width="80px" ref="updateData" :rules="rules" >
+    <!-- <el-dialog title="编辑项目" :visible.sync="dialogFormVisibleUpdate">
+      <el-form :model="updateData" label-width="80px" ref="updateData" :rules="rules">
         <el-form-item label="项目名称" prop="title">
           <el-input v-model="updateData.title" autocomplete="off" placeholder="项目名称"></el-input>
         </el-form-item>
@@ -89,7 +97,7 @@
         <el-button @click="dialogFormVisibleUpdate = false;$refs.updateData.resetFields()">取 消</el-button>
         <el-button type="primary" @click="update()">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog>-->
     <!-- 编辑项目-结束 -->
   </div>
 </template>
@@ -158,7 +166,7 @@ export default {
       });
     },
     //删除数据
-    del(id) {
+    delete(id) {
       if (!id) {
         this.$message.error("id错误");
         return;
@@ -171,7 +179,7 @@ export default {
       })
         .then(() => {
           this.$http
-            .post("/project/del", {
+            .post("/project/delete", {
               id,
             })
             .then(
@@ -193,12 +201,12 @@ export default {
     },
     //更新
     update() {
-      this.$refs.updateData.validate((valid) => {
+      this.isUpdate = true;
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.$http
             .post("/project/update", {
-              id: this.updateData.id,
-              ...this.updateData,
+              ...this.form
             })
             .then(
               (res) => {
@@ -211,11 +219,17 @@ export default {
                 } else {
                   this.$message.error("失败!" + response.msg);
                 }
+
+                this.update = false;
               },
               () => {
                 this.$message.error("操作失败!");
+                this.update = false;
               }
-            );
+            )
+            .catch(() => {
+              this.update = false;
+            });
         } else {
           return false;
         }
@@ -225,8 +239,8 @@ export default {
       this.currPage = page;
       this.getProjectList(page, 5);
     },
-    detail(id) {
-      this.$router.push("/detail/" + id);
+    detail(row) {
+      this.$router.push("/detail/" + row.id);
     },
   },
   created() {
@@ -234,15 +248,15 @@ export default {
   },
   data() {
     return {
-      action: "create",
-      projectList: [],
+        projectList: [],
       pageSize: 5,
       currPage: 1,
       itemCount: 0,
       loading: true,
       dialogFormVisible: false,
-      dialogFormVisibleUpdate: false,
-      updateData: {},
+      isUpdate: false,
+      // dialogFormVisibleUpdate: false,
+      // updateData: {},
       form: {
         title: "",
         version: "",
