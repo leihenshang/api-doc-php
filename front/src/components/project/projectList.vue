@@ -22,7 +22,7 @@
             <el-button
               slot="reference"
               v-show="$store.state.userInfo.type == 2"
-              @click.stop="delete(scope.row.id)"
+              @click.stop="deleteData(scope.row.id)"
             >删除</el-button>
             <el-button
               type="warning"
@@ -46,7 +46,7 @@
         @current-change="jumpPage($event)"
       ></el-pagination>
     </div>
-    <!-- 添加项目-开始 -->
+    <!-- 编辑添加项目 -->
     <el-dialog title="添加项目" :visible.sync="dialogFormVisible">
       <el-form :model="form" label-width="80px" ref="form" :rules="rules">
         <el-form-item label="项目名称" prop="title">
@@ -67,38 +67,10 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false;$refs.form.resetFields();isUpdate = false;">取 消</el-button>
-        <el-button
-          type="primary"
-          @click=" isUpdate ? update(): create() ; "
-        >确 定</el-button>
+        <el-button type="primary" @click=" isUpdate ? update(): create() ; ">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- 添加项目-结束 -->
-    <!-- 编辑项目-开始 -->
-    <!-- <el-dialog title="编辑项目" :visible.sync="dialogFormVisibleUpdate">
-      <el-form :model="updateData" label-width="80px" ref="updateData" :rules="rules">
-        <el-form-item label="项目名称" prop="title">
-          <el-input v-model="updateData.title" autocomplete="off" placeholder="项目名称"></el-input>
-        </el-form-item>
-        <el-form-item label="版本号" prop="version">
-          <el-input v-model="updateData.version" autocomplete="off" placeholder="版本号"></el-input>
-        </el-form-item>
-        <el-form-item label="项目类型" prop="type">
-          <el-select v-model="updateData.type" placeholder="请选择">
-            <el-option label="pc" value="pc"></el-option>
-            <el-option label="web" value="web"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="项目描述" prop="description">
-          <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="updateData.description"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisibleUpdate = false;$refs.updateData.resetFields()">取 消</el-button>
-        <el-button type="primary" @click="update()">确 定</el-button>
-      </div>
-    </el-dialog>-->
-    <!-- 编辑项目-结束 -->
+    <!-- 编辑添加项目-结束 -->
   </div>
 </template>
 
@@ -144,34 +116,22 @@ export default {
             .post("/project/create", {
               ...this.form,
             })
-            .then(
-              (res) => {
-                let response = res.data;
-                if (response.code === CODE_OK) {
-                  this.$message.success("成功!");
-                  this.getProjectList(this.currPage, this.pageSize);
-                  this.dialogFormVisible = false;
-                  this.$refs.form.resetFields();
-                } else {
-                  this.$message.error(response.msg);
-                }
-              },
-              () => {
-                this.$message.error("请求失败!");
+            .then((res) => {
+              let response = res.data;
+              if (response.code === CODE_OK) {
+                this.$message.success("成功!");
+                this.getProjectList(this.currPage, this.pageSize);
+                this.dialogFormVisible = false;
+                this.$refs.form.resetFields();
+              } else {
+                this.$message.error(response.msg);
               }
-            );
-        } else {
-          return false;
+            });
         }
       });
     },
     //删除数据
-    delete(id) {
-      if (!id) {
-        this.$message.error("id错误");
-        return;
-      }
-
+    deleteData(id) {
       this.$confirm("此操作将删除该分组, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -182,62 +142,47 @@ export default {
             .post("/project/delete", {
               id,
             })
-            .then(
-              (res) => {
-                let response = res.data;
-                if (response.code === CODE_OK) {
-                  this.$message.success("成功!" + response.msg);
-                  this.getProjectList(this.currPage, this.pageSize);
-                } else {
-                  this.$message.error("失败!" + response.msg);
-                }
-              },
-              () => {
-                this.$message.error("操作失败!");
+            .then((res) => {
+              let response = res.data;
+              if (response.code === CODE_OK) {
+                this.$message.success("成功!" + response.msg);
+                this.getProjectList(this.currPage, this.pageSize);
+              } else {
+                this.$message.error("失败!" + response.msg);
               }
-            );
+            });
         })
         .catch(() => {});
     },
     //更新
     update() {
-      this.isUpdate = true;
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.$http
             .post("/project/update", {
-              ...this.form
+              ...this.form,
             })
-            .then(
-              (res) => {
-                let response = res.data;
-                if (response.code === CODE_OK) {
-                  this.$message.success("成功!");
-                  this.dialogFormVisibleUpdate = false;
-                  this.$refs.updateData.resetFields();
-                  this.getProjectList(this.currPage, this.pageSize);
-                } else {
-                  this.$message.error("失败!" + response.msg);
-                }
-
-                this.update = false;
-              },
-              () => {
-                this.$message.error("操作失败!");
-                this.update = false;
+            .then((res) => {
+              let response = res.data;
+              if (response.code === CODE_OK) {
+                this.$message.success("成功!");
+                this.dialogFormVisible = false;
+                this.$refs.updateData.resetFields();
+                this.getProjectList(this.currPage, this.pageSize);
+              } else {
+                this.$message.error("失败!" + response.msg);
               }
-            )
+              this.update = false;
+            })
             .catch(() => {
               this.update = false;
             });
-        } else {
-          return false;
         }
       });
     },
     jumpPage(page) {
       this.currPage = page;
-      this.getProjectList(page, 5);
+      this.getProjectList(page, this.pageSize);
     },
     detail(row) {
       this.$router.push("/detail/" + row.id);
@@ -248,15 +193,13 @@ export default {
   },
   data() {
     return {
-        projectList: [],
+      projectList: [],
       pageSize: 5,
       currPage: 1,
       itemCount: 0,
       loading: true,
       dialogFormVisible: false,
       isUpdate: false,
-      // dialogFormVisibleUpdate: false,
-      // updateData: {},
       form: {
         title: "",
         version: "",
@@ -294,22 +237,21 @@ export default {
       },
     };
   },
-  components: {},
 };
 </script>
 
 <style lang="scss" scoped>
-.project-list-bar {
-  margin: 10px 0;
-}
-
-.project-list-content {
-  border: 1px solid #e5e5e5;
-  min-height: 600px;
-}
-
-.page-wrapper {
-  text-align: center;
-  margin: 10px 0;
+.project-list {
+  .project-list-bar {
+    margin: 10px 0;
+  }
+  .project-list-content {
+    border: 1px solid #e5e5e5;
+    min-height: 600px;
+  }
+  .page-wrapper {
+    text-align: center;
+    margin: 10px 0;
+  }
 }
 </style>
