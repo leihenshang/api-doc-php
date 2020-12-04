@@ -22,9 +22,17 @@ Vue.use(mavonEditor);
 Vue.use(ElementUI);
 Vue.use(VueClipboard);
 
-//实例化Vue
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount("#app");
+
+(function () {
+  axios.get('/config.json').then((res) => {
+    Vue.prototype.BASE_URL = res.data.BASE_URL;
+
+    //实例化Vue
+    new Vue({
+      router,
+      store,
+      render: (h) => h(App),
+    }).$mount("#app");
+
+  });
+})();

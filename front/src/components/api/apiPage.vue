@@ -108,7 +108,6 @@ export default {
 .api-content {
   width: 100%;
   height: calc(100% - 21px);
-  margin-bottom: 20px;
   display: flex;
 }
 
@@ -120,7 +119,6 @@ export default {
 
 .api-wrapper {
   flex: 1;
-  overflow-y: scroll;
   padding-left: 10px;
 }
 </style>

@@ -42,7 +42,7 @@ export default {
 
 
 <style>
-@import "static/css/normalize.css";
+@import "../public/css/normalize.css";
 
 #app {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
