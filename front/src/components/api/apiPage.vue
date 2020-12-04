@@ -1,11 +1,7 @@
 <template>
   <div class="api-page">
     <div class="btn-wrapper">
-      <div
-        class="btn"
-        v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
-        style="display:inline-block"
-      >
+      <div class="btn" v-show="controlShow()" style="display:inline-block">
         <el-button @click="showCreateGroup = !showCreateGroup">+新建分组</el-button>
       </div>
       <div
@@ -13,11 +9,7 @@
         v-show=" $route.name != 'apiCreate' && $route.name != 'apiEdit' "
         style="display:inline-block"
       >
-        <el-button
-          style="margin:0 10px;"
-          @click="addApi()"
-          v-show="$store.state.projectPermission == 6 || $store.state.userInfo.type === 2"
-        >+创建api</el-button>
+        <el-button style="margin:0 10px;" @click="addApi()" v-show="controlShow()">+创建api</el-button>
         <el-input
           placeholder="请输入标题"
           v-model="keyword"
@@ -48,6 +40,7 @@
 
 <script>
 import group from "../project/group";
+import controlShow from "../../mixins/controlShow";
 
 export default {
   name: "apiPage",
@@ -98,6 +91,7 @@ export default {
   components: {
     group,
   },
+  mixins: [controlShow],
 };
 </script>
 

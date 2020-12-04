@@ -35,13 +35,7 @@
               @confirm="restoreApi(scope.row.id)"
               width="200"
             >
-              <el-button
-                slot="reference"
-                v-show="
-                  $store.state.projectPermission == 6 ||
-                  $store.state.userInfo.type === 2
-                "
-              >还原</el-button>
+              <el-button slot="reference" v-show="controlShow()">还原</el-button>
             </el-popconfirm>
 
             <el-popconfirm
@@ -89,6 +83,7 @@
 </template>
 
 <script>
+import controlShow from "../../mixins/controlShow";
 const CODE_OK = 200;
 
 export default {
@@ -235,6 +230,7 @@ export default {
       }
     },
   },
+  mixins: [controlShow],
 };
 </script>
 

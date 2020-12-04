@@ -1,19 +1,21 @@
 
 <template>
   <div class="group">
-    <h4>
-      <span>分组</span>
-    </h4>
     <ul v-show="group">
       <li>
         <a href="javascript:;" @click="clientBtn(null,null)">
           <i class="el-icon-s-order"></i>
-          <slot>全部条目</slot>
+          <slot>全 部</slot>
+        </a>
+      </li>
+      <li>
+        <a href="javascript:;">
+          <i class="el-icon-delete"></i> 管 理
         </a>
       </li>
       <li class="last-item">
         <a href="javascript:;" @click="clientBtn(-1,null)">
-          <i class="el-icon-delete"></i> 回收站
+          <i class="el-icon-delete"></i> 回 收 站
         </a>
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
@@ -228,7 +230,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .group {
   width: 100%;
@@ -239,19 +240,9 @@ export default {
   overflow-y: auto;
 }
 
-.group h4 {
-  font-size: 14px;
-  padding: 5px 0 0 15px;
-  position: relative;
-}
-
-.group h4 span {
-  display: inline-block;
-}
-
 .group ul {
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
 }
 
 .group ul li {
