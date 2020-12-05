@@ -2,6 +2,7 @@
   <div class="api-detail" v-loading="loading">
     <div class="btn-group">
       <el-button @click="returnApiPage">↩ 接口列表</el-button>
+      <el-button @click="returnApiPage">复制接口</el-button>
       <el-button @click="updateApi()" v-show="$store.state.projectPermission == 6" type="primary">编辑</el-button>
     </div>
     <!-- api信息 -->
@@ -67,7 +68,7 @@
         <el-table-column prop="name" label="参数" width="180"></el-table-column>
         <el-table-column prop="desc" label="说明" width="180"></el-table-column>
         <el-table-column prop="required" label="必填">
-          <template scope="scope">{{scope.row.required }}</template>
+          <template slot-scope="scope">{{scope.row.required }}</template>
         </el-table-column>
         <el-table-column prop="type" label="类型"></el-table-column>
         <el-table-column prop="example" label="示例"></el-table-column>
@@ -82,7 +83,7 @@
         <el-table-column prop="objectName" label="类名" width="180"></el-table-column>
         <el-table-column prop="description" label="说明"></el-table-column>
         <el-table-column prop="required" label="必含">
-          <template scope="scope">{{scope.row.required }}</template>
+          <template slot-scope="scope">{{scope.row.required }}</template>
         </el-table-column>
         <el-table-column prop="type" label="类型"></el-table-column>
       </el-table>
