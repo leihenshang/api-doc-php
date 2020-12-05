@@ -9,7 +9,7 @@
       >全部文档</group>
     </div>
     <div class="doc-wrapper">
-      <div class="btn-wrapper">
+      <div class="btn-wrapper" v-show=" $route.name == 'docList' ">
         <div class="input" style="display:inline-block;">
           <el-button @click="addDoc()" style="margin-right:5px">创建文档</el-button>
           <el-input
@@ -17,6 +17,7 @@
             v-model="keyword"
             class="input-with-select"
             style="width:300px"
+            clearable
           ></el-input>
           <el-button icon="el-icon-search" @click="searchDoc()" style="margin-left:5px;">搜索</el-button>
         </div>

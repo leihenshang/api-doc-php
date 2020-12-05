@@ -41,18 +41,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item label="开发语言" prop="develop_language" label-width="80px">
-              <el-select v-model="apiInfo.develop_language" placeholder="选择开发语言">
-                <el-option
-                  v-for="item in propertyList.api_language"
-                  :key="item.id"
-                  :label="item.tag_name"
-                  :value="item.tag_name"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
+          <el-col :span="5"></el-col>
         </el-form-item>
         <el-form-item label="url" prop="url" label-width="80px">
           <el-input v-model="apiInfo.url"></el-input>

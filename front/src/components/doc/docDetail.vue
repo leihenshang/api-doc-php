@@ -1,20 +1,17 @@
 <template>
   <div class="doc-wrapper">
     <div class="btn">
-      <div class="left">
-        <el-button plain @click="$router.go(-1)">
-          <i class="el-icon-arrow-left"></i> 文档列表
-        </el-button>
-      </div>
-      <div class="right">
-        <el-button
-          type="success"
-          plain
-          @click="updateDoc()"
-          :loading="btnLoading"
-          v-show="$store.state.projectPermission == 6"
-        >修改文档</el-button>
-      </div>
+      <el-button plain @click="$router.go(-1)">
+        <i class="el-icon-arrow-left"></i> 文档列表
+      </el-button>
+
+      <el-button
+        type="success"
+        plain
+        @click="updateDoc()"
+        :loading="btnLoading"
+        v-show="$store.state.projectPermission == 6"
+      >修改文档</el-button>
     </div>
     <div class="doc-detail" v-if="doc">
       <div class="title">
@@ -26,16 +23,14 @@
         <span>阅读次数:{{doc.view_count}}</span>
         <span>点赞次数:{{doc.like_count}}</span>
       </div>
-      <div class="doc-content">
-        <mavon-editor
-          v-model="doc.content"
-          ref="md"
-          :subfield="false"
-          :editable="false"
-          :toolbarsFlag="false"
-          :defaultOpen="'preview'"
-        />
-      </div>
+      <mavon-editor
+        v-model="doc.content"
+        ref="md"
+        :subfield="false"
+        :editable="false"
+        :toolbarsFlag="false"
+        :defaultOpen="'preview'"
+      />
     </div>
   </div>
 </template>
@@ -84,37 +79,31 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.doc-detail {
-  margin: 10px auto;
-  background-color: #fff;
-  height: 100%;
-  min-height: 620px;
+.doc-wrapper {
+  margin: 10px 0 0 0;
 
+  .doc-detail {
+    margin: 10px auto;
+    background-color: #fff;
+    height: 100%;
+    min-height: 620px;
+
+    .info span {
+      margin-right: 12px;
+      font-size: 12px;
+      color: gray;
+    }
+  }
+
+  .v-note-wrapper {
+    margin: 10px 0;
+    height: 1000px;
+  }
+
+  .btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
 }
-
-.doc-detail .info span {
-  margin-right: 12px;
-  font-size: 12px;
-  color: gray;
-}
-
-.doc-content .v-note-wrapper {
-  margin: 10px 0;
-  height: 1000px;
-}
-
-.doc-content ul li {
-  list-style: auto;
-}
-
-.btn {
-  width: 100%;
-  display: flex;
-}
-
-.btn .right {
-  padding-left: 20px;
-}
-
-
 </style>

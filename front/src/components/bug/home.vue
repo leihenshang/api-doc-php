@@ -8,23 +8,6 @@
             :myTargetObject="contentFilter"
             :userFilterOptions="userFilterOptions"
           ></user-search-select>
-
-          <!-- <el-select
-            v-model="contentFilter.toUserId"
-            filterable
-            remote
-            clearable
-            placeholder="请输入昵称"
-            :remote-method="userFilterSearch"
-            :loading="userFilterLoading"
-          >
-            <el-option
-              v-for="item in userFilterOptions"
-              :key="item.id"
-              :label="item.nick_name"
-              :value="item.id"
-            ></el-option>
-          </el-select>-->
         </el-form-item>
 
         <el-form-item label="状态" prop="status">

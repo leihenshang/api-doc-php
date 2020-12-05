@@ -7,23 +7,14 @@
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button
-              @click="jumpPage('docEdit',scope.row.id)"
-              v-show="$store.state.projectPermission == 6"
-            >编辑</el-button>
+            <el-button @click="jumpPage('docEdit',scope.row.id)">编辑</el-button>
             <el-button @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
             <el-button
               v-if="$route.params.groupId == -1"
               type="danger"
               @click="restoreDoc(scope.row.id)"
-              v-show="$store.state.projectPermission == 6"
             >还原</el-button>
-            <el-button
-              v-else
-              type="danger"
-              @click="delDoc(scope.row.id)"
-              v-show="$store.state.projectPermission == 6"
-            >删除</el-button>
+            <el-button v-else type="danger" @click="delDoc(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -35,8 +26,6 @@
         :total="count"
         :page-size="ps"
         :current-page="cp"
-        @prev-click="changePage($event)"
-        @next-click="changePage($event)"
         @current-change="changePage($event)"
       ></el-pagination>
     </div>
@@ -66,7 +55,7 @@ export default {
       loading: true,
       docList: [],
       cp: 1,
-      ps: 10,
+      ps: 2,
       count: 0,
     };
   },
@@ -106,9 +95,6 @@ export default {
     },
     //翻页
     changePage(event) {
-      if (event == this.cp) {
-        return;
-      }
       this.loading = true;
       this.getDocList(this.ps, event, this.groupId, this.$route.params.id);
       this.cp = event;
@@ -119,34 +105,32 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-      })
-        .then(() => {
-          this.$http
-            .post("/doc/delete", {
-              id: id,
-              projectId: this.$route.params.id,
-            })
-            .then(
-              (response) => {
-                response = response.data;
-                if (response.code === CODE_OK) {
-                  this.$message.success("成功!");
-                  this.getDocList(
-                    this.ps,
-                    this.cp,
-                    this.groupId,
-                    this.$route.params.id
-                  );
-                } else {
-                  this.$message.error("操作失败!");
-                }
-              },
-              () => {
-                this.$message.error("操作失败!");
+      }).then(() => {
+        this.$http
+          .post("/doc/delete", {
+            id: id,
+            projectId: this.$route.params.id,
+          })
+          .then((response) => {
+            response = response.data;
+            if (response.code === CODE_OK) {
+              this.$message.success("成功!");
+              //如果当前页只有1条数据则请求上一页
+              if (this.docList.length === 1 && this.cp > 1) {
+                this.cp--;
               }
-            );
-        })
-        .catch(() => {});
+
+              this.getDocList(
+                this.ps,
+                this.cp,
+                this.groupId,
+                this.$route.params.id
+              );
+            } else {
+              this.$message.error("操作失败!");
+            }
+          });
+      });
     },
     //获取文档
     getDocList(size, curr, groupId, projectId, keyword = "") {
@@ -167,7 +151,7 @@ export default {
             ps: size,
             cp: curr,
             is_deleted: groupId < 0 ? 1 : 0,
-            keyword: keyword.length > 0 ? keyword : "",
+            keyword: keyword,
           },
         })
         .then(

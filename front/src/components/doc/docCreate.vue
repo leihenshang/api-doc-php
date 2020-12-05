@@ -2,18 +2,16 @@
   <div class="doc-create">
     <div class="btn">
       <div class="left">
-        <el-button plain  @click="$router.go(-1)">&lt; 文档列表</el-button>
+        <el-button plain @click="$router.go(-1)">&lt; 文档列表</el-button>
       </div>
       <div class="right">
-        <el-button type="success" plain  @click="createDoc()">保存文档</el-button>
-        <el-button type="success" plain  @click="createDoc(true)">继续添加</el-button>
+        <el-button type="success" plain @click="createDoc()">保存文档</el-button>
+        <el-button type="success" plain @click="createDoc(true)">继续添加</el-button>
       </div>
     </div>
     <div class="doc-box">
       <DocInfo :groupList="this.groupList" v-on:update-info="updateInfo($event)" />
-      <div class="doc-content">
-        <mavon-editor v-model="content" />
-      </div>
+      <mavon-editor v-model="content" />
     </div>
   </div>
 </template>
@@ -24,7 +22,7 @@ const CODE_OK = 200;
 
 export default {
   components: {
-    DocInfo
+    DocInfo,
   },
   name: "docCreate",
   data() {
@@ -33,7 +31,7 @@ export default {
       content: "",
       description: "",
       groupId: null,
-      groupList: []
+      groupList: [],
     };
   },
   methods: {
@@ -47,16 +45,16 @@ export default {
     //获取分组列表
     getGroup(pageSize = 10, curr = 1, projectId) {
       this.$http
-        .get( "/group/list", {
+        .get("/group/list", {
           params: {
             cp: curr,
             type: 3,
             ps: pageSize,
-            projectId: projectId ? projectId : 0
-          }
+            projectId: projectId ? projectId : 0,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               if (response.data) {
@@ -87,16 +85,16 @@ export default {
       this.$confirm("要保存吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(() => {
         this.$http
-          .post( "/doc/create", {
+          .post("/doc/create", {
             title: this.title,
             content: this.content,
             group_id: this.groupId,
-            project_id:this.$route.params.id
+            project_id: this.$route.params.id,
           })
-          .then(res => {
+          .then((res) => {
             res = res.data;
             if (res.code === CODE_OK) {
               this.$message.success("创建成功！");
@@ -111,32 +109,33 @@ export default {
             }
           });
       });
-    }
+    },
   },
   created() {
     this.getGroup(100, 1, this.$route.params.id);
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>
-.doc-box {
-  margin: 20px auto;
-  min-height: 1200px;
-}
+.doc-create {
+  .doc-box {
+    margin: 20px auto;
+    min-height: 1200px;
+  }
 
-.doc-content .v-note-wrapper {
-  margin: 10px;
-  height: 1000px;
-}
+  .v-note-wrapper {
+    margin: 10px;
+    height: 1000px;
+  }
 
-.btn {
-  width: 100%;
-  display: flex;
-  margin: 0 10px;
-}
-
-.btn .right {
-  text-align: right;
-  padding-right: 20px;
+  .btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    .right {
+      padding-right: 20px;
+    }
+  }
 }
 </style>

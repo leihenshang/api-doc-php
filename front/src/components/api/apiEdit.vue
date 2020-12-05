@@ -1,36 +1,28 @@
 <template>
   <div class="create-api" v-loading="loading">
     <div class="box1">
-      <div class="btn-group-1">
-        <button @click="returnApiPage">↩ 接口列表</button>
-        <button
-          @click="showDescription=false"
-          v-bind:class="{ 'btn-group-1-btn-change' : showDescription==false}"
-        >基础信息</button>
-        <button
-          @click="showDescription=true"
-          v-bind:class="{ 'btn-group-1-btn-change' : showDescription==true}"
-        >详细说明</button>
-      </div>
-      <!-- 保存按钮 -->
-      <div class="btn-group-2">
-        <button style="float:right;" @click="updateApi()">保存</button>
-      </div>
+      <el-button @click="returnApiPage">↩ 接口列表</el-button>
+      <el-button style="float:right;" @click="updateApi()">保存</el-button>
     </div>
-    <!-- 详细说明 -->
-    <detailDescription
-      v-show="showDescription"
-      :description="apiData.description"
-      v-on:update="apiData.description=$event"
-    />
-    <!-- api信息 -->
-    <apiInfo
-      v-show="showDescription === false"
-      :groupList="groupList"
-      :propertyList="propertyList"
-      :apiData="apiData"
-      ref="apiInfo"
-    />
+
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="基本信息" name="first">
+        <!-- api信息 -->
+        <apiInfo
+          :groupList="groupList"
+          :propertyList="propertyList"
+          :apiData="apiData"
+          ref="apiInfo"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="接口备注" name="second">
+        <!-- 详细说明 -->
+        <detailDescription
+          :description="apiData.description"
+          v-on:update="apiData.description=$event"
+        />
+      </el-tab-pane>
+    </el-tabs>
 
     <!-- 请求参数 -->
     <requestParams
@@ -68,7 +60,7 @@ export default {
   },
   data() {
     return {
-      showDescription: false,
+      activeName: "first",
       loading: true,
       groupList: [],
       propertyList: [],
@@ -211,51 +203,7 @@ export default {
 
 /* 第一行按钮 */
 .box1 {
-  margin: 5px 0;
   display: flex;
   justify-content: space-between;
-}
-
-.btn-group-1 button,
-.btn-group-2 button {
-  border: 1px solid #dddddd;
-  width: 90px;
-  height: 30px;
-  font-size: 12px;
-  margin: 0;
-  padding: 0;
-  outline: none;
-  border-radius: 3px;
-}
-
-.btn-group-1 button {
-  border-right: none;
-  border-left: none;
-}
-
-.btn-group-1-btn-change {
-  background-color: #efefef;
-}
-
-.btn-group-1 button:first-child {
-  margin: 0 10px 0 0;
-  border-right: 1px solid #dddddd;
-  border-left: 1px solid #dddddd;
-}
-
-.btn-group-1 button:nth-child(2) {
-  border-left: 1px solid #dddddd;
-
-  border-radius: 3px 0 0 3px;
-}
-
-.btn-group-1-btn-change {
-  background-color: #4caf50;
-  color: #fff;
-}
-
-.btn-group-1 button:nth-last-child(1) {
-  border-right: 1px solid #dddddd;
-  border-radius: 0 3px 3px 0;
 }
 </style>

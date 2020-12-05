@@ -1,24 +1,13 @@
 <template>
-  <div class="doc-edit">
-    <div
-      class="loading"
-      v-loading="loading"
-      element-loading-text="拼命加载中"
-      element-loading-spinner="el-icon-loading"
-    >
-      <div class="btn">
-        <div class="left">
-          <el-button plain  @click="$router.go(-1)">&lt; 返回</el-button>
-        </div>
-        <div class="right">
-          <el-button type="success" plain  @click="updateDoc()">保存文档</el-button>
-        </div>
-      </div>
-      <div class="doc-wrapper">
-        <DocInfo :doc="doc" :groupList="this.groupList" v-on:update-info="updateInfo($event)" />
-        <div class="doc-content">
-          <mavon-editor v-model="doc.content" ref="md" />
-        </div>
+  <div class="doc-edit" v-loading="loading">
+    <div class="btn">
+      <el-button plain @click="$router.go(-1)">返 回</el-button>
+      <el-button type="success" plain @click="updateDoc()">保存文档</el-button>
+    </div>
+    <div class="doc-wrapper">
+      <DocInfo :doc="doc" :groupList="this.groupList" v-on:update-info="updateInfo($event)" />
+      <div class="doc-content">
+        <mavon-editor v-model="doc.content" ref="md" />
       </div>
     </div>
   </div>
@@ -29,18 +18,18 @@ const CODE_OK = 200;
 
 export default {
   components: {
-    DocInfo
+    DocInfo,
   },
   name: "docEdit",
   props: {
-    docId: [Number, String]
+    docId: [Number, String],
   },
   data() {
     return {
       doc: {},
       groupList: [],
       isCreate: true,
-      loading: true
+      loading: true,
     };
   },
   methods: {
@@ -51,16 +40,16 @@ export default {
     //获取分组列表
     getGroup(pageSize = 10, curr = 1, projectId) {
       this.$http
-        .get( "/group/list", {
+        .get("/group/list", {
           params: {
             cp: curr,
             type: 3,
             ps: pageSize,
-            projectId: projectId ? projectId : 0
-          }
+            projectId: projectId ? projectId : 0,
+          },
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               if (response.data) {
@@ -91,16 +80,16 @@ export default {
       this.$confirm("要保存吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(() => {
         this.$http
-          .post( "/doc/update", {
+          .post("/doc/update", {
             title: this.doc.title,
             content: this.doc.content,
             group_id: this.doc.group_id,
-            id: this.docId
+            id: this.docId,
           })
-          .then(res => {
+          .then((res) => {
             res = res.data;
             if (res.code === CODE_OK) {
               this.$message.success("更新成功!");
@@ -114,13 +103,13 @@ export default {
     //获取文档详情
     getDocDetail() {
       this.$http
-        .get( "/doc/detail", {
+        .get("/doc/detail", {
           params: {
-            id: this.docId
-          }
+            id: this.docId,
+          },
         })
         .then(
-          res => {
+          (res) => {
             let response = res.data;
             if (response.code === CODE_OK) {
               this.doc = response.data;
@@ -132,7 +121,7 @@ export default {
             this.$message.error("获取数据失败");
           }
         );
-    }
+    },
   },
   created() {
     if (!this.docId) {
@@ -143,32 +132,32 @@ export default {
     this.getDocDetail();
   },
   watch: {
-    doc: function(val) {
+    doc: function (val) {
       if (val.id) {
         this.loading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-.doc-wrapper {
-  margin: 20px auto;
-  min-height: 800px;
-}
+.doc-edit {
+  margin: 10px 0 0 0;
 
-.doc-content .v-note-wrapper {
-  margin: 10px;
-  height: 1000px;
-}
+  .doc-wrapper {
+    margin: 20px auto;
+    min-height: 800px;
+  }
 
-.btn {
-  width: 100%;
-  display: flex;
-}
+  .doc-content .v-note-wrapper {
+    margin: 10px;
+    height: 1000px;
+  }
 
-.btn .right {
-  text-align: right;
-  padding-right: 20px;
+  .btn {
+    width: 100%;
+    display: flex;
+     justify-content: space-between;
+  }
 }
 </style>

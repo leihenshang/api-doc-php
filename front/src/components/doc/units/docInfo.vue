@@ -3,13 +3,13 @@
     <ul>
       <li>
         <span class="span-label">分组:</span>
-        <el-select v-model="content.groupId"  placeholder="请选择">
+        <el-select v-model="content.groupId" placeholder="请选择">
           <el-option v-for="item in groupList" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </li>
       <li>
         <span class="span-label">标题:</span>
-        <el-input v-model="content.title"  placeholder="请输入标题" style="width:90%"></el-input>
+        <el-input v-model="content.title" placeholder="请输入标题" style="width:50%"></el-input>
       </li>
     </ul>
   </div>
@@ -44,18 +44,24 @@ export default {
   },
 };
 </script>
-<style>
-.info ul li {
-  padding: 5px 0;
-  list-style: none;
-}
+<style lang="scss" scoped>
+.info {
+  ul {
+    margin: 0;
+    padding: 0;
+    li {
+      padding: 5px 0;
+      list-style: none;
+    }
+  }
 
-.info li .span-label {
-  display: inline-block;
-  min-width: 50px;
-  text-align: right;
-  padding-right: 20px;
-  font-size: 12px;
-  font-weight: 600;
+  li .span-label {
+    display: inline-block;
+    min-width: 50px;
+    text-align: right;
+    padding-right: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
 }
 </style>

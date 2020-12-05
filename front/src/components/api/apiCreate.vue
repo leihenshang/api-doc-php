@@ -7,7 +7,6 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="基本信息" name="first">
         <apiInfo
-          v-show="showDescription === false"
           :groupList="groupList"
           :propertyList="propertyList"
           :groupId="groupId"
@@ -65,7 +64,6 @@ export default {
         },
       },
       finalData: {},
-      showDescription: false,
       errors: "信息填写错误",
     };
   },
