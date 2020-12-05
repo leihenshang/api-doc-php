@@ -4,10 +4,7 @@
       <el-button @click="returnApiPage">↩ 接口列表</el-button>
       <div>
         <el-button @click="copyApi">复制接口</el-button>
-        <el-button
-          @click="updateApi()"
-          type="primary"
-        >编辑</el-button>
+        <el-button @click="updateApi()" type="primary">编辑</el-button>
       </div>
     </div>
     <!-- api信息 -->
@@ -217,12 +214,7 @@ export default {
       return groupName;
     },
   },
-  watch: {
-    apiId: function () {
-      this.loading = true;
-      this.getApiDetail();
-    },
-  },
+
   components: {},
 };
 </script>
@@ -256,8 +248,8 @@ export default {
     i {
       font-style: normal;
       font-weight: bold;
-            min-width: 100px;
-      display:inline-block;
+      min-width: 100px;
+      display: inline-block;
       text-align: center;
     }
 
@@ -267,7 +259,7 @@ export default {
       font-weight: 700;
       margin-right: 5px;
       min-width: 100px;
-      display:inline-block;
+      display: inline-block;
     }
 
     span {

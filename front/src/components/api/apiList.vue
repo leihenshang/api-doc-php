@@ -219,6 +219,7 @@ export default {
   components: {},
   watch: {
     $route: function (to) {
+      console.log(to)
       if (to.query.keyword) {
         this.cp = 1;
         this.getApiList(20, 1, to.params.id, 0, to.query.keyword);

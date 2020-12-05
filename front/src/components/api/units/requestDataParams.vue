@@ -30,6 +30,7 @@
           </td>
           <td>
             <el-button
+              size="small"
               v-if="item.content.length >= 1"
               icon="el-icon-delete"
               @click="apiParamHeaderDelete(index)"
