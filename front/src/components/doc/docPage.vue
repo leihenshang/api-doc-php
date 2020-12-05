@@ -4,7 +4,6 @@
       <group
         :type="type"
         v-on:change-group="changeGroup"
-        :showCreateGroup="showCreateGroup"
         :showIsEdit="$store.state.projectPermission == 4 ? false : true"
       >全部文档</group>
     </div>
@@ -30,8 +29,6 @@
 <script>
 import group from "../project/group";
 
-// const CODE_OK = 200;
-
 export default {
   name: "docPage",
   props: {
@@ -42,16 +39,7 @@ export default {
   data() {
     return {
       keyword: "",
-      groupList: [],
-      docData: {},
       type: 3,
-      indesideRoute: [
-        { title: "项目概况", route: "detail" },
-        { title: "API接口", route: "api" },
-      ],
-      showCreateGroup: false,
-      groupId: 0,
-      isCreate: false,
     };
   },
   methods: {
@@ -78,7 +66,6 @@ export default {
     },
     //添加文档
     addDoc() {
-      this.isCreate = true;
       this.$router.push({ name: "docCreate" });
     },
   },

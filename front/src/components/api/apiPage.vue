@@ -4,7 +4,6 @@
       <group
         :type="type"
         v-on:change-group="changeGroup"
-        :showCreateGroup="showCreateGroup"
         :showIsEdit="$store.state.projectPermission == 4 ? false : true"
       >全部接口</group>
     </div>
@@ -34,12 +33,6 @@ export default {
   data() {
     return {
       type: 1,
-      groupId: 0,
-      groupList: [],
-      apiList: {},
-      curr: 1,
-      pageSize: 100,
-      showCreateGroup: false,
       keyword: "",
     };
   },

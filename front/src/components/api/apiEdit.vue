@@ -1,8 +1,8 @@
 <template>
   <div class="create-api" v-loading="loading">
     <div class="box1">
-      <el-button @click="returnApiPage">↩ 接口列表</el-button>
-      <el-button style="float:right;" @click="updateApi()">保存</el-button>
+      <el-button @click="returnApiPage">↩ 返 回</el-button>
+      <el-button style="float:right;" @click="saveApi()">保 存</el-button>
     </div>
 
     <el-tabs v-model="activeName">
@@ -57,6 +57,7 @@ export default {
     this.getApiDetail();
     this.getGroup();
     this.getProperty();
+    this.isCopy = this.$route.query.copy == true;
   },
   data() {
     return {
@@ -68,6 +69,7 @@ export default {
       http_request_header: [],
       http_request_params: [],
       http_return_params: [],
+      isCopy: false,
     };
   },
   methods: {
@@ -103,11 +105,12 @@ export default {
       this.$router.go(-1);
     },
     //更新api
-    updateApi() {
+    saveApi() {
+      let url = this.isCopy ? "/api/create" : "/api/update";
       this.$refs.apiInfo.$refs.form.validate((validate) => {
         if (validate) {
           this.$http
-            .post("/api/update", {
+            .post(url, {
               id: this.apiId,
               group_id: this.apiData.group_id,
               project_id: this.$route.params.id,
@@ -118,23 +121,18 @@ export default {
                 response = response.data;
                 if (response.code === CODE_OK) {
                   this.$message({
-                    message: "更新数据成功！",
+                    message: "保存成功！",
                     type: "success",
                   });
-                  this.$router.go(-1);
+                  this.$router.push({name:"apiList"});
                 } else {
                   this.$message({
                     message: !response.msg ? response.msg : "",
                     type: "error",
                   });
                 }
-              },
-              () => {
-                this.$message.error("保存失败!");
               }
             );
-        } else {
-          return false;
         }
       });
     },
@@ -188,11 +186,6 @@ export default {
     apiInfo,
     detailDescription,
   },
-  watch: {
-    apiId: function () {
-      this.getApiDetail();
-    },
-  },
 };
 </script>
 
@@ -201,7 +194,6 @@ export default {
   margin-bottom: 20px;
 }
 
-/* 第一行按钮 */
 .box1 {
   display: flex;
   justify-content: space-between;
