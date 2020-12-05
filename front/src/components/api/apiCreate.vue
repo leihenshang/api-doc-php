@@ -1,24 +1,24 @@
 <template>
   <div class="create-api">
     <div class="box1">
-      <div class="btn-group-1">
-        <button @click="returnApiPage">↩ 接口列表</button>
-      </div>
-      <div class="btn-group-1">
-        <button @click="createApi()">保存</button>
-      </div>
+      <el-button @click="returnApiPage">↩ 接口列表</el-button>
+      <el-button @click="createApi()">保存</el-button>
     </div>
-
-    <apiInfo
-      v-show="showDescription === false"
-      :groupList="groupList"
-      :propertyList="propertyList"
-      :groupId="groupId"
-      v-on:update:apiInfo="apiInfo = $event"
-      ref="apiInfo"
-    />
-
-    <detailDescription :description="description" v-on:update="description = $event" />
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="基本信息" name="first">
+        <apiInfo
+          v-show="showDescription === false"
+          :groupList="groupList"
+          :propertyList="propertyList"
+          :groupId="groupId"
+          v-on:update:apiInfo="apiInfo = $event"
+          ref="apiInfo"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="接口备注" name="second">
+        <detailDescription :description="description" v-on:update="description = $event" />
+      </el-tab-pane>
+    </el-tabs>
 
     <requestParams
       :propertyList="propertyList"
@@ -47,6 +47,7 @@ export default {
   },
   data() {
     return {
+      activeName: "first",
       //分组列表
       groupList: [],
       //api属性列表
@@ -173,47 +174,7 @@ export default {
 <style lang="scss" scoped>
 /* 第一行按钮 */
 .box1 {
-  margin: 5px 0;
   display: flex;
   justify-content: space-between;
-}
-
-.btn-group-1 button {
-  border: 1px solid #dddddd;
-  width: 90px;
-  height: 30px;
-  font-size: 12px;
-  margin: 0;
-  padding: 0;
-  outline: none;
-  border-right: none;
-  border-left: none;
-  border-radius: 3px;
-}
-
-.btn-group-1-btn-change {
-  background-color: #efefef;
-}
-
-.btn-group-1 button:first-child {
-  margin: 0 10px 0 0;
-  border-right: 1px solid #dddddd;
-  border-left: 1px solid #dddddd;
-}
-
-.btn-group-1 button:nth-child(2) {
-  border-left: 1px solid #dddddd;
-
-  border-radius: 3px 0 0 3px;
-}
-
-.btn-group-1-btn-change {
-  background-color: #4caf50;
-  color: #fff;
-}
-
-.btn-group-1 button:nth-last-child(1) {
-  border-right: 1px solid #dddddd;
-  border-radius: 0 3px 3px 0;
 }
 </style>

@@ -1,38 +1,27 @@
 <template>
   <div class="doc-page">
-    <div class="btn-wrapper">
-      <div class="btn" style="display:inline-block">
-        <el-button
-          @click="showCreateGroup = !showCreateGroup"
-          v-show="$store.state.projectPermission == 6"
-        >+新建分组</el-button>
-      </div>
-      <div class="input" style="display:inline-block;">
-        <el-button @click="addDoc()" style="margin-right:5px">创建文档</el-button>
-        <el-input
-          placeholder="请输入标题"
-          v-model="keyword"
-          class="input-with-select"
-          style="width:300px"
-        ></el-input>
-        <el-button icon="el-icon-search" @click="searchDoc()" style="margin-left:5px;">搜索</el-button>
-      </div>
+    <div class="group-wrapper">
+      <group
+        :type="type"
+        v-on:change-group="changeGroup"
+        :showCreateGroup="showCreateGroup"
+        :showIsEdit="$store.state.projectPermission == 4 ? false : true"
+      >全部文档</group>
     </div>
-
-    <div class="doc-content">
-      <div class="group-wrapper">
-        <group
-          :type="type"
-          v-on:change-group="changeGroup"
-          :showCreateGroup="showCreateGroup"
-          :showIsEdit="$store.state.projectPermission == 4 ? false : true"
-        >全部文档</group>
+    <div class="doc-wrapper">
+      <div class="btn-wrapper">
+        <div class="input" style="display:inline-block;">
+          <el-button @click="addDoc()" style="margin-right:5px">创建文档</el-button>
+          <el-input
+            placeholder="请输入标题"
+            v-model="keyword"
+            class="input-with-select"
+            style="width:300px"
+          ></el-input>
+          <el-button icon="el-icon-search" @click="searchDoc()" style="margin-left:5px;">搜索</el-button>
+        </div>
       </div>
-      <div class="doc-wrapper">
-        <transition name="el-fade-in-linear" mode="out-in" appear>
-          <router-view />
-        </transition>
-      </div>
+      <router-view />
     </div>
   </div>
 </template>
@@ -99,32 +88,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-wrapper {
-  padding: 10px 0;
-  overflow: hidden;
-}
-
-.doc-content {
+.doc-page {
   width: 100%;
   height: calc(100% - 21px);
   display: flex;
-}
 
-.group-wrapper {
-  width: 260px;
-  height: auto;
-  border: 1px solid #e5e5e5;
-}
+  .group-wrapper {
+    width: 260px;
+    height: auto;
+    border: 1px solid #e5e5e5;
+    flex: 0.2;
+    margin: 10px 0 0 0;
+  }
 
-.doc-wrapper {
-  flex: 1;
-  padding-left: 10px;
-}
-
-.btn {
-  width: 260px;
-}
-.input {
-  margin-left: 10px;
+  .doc-wrapper {
+    flex: 1;
+    padding-left: 10px;
+    .btn-wrapper {
+      padding: 10px 0;
+      overflow: hidden;
+    }
+  }
 }
 </style>

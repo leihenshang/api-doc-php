@@ -1,39 +1,24 @@
 <template>
   <div class="api-page">
-    <div class="btn-wrapper">
-      <div class="btn" v-show="controlShow()" style="display:inline-block">
-        <el-button @click="showCreateGroup = !showCreateGroup">+新建分组</el-button>
-      </div>
-      <div
-        class="input"
-        v-show=" $route.name != 'apiCreate' && $route.name != 'apiEdit' "
-        style="display:inline-block"
-      >
-        <el-button style="margin:0 10px;" @click="addApi()" v-show="controlShow()">+创建api</el-button>
-        <el-input
-          placeholder="请输入标题"
-          v-model="keyword"
-          class="input-with-select"
-          style="width:300px"
-        >
-          <el-button size slot="append" icon="el-icon-search" @click="searchApi()"></el-button>
-        </el-input>
-      </div>
+    <div class="group-wrapper">
+      <group
+        :type="type"
+        v-on:change-group="changeGroup"
+        :showCreateGroup="showCreateGroup"
+        :showIsEdit="$store.state.projectPermission == 4 ? false : true"
+      >全部接口</group>
     </div>
 
-    <div class="api-content">
-      <div class="group-wrapper">
-        <group
-          :type="type"
-          v-on:change-group="changeGroup"
-          :showCreateGroup="showCreateGroup"
-          :showIsEdit="$store.state.projectPermission == 4 ? false : true"
-        >全部接口</group>
+    <div class="api-wrapper">
+      <div class="btn-wrapper">
+        <div v-show=" $route.name == 'apiList'  ">
+          <el-input placeholder="请输入标题" v-model="keyword" style="width:400px">
+            <el-button size slot="append" icon="el-icon-search" @click="searchApi()"></el-button>
+          </el-input>
+          <el-button style="margin:0 0 0 10px;" @click="addApi()" v-show="controlShow()">+创建api</el-button>
+        </div>
       </div>
-
-      <div class="api-wrapper">
-        <router-view></router-view>
-      </div>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -96,29 +81,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-wrapper {
-  padding: 10px 0;
-  overflow: hidden;
-}
-
-.btn {
-  width: 260px;
-}
-
-.api-content {
+.api-page {
   width: 100%;
   height: calc(100% - 21px);
   display: flex;
-}
 
-.group-wrapper {
-  width: 260px;
-  height: auto;
-  border: 1px solid #e5e5e5;
-}
+  .group-wrapper {
+    width: 260px;
+    height: auto;
+    border: 1px solid #e5e5e5;
+    flex: 0.2;
+    margin: 10px 0 0 0;
+  }
 
-.api-wrapper {
-  flex: 1;
-  padding-left: 10px;
+  .api-wrapper {
+    flex: 1;
+    padding-left: 10px;
+    .btn-wrapper {
+      padding: 10px 0;
+      overflow: hidden;
+    }
+  }
 }
 </style>

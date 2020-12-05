@@ -2,17 +2,18 @@
 <template>
   <div class="group">
     <ul v-show="group">
+      <li @click="showCreateGroupDialog">
+        <a href="javascript:;">
+          <i class="el-icon-delete"></i> 新增分组
+        </a>
+      </li>
       <li>
         <a href="javascript:;" @click="clientBtn(null,null)">
           <i class="el-icon-s-order"></i>
           <slot>全 部</slot>
         </a>
       </li>
-      <li>
-        <a href="javascript:;">
-          <i class="el-icon-delete"></i> 管 理
-        </a>
-      </li>
+
       <li class="last-item">
         <a href="javascript:;" @click="clientBtn(-1,null)">
           <i class="el-icon-delete"></i> 回 收 站
@@ -39,7 +40,6 @@ const CODE_OK = 200;
 export default {
   name: "group",
   props: {
-    showCreateGroup: Boolean,
     showIsEdit: {
       type: Boolean,
       default: false,
@@ -130,7 +130,9 @@ export default {
               this.getGroup(this.pageSize, this.curr, this.$route.params.id);
             });
         })
-        .catch(() => {});
+        .catch(() => {
+          this.showCreateGroup = false;
+        });
     },
     //点击分组
     clientBtn(id, index) {
@@ -180,9 +182,7 @@ export default {
         })
         .catch(() => {});
     },
-  },
-  watch: {
-    showCreateGroup: function () {
+    showCreateGroupDialog() {
       this.$prompt("请输入分组名", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -220,6 +220,8 @@ export default {
           this.getGroup(this.pageSize, this.curr, this.$route.params.id);
         });
     },
+  },
+  watch: {
     $route: function (to) {
       if (to.params.groupId == 0) {
         this.getGroup(this.pageSize, this.curr, this.$route.params.id);
