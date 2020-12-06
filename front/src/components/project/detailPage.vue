@@ -40,6 +40,7 @@
             :remote-method="getUserList"
             :loading="loading"
             @change="addProjectUser($event)"
+            clearable
           >
             <el-option
               v-for="item in searchUserList.list"
@@ -65,7 +66,6 @@
               placement="bottom"
               trigger="click"
               @command="handleCommand"
-              v-show="$store.state.projectPermission == 6"
             >
               <i class="el-icon-s-unfold"></i>
               <el-dropdown-menu slot="dropdown">
@@ -378,7 +378,7 @@ export default {
         .get("/user/list", {
           params: {
             keyword,
-            project_id: this.$route.params.id,
+            notProjectId:true
           },
         })
         .then((response) => {

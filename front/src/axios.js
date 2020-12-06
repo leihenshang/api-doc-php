@@ -27,7 +27,7 @@ axios.interceptors.request.use(config => {
       }
 
       //附加项目id
-      if (config.params && !config.params.projectId && store.state.project) {
+      if (config.params && !config.params.projectId  && !config.params.notProjectId && store.state.project) {
         config.params.projectId = store.state.project.id;
       }
     } else if (config.method === "post" && config.data) {
@@ -36,7 +36,7 @@ axios.interceptors.request.use(config => {
       }
 
       //附加项目id
-      if (!config.data.projectId && store.state.project) {
+      if (!config.data.projectId && !config.data.notProjectId && store.state.project) {
         config.data.projectId = store.state.project.id;
       }
     }

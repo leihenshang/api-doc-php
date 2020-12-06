@@ -116,23 +116,24 @@ export default {
               project_id: this.$route.params.id,
               data: JSON.stringify(this.apiData),
             })
-            .then(
-              (response) => {
-                response = response.data;
-                if (response.code === CODE_OK) {
-                  this.$message({
-                    message: "保存成功！",
-                    type: "success",
-                  });
-                  this.$router.push({name:"apiList"});
-                } else {
-                  this.$message({
-                    message: !response.msg ? response.msg : "",
-                    type: "error",
-                  });
-                }
+            .then((response) => {
+              response = response.data;
+              if (response.code === CODE_OK) {
+                this.$message({
+                  message: "保存成功！",
+                  type: "success",
+                });
+                this.$router.push({
+                  name: "apiDetail",
+                  params: { apiId: this.apiId },
+                });
+              } else {
+                this.$message({
+                  message: !response.msg ? response.msg : "",
+                  type: "error",
+                });
               }
-            );
+            });
         }
       });
     },

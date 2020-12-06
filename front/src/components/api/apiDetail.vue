@@ -1,7 +1,7 @@
 <template>
   <div class="api-detail" v-loading="loading">
     <div class="btn-group">
-      <el-button @click="returnApiPage">↩ 接口列表</el-button>
+      <el-button @click="returnApiPage">↩ 返 回</el-button>
       <div>
         <el-button @click="copyApi">复制接口</el-button>
         <el-button @click="updateApi()" type="primary">编辑</el-button>
