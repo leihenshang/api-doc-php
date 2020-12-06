@@ -166,7 +166,6 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    changeAvatar() {},
     //获取用户信息
     getUserInfo() {
       this.$http
@@ -288,9 +287,9 @@ export default {
   .avatar-uploader {
     text-align: center;
 
-    .el-upload {
-      border: 1px dashed #d9d9d9;
-      border-radius: 6px;
+    ::v-deep .el-upload {
+      border: 1px solid #d9d9d9;
+      border-radius: 178px;
       cursor: pointer;
       position: relative;
       overflow: hidden;

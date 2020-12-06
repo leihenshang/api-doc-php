@@ -2,14 +2,10 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 //项目相关
-import Detail from "./page/project/project";
 import ProjectList from "./components/project/projectList";
-import FieldMapping from "./components/project/fieldMapping";
 
 //api相关操作
-import ApiPage from "./components/api/apiPage";
 import apiCreate from "./components/api/apiCreate";
-import DetailPage from "./components/project/detailPage";
 import ApiList from "./components/api/apiList";
 import ApiDetail from "./components/api/apiDetail";
 import ApiEdit from "./components/api/apiEdit";
@@ -22,13 +18,8 @@ import DocDetail from "./components/doc/docDetail";
 import DocList from "./components/doc/docList";
 
 //用户相关操作
-import Login from "./page/user/login";
-import Register from "./page/user/register";
 import MyCenter from "./page/user/myCenter";
 import UserManager from "./page/user/userManager";
-
-//bug
-import BugHome from "./components/bug/home";
 
 import store from "./store/main";
 
@@ -41,39 +32,39 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
-    { path: "/register", component: Register, name: "register" },
-    { path: "/login", name: "userLogin", component: Login },
+    { path: "/register", component: resolve => require(['./page/user/register'], resolve), name: "register" },
+    { path: "/login", name: "userLogin", component: resolve => require(['./page/user/login'], resolve) },
     {
       path: "/detail/:id",
-      component: Detail,
+      component: resolve => require(['./page/project/project'], resolve),
       props: true,
       children: [
 
         {
           path: "",
           name: "detailPage",
-          component: DetailPage,
+          component: resolve => require(['./components/project/detailPage'], resolve),
           meta: { requiresAuth: true },
           props: true,
         },
         {
           path: "bugHome",
           name: "bugHome",
-          component: BugHome,
+          component: resolve => require(['./components/bug/home'], resolve),
           meta: { requiresAuth: true },
           props: true,
         },
         {
           path: "fieldMapping",
           name: "fieldMapping",
-          component: FieldMapping,
+          component: resolve => require(['./components/project/fieldMapping'], resolve),
           meta: { requiresAuth: true },
           props: true,
         },
         {
           path: "apiPage",
           name: "apiPage",
-          component: ApiPage,
+          component:resolve => require(["./components/api/apiPage"], resolve) ,
           meta: { requiresAuth: true },
           redirect: "apiPage/apiList/0",
           props: true,
