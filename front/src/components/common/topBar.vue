@@ -11,18 +11,15 @@
         background-color="#409eff"
         text-color="#fff"
       >
-        <el-menu-item
-          :index="item.route"
-          v-for="item in insideRoute"
-          :key="item.id"
-        >
-          <!-- <i :class="item.icon ? item.icon : 'el-icon-setting'"></i> -->
+        <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
           <span slot="title">{{ item.title }}</span>
         </el-menu-item>
       </el-menu>
     </div>
     <div class="top-bar-avatar">
-      <div class="avatar"><el-avatar> user </el-avatar></div>
+      <div class="avatar">
+        <el-avatar :src="avatarUrl" :size="40"></el-avatar>
+      </div>
       <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link">
           {{ nickName ? nickName : "null" }}
@@ -43,24 +40,11 @@ export default {
   created() {},
   props: {},
   computed: {
-    showTitle: function () {
-      if (this.$route.fullPath === "/projectList") {
-        return;
-      }
-
-      let routerStr = "";
-      if (this.$store.state.project.title) {
-        routerStr = " > " + this.$store.state.project.title;
-        if (this.$route.name == "apiList") {
-          routerStr += " > api";
-        } else if (this.$route.name == "docList") {
-          routerStr += " > 文档";
-        }
-      }
-      return routerStr;
-    },
     nickName: function () {
       return this.$store.state.userInfo.nick_name;
+    },
+    avatarUrl: function () {
+      return this.BASE_URL + "/" + this.$store.state.userInfo.user_face;
     },
   },
   methods: {
@@ -128,8 +112,8 @@ export default {
   align-items: center;
 }
 
-.top-bar-title{
-  color:#fff;
+.top-bar-title {
+  color: #fff;
   font-weight: bold;
 }
 
@@ -142,7 +126,7 @@ export default {
 }
 
 .top-bar .top-bar-avatar .avatar {
-  margin-right:10px;
+  margin-right: 10px;
 }
 
 .top-bar .el-menu.el-menu--horizontal {

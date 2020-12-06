@@ -274,9 +274,9 @@ export default {
       })
         .then(({ value }) => {
           this.$http
-            .post("/user/update-nickname", {
+            .post("/user/update", {
               userId: val.id,
-              nickname: value,
+              nick_name: value,
             })
             .then((response) => {
               response = response.data;

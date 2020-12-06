@@ -71,7 +71,7 @@ class UserInfo extends BaseModel
             [['name', 'pwd'], 'required'],
             [['is_deleted', 'type', 'state'], 'integer'],
             [['create_time', 'last_login_time', 'token_expire_time'], 'safe'],
-            [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 100],
+            [['name', 'pwd', 'email', 'nick_name', 'last_login_ip', 'user_face', 'token'], 'string', 'max' => 500],
             ['email', 'email'],
             [['re_pwd', 'name'], 'required', 'on' => self::SCENARIO_REGISTER],
             ['re_pwd', 'required', 'on' => self::SCENARIO_UPDATE_PWD],
@@ -88,6 +88,7 @@ class UserInfo extends BaseModel
         $scenarios[self::SCENARIO_QUERY] = ['keyword', 'ps', 'cp','type','state'];
         $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'nick_name', 'email'];
         $scenarios[self::SCENARIO_UPDATE_PWD] = ['re_pwd', 'pwd'];
+        $scenarios[self::SCENARIO_UPDATE] = ['nick_name',  'state', 'is_deleted', 'user_face'];
         return $scenarios;
     }
 
