@@ -19,7 +19,7 @@
           <em>登录名：</em>
           <p>{{ userInfo.name }}</p>
         </li>
-        <li class="nick-name-li">
+        <li>
           <em>昵称：</em>
           <p>{{ userInfo.nick_name }}</p>
         </li>
@@ -281,20 +281,20 @@ export default {
 .user-center {
   border: 1px solid rgb(195, 195, 195);
   width: 50%;
-  margin: 80px auto;
+  margin: 0 auto;
+  margin-top: 80px;
   padding: 50px 0;
-  position: relative;
-  border-radius: 10px;
 
   .avatar-uploader {
     text-align: center;
+
     .el-upload {
       border: 1px dashed #d9d9d9;
       border-radius: 6px;
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      .el-upload:hover {
+      &:hover {
         border-color: #409eff;
       }
     }
@@ -325,25 +325,13 @@ export default {
       width: 350px;
       margin: 0 auto;
       padding: 0;
-
-      p {
-        display: inline-block;
-      }
+      font-size: 14px;
 
       li {
         border-bottom: 1px dashed gray;
-        padding-bottom: 10px;
         list-style: none;
         &last-child {
           margin-bottom: 10px;
-        }
-
-        .nick-name-li p {
-          width: 140px;
-        }
-
-        .nick-name-li input {
-          height: 20px;
         }
 
         em {
@@ -352,7 +340,11 @@ export default {
           text-align: right;
           margin-right: 40px;
           font-style: normal;
-          font-size: 14px;
+          font-size: 12px;
+        }
+
+        p {
+          display: inline-block;
         }
       }
     }
