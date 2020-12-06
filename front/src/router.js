@@ -1,26 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
-//项目相关
-import ProjectList from "./components/project/projectList";
-
-//api相关操作
-import apiCreate from "./components/api/apiCreate";
-import ApiList from "./components/api/apiList";
-import ApiDetail from "./components/api/apiDetail";
-import ApiEdit from "./components/api/apiEdit";
-
-//文档相关操作
-import DocPage from "./components/doc/docPage";
-import DocCreate from "./components/doc/docCreate";
-import DocEdit from "./components/doc/docEdit";
-import DocDetail from "./components/doc/docDetail";
-import DocList from "./components/doc/docList";
-
-//用户相关操作
-import MyCenter from "./page/user/myCenter";
-import UserManager from "./page/user/userManager";
-
 import store from "./store/main";
 
 const originalPush = VueRouter.prototype.push
@@ -64,7 +43,7 @@ const router = new VueRouter({
         {
           path: "apiPage",
           name: "apiPage",
-          component:resolve => require(["./components/api/apiPage"], resolve) ,
+          component: resolve => require(["./components/api/apiPage"], resolve),
           meta: { requiresAuth: true },
           redirect: "apiPage/apiList/0",
           props: true,
@@ -72,28 +51,28 @@ const router = new VueRouter({
             {
               path: "apiCreate/:groupId",
               name: "apiCreate",
-              component: apiCreate,
+              component: resolve => require(["./components/api/apiCreate"], resolve),
               meta: { requiresAuth: true },
               props: true,
             },
             {
               path: "apiList/:groupId",
               name: "apiList",
-              component: ApiList,
+              component: resolve => require(["./components/api/apiList"], resolve),
               meta: { requiresAuth: true },
               props: true,
             },
             {
               path: "apiEdit/:apiId",
               name: "apiEdit",
-              component: ApiEdit,
+              component: resolve => require(["./components/api/apiEdit"], resolve),
               meta: { requiresAuth: true },
               props: true,
             },
             {
               path: "apiDetail/:apiId",
               name: "apiDetail",
-              component: ApiDetail,
+              component: resolve => require(["./components/api/apiDetail"], resolve),
               meta: { requiresAuth: true },
               props: true,
             },
@@ -102,35 +81,35 @@ const router = new VueRouter({
         {
           path: "projectDoc",
           name: "projectDoc",
-          component: DocPage,
+          component: resolve => require(["./components/doc/docPage"], resolve),
           props: true,
           redirect: "projectDoc/docList/0",
           children: [
             {
               path: "docList/:groupId",
               name: "docList",
-              component: DocList,
+              component: resolve => require(["./components/doc/docList"], resolve),
               props: true,
               meta: { requiresAuth: true },
             },
             {
               path: "docDetail/:docId",
               name: "docDetail",
-              component: DocDetail,
+              component: resolve => require(["./components/doc/docDetail"], resolve),
               props: true,
               meta: { requiresAuth: true },
             },
             {
               path: "docEdit/:docId",
               name: "docEdit",
-              component: DocEdit,
+              component: resolve => require(["./components/doc/docEdit"], resolve),
               props: true,
               meta: { requiresAuth: true },
             },
             {
               path: "docCreate",
               name: "docCreate",
-              component: DocCreate,
+              component: resolve => require(["./components/doc/docCreate"], resolve),
               props: true,
               meta: { requiresAuth: true },
             },
@@ -140,17 +119,17 @@ const router = new VueRouter({
     },
     {
       path: "/projectList",
-      component: ProjectList,
+      component: resolve => require(['./components/project/projectList'], resolve),
       name: "projectList"
     },
     {
       path: "/userManager",
-      component: UserManager,
+      component: resolve => require(['./page/user/userManager'], resolve),
       name: "userManager"
     },
     {
       path: "/myCenter",
-      component: MyCenter,
+      component: resolve => require(['./page/user/myCenter'], resolve),
       name: "myCenter"
     },
     {
