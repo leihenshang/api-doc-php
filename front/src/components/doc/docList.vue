@@ -55,7 +55,7 @@ export default {
       loading: true,
       docList: [],
       cp: 1,
-      ps: 2,
+      ps: 10,
       count: 0,
     };
   },

@@ -21,7 +21,7 @@
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
-        <div class="btn-group" v-show="showIsEdit === true">
+        <div class="btn-group">
           <el-dropdown placement="left-start" @command="handleCommand" trigger="click">
             <span class="el-icon-s-unfold"></span>
             <el-dropdown-menu slot="dropdown">
@@ -56,10 +56,7 @@ export default {
   },
   data() {
     return {
-      newGroup: "",
       group: [],
-      isEdit: false,
-      visible: false,
       curr: 1,
       pageSize: 100,
     };
@@ -280,6 +277,7 @@ export default {
   margin-left: 8px;
   padding-left: 10px;
   height: 100%;
+  text-decoration: none;
 }
 
 .group ul li i {

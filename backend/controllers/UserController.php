@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\behaviors\UserVerify;
 use app\models\UserInfo;
 use Yii;
+use yii\base\DynamicModel;
 use yii\base\InvalidConfigException;
 
 class UserController extends BaseController
@@ -15,7 +16,7 @@ class UserController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['userVerify'] = [
             'class' => UserVerify::class,
-            'actions' => ['list', 'update-status', 'get-user-info', 'update-nickname', 'update-pwd', 'create', 'init-pwd'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
+            'actions' => ['list', 'get-user-info', 'update', 'update-pwd', 'create', 'init-pwd'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证
             'projectPermission' => ['update-status', 'update-nickname', 'date-pwd', 'init-pwd']
         ];
@@ -53,8 +54,8 @@ class UserController extends BaseController
         $params = Yii::$app->request->get();
         $projectId = $params['projectId'] ?? 0;
         $all = $params['all'] ?? false;
-        if(!is_bool($all)) {
-            $all  = false;
+        if (!is_bool($all)) {
+            $all = false;
         }
         $user = new UserInfo(['scenario' => UserInfo::SCENARIO_QUERY]);
         $user->attributes = $params;
@@ -79,11 +80,11 @@ class UserController extends BaseController
         $res->where(['a.is_deleted' => UserInfo::IS_DELETED['no'], 'a.type' => UserInfo::USER_TYPE['normal'][0]]);
 
         $isAdmin = false;
-        if(UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type != UserInfo::USER_TYPE['admin'][0]) {
+        if (UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type != UserInfo::USER_TYPE['admin'][0]) {
             $isAdmin = true;
         }
 
-        if ($isAdmin === false ) {
+        if ($isAdmin === false) {
             $res->andWhere(['a.state' => UserInfo::USER_STATE['normal'][0]]);
         }
 
@@ -95,7 +96,7 @@ class UserController extends BaseController
         }
 
         if ($all === false && $projectId) {
-            $res->innerJoin('user_project b','a.id = b.user_id')->andWhere(['b.project_id' => $projectId]);
+            $res->innerJoin('user_project b', 'a.id = b.user_id')->andWhere(['b.project_id' => $projectId]);
         }
 
         $recordCount = $res->count();
@@ -183,74 +184,71 @@ class UserController extends BaseController
     }
 
     /**
-     * 更新用户状态字段
-     * @return array
-     */
-    public function actionUpdateStatus()
-    {
-        if ($this->userInfo->type != UserInfo::USER_TYPE['admin'][0]) {
-            return $this->failed('非管理员不能操作');
-        }
-
-        $userId = Yii::$app->request->post('userId', null);
-        $sate = Yii::$app->request->post('state', null);
-        $is_deleted = Yii::$app->request->post('is_deleted', null);
-        if (!$userId || !is_numeric($userId)) {
-            return $this->failed('userId不能为空或userId错误');
-        }
-
-        if (!$is_deleted && !$sate) {
-            return $this->failed('修改数据不能为空');
-        }
-
-        if (!is_numeric($is_deleted) && !is_numeric($sate)) {
-            return $this->failed('修改值错误');
-        }
-
-        $arr = [];
-        if (is_numeric($is_deleted)) {
-            $arr['is_deleted'] = $is_deleted;
-        }
-
-        if (is_numeric($sate)) {
-            $arr['state'] = $sate;
-        }
-
-        $res = UserInfo::updateAll($arr, ['id' => $userId]);
-        if ($res) {
-            return $this->success([], '更新完成');
-        }
-
-        return $this->failed('更新失败');
-    }
-
-    /**
-     * 更新用户昵称
+     * 更新用户信息
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function actionUpdateNickname()
+    public function actionUpdate()
     {
-        $nickname = Yii::$app->request->post('nickname', null);
+        $nickname = Yii::$app->request->post('nick_name', null);
+        $userFace = Yii::$app->request->post('face_url', null);
         $userId = Yii::$app->request->post('userId', null);
-        if (!$nickname) {
-            return $this->failed('昵称不能为空');
+        $state = Yii::$app->request->post('state', null);
+        $isDeleted = Yii::$app->request->post('is_deleted', null);
+        $dataArr = compact('nickname', 'userId', 'state', 'isDeleted', 'userFace');
+        $rules = DynamicModel::validateData($dataArr, [
+            [['state', 'isDeleted', 'userId'], 'number'],
+            [['nickname', 'userFace'], 'string', 'max' => 500],
+        ]);
+
+        $oldUserData = $this->userInfo;
+
+        if (!$rules->validate()) {
+            return $this->failed(current($rules->getFirstErrors()));
         }
 
-        //检查昵称是否重复
-        if (UserInfo::checkReplayNickname($nickname)) {
-            return $this->failed('昵称重复');
-        }
-        if (is_numeric($userId)) {
-            $res = UserInfo::updateAll(['nick_name' => $nickname], ['id' => $userId]);
-        } else {
-            $res = UserInfo::updateAll(['nick_name' => $nickname], ['id' => $this->userInfo->id]);
-        }
-        if ($res) {
-            return $this->success([], '更新完成');
+        if ($nickname && UserInfo::checkReplayNickname($nickname)) {
+            return $this->failed('昵称重复或相同');
         }
 
-        return $this->failed('更新失败');
+        //通过传入userId判断是否管理员操作
+        if ($userId && $userId != $oldUserData->id && $oldUserData->type != UserInfo::USER_TYPE['admin'][0]) {
+            return $this->failed('非管理员不能操作其他用户');
+        }
+
+        //判断是否是更改自己的信息
+        if ($userId && $userId != $this->userInfo->id) {
+            $oldUserData = UserInfo::findOne($userId);
+            if (!$oldUserData) {
+                return $this->failed('没有找到要更新的数据');
+            }
+        }
+
+        if ($nickname && $oldUserData->nick_name != $nickname) {
+            $oldUserData->nick_name = $nickname;
+        }
+
+        if ($state && $oldUserData->state != $state) {
+            $oldUserData->state = $state;
+        }
+
+        if (is_numeric($isDeleted) && $oldUserData->is_deleted != $isDeleted) {
+            $oldUserData->is_deleted = $isDeleted;
+        }
+
+        if ($userFace && $oldUserData->user_face != $userFace) {
+            $oldUserData->user_face = $userFace;
+        }
+
+        if ($oldUserData->getDirtyAttributes()) {
+            $oldUserData->setScenario(UserInfo::SCENARIO_UPDATE);
+            if (!$oldUserData->save()) {
+                return $this->failed('保存失败:'.current($oldUserData->getFirstErrors()));
+            }
+        }
+
+        return $this->success([], '更新完成');
+
     }
 
     /**
@@ -321,8 +319,7 @@ class UserController extends BaseController
 
     /**
      * 获取用户信息
-     * @return (array|string|int)[]
-     * @throws InvalidConfigException
+     * @return array
      */
     public function actionGetUserInfo()
     {
@@ -359,8 +356,4 @@ class UserController extends BaseController
         return $verbs;
     }
 
-    public function actionTest($pwd)
-    {
-        die(UserInfo::encryptionPwd($pwd));
-    }
 }

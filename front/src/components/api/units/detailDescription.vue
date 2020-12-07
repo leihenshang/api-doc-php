@@ -1,7 +1,7 @@
 <template>
   <div class="detail-description">
     <div class="description">
-      <textarea name id cols="30" rows="10" v-model="newDescription"></textarea>
+      <el-input type="textarea" :rows="8" v-model="newDescription"></el-input>
     </div>
   </div>
 </template>

@@ -1,9 +1,11 @@
 <template>
   <div class="api-detail" v-loading="loading">
     <div class="btn-group">
-      <el-button @click="returnApiPage">↩ 接口列表</el-button>
-      <el-button @click="returnApiPage">复制接口</el-button>
-      <el-button @click="updateApi()" v-show="$store.state.projectPermission == 6" type="primary">编辑</el-button>
+      <el-button @click="returnApiPage">↩ 返 回</el-button>
+      <div>
+        <el-button @click="copyApi">复制接口</el-button>
+        <el-button @click="updateApi()" type="primary">编辑</el-button>
+      </div>
     </div>
     <!-- api信息 -->
     <div class="api-detail-info">
@@ -191,6 +193,14 @@ export default {
           }
         );
     },
+    copyApi() {
+      this.$router
+        .push({
+          name: "apiEdit",
+          query: { copy: true },
+        })
+        .catch(() => {});
+    },
   },
   computed: {
     groupName() {
@@ -204,12 +214,7 @@ export default {
       return groupName;
     },
   },
-  watch: {
-    apiId: function () {
-      this.loading = true;
-      this.getApiDetail();
-    },
-  },
+
   components: {},
 };
 </script>
@@ -243,6 +248,9 @@ export default {
     i {
       font-style: normal;
       font-weight: bold;
+      min-width: 100px;
+      display: inline-block;
+      text-align: center;
     }
 
     em {
@@ -250,6 +258,8 @@ export default {
       font-size: 12px;
       font-weight: 700;
       margin-right: 5px;
+      min-width: 100px;
+      display: inline-block;
     }
 
     span {

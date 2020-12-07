@@ -1,84 +1,67 @@
 <template>
   <div class="user-center">
-      <div class="avatar">
-        <el-avatar :size="100" :src="avatarUrl">头像</el-avatar>
-      </div>
-      <div class="btn-change-avatar">
-          <el-button  type="primary" @click="changeAvatar()"
-            >更换头像</el-button
-          >
-      </div>
-      <div class="info">
-        <ul>
-          <li>
-            <em>登录名：</em>
-            <p>{{ userInfo.name }}</p>
-          </li>
-          <li class="nick-name-li">
-            <em>昵称：</em>
-            <p>{{ userInfo.nick_name }}</p>
-          </li>
-          <li>
-            <em>邮箱：</em>
-            <p>{{ userInfo.email }}</p>
-          </li>
-          <li>
-            <em>创建时间：</em>
-            <p>{{ userInfo.create_time }}</p>
-          </li>
-          <li>
-            <em>用户权限：</em>
-            <p>{{ userInfo.type_text }}</p>
-          </li>
-          <li>
-            <em>用户状态：</em>
-            <p>{{ userInfo.state_text }}</p>
-          </li>
-          <li>
-            <em>手机：</em>
-            <p>
-              {{ userInfo.mobile_number ? userInfo.mobile_number : "unknown" }}
-            </p>
-          </li>
-        </ul>
-        <div class="btn">
-          <el-button
-            @click="dialogFormVisible = true"
-            type="primary"
-            
-            >修改密码</el-button
-          >
-          <el-button  type="primary" @click="updateNickName()"
-            >修改昵称</el-button
-          >
-          
+    <el-upload
+      class="avatar-uploader"
+      :action="BASE_URL + '/file/upload-img'"
+      :show-file-list="false"
+      :on-success="handleAvatarSuccess"
+      :before-upload="beforeAvatarUpload"
+      :data="{token:userInfo.token}"
+      name="img"
+    >
+      <img v-if="avatarUrl" :src="avatarUrl" class="avatar" />
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    </el-upload>
+    <!-- 用户信息 -->
+    <div class="info">
+      <ul>
+        <li>
+          <em>登录名：</em>
+          <p>{{ userInfo.name }}</p>
+        </li>
+        <li>
+          <em>昵称：</em>
+          <p>{{ userInfo.nick_name }}</p>
+        </li>
+        <li>
+          <em>邮箱：</em>
+          <p>{{ userInfo.email }}</p>
+        </li>
+        <li>
+          <em>创建时间：</em>
+          <p>{{ userInfo.create_time }}</p>
+        </li>
+        <li>
+          <em>用户权限：</em>
+          <p>{{ userInfo.type_text }}</p>
+        </li>
+        <li>
+          <em>用户状态：</em>
+          <p>{{ userInfo.state_text }}</p>
+        </li>
+        <li>
+          <em>手机：</em>
+          <p>{{ userInfo.mobile_number ? userInfo.mobile_number : "unknown" }}</p>
+        </li>
+      </ul>
+      <div class="btn">
+        <el-button @click="dialogFormVisible = true" type="primary">修改密码</el-button>
+        <el-button type="primary" @click="updateUserInfo()">修改昵称</el-button>
       </div>
     </div>
-    <el-dialog title="新建用户" :visible.sync="dialogFormVisible" width="30%">
+    <!-- 用户信息-结束 -->
+
+    <!-- 修改密码 -->
+    <el-dialog title="修改密码" :visible.sync="dialogFormVisible" width="30%">
       <el-form :model="form" label-width="80px" ref="form" :rules="rules">
         <el-form-item label="旧密码" prop="old_pwd">
-          <el-input
-            v-model="form.old_pwd"
-            autocomplete="off"
-            type="password"
-            placeholder="旧密码"
-          ></el-input>
+          <el-input v-model="form.old_pwd" autocomplete="off" type="password" placeholder="旧密码"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
-          <el-input
-            v-model="form.pwd"
-            autocomplete="off"
-            type="password"
-            placeholder="密码"
-          ></el-input>
+          <el-input v-model="form.pwd" autocomplete="off" type="password" placeholder="密码"></el-input>
         </el-form-item>
         <el-form-item label="重复密码" prop="re_pwd">
-          <el-input
-            v-model="form.re_pwd"
-            autocomplete="off"
-            type="password"
-            placeholder="重复密码"
-          ></el-input>
+          <el-input v-model="form.re_pwd" autocomplete="off" type="password" placeholder="重复密码"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -86,6 +69,7 @@
         <el-button type="primary" @click="updatePwd()">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 修改密码-结束 -->
   </div>
 </template>
 
@@ -161,30 +145,44 @@ export default {
   },
   created() {
     this.getUserInfo();
-    if (!this.userInfo) {
-      return this.$message.error("没有获取到用户信息");
-    }
   },
   methods: {
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      this.avatarUrl = res.data.url;
+      if (this.avatarUrl) {
+        this.updateUserInfo("", this.avatarUrl);
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
     //获取用户信息
     getUserInfo() {
       this.$http
         .get("/user/get-user-info", {
           params: {},
         })
-        .then(
-          (res) => {
-            let response = res.data;
-            if (response.code === CODE_OK) {
-              this.userInfo = response.data;
-            } else {
-              this.$message.error("failed:" + response.msg);
-            }
-          },
-          () => {
-            this.$message.error("获取数据失败");
+        .then((res) => {
+          let response = res.data;
+          if (response.code === CODE_OK) {
+            this.userInfo = response.data;
+            this.avatarUrl = this.userInfo.user_face
+              ? this.BASE_URL + "/" + this.userInfo.user_face
+              : "";
+          } else {
+            this.$message.error("failed:" + response.msg);
           }
-        );
+        });
     },
     //更新密码
     updatePwd() {
@@ -222,7 +220,7 @@ export default {
         }
       });
     },
-    updateNickName() {
+    updateNickname() {
       this.$prompt("请修改昵称", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -237,37 +235,41 @@ export default {
             return;
           }
 
-          this.$http
-            .post("/user/update-nickname", {
-              nickname: value,
-            })
-            .then(
-              (res) => {
-                let response = res.data;
-                if (response.code !== CODE_OK) {
-                  this.$message.error("failed:" + response.msg);
-                  return;
-                } else {
-                  this.getUserInfo();
-                  this.userInfo.nick_name = value;
-                  this.$store.commit("saveUserInfo", this.userInfo);
-                  this.$message({
-                    type: "success",
-                    message: "你的新昵称是: " + value,
-                  });
-                }
-              },
-              () => {
-                this.$message.error("请求发生错误");
-              }
-            );
+          this.updateUserInfo(value, null);
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "取消输入",
-          });
-        });
+        .catch(() => {});
+    },
+
+    //更新昵称
+    updateUserInfo(nickName = "", faceUrl = "") {
+      if (!nickName && !faceUrl) {
+        return;
+      }
+
+      this.$http
+        .post("/user/update", {
+          nick_name: nickName,
+          face_url: faceUrl,
+        })
+        .then(
+          (res) => {
+            let response = res.data;
+            if (response.code !== CODE_OK) {
+              this.$message.error("failed:" + response.msg);
+              return;
+            } else {
+              this.getUserInfo();
+              this.$store.commit("saveUserInfo", this.userInfo);
+              this.$message({
+                type: "success",
+                message: "保存成功",
+              });
+            }
+          },
+          () => {
+            this.$message.error("请求发生错误");
+          }
+        );
     },
   },
   computed: {},
@@ -275,76 +277,76 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .user-center {
   border: 1px solid rgb(195, 195, 195);
-  width: 40%;
+  width: 50%;
   margin: 0 auto;
-  margin-top:100px;
+  margin-top: 80px;
   padding: 50px 0;
-  position: relative;
-  background-color: #fff;
-  border-radius: 10px;
-}
 
-.avatar {
-  text-align: center;
-}
+  .avatar-uploader {
+    text-align: center;
 
-.info ul {
-  width: 350px;
-  margin: 0 auto;
-  padding:0;
-}
+    ::v-deep .el-upload {
+      border: 1px solid #d9d9d9;
+      border-radius: 178px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      &:hover {
+        border-color: #409eff;
+      }
+    }
 
-.info ul li {
-  border-bottom: 1px dashed gray;
-  padding-bottom: 10px;
-}
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 178px;
+      height: 178px;
+      line-height: 178px;
+      text-align: center;
+    }
+    .avatar {
+      width: 178px;
+      height: 178px;
+      display: block;
+    }
+  }
 
-.info ul li:last-child {
-  margin-bottom:10px;
-}
+  .info {
+    .btn {
+      margin: 20px auto;
+      width: 100%;
+      text-align: center;
+    }
 
-.nick-name-li p {
-  width: 140px;
-}
+    ul {
+      width: 350px;
+      margin: 0 auto;
+      padding: 0;
+      font-size: 14px;
 
-.nick-name-li input {
-  height: 20px;
-}
+      li {
+        border-bottom: 1px dashed gray;
+        list-style: none;
+        &last-child {
+          margin-bottom: 10px;
+        }
 
-.nick-name-li button {
-  float: right;
-}
+        em {
+          width: 100px;
+          display: inline-block;
+          text-align: right;
+          margin-right: 40px;
+          font-style: normal;
+          font-size: 12px;
+        }
 
-.info ul em {
-  width: 100px;
-  display: inline-block;
-  text-align: right;
-  margin-right: 40px;
-  font-style: normal;
-  font-size: 14px;
+        p {
+          display: inline-block;
+        }
+      }
+    }
+  }
 }
-
-.info ul p {
-  display: inline-block;
-}
-
-.btn {
-  margin: 20px 0;
-  width: 350px;
-  margin: 0 auto;
-  text-align: right;
-}
-
-.btn button {
-  display: inline-block;
-}
-
-.btn-change-avatar {
-  text-align: center;
-  margin:10px 0;
-}
-
 </style>

@@ -19,7 +19,7 @@ import "element-ui/lib/theme-chalk/index.css";
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios)
 Vue.use(mavonEditor);
-Vue.use(ElementUI);
+Vue.use(ElementUI,{ size: 'middle', zIndex: 3000 });
 Vue.use(VueClipboard);
 
 

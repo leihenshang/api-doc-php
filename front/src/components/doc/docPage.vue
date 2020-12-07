@@ -1,12 +1,7 @@
 <template>
   <div class="doc-page">
-    <div class="group-wrapper">
-      <group
-        :type="type"
-        v-on:change-group="changeGroup"
-        :showCreateGroup="showCreateGroup"
-        :showIsEdit="$store.state.projectPermission == 4 ? false : true"
-      >全部文档</group>
+    <div class="group-wrapper"  v-show=" $route.name == 'docList'">
+      <group :type="type" v-on:change-group="changeGroup" :showIsEdit=" true">全部文档</group>
     </div>
     <div class="doc-wrapper">
       <div class="btn-wrapper" v-show=" $route.name == 'docList' ">
@@ -30,8 +25,6 @@
 <script>
 import group from "../project/group";
 
-// const CODE_OK = 200;
-
 export default {
   name: "docPage",
   props: {
@@ -42,16 +35,7 @@ export default {
   data() {
     return {
       keyword: "",
-      groupList: [],
-      docData: {},
       type: 3,
-      indesideRoute: [
-        { title: "项目概况", route: "detail" },
-        { title: "API接口", route: "api" },
-      ],
-      showCreateGroup: false,
-      groupId: 0,
-      isCreate: false,
     };
   },
   methods: {
@@ -78,7 +62,6 @@ export default {
     },
     //添加文档
     addDoc() {
-      this.isCreate = true;
       this.$router.push({ name: "docCreate" });
     },
   },

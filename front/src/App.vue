@@ -7,35 +7,35 @@
  -->
 <template>
   <div id="app">
-    <div class="top" v-show="showTopBar">
-      <topBar />
-    </div>
-    <transition name="el-fade-in-linear" mode="out-in" appear>
-      <div class="app-full">
-        <router-view></router-view>
-      </div>
-    </transition>
+    <el-container>
+      <el-header style="padding:0">
+        <topBar />
+      </el-header>
+      <el-main style="padding:0 0 40px 0;">
+        <transition name="el-fade-in-linear" mode="out-in" appear>
+          <div class="app-full">
+            <router-view></router-view>
+          </div>
+        </transition>
+      </el-main>
+      <el-footer style="padding:0">
+        <bottomBar />
+      </el-footer>
+    </el-container>
   </div>
 </template>
 
 <script>
 import TopBar from "./components/common/topBar";
+import BottomBar from "./components/common/bottomBar";
 
 export default {
   name: "app",
   created() {},
-  computed: {
-    showTopBar() {
-      let userInfo = this.$store.state.userInfo;
-      if (userInfo && userInfo.id > 0 && this.$route.name != "userLogin") {
-        return true;
-      }
-
-      return false;
-    },
-  },
+  computed: {},
   components: {
     topBar: TopBar,
+    bottomBar: BottomBar,
   },
 };
 </script>
@@ -49,15 +49,11 @@ export default {
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  width: 100%;
-  height: 100%;
 }
 
-.top {
-  background-color: rgb(64, 158, 255);
-}
 .app-full {
   width: 85%;
   margin: 0 auto;
+  min-height: 800px;
 }
 </style>
