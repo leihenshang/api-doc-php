@@ -56,6 +56,11 @@ export default {
           route: "/detail/" + this.$route.params.id + "/bugHome",
           icon: "el-icon-sort",
         },
+           {
+          title: "成员管理",
+          route: "/detail/" + this.$route.params.id + "/members",
+          icon: "el-icon-user",
+        },
       ],
     };
   },

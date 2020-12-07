@@ -34,6 +34,13 @@ const router = new VueRouter({
           props: true,
         },
         {
+          path: "members",
+          name: "members",
+          component: resolve => require(['./components/project/members'], resolve),
+          meta: { requiresAuth: true },
+          props: true,
+        },
+        {
           path: "fieldMapping",
           name: "fieldMapping",
           component: resolve => require(['./components/project/fieldMapping'], resolve),
