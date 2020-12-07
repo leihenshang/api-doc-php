@@ -88,9 +88,7 @@ const CODE_OK = 200;
 
 export default {
   name: "apiList",
-  props: {
-    showEdit: Number,
-  },
+  props: {},
   created() {
     this.getApiList(
       this.ps,
@@ -190,9 +188,8 @@ export default {
             this.$message.error("失败:" + response.msg);
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.loading = false;
-          console.log(error);
         });
     },
     jumpPage(name, id) {
@@ -219,10 +216,12 @@ export default {
   components: {},
   watch: {
     $route: function (to) {
-      console.log(to)
       if (to.query.keyword) {
         this.cp = 1;
-        this.getApiList(20, 1, to.params.id, 0, to.query.keyword);
+        this.getApiList(this.ps, this.cp, to.params.id, 0, to.query.keyword);
+        this.loading = true;
+      } else if (to.query.groupId) {
+        this.getApiList(this.ps, this.cp, to.params.id, to.query.groupId);
         this.loading = true;
       } else {
         this.cp = 1;

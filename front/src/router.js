@@ -52,18 +52,18 @@ const router = new VueRouter({
           name: "apiPage",
           component: resolve => require(["./components/api/apiPage"], resolve),
           meta: { requiresAuth: true },
-          redirect: "apiPage/apiList/0",
+          redirect: "apiPage/apiList",
           props: true,
           children: [
             {
-              path: "apiCreate/:groupId",
+              path: "apiCreate",
               name: "apiCreate",
               component: resolve => require(["./components/api/apiCreate"], resolve),
               meta: { requiresAuth: true },
               props: true,
             },
             {
-              path: "apiList/:groupId",
+              path: "apiList",
               name: "apiList",
               component: resolve => require(["./components/api/apiList"], resolve),
               meta: { requiresAuth: true },

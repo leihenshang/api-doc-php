@@ -37,15 +37,14 @@ import detailDescription from "./units/detailDescription.vue";
 const CODE_OK = 200;
 export default {
   name: "apiCreate",
-  props: {
-    groupId: [Number, String],
-  },
+  props: {},
   created() {
     this.getGroup();
     this.getProperty();
   },
   data() {
     return {
+      groupId: this.$route.query.groupId ? this.$route.query.groupId : 0,
       activeName: "first",
       //分组列表
       groupList: [],
@@ -98,7 +97,7 @@ export default {
                   //跳转携带分组参数
                   this.$router.push({
                     name: "apiList",
-                    params: { groupId: this.groupId },
+                    params: { groupId: this.$route.query.groupId },
                   });
                 } else {
                   this.$message.error("  保存api失败 ： " + response.msg);

@@ -1,17 +1,13 @@
 <template>
   <div class="api-page">
     <div class="group-wrapper" v-show=" $route.name == 'apiList'  ">
-      <group
-        :type="type"
-        v-on:change-group="changeGroup"
-        :showIsEdit="$store.state.projectPermission == 4 ? false : true"
-      >全部接口</group>
+      <group :type="type" v-on:change-group="changeGroup">全部接口</group>
     </div>
 
     <div class="api-wrapper">
       <div class="btn-wrapper">
         <div v-show=" $route.name == 'apiList'  ">
-          <el-input placeholder="请输入标题" v-model="keyword" style="width:30%" clearable="">
+          <el-input placeholder="请输入标题" v-model="keyword" style="width:30%" clearable>
             <el-button size slot="append" icon="el-icon-search" @click="searchApi()">搜 索</el-button>
           </el-input>
           <el-button style="margin:0 0 0 10px;" @click="addApi()" v-show="controlShow()">+创建api</el-button>
@@ -48,9 +44,8 @@ export default {
     },
     //更改分组
     changeGroup(id) {
-      id = id ? id : 0;
       this.$router.push(
-        { name: "apiList", params: { groupId: id } },
+        { name: "apiList", query: { groupId: id } },
         () => {
           return;
         },
@@ -63,6 +58,7 @@ export default {
     addApi() {
       this.$router.push({
         name: "apiCreate",
+        query: { groupId: this.$route.query.groupId },
       });
     },
   },
