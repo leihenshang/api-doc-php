@@ -280,6 +280,7 @@ export default {
   margin-left: 8px;
   padding-left: 10px;
   height: 100%;
+  text-decoration: none;
 }
 
 .group ul li i {
