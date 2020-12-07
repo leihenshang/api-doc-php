@@ -1,5 +1,6 @@
 <template>
   <div class="members">
+    <!-- 用户选择 -->
     <div class="user-search">
       <el-select
         v-model="keywords"
@@ -19,36 +20,39 @@
         ></el-option>
       </el-select>
     </div>
+    <!-- 用户选择-结束 -->
+    <!-- 项目用户 -->
     <div class="all-user" v-loading="loading">
       <el-table :data="userList" stripe style="width: 100%" border>
         <el-table-column prop="name" label="账号" width="180"></el-table-column>
         <el-table-column prop="state" label="状态" width="180">
           <template slot-scope="scope">{{ transferState(scope.row.state) }}</template>
         </el-table-column>
- <el-table-column prop="is_leader" label="项目管理员" width="180">
-          <template slot-scope="scope">{{scope.row.is_leader == 1 ? '是' : '否' }}</template>
+        <el-table-column prop="is_leader" label="用户类型">
+          <template slot-scope="scope">{{scope.row.is_leader == 1 ? '项目管理者' : '项目成员' }}</template>
         </el-table-column>
-        <el-table-column prop="nick_name" label="昵称" width="180"></el-table-column>
+        <el-table-column prop="nick_name" label="昵称"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="last_login_time" label="最后登录时间"></el-table-column>
-        <el-table-column align="center" label="操作" width="100">
+        <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-dropdown placement="bottom" trigger="click" @command="handleCommand">
-             <el-button type="text">项目设置</el-button>
+              <el-button type="text">权限设置</el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   :command="{action:'setLeader',data:scope.row}"
                 >设为{{scope.row.is_leader == 0 ? '管理员' : '普通用户' }}</el-dropdown-item>
-                <el-dropdown-item :command="{action:'quit',data:scope.row}">移出项目</el-dropdown-item>
                 <el-dropdown-item
                   :command="{action:'setPermission',data:scope.row}"
                 >设置{{scope.row.permission == 4 ? '读/写':'只读'}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
+            <el-button type="text" style="margin-left:10px" @click="quitProject(scope.row)">移出项目</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <!-- 项目用户 -->
   </div>
 </template>
 
@@ -97,10 +101,6 @@ export default {
         case "setLeader":
           this.setLeader(val.data);
           break;
-        case "quit":
-          this.quitProject(val.data);
-          break;
-
         case "setPermission":
           this.setPermission(val.data);
           break;
@@ -217,22 +217,17 @@ export default {
             .post("/project/set-leader", {
               userId: val.id,
               projectId: this.$route.params.id,
-              cancel: val.is_leader == 1 ? 1 : 0,
+              cancel: val.is_leader == 1 ? 0 : 1,
             })
-            .then(
-              (response) => {
-                response = response.data;
-                if (response.code === CODE_OK) {
-                  this.getProjectUserList();
-                  this.$message.success("成功!");
-                } else {
-                  this.$message.error("操作失败");
-                }
-              },
-              () => {
-                this.$message.error("请求失败");
+            .then((response) => {
+              response = response.data;
+              if (response.code === CODE_OK) {
+                this.getProjectUserList();
+                this.$message.success("成功!");
+              } else {
+                this.$message.error("操作失败");
               }
-            );
+            });
         })
         .catch(() => {});
     },
@@ -256,15 +251,11 @@ export default {
     },
     //移除出项目
     quitProject(val) {
-      this.$confirm(
-        "将用户" + val.nick_name + "移出该项目, 是否继续?",
-        "提示",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("将" + val.nick_name + "移出该项目, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(() => {
           this.$http
             .post("/project/quit-project", {

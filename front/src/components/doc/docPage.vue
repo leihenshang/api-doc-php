@@ -1,11 +1,7 @@
 <template>
   <div class="doc-page">
-    <div class="group-wrapper">
-      <group
-        :type="type"
-        v-on:change-group="changeGroup"
-        :showIsEdit="$store.state.projectPermission == 4 ? false : true"
-      >全部文档</group>
+    <div class="group-wrapper"  v-show=" $route.name == 'docList'">
+      <group :type="type" v-on:change-group="changeGroup" :showIsEdit=" true">全部文档</group>
     </div>
     <div class="doc-wrapper">
       <div class="btn-wrapper" v-show=" $route.name == 'docList' ">

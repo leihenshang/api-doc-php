@@ -1,6 +1,6 @@
 <template>
   <div class="api-page">
-    <div class="group-wrapper">
+    <div class="group-wrapper" v-show=" $route.name == 'apiList'  ">
       <group
         :type="type"
         v-on:change-group="changeGroup"
