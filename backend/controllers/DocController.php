@@ -7,6 +7,7 @@ use app\models\Doc;
 use app\models\Group;
 use Throwable;
 use Yii;
+use yii\base\DynamicModel;
 use yii\base\Exception;
 
 class DocController extends BaseController
@@ -75,13 +76,27 @@ class DocController extends BaseController
     public function actionList()
     {
         $params = Yii::$app->request->get();
-        $res = new Doc(['scenario' => Doc::SCENARIO_LIST]);
-        $res->attributes = $params;
-        if (!$res->validate()) {
-            return $this->failed(current($res->getFirstErrors()));
+        $res = new Doc();
+        $projectId  =  $params['projectId'] ?? null;
+        $groupId  =  $params['groupId'] ?? 0;
+        $validate = DynamicModel::validateData(compact(['projectId','groupId']),[
+            [['projectId','groupId'],'required'],
+            [['projectId','groupId'],'number'],
+        ] );
+        if(!$validate->validate()) {
+            return $this->failed(current($validate->getFirstErrors()));
         }
 
-        $res = $res->dataList($params['project_id'], $params['group_id'], Yii::$app->request->get('ps', 10), Yii::$app->request->get('cp', 1), Yii::$app->request->get('is_deleted'), Yii::$app->request->get('keyword'));
+
+        $res = $res->dataList(
+            $projectId,
+            $groupId,
+            Yii::$app->request->get('ps', 10),
+            Yii::$app->request->get('cp', 1),
+            Yii::$app->request->get('isDeleted'),
+            Yii::$app->request->get('keyword'),
+            Yii::$app->request->get('isTop')
+        );
         if (is_string($res)) {
             return $this->success([], $res);
         }

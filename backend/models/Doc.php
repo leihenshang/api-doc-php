@@ -17,6 +17,8 @@ namespace app\models;
  * @property int $view_count
  * @property int $like_count
  * @property int $project_id
+ * @property int $is_top
+ * @property int $priority
  */
 class Doc extends BaseModel
 {
@@ -41,7 +43,7 @@ class Doc extends BaseModel
     public function rules()
     {
         return [
-            [['is_deleted', 'user_id', 'state', 'group_id', 'view_count', 'like_count', 'project_id'], 'integer'],
+            [['is_deleted', 'user_id', 'state', 'group_id', 'view_count', 'like_count', 'project_id', 'is_top', 'priority'], 'integer'],
             [['title', 'content'], 'required', 'on' => self::SCENARIO_CREATE],
             [['content'], 'string'],
             [['create_time', 'update_time'], 'safe'],
@@ -71,16 +73,18 @@ class Doc extends BaseModel
             'update_time' => 'Update Time',
             'view_count' => 'View Count',
             'like_count' => 'Like Count',
+            'is_top' => '置顶',
+            'priority' => '置顶优先级',
         ];
     }
 
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['group_id', 'title', 'content','project_id'];
+        $scenarios[self::SCENARIO_CREATE] = ['group_id', 'title', 'content', 'project_id'];
         $scenarios[self::SCENARIO_DELETE] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['state', 'title', 'content', 'group_id', 'id'];
-        $scenarios[self::SCENARIO_LIST] = ['project_id', 'group_id',];
+        $scenarios[self::SCENARIO_UPDATE] = ['state', 'title', 'content', 'group_id', 'id', 'is_top'];
+        $scenarios[self::SCENARIO_LIST] = [];
         return $scenarios;
     }
 
@@ -121,15 +125,11 @@ class Doc extends BaseModel
         }
 
         $res->attributes = $request;
-        if (empty($this->title) && empty($this->content)) {
-            return '没有更新内容';
-        }
-
-        if ($res->save(false)) {
+        if ($res->save()) {
             return $res->toArray();
         }
 
-        return '更新失败';
+        return '更新失败' . current($res->getFirstErrors());
     }
 
     /**
@@ -159,10 +159,20 @@ class Doc extends BaseModel
      * @param int $cp
      * @param int $isDelete
      * @param string $keyword
+     * @param int $isTop
      * @return array|string
      */
-    public function dataList($projectId, $groupId = 0, $ps = 10, $cp = 1, $isDelete = 0, $keyword = '')
+    public function dataList(
+        int $projectId,
+        $groupId = 0,
+        $ps = 10,
+        $cp = 1,
+        $isDelete = 0,
+        $keyword = '',
+        $isTop = null
+    )
     {
+
         $where = [];
         if ($groupId > 0) {
             $where = ['a.group_id' => $groupId];
@@ -171,6 +181,9 @@ class Doc extends BaseModel
         $where['a.project_id'] = $projectId;
         $where['a.is_deleted'] = $isDelete == 1 ? self::IS_DELETED['yes'] : self::IS_DELETED['no'];
         $where['a.state'] = self::STATE['normal'];
+        if (is_numeric($isTop)) {
+            $where['a.is_top'] = $isTop;
+        }
 
         if ($where['a.is_deleted'] === self::IS_DELETED['yes']) {
             unset($where['a.group_id']);
@@ -180,7 +193,7 @@ class Doc extends BaseModel
             ->leftJoin('user_info b', 'a.user_id  = b.id')
             ->select('a.*,b.nick_name');
         if ($keyword) {
-            $query->andWhere(['like', 'a.title',  "{$keyword}%", false]);
+            $query->andWhere(['like', 'a.title', "{$keyword}%", false]);
         }
 
         $data = ['total' => 0, 'data' => []];
@@ -191,7 +204,7 @@ class Doc extends BaseModel
             ->limit($ps)
             ->asArray()
             ->all();
-        
-            return $data;
+
+        return $data;
     }
 }

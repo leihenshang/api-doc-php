@@ -30,6 +30,22 @@
         </ul>
       </div>
 
+      <div class="doc-list-table">
+        <el-divider content-position="left">公 告</el-divider>
+        <el-table
+          :data="docList"
+          stripe
+          style="width: 100%"
+          v-loading="loading"
+          border
+          @row-click="tableRowClick"
+        >
+          <el-table-column prop="title" label="名称" width="180"></el-table-column>
+          <el-table-column prop="nick_name" label="创建者" width="180"></el-table-column>
+          <el-table-column prop="create_time" label="创建时间"></el-table-column>
+        </el-table>
+      </div>
+
       <!-- 右侧内容结束 -->
     </div>
     <div class="right-r">
@@ -49,12 +65,14 @@ export default {
   },
   created() {
     this.getDetail();
+    this.getDocList();
   },
   data() {
     return {
       loading: false,
       keyword: "",
       projectData: {},
+      docList: [],
       indesideRoute: [
         { title: "项目概况", route: "detail", child: "detailPage" },
         { title: "API接口", route: "detail", child: "apiPage" },
@@ -62,6 +80,9 @@ export default {
     };
   },
   methods: {
+    tableRowClick(row) {
+      this.$router.push({ name: "docDetail", params: { docId: row.id } });
+    },
     //获取项目详情
     getDetail() {
       this.$http
@@ -95,6 +116,34 @@ export default {
         params: { projectId: this.id, groupId: 0 },
       });
     },
+    //获取文档
+    getDocList(ps = 10, cp = 1) {
+      this.$http
+        .get("/doc/list", {
+          params: {
+            projectId: this.$route.params.id,
+            ps,
+            cp,
+            isTop: 1,
+          },
+        })
+        .then(
+          (response) => {
+            response = response.data;
+            if (response.code === CODE_OK) {
+              this.docList = response.data.data;
+              this.count = Number.parseInt(response.data.total);
+              this.loading = false;
+            }
+          },
+          (res) => {
+            let response = res.data;
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
+    },
   },
   components: {
     message: Message,
@@ -115,6 +164,10 @@ export default {
   border-radius: 3px;
   overflow: hidden;
   background-color: #fff;
+
+  .doc-list-table {
+    margin: 50px 0;
+  }
 }
 
 .right-l .title {

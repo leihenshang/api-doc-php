@@ -87,20 +87,12 @@ export default {
         route: "/projectList",
         icon: "el-icon-s-fold",
       },
-      // {
-      //   title: "个人中心",
-      //   route: "/myCenter",
-      //   icon: "el-icon-s-operation",
-      // },
-    ];
-
-    if (this.$store.state.userInfo.type == 2) {
-      route.push({
+      {
         title: "用户管理",
         route: "/userManager",
         icon: "el-icon-user",
-      });
-    }
+      },
+    ];
 
     return {
       insideRoute: route,

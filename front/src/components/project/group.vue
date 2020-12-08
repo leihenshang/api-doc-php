@@ -2,18 +2,17 @@
 <template>
   <div class="group">
     <ul v-show="group">
-      <li @click="showCreateGroupDialog">
-        <a href="javascript:;">
-          <i class="el-icon-delete"></i> 新增分组
-        </a>
-      </li>
       <li>
         <a href="javascript:;" @click="clientBtn(null,null)">
           <i class="el-icon-s-order"></i>
           <slot>全 部</slot>
         </a>
       </li>
-
+      <li @click="showCreateGroupDialog">
+        <a href="javascript:;">
+          <i class="el-icon-delete"></i> 新增分组
+        </a>
+      </li>
       <li class="last-item">
         <a href="javascript:;" @click="clientBtn(-1,null)">
           <i class="el-icon-delete"></i> 回 收 站
