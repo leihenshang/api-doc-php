@@ -2,7 +2,7 @@
   <div class="doc-wrapper">
     <div class="btn">
       <el-button plain @click="$router.go(-1)">
-        <i class="el-icon-arrow-left"></i> 文档列表
+        <i class="el-icon-arrow-left"></i> 返 回
       </el-button>
 
       <el-button

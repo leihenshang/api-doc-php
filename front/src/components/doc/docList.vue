@@ -5,6 +5,16 @@
         <el-table-column prop="title" label="名称" width="180"></el-table-column>
         <el-table-column prop="nick_name" label="创建者" width="180"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
+        <el-table-column prop="is_top" label="置顶" width="130">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.is_top"
+              active-value="1"
+              inactive-value="0"
+              @change="setIsTop(scope.row)"
+            ></el-switch>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click="jumpPage('docEdit',scope.row.id)">编辑</el-button>
@@ -14,7 +24,7 @@
               type="danger"
               @click="restoreDoc(scope.row.id)"
             >还原</el-button>
-            <el-button v-else type="danger" @click="delDoc(scope.row.id)">删除</el-button>
+            <el-button v-else type="danger" @click="deleteDoc(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -100,7 +110,7 @@ export default {
       this.cp = event;
     },
     //删除文档
-    delDoc(id) {
+    deleteDoc(id) {
       this.$confirm("该文档将被删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -146,11 +156,11 @@ export default {
       this.$http
         .get("/doc/list", {
           params: {
-            group_id: groupId,
-            project_id: projectId,
+            groupId: groupId,
+            projectId: projectId,
             ps: size,
             cp: curr,
-            is_deleted: groupId < 0 ? 1 : 0,
+            isDeleted: groupId < 0 ? 1 : 0,
             keyword: keyword,
           },
         })
@@ -174,16 +184,30 @@ export default {
     jumpPage(name, docId) {
       this.$router.push({ name, params: { docId: docId } });
     },
+    setIsTop(data) {
+      this.$http
+        .post("/doc/update", {
+          is_top: data.is_top == 0 ? 0 : 1,
+          id: data.id,
+        })
+        .then((res) => {
+          res = res.data;
+          if (res.code !== CODE_OK) {
+            data.is_top = 0;
+            this.$message.error(res.msg);
+          }
+        });
+    },
   },
   watch: {
     $route: function (to) {
       if (to.query.keyword) {
         this.cp = 1;
-        this.getDocList(20, 1, 0, to.params.id, to.query.keyword);
+        this.getDocList(this.ps, this.cp, 0, to.params.id, to.query.keyword);
         this.loading = true;
       } else {
         this.cp = 1;
-        this.getDocList(this.ps, this.cp, to.params.groupId, to.params.id);
+        this.getDocList(this.ps, this.cp, to.query.groupId, to.params.id);
         this.loading = true;
       }
     },
@@ -199,7 +223,7 @@ export default {
 .page {
   background-color: #fff;
   border: 1px;
-  text-align: center;
+  text-align: right;
   margin: 20px 0;
 }
 </style>

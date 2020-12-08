@@ -322,7 +322,7 @@ export default {
       rules: {
         to_user_id: [
           {
-            required: true,
+            required: false,
             message: "请选择指派",
             trigger: "blur",
           },
@@ -360,7 +360,7 @@ export default {
       handleRules: {
         to_user_id: [
           {
-            required: true,
+            required: false,
             message: "请选择指派",
             trigger: "blur",
           },

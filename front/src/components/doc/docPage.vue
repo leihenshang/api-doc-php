@@ -1,12 +1,12 @@
 <template>
   <div class="doc-page">
     <div class="group-wrapper"  v-show=" $route.name == 'docList'">
-      <group :type="type" v-on:change-group="changeGroup" :showIsEdit=" true">全部文档</group>
+      <group :type="type" v-on:change-group="changeGroup" :showIsEdit=" true">全部</group>
     </div>
     <div class="doc-wrapper">
       <div class="btn-wrapper" v-show=" $route.name == 'docList' ">
         <div class="input" style="display:inline-block;">
-          <el-button @click="addDoc()" style="margin-right:5px">创建文档</el-button>
+          <el-button @click="addDoc()" style="margin-right:5px">创 建</el-button>
           <el-input
             placeholder="请输入标题"
             v-model="keyword"
@@ -51,7 +51,7 @@ export default {
     changeGroup(id) {
       id = id ? id : 0;
       this.$router.push(
-        { name: "docList", params: { groupId: id } },
+        { name: "docList", query: { groupId: id } },
         () => {
           return;
         },

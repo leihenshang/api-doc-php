@@ -46,7 +46,7 @@
       </ul>
       <div class="btn">
         <el-button @click="dialogFormVisible = true" type="primary">修改密码</el-button>
-        <el-button type="primary" @click="updateUserInfo()">修改昵称</el-button>
+        <el-button type="primary" @click="updateNickname()">修改昵称</el-button>
       </div>
     </div>
     <!-- 用户信息-结束 -->

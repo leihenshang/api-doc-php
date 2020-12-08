@@ -45,24 +45,10 @@
               @confirm="delApi(scope.row.id)"
               width="200"
             >
-              <el-button
-                slot="reference"
-                v-show="
-                  $store.state.projectPermission == 6 ||
-                  $store.state.userInfo.type === 2
-                "
-              >删除</el-button>
+              <el-button slot="reference">删除</el-button>
             </el-popconfirm>
 
-            <el-button
-              type="warning"
-              plain
-              @click="jumpPage('edit', scope.row.id)"
-              v-show="
-                $store.state.projectPermission == 6 ||
-                $store.state.userInfo.type === 2
-              "
-            >编辑</el-button>
+            <el-button type="warning" plain @click="jumpPage('edit', scope.row.id)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -220,12 +206,9 @@ export default {
         this.cp = 1;
         this.getApiList(this.ps, this.cp, to.params.id, 0, to.query.keyword);
         this.loading = true;
-      } else if (to.query.groupId) {
-        this.getApiList(this.ps, this.cp, to.params.id, to.query.groupId);
-        this.loading = true;
       } else {
         this.cp = 1;
-        this.getApiList(this.ps, this.cp, to.params.id, to.params.groupId);
+        this.getApiList(this.ps, this.cp, to.params.id, to.query.groupId);
         this.loading = true;
       }
     },
@@ -240,7 +223,7 @@ export default {
 }
 
 .api-list .page {
-  text-align: center;
+  text-align: right;
   padding: 20px 0;
 }
 
