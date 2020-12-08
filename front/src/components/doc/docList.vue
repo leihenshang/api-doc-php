@@ -179,11 +179,11 @@ export default {
     $route: function (to) {
       if (to.query.keyword) {
         this.cp = 1;
-        this.getDocList(20, 1, 0, to.params.id, to.query.keyword);
+        this.getDocList(this.ps,  this.cp, 0, to.params.id, to.query.keyword);
         this.loading = true;
       } else {
         this.cp = 1;
-        this.getDocList(this.ps, this.cp, to.params.groupId, to.params.id);
+        this.getDocList(this.ps, this.cp, to.query.groupId, to.params.id);
         this.loading = true;
       }
     },
@@ -199,7 +199,7 @@ export default {
 .page {
   background-color: #fff;
   border: 1px;
-  text-align: center;
+  text-align: right;
   margin: 20px 0;
 }
 </style>

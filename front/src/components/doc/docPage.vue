@@ -51,7 +51,7 @@ export default {
     changeGroup(id) {
       id = id ? id : 0;
       this.$router.push(
-        { name: "docList", params: { groupId: id } },
+        { name: "docList", query: { groupId: id } },
         () => {
           return;
         },

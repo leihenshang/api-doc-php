@@ -90,10 +90,10 @@ const router = new VueRouter({
           name: "projectDoc",
           component: resolve => require(["./components/doc/docPage"], resolve),
           props: true,
-          redirect: "projectDoc/docList/0",
+          redirect: "projectDoc/docList",
           children: [
             {
-              path: "docList/:groupId",
+              path: "docList",
               name: "docList",
               component: resolve => require(["./components/doc/docList"], resolve),
               props: true,

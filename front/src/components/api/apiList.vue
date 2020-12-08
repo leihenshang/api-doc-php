@@ -220,12 +220,9 @@ export default {
         this.cp = 1;
         this.getApiList(this.ps, this.cp, to.params.id, 0, to.query.keyword);
         this.loading = true;
-      } else if (to.query.groupId) {
-        this.getApiList(this.ps, this.cp, to.params.id, to.query.groupId);
-        this.loading = true;
       } else {
         this.cp = 1;
-        this.getApiList(this.ps, this.cp, to.params.id, to.params.groupId);
+        this.getApiList(this.ps, this.cp, to.params.id, to.query.groupId);
         this.loading = true;
       }
     },
@@ -240,7 +237,7 @@ export default {
 }
 
 .api-list .page {
-  text-align: center;
+  text-align: right;
   padding: 20px 0;
 }
 

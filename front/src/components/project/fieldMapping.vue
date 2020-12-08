@@ -1,19 +1,14 @@
 <template>
   <div class="field-wrapper">
     <div class="btn-wrapper">
-      <el-button  @click="showAddWindow = true">新增</el-button>
+      <el-button @click="showAddWindow = true">新增</el-button>
       <el-dialog title="添加映射字段" :visible.sync="showAddWindow" :show-close="false">
-        <el-form :model="fieldMapping" label-width="80px" ref="form" :rules="rules" >
+        <el-form :model="fieldMapping" label-width="80px" ref="form" :rules="rules">
           <el-form-item label="字段名" prop="field">
             <el-input v-model="fieldMapping.field" autocomplete="off" placeholder="字段名"></el-input>
           </el-form-item>
           <el-form-item label="类型" prop="type">
-            <el-select
-              v-model="fieldMapping.type"
-              placeholder="请选择类型"
-              
-              v-if="propertyList.var_type"
-            >
+            <el-select v-model="fieldMapping.type" placeholder="请选择类型" v-if="propertyList.var_type">
               <el-option-group
                 v-for="(group,index) in propertyList.var_type"
                 :key="group.label"
@@ -39,29 +34,18 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="showAddWindow = false" >取 消</el-button>
-          <el-button type="primary" @click="saveFieldMapping()" >确 定</el-button>
+          <el-button @click="showAddWindow = false">取 消</el-button>
+          <el-button type="primary" @click="saveFieldMapping()">确 定</el-button>
         </div>
       </el-dialog>
 
       <el-dialog title="修改映射字段" :visible.sync="dialogFormVisibleUpdate" :show-close="false">
-        <el-form
-          :model="updateData"
-          label-width="80px"
-          ref="formUpdate"
-          :rules="rules"
-          
-        >
+        <el-form :model="updateData" label-width="80px" ref="formUpdate" :rules="rules">
           <el-form-item label="字段名" prop="field">
             <el-input v-model="updateData.field" autocomplete="off" placeholder="字段名"></el-input>
           </el-form-item>
           <el-form-item label="类型" prop="type">
-            <el-select
-              v-model="updateData.type"
-              placeholder="请选择类型"
-              
-              v-if="propertyList.var_type"
-            >
+            <el-select v-model="updateData.type" placeholder="请选择类型" v-if="propertyList.var_type">
               <el-option-group
                 v-for="(group,index) in propertyList.var_type"
                 :key="group.label"
@@ -87,8 +71,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisibleUpdate = false" >取 消</el-button>
-          <el-button type="primary" @click="updateFieldMapping()" >确 定</el-button>
+          <el-button @click="dialogFormVisibleUpdate = false">取 消</el-button>
+          <el-button type="primary" @click="updateFieldMapping()">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -104,14 +88,12 @@
               slot="reference"
               v-show="$store.state.userInfo.type == 2"
               @click="del(scope.row.id)"
-              
             >删除</el-button>
             <el-button
               type="warning"
               plain
               @click="updateData = scope.row;dialogFormVisibleUpdate = true; "
               v-show="$store.state.userInfo.type == 2"
-              
             >编辑</el-button>
           </template>
         </el-table-column>
@@ -126,7 +108,7 @@ const CODE_OK = 200;
 export default {
   name: "fieldMapping",
   props: {
-    id: [Number, String]
+    id: [Number, String],
   },
   created() {
     this.loading = true;
@@ -144,18 +126,28 @@ export default {
       fieldMapping: {
         field: "",
         type: "",
-        description: ""
+        description: "",
       },
       rules: {
         field: [
           { required: true, message: "请输入字段名", trigger: "blur" },
-          { min: 1, max: 50, message: "长度在 1 到 50 个字符", trigger: "blur" }
+          {
+            min: 1,
+            max: 50,
+            message: "长度在 1 到 50 个字符",
+            trigger: "blur",
+          },
         ],
         type: [{ required: true, message: "请选择类型", trigger: "blur" }],
         description: [
-          { min: 2, max: 50, message: "长度在 2 到 50 个字符", trigger: "blur" }
-        ]
-      }
+          {
+            min: 2,
+            max: 50,
+            message: "长度在 2 到 50 个字符",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -169,15 +161,15 @@ export default {
       this.$confirm("此操作将删除该记录, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.$http
-            .post( "/field-mapping/delete", {
-              id
+            .post("/field-mapping/delete", {
+              id,
             })
             .then(
-              res => {
+              (res) => {
                 let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
@@ -194,14 +186,14 @@ export default {
         .catch(() => {});
     },
     updateFieldMapping() {
-      this.$refs.formUpdate.validate(valid => {
+      this.$refs.formUpdate.validate((valid) => {
         if (valid) {
           this.$http
-            .post( "/field-mapping/update", {
-              ...this.updateData
+            .post("/field-mapping/update", {
+              ...this.updateData,
             })
             .then(
-              res => {
+              (res) => {
                 let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
@@ -223,15 +215,15 @@ export default {
     },
     //保存字段
     saveFieldMapping() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.$http
-            .post( "/field-mapping/create", {
+            .post("/field-mapping/create", {
               ...this.fieldMapping,
-              project_id: this.id
+              project_id: this.id,
             })
             .then(
-              res => {
+              (res) => {
                 let response = res.data;
                 if (response.code === CODE_OK) {
                   this.$message.success("成功!");
@@ -255,11 +247,11 @@ export default {
     getFieldList() {
       this.loading = true;
       this.$http
-        .get( "/field-mapping/list", {
-          params: {}
+        .get("/field-mapping/list", {
+          params: {},
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.fieldList = response.data;
@@ -275,11 +267,11 @@ export default {
     //获取创建api的默认属性
     getProperty() {
       this.$http
-        .get( "/property/list", {
-          params: {}
+        .get("/property/list", {
+          params: {},
         })
         .then(
-          response => {
+          (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
               this.propertyList = response.data;
@@ -289,8 +281,8 @@ export default {
             this.$message.error("获取数据失败");
           }
         );
-    }
-  }
+    },
+  },
 };
 </script>
 
