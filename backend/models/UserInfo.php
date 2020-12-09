@@ -32,9 +32,13 @@ class UserInfo extends BaseModel
     const SCENARIO_REGISTER = 'register';
     const SCENARIO_UPDATE_PWD = 'updatePwd';
     //1正常2禁用3锁定
-    const USER_STATE = ['normal' => [1, '正常'], 'disabled' => [2, '禁用'], 'not_activated' => [3, '未激活']];
+    const USER_STATE = ['normal' => [1, '正常'], 'disabled' => [2, '禁用']];
     //1普通用户2管理员
-    const USER_TYPE = ['normal' => [1, '普通用户'], 'admin' => [2, '管理员']];
+    const USER_TYPE = [
+        'normal' => [1, '普通用户'],
+        'admin' => [2, '管理员'],
+        'superuser' => [3, '超级管理员'],
+    ];
 
 
     public static $staticUserInfo;
@@ -85,10 +89,10 @@ class UserInfo extends BaseModel
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_LOGIN] = ['name', 'pwd'];
-        $scenarios[self::SCENARIO_QUERY] = ['keyword', 'ps', 'cp','type','state'];
+        $scenarios[self::SCENARIO_QUERY] = ['keyword', 'ps', 'cp', 'type', 'state'];
         $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'nick_name', 'email'];
         $scenarios[self::SCENARIO_UPDATE_PWD] = ['re_pwd', 'pwd'];
-        $scenarios[self::SCENARIO_UPDATE] = ['nick_name',  'state', 'is_deleted', 'user_face'];
+        $scenarios[self::SCENARIO_UPDATE] = ['nick_name', 'state', 'is_deleted', 'user_face'];
         return $scenarios;
     }
 
@@ -159,12 +163,12 @@ class UserInfo extends BaseModel
      */
     public static function createToken()
     {
-        return md5(mt_rand(1, 999999).time());
+        return md5(mt_rand(1, 999999) . time());
     }
 
     public static function encryptionPwd(string $pwd)
     {
-        return sha1(md5($pwd.$pwd).'myDocIsMyProjectUseVueAndPhpYii2');
+        return sha1(md5($pwd . $pwd) . 'myDocIsMyProjectUseVueAndPhpYii2');
     }
 
     /**

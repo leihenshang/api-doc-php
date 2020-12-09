@@ -77,10 +77,10 @@ class UserController extends BaseController
         a.last_login_time,
         a.user_face,
         ');
-        $res->where(['a.is_deleted' => UserInfo::IS_DELETED['no'], 'a.type' => UserInfo::USER_TYPE['normal'][0]]);
+        $res->where(['a.is_deleted' => UserInfo::IS_DELETED['no']]);
 
         $isAdmin = false;
-        if (UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type != UserInfo::USER_TYPE['admin'][0]) {
+        if (UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type == UserInfo::USER_TYPE['admin'][0]) {
             $isAdmin = true;
         }
 

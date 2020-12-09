@@ -38,7 +38,7 @@ $config = [
                     $code = isset($response->data['code']) ? $response->data['code'] : 200;
                     $response->data = [
                         'code' => $code,
-                        'msg' => isset($response->data['msg']) ? $response->data['msg'] : (isset($response->data['message']) ? $response->data['message'] : []),
+                        'msg' => isset($response->data['msg']) ? $response->data['msg'] : (isset($response->data['message']) ? $response->data['message'] : ""),
                         'data' => !isset($response->data['data']) ? [] : $response->data['data'],
                     ];
                 }

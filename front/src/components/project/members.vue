@@ -33,7 +33,6 @@
         </el-table-column>
         <el-table-column prop="nick_name" label="昵称"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
-        <el-table-column prop="last_login_time" label="最后登录时间"></el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-dropdown placement="bottom" trigger="click" @command="handleCommand">

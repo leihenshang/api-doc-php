@@ -36,26 +36,32 @@
     <div class="all-user" v-loading="loading">
       <el-table :data="userList.list" stripe style="width: 100%" border>
         <el-table-column prop="name" label="账号" width="180"></el-table-column>
-        <el-table-column prop="state" label="状态" width="180">
-          <template slot-scope="scope">{{ transferState(scope.row.state) }}</template>
-        </el-table-column>
+        <el-table-column prop="nick_name" label="昵称" width="180"></el-table-column>
+
         <el-table-column prop="type" label="类型" width="180">
           <template slot-scope="scope">{{ transferType(scope.row.type) }}</template>
         </el-table-column>
-        <el-table-column prop="nick_name" label="昵称" width="180"></el-table-column>
+
         <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop="last_login_time" label="最后登录时间"></el-table-column>
-        <el-table-column prop="last_login_ip" label="最后登录ip"></el-table-column>
+        <el-table-column prop="state" label="禁用" width="100">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.state"
+              :active-value="2"
+              :inactive-value="1"
+              :disabled="scope.row.type == 2"
+              @change="updateState(scope.row)"
+            ></el-switch>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="100">
           <template slot-scope="scope">
             <el-dropdown :hide-on-click="false" trigger="click" @command="handleCommand">
               <el-button>操作</el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="{action:'del',data:scope.row}">删除用户</el-dropdown-item>
-                <el-dropdown-item
-                  :command="{action:'updateState',data:scope.row}"
-                >{{ scope.row.state == 2 || scope.row.state == 3 ? "启用用户" : "禁用用户" }}</el-dropdown-item>
                 <el-dropdown-item :command="{action:'initPwd',data:scope.row}">初始化密码</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -169,12 +175,6 @@ export default {
         case "del":
           this.delUser(command.data.id);
           break;
-        case "updateState":
-          command.data.state == 2 || command.data.state == 3
-            ? this.updateState(command.data.id, 1)
-            : this.updateState(command.data.id, 2);
-
-          break;
         case "initPwd":
           this.initPwd(command.data.id);
           break;
@@ -248,34 +248,24 @@ export default {
         }
       });
     },
-    updateState(id, state) {
-      this.$confirm("此操作将改变用户状态, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          this.$http
-            .post("/user/update-status", {
-              state,
-              userId: id,
-            })
-            .then(
-              (response) => {
-                response = response.data;
-                if (response.code === CODE_OK) {
-                  this.getUserList();
-                  this.$message.success("成功！~");
-                } else {
-                  this.$message.error(response.msg);
-                }
-              },
-              () => {
-                this.$message.error("请求失败!");
-              }
-            );
+    updateState(data) {
+      console.log(data);
+      this.$http
+        .post("/user/update", {
+          state: data.state,
+          userId: data.id,
         })
-        .catch(() => {});
+        .then(
+          (response) => {
+            response = response.data;
+            if (response.code !== CODE_OK) {
+              data.state = 2;
+            }
+          },
+          () => {
+            this.$message.error("请求失败!");
+          }
+        );
     },
     //初始化用户密码
     delUser(id) {
