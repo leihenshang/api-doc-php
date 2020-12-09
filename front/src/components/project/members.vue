@@ -33,14 +33,14 @@
         </el-table-column>
         <el-table-column prop="nick_name" label="昵称"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column prop="email" label="权限">
+          <template slot-scope="scope">{{scope.row.permission == 6 ? '读/写':'只读'}}</template>
+        </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-dropdown placement="bottom" trigger="click" @command="handleCommand">
               <el-button type="text">权限设置</el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  :command="{action:'setLeader',data:scope.row}"
-                >设为{{scope.row.is_leader == 0 ? '管理员' : '普通用户' }}</el-dropdown-item>
                 <el-dropdown-item
                   :command="{action:'setPermission',data:scope.row}"
                 >设置{{scope.row.permission == 4 ? '读/写':'只读'}}</el-dropdown-item>
@@ -76,20 +76,17 @@ export default {
     transferState(state) {
       state = parseInt(state);
       let str = "";
-      //1正常2禁用3未激活
+      //1正常2禁用
       switch (state) {
         case 1:
           str = "正常";
           break;
         case 2:
-          str = "正常";
-          break;
-        case 3:
-          str = "正常";
+          str = "禁用";
           break;
 
         default:
-          str = "正常";
+          str = "unkonwn";
           break;
       }
 
@@ -97,9 +94,6 @@ export default {
     },
     handleCommand(val) {
       switch (val.action) {
-        case "setLeader":
-          this.setLeader(val.data);
-          break;
         case "setPermission":
           this.setPermission(val.data);
           break;
@@ -196,55 +190,6 @@ export default {
                 this.$message.error("操作失败!");
               }
             );
-        })
-        .catch(() => {});
-    },
-
-    //设置项目管理员
-    setLeader(val) {
-      this.$confirm(
-        "将用户" + val.nick_name + "设置为项目管理员, 是否继续?",
-        "提示",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(() => {
-          this.$http
-            .post("/project/set-leader", {
-              userId: val.id,
-              projectId: this.$route.params.id,
-              cancel: val.is_leader == 1 ? 0 : 1,
-            })
-            .then((response) => {
-              response = response.data;
-              if (response.code === CODE_OK) {
-                this.getProjectUserList();
-                this.$message.success("成功!");
-              } else {
-                this.$message.error("操作失败");
-              }
-            });
-        })
-        .catch(() => {});
-    },
-    handleSelect(val) {
-      this.$confirm(
-        "将用户" + val.nick_name + "加入该项目, 是否继续?",
-        "提示",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
         })
         .catch(() => {});
     },
