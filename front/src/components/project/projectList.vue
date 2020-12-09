@@ -21,14 +21,14 @@
           <template slot-scope="scope">
             <el-button
               slot="reference"
-              v-show="$store.state.userInfo.type == 2"
               @click.stop="deleteData(scope.row.id)"
+              :disabled="$store.state.userInfo.type == 1"
             >删除</el-button>
             <el-button
               type="warning"
               plain
               @click.stop="form = scope.row;dialogFormVisible = true; isUpdate = true;"
-              v-show="$store.state.userInfo.type == 2"
+              :disabled="$store.state.userInfo.type == 1"
             >编辑</el-button>
             <el-button type="success" plain @click.stop="detail(scope.row);">详情</el-button>
           </template>

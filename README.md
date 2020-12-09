@@ -22,6 +22,11 @@ restful风格api记录工具，方便前后台协作,并支持文档记录功能
 - github:https://github.com/leihenshang/apiDoc
 - gitee:https://gitee.com/leihenshang/apiDoc
 
+## 初始化超级管理员
+
+在backend目录下执行  php yii init/user
+超级管理员忘记密码 php yii init/user true
+
 
 #### 鸣谢列表
 - 感谢 `JetBrains` 提供的免费IDE支持！

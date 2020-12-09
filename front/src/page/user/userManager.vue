@@ -51,7 +51,7 @@
               v-model="scope.row.state"
               :active-value="2"
               :inactive-value="1"
-              :disabled="scope.row.type == 2"
+              :disabled="scope.row.type == 2 || scope.row.type == 3"
               @change="updateState(scope.row)"
             ></el-switch>
           </template>
@@ -183,43 +183,7 @@ export default {
           break;
       }
     },
-    //计算用户类型
-    userType(val) {
-      let str;
-      switch (val) {
-        case 1:
-          str = "普通用户";
-          break;
-        case 2:
-          str = "管理员";
-          break;
-
-        default:
-          str = "未知";
-          break;
-      }
-      return str;
-    },
-    //匹配用户状态
-    userState(val) {
-      let str;
-      switch (val) {
-        case 1:
-          str = "正常";
-          break;
-        case 2:
-          str = "禁用";
-          break;
-
-        case 3:
-          str = "未激活";
-          break;
-        default:
-          str = "未知";
-          break;
-      }
-      return str;
-    }, //删除项目用户
+    //删除项目用户
     createUser() {
       this.$refs.form.validate((valid) => {
         if (valid) {
@@ -367,14 +331,10 @@ export default {
           str = "正常";
           break;
         case 2:
-          str = "正常";
+          str = "禁用";
           break;
-        case 3:
-          str = "正常";
-          break;
-
         default:
-          str = "正常";
+          str = "unknown";
           break;
       }
 
@@ -390,6 +350,9 @@ export default {
           break;
         case 2:
           str = "管理员";
+          break;
+        case 3:
+          str = "超级管理员";
           break;
         default:
           str = "未知";

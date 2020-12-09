@@ -12,7 +12,7 @@
           background-color="#409eff"
           text-color="#fff"
         >
-          <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
+          <el-menu-item :index="item.route" v-for="item in myRoute" :key="item.id">
             <span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </el-menu>
@@ -48,13 +48,32 @@ export default {
     avatarUrl: function () {
       return this.BASE_URL + "/" + this.$store.state.userInfo.user_face;
     },
-    showInfo() {
+    showInfo: function () {
       let userInfo = this.$store.state.userInfo;
       if (userInfo && userInfo.id > 0 && this.$route.name != "userLogin") {
         return true;
       }
 
       return false;
+    },
+    myRoute: function () {
+      let route = [
+        {
+          title: "项目列表",
+          route: "/projectList",
+          icon: "el-icon-s-fold",
+        },
+      ];
+
+      if (this.$store.state.userInfo && this.$store.state.userInfo.type > 1) {
+        route.push({
+          title: "用户管理",
+          route: "/userManager",
+          icon: "el-icon-user",
+        });
+      }
+
+      return route;
     },
   },
   methods: {
@@ -81,22 +100,13 @@ export default {
     },
   },
   data: function () {
-    let route = [
-      {
-        title: "项目列表",
-        route: "/projectList",
-        icon: "el-icon-s-fold",
-      },
-      {
-        title: "用户管理",
-        route: "/userManager",
-        icon: "el-icon-user",
-      },
-    ];
+    return {};
+  },
 
-    return {
-      insideRoute: route,
-    };
+  watch: {
+    myRoute: function () {
+      console.log("chang");
+    },
   },
 };
 </script>
