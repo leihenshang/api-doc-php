@@ -31,7 +31,7 @@ class UserInfo extends BaseModel
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_REGISTER = 'register';
     const SCENARIO_UPDATE_PWD = 'updatePwd';
-    //1正常2禁用3锁定
+    //1正常2禁用
     const USER_STATE = ['normal' => [1, '正常'], 'disabled' => [2, '禁用']];
     //1普通用户2管理员
     const USER_TYPE = [

@@ -77,7 +77,7 @@ class ProjectController extends BaseController
         //如果用户不是管理员
         //1.获取用户可以使用的项目id
         //2.然后查询项目表返回项目
-        if ($this->userInfo->type !== UserInfo::USER_TYPE['admin'][0]) {
+        if ($this->userInfo->type === UserInfo::USER_TYPE['normal'][0]) {
             $res = UserProject::find()->alias('a')
                 ->select('b.*')
                 ->innerJoin('project b', 'a.project_id = b.id')
