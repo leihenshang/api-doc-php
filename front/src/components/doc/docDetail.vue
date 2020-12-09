@@ -10,8 +10,7 @@
         plain
         @click="updateDoc()"
         :loading="btnLoading"
-        v-show="$store.state.projectPermission == 6"
-      >修改文档</el-button>
+      >修 改</el-button>
     </div>
     <div class="doc-detail" v-if="doc">
       <div class="title">

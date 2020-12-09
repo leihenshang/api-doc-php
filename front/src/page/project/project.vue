@@ -42,7 +42,7 @@ export default {
           icon: "el-icon-s-promotion",
         },
         {
-          title: "项目文档",
+          title: "文档",
           route: "/detail/" + this.$route.params.id + "/projectDoc",
           icon: "el-icon-reading",
         },

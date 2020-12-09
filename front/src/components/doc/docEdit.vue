@@ -2,7 +2,7 @@
   <div class="doc-edit" v-loading="loading">
     <div class="btn">
       <el-button plain @click="$router.go(-1)">返 回</el-button>
-      <el-button type="success" plain @click="updateDoc()">保存文档</el-button>
+      <el-button type="success" plain @click="updateDoc()">保 存</el-button>
     </div>
     <div class="doc-wrapper">
       <DocInfo :doc="doc" :groupList="this.groupList" v-on:update-info="updateInfo($event)" />
