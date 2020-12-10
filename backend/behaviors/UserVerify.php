@@ -122,7 +122,7 @@ class UserVerify extends Behavior
             throw new UnauthorizedHttpException('没有用户登陆信息', 34);
         }
 
-        if ($this->userInfo->type == UserInfo::USER_TYPE['admin'][0]) {
+        if ($this->userInfo->type == UserInfo::USER_TYPE['admin'][0] || $this->userInfo->type == UserInfo::USER_TYPE['superuser'][0]) {
             return true;
         }
 

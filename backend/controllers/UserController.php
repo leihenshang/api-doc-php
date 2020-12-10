@@ -53,10 +53,9 @@ class UserController extends BaseController
     {
         $params = Yii::$app->request->get();
         $projectId = $params['projectId'] ?? 0;
-        $all = $params['all'] ?? false;
-        if (!is_bool($all)) {
-            $all = false;
-        }
+        $all = boolval($params['all'] ?? false);
+
+
         $user = new UserInfo(['scenario' => UserInfo::SCENARIO_QUERY]);
         $user->attributes = $params;
         if (!$user->validate()) {
