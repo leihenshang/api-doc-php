@@ -92,7 +92,7 @@ class UserInfo extends BaseModel
         $scenarios[self::SCENARIO_QUERY] = ['keyword', 'ps', 'cp', 'type', 'state'];
         $scenarios[self::SCENARIO_REGISTER] = ['name', 're_pwd', 'pwd', 'nick_name', 'email'];
         $scenarios[self::SCENARIO_UPDATE_PWD] = ['re_pwd', 'pwd'];
-        $scenarios[self::SCENARIO_UPDATE] = ['nick_name', 'state', 'is_deleted', 'user_face'];
+        $scenarios[self::SCENARIO_UPDATE] = ['nick_name', 'state', 'is_deleted', 'user_face','type'];
         return $scenarios;
     }
 

@@ -195,7 +195,7 @@ class UserController extends BaseController
         $userId = Yii::$app->request->post('userId');
         $state = Yii::$app->request->post('state');
         $isDeleted = Yii::$app->request->post('is_deleted');
-        $userType = Yii::$app->request->post('type');
+        $userType = Yii::$app->request->post('userType');
         $dataArr = compact('nickname', 'userId', 'state', 'isDeleted', 'userFace', 'userType');
         $rules = DynamicModel::validateData($dataArr, [
             [['state', 'isDeleted', 'userId', 'userType'], 'number'],
@@ -257,7 +257,7 @@ class UserController extends BaseController
             }
         }
 
-        return $this->success([], '更新完成');
+        return $this->success(null, '更新完成');
 
     }
 
