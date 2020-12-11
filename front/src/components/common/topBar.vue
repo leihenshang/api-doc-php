@@ -132,6 +132,7 @@ export default {
     .top-bar-title {
       color: #eeeeee;
       font-weight: bold;
+      font-size: 	20px;
     }
 
     .top-bar-avatar {

@@ -10,7 +10,7 @@
           <el-input placeholder="请输入标题" v-model="keyword" style="width:30%" clearable>
             <el-button size slot="append" icon="el-icon-search" @click="searchApi()">搜 索</el-button>
           </el-input>
-          <el-button style="margin:0 0 0 10px;" @click="addApi()" v-show="controlShow()">+创建api</el-button>
+          <el-button style="margin:0 0 0 10px;" @click="addApi()" :disabled="!controlShow()">+创建api</el-button>
         </div>
       </div>
       <router-view></router-view>

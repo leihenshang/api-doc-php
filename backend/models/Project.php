@@ -19,7 +19,6 @@ class Project extends BaseModel
     const SCENARIO_CREATE = 'create';
     const SCENARIO_DEL = 'del';
     const SCENARIO_UPDATE = 'update';
-    const SCENARIO_LIST = 'list';
 
     const TYPE = [
         'web' => ['tag' => 1, 'desc' => 'web'],
@@ -43,7 +42,6 @@ class Project extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = ['title', 'description', 'version', 'type'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
-        $scenarios[self::SCENARIO_LIST] = ['ps', 'cp'];
         $scenarios[self::SCENARIO_UPDATE] = ['title', 'description', 'version', 'type'];
         return $scenarios;
     }
@@ -143,28 +141,16 @@ class Project extends BaseModel
     /**
      * 检查用户项目操作权限
      * @param UserInfo $user
-     * @param $projectId
      * @return bool
      * @throws
      */
-    public static function checkUserProjectOperationPermission($user, $projectId)
+    public static function checkUserProjectOperationPermission(UserInfo $user)
     {
-        //判断是否是团队leader
-        $leaderInfo = UserProject::find()->where([
-            'user_id' => $user->id,
-            'is_leader' => UserProject::IS_LEADER['no'],
-            'is_deleted' => UserProject::IS_DELETED['no'],
-            'project_id' => $projectId
-        ])->one();
+       if($user->type != UserInfo::USER_TYPE['admin'][0] || $user->type != UserInfo::USER_TYPE['superuser'][0]){
+           return false;
+       }
 
-        //如果不是根管理员，则要判断是否是团队Leader
-        if ($user->type != UserInfo::USER_TYPE['admin'][0]) {
-            if (!$leaderInfo) {
-                return false;
-            }
-        }
-
-        return true;
+       return true;
     }
 
 }

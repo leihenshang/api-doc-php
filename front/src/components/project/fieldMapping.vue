@@ -248,7 +248,9 @@ export default {
       this.loading = true;
       this.$http
         .get("/field-mapping/list", {
-          params: {},
+          params: {
+            projectId:this.$route.params.id
+          },
         })
         .then(
           (response) => {

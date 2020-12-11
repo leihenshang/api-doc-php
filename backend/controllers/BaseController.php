@@ -12,13 +12,24 @@ use yii\rest\Controller;
  */
 class BaseController extends Controller
 {
-
-    public function success($data = [], $msg = 'success', $code = 200)
+    /**
+     * @param null $data
+     * @param string $msg
+     * @param int $code
+     * @return array
+     */
+    public function success($data = null, $msg = 'success', $code = 200): array
     {
         return ['data' => $data, 'msg' => $msg, 'code' => $code];
     }
 
-    public function failed($msg = 'failed', $code = 14, $data = [])
+    /**
+     * @param string $msg
+     * @param int $code
+     * @param null $data
+     * @return array
+     */
+    public function failed($msg = 'failed', $code = 14, $data = null): array
     {
         return $this->success($data, $msg, $code);
     }

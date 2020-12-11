@@ -45,10 +45,10 @@
               @confirm="delApi(scope.row.id)"
               width="200"
             >
-              <el-button slot="reference">删除</el-button>
+              <el-button slot="reference" :disabled="!controlShow()">删除</el-button>
             </el-popconfirm>
 
-            <el-button type="warning" plain @click="jumpPage('edit', scope.row.id)">编辑</el-button>
+            <el-button type="warning" plain @click="jumpPage('edit', scope.row.id)"  :disabled="!controlShow()">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>

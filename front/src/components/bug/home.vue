@@ -27,7 +27,7 @@
         <el-form-item>
           <el-button type="primary" @click="searchBug()">查询?</el-button>
           <el-button type="primary" @click="searchBug('contentFilterRef')">重置x</el-button>
-          <el-button type="primary" @click="dialogFormVisible = true;">新增+</el-button>
+          <el-button type="primary" @click="dialogFormVisible = true;" :disabled="!controlShow()">新增+</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -147,10 +147,11 @@
               @click.stop="updateBug(scope.row)"
               size="medium"
               style="margin-right:10px;"
+              :disabled="!controlShow()"
             >编 辑</el-button>
 
             <el-popconfirm title="确定要删除这个bug?" placement="top" @confirm="deleteBug(scope.row)">
-              <el-button slot="reference" size="medium" @click.stop>删 除</el-button>
+              <el-button slot="reference" size="medium" @click.stop :disabled="!controlShow()">删 除</el-button>
             </el-popconfirm>
           </template>
         </el-table-column>
@@ -244,7 +245,7 @@
         </ul>
         <!-- bug详情展示-结束 -->
         <div class="detail-btn">
-          <el-button type="primary" @click="dialogHandleFormVisible = true">处 理</el-button>
+          <el-button type="primary" @click="dialogHandleFormVisible = true" :disabled="!controlShow()">处 理</el-button>
           <!-- <el-button type="primary" @click="dialogContentFormVisible = false">取 消</el-button> -->
         </div>
         <!-- 指派列表-开始 -->
@@ -278,6 +279,7 @@
 
 <script>
 import UserSearchSelect from "./userSearchSelect.vue";
+import controlShow from "../../mixins/controlShow";
 
 export default {
   name: "bugHome",
@@ -609,6 +611,7 @@ export default {
     },
   },
   computed: {},
+  mixins:[controlShow],
   components: {
     UserSearchSelect,
   },

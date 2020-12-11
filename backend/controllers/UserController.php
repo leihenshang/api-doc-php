@@ -79,7 +79,8 @@ class UserController extends BaseController
         $res->where(['a.is_deleted' => UserInfo::IS_DELETED['no']]);
 
         $isAdmin = false;
-        if (UserInfo::$staticUserInfo && UserInfo::$staticUserInfo->type == UserInfo::USER_TYPE['admin'][0]) {
+        if (UserInfo::$staticUserInfo &&
+            in_array(UserInfo::$staticUserInfo->type, [UserInfo::USER_TYPE['superuser'][0], UserInfo::USER_TYPE['admin'][0]])) {
             $isAdmin = true;
         }
 
@@ -242,7 +243,7 @@ class UserController extends BaseController
         if ($oldUserData->getDirtyAttributes()) {
             $oldUserData->setScenario(UserInfo::SCENARIO_UPDATE);
             if (!$oldUserData->save()) {
-                return $this->failed('保存失败:'.current($oldUserData->getFirstErrors()));
+                return $this->failed('保存失败:' . current($oldUserData->getFirstErrors()));
             }
         }
 

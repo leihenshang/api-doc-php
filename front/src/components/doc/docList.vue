@@ -11,20 +11,27 @@
               v-model="scope.row.is_top"
               active-value="1"
               inactive-value="0"
+              :disabled="!controlShow()"
               @change="setIsTop(scope.row)"
             ></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button @click="jumpPage('docEdit',scope.row.id)">编辑</el-button>
             <el-button @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
+            <el-button @click="jumpPage('docEdit',scope.row.id)" :disabled="!controlShow()">编辑</el-button>
             <el-button
               v-if="$route.params.groupId == -1"
               type="danger"
               @click="restoreDoc(scope.row.id)"
+              :disabled="!controlShow()"
             >还原</el-button>
-            <el-button v-else type="danger" @click="deleteDoc(scope.row.id)">删除</el-button>
+            <el-button
+              v-else
+              type="danger"
+              @click="deleteDoc(scope.row.id)"
+              :disabled="!controlShow()"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -43,6 +50,8 @@
 </template>
 
 <script>
+import controlShow from "../../mixins/controlShow";
+
 const CODE_OK = 200;
 export default {
   name: "docList",
@@ -212,6 +221,7 @@ export default {
       }
     },
   },
+  mixins: [controlShow],
 };
 </script>
 

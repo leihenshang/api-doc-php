@@ -27,7 +27,7 @@ class BugController extends BaseController
             'class' => UserVerify::class,
             'actions' => ['*'],  //设置要验证的action,如果留空或者里边放入 * ，则所有的action都要执行验证
             'excludeAction' => [], //要排除的action,在此数组内的action不执行登陆状态验证,
-            'projectPermission' => ['update', 'delete', 'create', 'detail', 'list']
+            'projectPermission' => ['update', 'delete', 'create', 'detail']
         ];
         return $behaviors;
     }

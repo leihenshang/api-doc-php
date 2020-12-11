@@ -69,14 +69,12 @@ class ProjectController extends BaseController
      * 项目列表
      * @return array
      */
-    public function actionList()
+    public function actionList(): array
     {
-        $project = new Project(['scenario' => Project::SCENARIO_LIST]);
-        $project->attributes = Yii::$app->request->get();
+        $ps = Yii::$app->request->get('ps');
+        $cp = Yii::$app->request->get('cp');
+        $offset = ($cp - 1) * $ps;
 
-        //如果用户不是管理员
-        //1.获取用户可以使用的项目id
-        //2.然后查询项目表返回项目
         if ($this->userInfo->type === UserInfo::USER_TYPE['normal'][0]) {
             $res = UserProject::find()->alias('a')
                 ->select('b.*')
@@ -87,26 +85,10 @@ class ProjectController extends BaseController
                     'a.user_id' => $this->userInfo->id
                 ]);
             $resCount = $res->count();
-            return $this->success(['count' => $resCount, 'res' => $res->asArray()->all()]);
+        } else {
+            $res = Project::find()->where(['is_deleted' => 0])->limit($ps)->offset($offset)->orderBy('create_time desc');
+            $resCount = $res->count();
         }
-
-
-        $res = Project::find()->where(['is_deleted' => 0])->limit($project->ps)->offset($project->offset)->orderBy('create_time desc');
-        $resCount = $res->count();
-        /*        $res = array_map(function ($a) {
-                    switch ($a['type']) {
-                        case Project::TYPE['web']['tag']:
-                            $a['typeDesc'] = Project::TYPE['web']['desc'];
-                            break;
-                        case Project::TYPE['pc']['tag']:
-                            $a['typeDesc'] = Project::TYPE['pc']['desc'];
-                            break;
-                            default:
-                            $a['typeDesc'] = '默认';
-                            break;
-                    }
-                    return $a;
-                }, $res);*/
 
         return ['data' => ['count' => $resCount, 'res' => $res->asArray()->all()]];
     }
@@ -148,22 +130,22 @@ class ProjectController extends BaseController
      * 获取项目用户列表
      * @return array
      */
-    public function actionProjectUser()
+    public function actionProjectUser(): array
     {
-        $id = Yii::$app->request->get('id', null);
+        $id = Yii::$app->request->get('id');
         if (!$id) {
             return $this->failed('获取id参数失败');
         }
 
         $res = UserProject::find()->alias('a')
-            ->leftJoin('user_info b', 'a.user_id = b.id')
-            ->select('b.*,a.id relation_id,a.permission,a.is_leader')
+            ->innerJoin('user_info b', 'a.user_id = b.id')
+            ->select('b.*,a.permission,a.is_leader')
             ->where([
                 'a.project_id' => $id,
                 'a.is_deleted' => UserProject::IS_DELETED['no']
             ])
-            //不显示根管理员
-            ->andWhere(['<>', 'b.type', UserInfo::USER_TYPE['admin'][0]])
+            //不显示超级用户
+            ->andWhere(['NOT IN', 'b.type', [UserInfo::USER_TYPE['admin'][0], UserInfo::USER_TYPE['superuser'][0]]])
             ->asArray()->all();
 
         $res = array_map(function ($a) {
@@ -174,7 +156,6 @@ class ProjectController extends BaseController
         }, $res);
 
         return $this->success($res);
-
     }
 
     /**
@@ -280,9 +261,9 @@ class ProjectController extends BaseController
         }
 
         //检查操作权限
-        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo, $projectId);
+        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo);
         if (!$checkRes) {
-            return $this->failed('非管理员以及团队leader禁止操作');
+            return $this->failed('非管理员禁止操作');
         }
 
         $userProject = UserProject::find()->where([
@@ -315,9 +296,9 @@ class ProjectController extends BaseController
      */
     public function actionSetPermission()
     {
-        $userId = Yii::$app->request->post('userId', null);
-        $projectId = Yii::$app->request->post('projectId', null);
-        $permission = Yii::$app->request->post('permission', null);
+        $userId = Yii::$app->request->post('userId');
+        $projectId = Yii::$app->request->post('projectId');
+        $permission = Yii::$app->request->post('permission');
 
         if (!$userId || !$projectId || !$permission) {
             return $this->failed('必须传入userId以及projectId,permission');
@@ -329,9 +310,9 @@ class ProjectController extends BaseController
         }
 
         //检查操作权限
-        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo, $projectId);
+        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo);
         if (!$checkRes) {
-            return $this->failed('非管理员以及团队leader禁止操作');
+            return $this->failed('非管理员禁止操作');
         }
 
         $userProject = UserProject::find()->where([
@@ -362,7 +343,7 @@ class ProjectController extends BaseController
      * 检查可操作权限
      * @return array
      */
-    public function actionCheckOperationPermission()
+    public function actionCheckOperationPermission(): array
     {
         $projectId = Yii::$app->request->post('projectId', null);
 
@@ -371,12 +352,12 @@ class ProjectController extends BaseController
         }
 
         //检查操作权限
-        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo, $projectId);
+        $checkRes = Project::checkUserProjectOperationPermission($this->userInfo);
         if (!$checkRes) {
-            return $this->failed('非管理员以及团队leader禁止操作');
+            return $this->failed('非管理员禁止操作');
         }
 
-        return $this->success($checkRes);
+        return $this->success();
     }
 
     /**
