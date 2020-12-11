@@ -70,8 +70,8 @@ export default {
   bottom: 0;
   height: 150px;
   width: 100%;
-  background-color: rgb(64, 158, 255);
-  color: rgb(223, 228, 231);
+  background-color: #222831;
+  color: #eeeeee;
   ul {
     margin: 0 20px;
     padding: 0;

@@ -51,7 +51,7 @@
               v-model="scope.row.state"
               :active-value="2"
               :inactive-value="1"
-              :disabled="scope.row.type == 2 || scope.row.type == 3"
+              :disabled="actionBtnShow(scope.row)"
               @change="updateState(scope.row)"
             ></el-switch>
           </template>
@@ -59,10 +59,18 @@
         <el-table-column align="center" label="操作" width="100">
           <template slot-scope="scope">
             <el-dropdown :hide-on-click="false" trigger="click" @command="handleCommand">
-              <el-button>操作</el-button>
+              <el-button :disabled="actionBtnShow(scope.row)">操作</el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="{action:'del',data:scope.row}">删除用户</el-dropdown-item>
                 <el-dropdown-item :command="{action:'initPwd',data:scope.row}">初始化密码</el-dropdown-item>
+                <el-dropdown-item
+                  v-if="scope.row.type == 1"
+                  :command="{action:'setAdminUser',data:scope.row}"
+                >设为管理员</el-dropdown-item>
+                <el-dropdown-item
+                  v-else-if="scope.row.type == 2"
+                  :command="{action:'setNormalUser',data:scope.row}"
+                >设为普通用户</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -173,9 +181,15 @@ export default {
     handleCommand(command) {
       switch (command.action) {
         case "del":
-          this.delUser(command.data.id);
+          this.deleteUser(command.data.id);
           break;
         case "initPwd":
+          this.initPwd(command.data.id);
+          break;
+        case "setNormalUser":
+          this.initPwd(command.data.id);
+          break;
+        case "setAdminUser":
           this.initPwd(command.data.id);
           break;
 
@@ -183,7 +197,6 @@ export default {
           break;
       }
     },
-    //删除项目用户
     createUser() {
       this.$refs.form.validate((valid) => {
         if (valid) {
@@ -231,8 +244,7 @@ export default {
           }
         );
     },
-    //初始化用户密码
-    delUser(id) {
+    deleteUser(id) {
       this.$confirm("此操作将删除该用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -289,7 +301,6 @@ export default {
         })
         .catch(() => {});
     },
-
     //获取用户列表
     getUserList(cp) {
       this.loading = true;
@@ -360,6 +371,34 @@ export default {
       }
 
       return str;
+    },
+    actionBtnShow(data) {
+      //如果是超级管理员关闭
+      if (data.type == 3) {
+        return true;
+      }
+
+      //如果是超级管理员打开
+      if (this.$store.state.userInfo.type == 3) {
+        return false;
+      }
+
+      //当前行是自己，关闭
+      if (this.$store.state.userInfo.id == data.id) {
+        return true;
+      }
+
+      //当前行是普通用户，打开
+      if (data.type == 1) {
+        return false;
+      }
+
+      //当前行是其他管理员，关闭
+      if (data.type == 2) {
+        return true;
+      }
+
+      return true;
     },
   },
 };

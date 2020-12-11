@@ -9,8 +9,9 @@
           :router="true"
           ref="menu"
           class="el-menu"
-          background-color="#409eff"
-          text-color="#fff"
+          background-color="#222831"
+          text-color="#eeeeee"
+          active-text-color="#00adb5"
         >
           <el-menu-item :index="item.route" v-for="item in myRoute" :key="item.id">
             <span slot="title">{{ item.title }}</span>
@@ -115,7 +116,7 @@ export default {
 .top-bar {
   width: 100%;
   height: 60px;
-  background-color: rgb(64, 158, 255);
+  background-color: #222831;
   .top-bar-container {
     display: flex;
     width: 85%;
@@ -129,7 +130,7 @@ export default {
     }
 
     .top-bar-title {
-      color: #fff;
+      color: #eeeeee;
       font-weight: bold;
     }
 
