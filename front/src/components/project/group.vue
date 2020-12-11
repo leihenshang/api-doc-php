@@ -8,7 +8,7 @@
           <slot>全 部</slot>
         </a>
       </li>
-      <li @click="showCreateGroupDialog">
+      <li @click="showCreateGroupDialog" v-show="controlShow()">
         <a href="javascript:;">
           <i class="el-icon-delete"></i> 新增分组
         </a>
@@ -20,7 +20,7 @@
       </li>
       <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
         <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
-        <div class="btn-group">
+        <div class="btn-group" v-show="controlShow()">
           <el-dropdown placement="left-start" @command="handleCommand" trigger="click">
             <span class="el-icon-s-unfold"></span>
             <el-dropdown-menu slot="dropdown">
@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import controlShow from "../../mixins/controlShow";
+
 const CODE_OK = 200;
 export default {
   name: "group",
@@ -225,6 +227,7 @@ export default {
     },
   },
   components: {},
+  mixins: [controlShow],
 };
 </script>
 

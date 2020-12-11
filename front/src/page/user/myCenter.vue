@@ -39,10 +39,10 @@
           <em>用户状态：</em>
           <p>{{ userInfo.state_text }}</p>
         </li>
-        <li>
+        <!-- <li>
           <em>手机：</em>
           <p>{{ userInfo.mobile_number ? userInfo.mobile_number : "unknown" }}</p>
-        </li>
+        </li> -->
       </ul>
       <div class="btn">
         <el-button @click="dialogFormVisible = true" type="primary">修改密码</el-button>
