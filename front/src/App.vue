@@ -7,7 +7,7 @@
  -->
 <template>
   <div id="app">
-    <el-container>
+    <el-container style="height:100%">
       <el-header style="padding:0">
         <topBar />
       </el-header>
@@ -18,16 +18,12 @@
           </transition>
         </div>
       </el-main>
-      <el-footer style="padding:0">
-        <bottomBar />
-      </el-footer>
     </el-container>
   </div>
 </template>
 
 <script>
 import TopBar from "./components/common/topBar";
-import BottomBar from "./components/common/bottomBar";
 
 export default {
   name: "app",
@@ -35,7 +31,6 @@ export default {
   computed: {},
   components: {
     topBar: TopBar,
-    bottomBar: BottomBar,
   },
 };
 </script>
@@ -44,15 +39,24 @@ export default {
 <style>
 @import "../public/css/normalize.css";
 
+html,
+body,
+#app {
+  height: 100%;
+}
+
 #app {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* background-color: #F6F6F6; */
+  /* background-color: #F8F8F5; */
+  /* background-color: #F6F5F0; */
 }
 
 .app-full {
-  width: 85%;
+  width: 80%;
   margin: 0 auto;
   min-height: 700px;
 }

@@ -187,10 +187,10 @@ export default {
           this.initPwd(command.data.id);
           break;
         case "setNormalUser":
-          this.initPwd(command.data.id);
+          this.updateUserType(command.data, 1);
           break;
         case "setAdminUser":
-          this.initPwd(command.data.id);
+          this.updateUserType(command.data, 2);
           break;
 
         default:
@@ -226,7 +226,6 @@ export default {
       });
     },
     updateState(data) {
-      console.log(data);
       this.$http
         .post("/user/update", {
           state: data.state,
@@ -243,6 +242,21 @@ export default {
             this.$message.error("请求失败!");
           }
         );
+    },
+    updateUserType(data, userType) {
+      this.$http
+        .post("/user/update", {
+          userType,
+          userId: data.id,
+        })
+        .then((response) => {
+          response = response.data;
+          if (response.code !== CODE_OK) {
+            this.$message.error(response.msg);
+          } else {
+            data.type = userType;
+          }
+        });
     },
     deleteUser(id) {
       this.$confirm("此操作将删除该用户, 是否继续?", "提示", {
@@ -413,7 +427,6 @@ export default {
 }
 
 .page {
-  margin: 10px 0;
-  text-align: center;
+  text-align: right;
 }
 </style>

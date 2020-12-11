@@ -118,7 +118,7 @@ export default {
 
   .top-bar-container {
     display: flex;
-    width: 85%;
+    width: 80%;
     height: 100%;
     margin: 0 auto;
     position: relative;

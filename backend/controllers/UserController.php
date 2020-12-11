@@ -190,14 +190,15 @@ class UserController extends BaseController
      */
     public function actionUpdate()
     {
-        $nickname = Yii::$app->request->post('nick_name', null);
-        $userFace = Yii::$app->request->post('face_url', null);
-        $userId = Yii::$app->request->post('userId', null);
-        $state = Yii::$app->request->post('state', null);
-        $isDeleted = Yii::$app->request->post('is_deleted', null);
-        $dataArr = compact('nickname', 'userId', 'state', 'isDeleted', 'userFace');
+        $nickname = Yii::$app->request->post('nick_name');
+        $userFace = Yii::$app->request->post('face_url');
+        $userId = Yii::$app->request->post('userId');
+        $state = Yii::$app->request->post('state');
+        $isDeleted = Yii::$app->request->post('is_deleted');
+        $userType = Yii::$app->request->post('type');
+        $dataArr = compact('nickname', 'userId', 'state', 'isDeleted', 'userFace', 'userType');
         $rules = DynamicModel::validateData($dataArr, [
-            [['state', 'isDeleted', 'userId'], 'number'],
+            [['state', 'isDeleted', 'userId', 'userType'], 'number'],
             [['nickname', 'userFace'], 'string', 'max' => 500],
         ]);
 
@@ -207,12 +208,17 @@ class UserController extends BaseController
             return $this->failed(current($rules->getFirstErrors()));
         }
 
+        //只有超级管理员可以设置用户类型
+        if ($this->userInfo->type !== UserInfo::USER_TYPE['superuser'][0]) {
+            return $this->failed('超级管理员才能改变用户类型');
+        }
+
         if ($nickname && UserInfo::checkReplayNickname($nickname)) {
             return $this->failed('昵称重复或相同');
         }
 
         //通过传入userId判断是否管理员操作
-        if ($userId && $userId != $oldUserData->id && $oldUserData->type != UserInfo::USER_TYPE['admin'][0]) {
+        if ($userId && $userId != $oldUserData->id && !in_array($oldUserData->type, [UserInfo::USER_TYPE['admin'][0], UserInfo::USER_TYPE['superuser'][0]])) {
             return $this->failed('非管理员不能操作其他用户');
         }
 
@@ -240,6 +246,10 @@ class UserController extends BaseController
             $oldUserData->user_face = $userFace;
         }
 
+        if ($userType && $oldUserData->type != $userType) {
+            $oldUserData->type = $userType;
+        }
+
         if ($oldUserData->getDirtyAttributes()) {
             $oldUserData->setScenario(UserInfo::SCENARIO_UPDATE);
             if (!$oldUserData->save()) {
@@ -256,7 +266,7 @@ class UserController extends BaseController
      * @return array
      * @throws
      */
-    public function actionUpdatePwd()
+    public function actionUpdatePwd(): array
     {
         $pwdSecond = Yii::$app->request->post('rePwd', '');
         if (!$pwdSecond) {
