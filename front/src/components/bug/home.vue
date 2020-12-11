@@ -625,7 +625,7 @@ export default {
   }
 
   .content-page {
-    text-align: center;
+    text-align: right;
   }
 
   .dialog-bug-detail {

@@ -11,12 +11,12 @@
       <el-header style="padding:0">
         <topBar />
       </el-header>
-      <el-main style="padding:0 0 40px 0;">
-        <transition name="el-fade-in-linear" mode="out-in" appear>
-          <div class="app-full">
+      <el-main style="padding:15px 0;">
+        <div class="app-full">
+          <transition name="el-fade-in-linear" mode="out-in" appear>
             <router-view></router-view>
-          </div>
-        </transition>
+          </transition>
+        </div>
       </el-main>
       <el-footer style="padding:0">
         <bottomBar />
@@ -54,6 +54,6 @@ export default {
 .app-full {
   width: 85%;
   margin: 0 auto;
-  min-height: 800px;
+  min-height: 700px;
 }
 </style>

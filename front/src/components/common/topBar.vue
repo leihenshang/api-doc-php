@@ -1,7 +1,7 @@
 <template>
   <div class="top-bar">
     <div class="top-bar-container">
-      <div class="top-bar-title">api-doc</div>
+      <div class="top-bar-title">apiDoc</div>
       <div class="top-bar-nav" v-show="showInfo">
         <el-menu
           :default-active="$route.path"
@@ -9,19 +9,16 @@
           :router="true"
           ref="menu"
           class="el-menu"
-          background-color="#222831"
-          text-color="#eeeeee"
-          active-text-color="#00adb5"
+          background-color="#409EFF"
+          text-color="#d9ecff"
+          active-text-color="#eeeeee"
         >
           <el-menu-item :index="item.route" v-for="item in myRoute" :key="item.id">
             <span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </el-menu>
       </div>
-      <div class="top-bar-avatar" v-show="showInfo">
-        <div class="avatar">
-          <el-avatar :src="avatarUrl" :size="40"></el-avatar>
-        </div>
+      <div class="top-bar-user" v-show="showInfo">
         <el-dropdown @command="handleCommand" style="color:#fff">
           <span class="el-dropdown-link">
             {{ nickName ? nickName : "null" }}
@@ -105,9 +102,9 @@ export default {
   },
 
   watch: {
-    myRoute: function () {
-      console.log("chang");
-    },
+   nickName:function(){
+        console.log(this.$store.state.userInfo)
+      }
   },
 };
 </script>
@@ -116,7 +113,9 @@ export default {
 .top-bar {
   width: 100%;
   height: 60px;
-  background-color: #222831;
+  background-color: #409EFF;
+  border-bottom: 1px solid #409EFF;
+
   .top-bar-container {
     display: flex;
     width: 85%;
@@ -132,19 +131,15 @@ export default {
     .top-bar-title {
       color: #eeeeee;
       font-weight: bold;
-      font-size: 	20px;
+      font-size: 20px;
     }
 
-    .top-bar-avatar {
+    .top-bar-user {
       height: 61px;
       display: flex;
       align-items: center;
       position: absolute;
       right: 10px;
-    }
-
-    .top-bar-avatar .avatar {
-      margin-right: 10px;
     }
 
     .el-menu.el-menu--horizontal {

@@ -1,18 +1,11 @@
 <template>
   <div class="project-list">
     <div class="project-list-bar">
-      <el-button @click="dialogFormVisible = true; " v-show="$store.state.userInfo.type == 2">+新增项目</el-button>
+      <el-button @click="dialogFormVisible = true; " :disabled="!controlShow()">+新增项目</el-button>
     </div>
     <!-- 项目列表-开始 -->
     <div class="project-list-content">
-      <el-table
-        :data="projectList"
-        stripe
-        style="width: 100%"
-        v-loading="loading"
-        height="650"
-        @cell-click="detail"
-      >
+      <el-table border :data="projectList" stripe v-loading="loading" @cell-click="detail">
         <el-table-column prop="title" label="项目名称" width="180"></el-table-column>
         <el-table-column prop="version" label="版本号" width="180"></el-table-column>
         <el-table-column prop="type" label="类型"></el-table-column>
@@ -75,10 +68,12 @@
 </template>
 
 <script>
+import controlShow from "../../mixins/controlShow";
 const CODE_OK = 200;
 
 export default {
   name: "projectList",
+  mixins: [controlShow],
   methods: {
     jump(route) {
       this.$router.push({ path: "/" + route });
@@ -243,15 +238,13 @@ export default {
 <style lang="scss" scoped>
 .project-list {
   .project-list-bar {
-    margin: 10px 0;
+    margin-bottom: 10px;
   }
   .project-list-content {
-    border: 1px solid #e5e5e5;
     min-height: 600px;
   }
   .page-wrapper {
-    text-align: center;
-    margin: 10px 0;
+    text-align: right;
   }
 }
 </style>

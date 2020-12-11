@@ -67,10 +67,9 @@ export default {
 
 <style lang="scss" scoped>
 .bottom-bar {
-  bottom: 0;
   height: 150px;
   width: 100%;
-  background-color: #222831;
+  background-color: #409EFF;
   color: #eeeeee;
   ul {
     margin: 0 20px;

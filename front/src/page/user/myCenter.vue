@@ -1,6 +1,6 @@
 <template>
   <div class="user-center">
-    <el-upload
+    <!-- <el-upload
       class="avatar-uploader"
       :action="BASE_URL + '/file/upload-img'"
       :show-file-list="false"
@@ -11,7 +11,7 @@
     >
       <img v-if="avatarUrl" :src="avatarUrl" class="avatar" />
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
+    </el-upload>-->
     <!-- 用户信息 -->
     <div class="info">
       <ul>
@@ -42,7 +42,7 @@
         <!-- <li>
           <em>手机：</em>
           <p>{{ userInfo.mobile_number ? userInfo.mobile_number : "unknown" }}</p>
-        </li> -->
+        </li>-->
       </ul>
       <div class="btn">
         <el-button @click="dialogFormVisible = true" type="primary">修改密码</el-button>
@@ -147,25 +147,25 @@ export default {
     this.getUserInfo();
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-      this.avatarUrl = res.data.url;
-      if (this.avatarUrl) {
-        this.updateUserInfo("", this.avatarUrl);
-      }
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+    // handleAvatarSuccess(res, file) {
+    //   this.imageUrl = URL.createObjectURL(file.raw);
+    //   this.avatarUrl = res.data.url;
+    //   if (this.avatarUrl) {
+    //     this.updateUserInfo("", this.avatarUrl);
+    //   }
+    // },
+    // beforeAvatarUpload(file) {
+    //   const isJPG = file.type === "image/jpeg";
+    //   const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
+    //   if (!isJPG) {
+    //     this.$message.error("上传头像图片只能是 JPG 格式!");
+    //   }
+    //   if (!isLt2M) {
+    //     this.$message.error("上传头像图片大小不能超过 2MB!");
+    //   }
+    //   return isJPG && isLt2M;
+    // },
     //获取用户信息
     getUserInfo() {
       this.$http
@@ -179,6 +179,7 @@ export default {
             this.avatarUrl = this.userInfo.user_face
               ? this.BASE_URL + "/" + this.userInfo.user_face
               : "";
+            this.$store.commit("saveUserInfo", this.userInfo);
           } else {
             this.$message.error("failed:" + response.msg);
           }
@@ -259,7 +260,6 @@ export default {
               return;
             } else {
               this.getUserInfo();
-              this.$store.commit("saveUserInfo", this.userInfo);
               this.$message({
                 type: "success",
                 message: "保存成功",
@@ -281,37 +281,36 @@ export default {
   border: 1px solid rgb(195, 195, 195);
   width: 50%;
   margin: 0 auto;
-  margin-top: 80px;
   padding: 50px 0;
 
-  .avatar-uploader {
-    text-align: center;
+  // .avatar-uploader {
+  //   text-align: center;
 
-    ::v-deep .el-upload {
-      border: 1px solid #d9d9d9;
-      border-radius: 178px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      &:hover {
-        border-color: #409eff;
-      }
-    }
+  //   ::v-deep .el-upload {
+  //     border: 1px solid #d9d9d9;
+  //     border-radius: 178px;
+  //     cursor: pointer;
+  //     position: relative;
+  //     overflow: hidden;
+  //     &:hover {
+  //       border-color: #409eff;
+  //     }
+  //   }
 
-    .avatar-uploader-icon {
-      font-size: 28px;
-      color: #8c939d;
-      width: 178px;
-      height: 178px;
-      line-height: 178px;
-      text-align: center;
-    }
-    .avatar {
-      width: 178px;
-      height: 178px;
-      display: block;
-    }
-  }
+  //   .avatar-uploader-icon {
+  //     font-size: 28px;
+  //     color: #8c939d;
+  //     width: 178px;
+  //     height: 178px;
+  //     line-height: 178px;
+  //     text-align: center;
+  //   }
+  //   .avatar {
+  //     width: 178px;
+  //     height: 178px;
+  //     display: block;
+  //   }
+  // }
 
   .info {
     .btn {

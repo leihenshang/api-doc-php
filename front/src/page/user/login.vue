@@ -4,7 +4,7 @@
     <homeHeader />
     <div class="login-page-content">
       <div class="title">
-        <span>my-doc</span>
+        <span>apiDoc</span>
       </div>
       <div class="login-box" v-loading="loading">
         <el-form :inline="true" :model="form" :rules="rules" ref="form" @submit.native.prevent>
