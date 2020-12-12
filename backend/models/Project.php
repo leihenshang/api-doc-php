@@ -144,7 +144,7 @@ class Project extends BaseModel
      * @return bool
      * @throws
      */
-    public static function checkUserProjectOperationPermission(UserInfo $user)
+    public static function checkUserProjectOperationPermission(UserInfo $user): bool
     {
        if($user->type != UserInfo::USER_TYPE['admin'][0] || $user->type != UserInfo::USER_TYPE['superuser'][0]){
            return false;

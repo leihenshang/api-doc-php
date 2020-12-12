@@ -110,9 +110,9 @@ class ProjectController extends BaseController
      * @throws Throwable
      * @throws StaleObjectException
      */
-    public function actionDelete()
+    public function actionDelete(): array
     {
-        if ($this->userInfo->type !== UserInfo::USER_TYPE['admin'][0]) {
+        if (Project::checkUserProjectOperationPermission($this->userInfo)) {
             return $this->failed('非管理员不能执行删除');
         }
 
