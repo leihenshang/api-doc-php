@@ -48,7 +48,12 @@
               <el-button slot="reference" :disabled="!controlShow()">删除</el-button>
             </el-popconfirm>
 
-            <el-button type="warning" plain @click="jumpPage('edit', scope.row.id)"  :disabled="!controlShow()">编辑</el-button>
+            <el-button
+              type="warning"
+              plain
+              @click="jumpPage('edit', scope.row.id)"
+              :disabled="!controlShow()"
+            >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -60,8 +65,6 @@
         :total="count"
         :page-size="ps"
         :current-page="cp"
-        @prev-click="changePage($event)"
-        @next-click="changePage($event)"
         @current-change="changePage($event)"
       ></el-pagination>
     </div>
@@ -80,7 +83,7 @@ export default {
       this.ps,
       this.cp,
       this.$route.params.id,
-      this.$route.params.groupId
+      this.$route.query.groupId
     );
   },
   data() {
@@ -151,7 +154,7 @@ export default {
         this.ps,
         event,
         this.$route.params.id,
-        this.$route.params.groupId
+        this.$route.query.groupId
       );
       this.cp = event;
     },
@@ -167,7 +170,7 @@ export default {
             this.$message.success("操作成功");
             this.$router.push({
               name: "apiList",
-              params: { groupId: this.$route.params.groupId },
+              params: { groupId: this.$route.query.groupId },
               query: { random: Math.random() },
             });
           } else {

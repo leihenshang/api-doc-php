@@ -105,7 +105,7 @@ class Doc extends BaseModel
         }
 
         $res->is_deleted = self::IS_DELETED['yes'];
-        if (!$res->save()) {
+        if (!$res->save(false)) {
             return '删除数据失败:' . current($this->getFirstErrors());
         }
 
@@ -125,11 +125,11 @@ class Doc extends BaseModel
         }
 
         $res->attributes = $request;
-        if ($res->save()) {
+        if ($res->save(false)) {
             return $res->toArray();
         }
 
-        return '更新失败' . current($res->getFirstErrors());
+        return '更新失败,' . current($res->getFirstErrors());
     }
 
     /**
