@@ -1,7 +1,7 @@
 <template>
   <div class="top-bar">
     <div class="top-bar-container">
-      <div class="top-bar-title">apiDoc</div>
+      <div class="top-bar-title">{{projectName ? projectName : 'apiDoc'}}</div>
       <div class="top-bar-nav" v-show="showInfo">
         <el-menu
           :default-active="$route.path"
@@ -54,6 +54,16 @@ export default {
 
       return false;
     },
+    projectName: function () {
+      if (
+        this.$route.params.id &&
+        this.$route.params.id == this.$store.state.project.id
+      ) {
+        return this.$store.state.project.title;
+      }
+
+      return "";
+    },
     myRoute: function () {
       let route = [
         {
@@ -102,9 +112,9 @@ export default {
   },
 
   watch: {
-   nickName:function(){
-        console.log(this.$store.state.userInfo)
-      }
+    nickName: function () {
+      console.log(this.$store.state.userInfo);
+    },
   },
 };
 </script>
@@ -113,8 +123,8 @@ export default {
 .top-bar {
   width: 100%;
   height: 60px;
-  background-color: #409EFF;
-  border-bottom: 1px solid #409EFF;
+  background-color: #409eff;
+  border-bottom: 1px solid #409eff;
 
   .top-bar-container {
     display: flex;
