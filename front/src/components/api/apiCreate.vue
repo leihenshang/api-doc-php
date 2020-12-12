@@ -86,7 +86,7 @@ export default {
           this.$http
             .post("/api/create", {
               group_id: data.group_id,
-              project_id: this.$route.params.id,
+              project_id: this.$route.params.projectId,
               data: JSON.stringify(data),
             })
             .then(
@@ -124,7 +124,7 @@ export default {
       this.$http
         .get("/group/list", {
           params: {
-            projectId: this.$route.params.id,
+            projectId: this.$route.params.projectId,
             type: 1,
           },
         })

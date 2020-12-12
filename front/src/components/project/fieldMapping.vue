@@ -249,7 +249,7 @@ export default {
       this.$http
         .get("/field-mapping/list", {
           params: {
-            projectId:this.$route.params.id
+            projectId:this.$route.params.projectId
           },
         })
         .then(

@@ -128,7 +128,7 @@ export default {
       return;
     }
 
-    this.getGroup(100, 1, this.$route.params.id);
+    this.getGroup(100, 1, this.$route.params.projectId);
     this.getDocDetail();
   },
   watch: {

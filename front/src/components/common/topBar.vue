@@ -2,22 +2,7 @@
   <div class="top-bar">
     <div class="top-bar-container">
       <div class="top-bar-title">{{projectName ? projectName : 'apiDoc'}}</div>
-      <div class="top-bar-nav" v-show="showInfo">
-        <el-menu
-          :default-active="$route.path"
-          mode="horizontal"
-          :router="true"
-          ref="menu"
-          class="el-menu"
-          background-color="#409EFF"
-          text-color="#d9ecff"
-          active-text-color="#eeeeee"
-        >
-          <el-menu-item :index="item.route" v-for="item in myRoute" :key="item.id">
-            <span slot="title">{{ item.title }}</span>
-          </el-menu-item>
-        </el-menu>
-      </div>
+      <el-button v-show="showHomeBtn" @click="$router.push('/')" type="text" style="color:#fff">返回首页</el-button>
       <div class="top-bar-user" v-show="showInfo">
         <el-dropdown @command="handleCommand" style="color:#fff">
           <span class="el-dropdown-link">
@@ -56,32 +41,23 @@ export default {
     },
     projectName: function () {
       if (
-        this.$route.params.id &&
-        this.$route.params.id == this.$store.state.project.id
+        this.$route.params.projectId &&
+        this.$route.params.projectId == this.$store.state.project.id
       ) {
         return this.$store.state.project.title;
       }
 
       return "";
     },
-    myRoute: function () {
-      let route = [
-        {
-          title: "项目列表",
-          route: "/projectList",
-          icon: "el-icon-s-fold",
-        },
-      ];
-
-      if (this.$store.state.userInfo && this.$store.state.userInfo.type > 1) {
-        route.push({
-          title: "用户管理",
-          route: "/userManager",
-          icon: "el-icon-user",
-        });
+    showHomeBtn: function () {
+      if (
+        this.$route.params.projectId &&
+        this.$route.params.projectId == this.$store.state.project.id
+      ) {
+        return true;
       }
 
-      return route;
+      return false;
     },
   },
   methods: {
@@ -128,20 +104,17 @@ export default {
 
   .top-bar-container {
     display: flex;
-    width: 80%;
+    width: 100%;
     height: 100%;
     margin: 0 auto;
     position: relative;
     .top-bar-title {
-      margin: 0 20px 0 10px;
+      margin: 0 20px 0 40px;
       display: flex;
       align-items: center;
-    }
-
-    .top-bar-title {
       color: #eeeeee;
-      font-weight: bold;
       font-size: 20px;
+      min-width: 12px;
     }
 
     .top-bar-user {
@@ -149,11 +122,7 @@ export default {
       display: flex;
       align-items: center;
       position: absolute;
-      right: 10px;
-    }
-
-    .el-menu.el-menu--horizontal {
-      border-bottom: none;
+      right: 40px;
     }
   }
 }

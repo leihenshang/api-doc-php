@@ -178,7 +178,7 @@ export default {
       this.$http
         .get("/group/list", {
           params: {
-            projectId: this.$route.params.id,
+            projectId: this.$route.params.projectId,
           },
         })
         .then(

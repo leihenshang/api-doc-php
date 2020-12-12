@@ -14,13 +14,13 @@ const router = new VueRouter({
     { path: "/register", component: resolve => require(['./page/user/register'], resolve), name: "register" },
     { path: "/login", name: "userLogin", component: resolve => require(['./page/user/login'], resolve) },
     {
-      path: "/detail/:id",
+      path: "/detail/:projectId",
       component: resolve => require(['./page/project/project'], resolve),
       props: true,
       children: [
 
         {
-          path: "",
+          path: "/detail/:projectId",
           name: "detailPage",
           component: resolve => require(['./components/project/detailPage'], resolve),
           meta: { requiresAuth: true },

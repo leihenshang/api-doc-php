@@ -113,7 +113,7 @@ export default {
             .post(url, {
               id: this.apiId,
               group_id: this.apiData.group_id,
-              project_id: this.$route.params.id,
+              project_id: this.$route.params.projectId,
               data: JSON.stringify(this.apiData),
             })
             .then((response) => {
@@ -142,7 +142,7 @@ export default {
       this.$http
         .get("/group/list", {
           params: {
-            projectId: this.$route.params.id,
+            projectId: this.$route.params.projectId,
             type: 1,
           },
         })

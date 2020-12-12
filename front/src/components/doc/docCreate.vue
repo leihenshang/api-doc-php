@@ -92,7 +92,7 @@ export default {
             title: this.title,
             content: this.content,
             group_id: this.groupId,
-            project_id: this.$route.params.id,
+            project_id: this.$route.params.projectId,
           })
           .then((res) => {
             res = res.data;
@@ -112,7 +112,7 @@ export default {
     },
   },
   created() {
-    this.getGroup(100, 1, this.$route.params.id);
+    this.getGroup(100, 1, this.$route.params.projectId);
   },
 };
 </script>

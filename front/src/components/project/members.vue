@@ -107,7 +107,7 @@ export default {
       this.$http
         .get("/project/project-user", {
           params: {
-            id: this.$route.params.id,
+            id: this.$route.params.projectId,
           },
         })
         .then(
@@ -141,7 +141,7 @@ export default {
           this.$http
             .post("/project/add-user", {
               user_id: val.id,
-              project_id: this.$route.params.id,
+              project_id: this.$route.params.projectId,
             })
             .then(
               (response) => {
@@ -174,7 +174,7 @@ export default {
             .post("/project/set-permission", {
               userId: val.id,
               permission: userPermission,
-              projectId: this.$route.params.id,
+              projectId: this.$route.params.projectId,
             })
             .then(
               (response) => {
@@ -204,7 +204,7 @@ export default {
           this.$http
             .post("/project/quit-project", {
               userId: val.id,
-              projectId: this.$route.params.id,
+              projectId: this.$route.params.projectId,
             })
             .then(
               (response) => {

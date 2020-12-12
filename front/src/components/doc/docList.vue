@@ -67,7 +67,7 @@ export default {
     },
   },
   created() {
-    this.getDocList(this.ps, this.cp, this.groupId, this.$route.params.id);
+    this.getDocList(this.ps, this.cp, this.groupId, this.$route.params.projectId);
   },
   data() {
     return {
@@ -99,7 +99,7 @@ export default {
                     this.ps,
                     this.cp,
                     this.groupId,
-                    this.$route.params.id
+                    this.$route.params.projectId
                   );
                 } else {
                   this.$message.error("操作失败!");
@@ -115,7 +115,7 @@ export default {
     //翻页
     changePage(event) {
       this.loading = true;
-      this.getDocList(this.ps, event, this.groupId, this.$route.params.id);
+      this.getDocList(this.ps, event, this.groupId, this.$route.params.projectId);
       this.cp = event;
     },
     //删除文档
@@ -128,7 +128,7 @@ export default {
         this.$http
           .post("/doc/delete", {
             id: id,
-            projectId: this.$route.params.id,
+            projectId: this.$route.params.projectId,
           })
           .then((response) => {
             response = response.data;
@@ -143,7 +143,7 @@ export default {
                 this.ps,
                 this.cp,
                 this.groupId,
-                this.$route.params.id
+                this.$route.params.projectId
               );
             } else {
               this.$message.error("操作失败!");

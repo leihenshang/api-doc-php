@@ -33,7 +33,7 @@ export default {
       this.$http
         .get("/operation-log/list", {
           params: {
-            object_id: this.$route.params.id,
+            object_id: this.$route.params.projectId,
             type: "1,2,3,4",
             ps: this.ps,
             cp: this.cp,

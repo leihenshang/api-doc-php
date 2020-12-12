@@ -52,7 +52,7 @@ export default {
   },
   created() {
     if (this.group.length < 1) {
-      this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+      this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
     }
   },
   data() {
@@ -125,7 +125,7 @@ export default {
               } else {
                 this.$message.error("操作失败");
               }
-              this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+              this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
             });
         })
         .catch(() => {
@@ -168,7 +168,7 @@ export default {
                   this.$message.error(response.msg);
                 }
 
-                this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+                this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
               },
               (res) => {
                 let response = res.data;
@@ -191,7 +191,7 @@ export default {
           this.$http
             .post("/group/create", {
               title: value,
-              project_id: this.$route.params.id,
+              project_id: this.$route.params.projectId,
               type: this.type,
             })
             .then(
@@ -203,7 +203,7 @@ export default {
                   this.$message.error(response.msg);
                 }
 
-                this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+                this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
                 // this.showCreateGroup =
               },
               (res) => {
@@ -215,14 +215,14 @@ export default {
             );
         })
         .catch(() => {
-          this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+          this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
         });
     },
   },
   watch: {
     $route: function (to) {
       if (to.params.groupId == 0) {
-        this.getGroup(this.pageSize, this.curr, this.$route.params.id);
+        this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
       }
     },
   },

@@ -88,7 +88,7 @@ export default {
       this.$http
         .get("/project/detail", {
           params: {
-            id: this.$route.params.id,
+            id: this.$route.params.projectId,
           },
         })
         .then(
@@ -121,7 +121,7 @@ export default {
       this.$http
         .get("/doc/list", {
           params: {
-            projectId: this.$route.params.id,
+            projectId: this.$route.params.projectId,
             ps,
             cp,
             isTop: 1,

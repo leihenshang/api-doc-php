@@ -82,7 +82,7 @@ export default {
     this.getApiList(
       this.ps,
       this.cp,
-      this.$route.params.id,
+      this.$route.params.projectId,
       this.$route.query.groupId
     );
   },
@@ -153,7 +153,7 @@ export default {
       this.getApiList(
         this.ps,
         event,
-        this.$route.params.id,
+        this.$route.params.projectId,
         this.$route.query.groupId
       );
       this.cp = event;

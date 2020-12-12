@@ -5,18 +5,11 @@
         <i class="el-icon-arrow-left"></i> 返 回
       </el-button>
 
-      <el-button
-        type="success"
-        plain
-        @click="updateDoc()"
-        :loading="btnLoading"
-      >修 改</el-button>
+      <el-button type="success" plain @click="updateDoc()" :loading="btnLoading">修 改</el-button>
     </div>
     <div class="doc-detail" v-if="doc">
-      <div class="title">
-        <h3>{{doc.title}}</h3>
-      </div>
       <div class="info">
+        <h3>{{doc.title}}</h3>
         <span>作者:{{doc.nick_name}}</span>
         <span>{{doc.create_time}}</span>
         <span>阅读次数:{{doc.view_count}}</span>
@@ -87,16 +80,22 @@ export default {
     height: 100%;
     min-height: 620px;
 
-    .info span {
-      margin-right: 12px;
-      font-size: 12px;
-      color: gray;
+    .info {
+      margin: 20px 0;
+      h3 {
+        display: inline-block;
+        margin: 0 10px;
+      }
+      span {
+        margin-right: 12px;
+        font-size: 12px;
+        color: gray;
+      }
     }
   }
 
   .v-note-wrapper {
-    margin: 10px 0;
-    height: 1000px;
+    min-height: 800px;
   }
 
   .btn {

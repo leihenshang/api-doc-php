@@ -309,7 +309,7 @@ export default {
       },
       formUpdate: {},
       form: {
-        project_id: this.$route.params.id,
+        project_id: this.$route.params.projectId,
         to_user_id: null,
         title: "",
         content: "",
@@ -388,7 +388,7 @@ export default {
     };
   },
   created() {
-    this.bugList(this.$route.params.id, this.ps, this.cp);
+    this.bugList(this.$route.params.projectId, this.ps, this.cp);
     this.formBak = JSON.parse(JSON.stringify(this.form));
   },
 
@@ -436,7 +436,7 @@ export default {
               if (data.code === 200) {
                 this.$message.success("保存成功");
                 this.resetForm(formName);
-                this.bugList(this.$route.params.id, this.ps, this.cp);
+                this.bugList(this.$route.params.projectId, this.ps, this.cp);
               } else {
                 this.$message.error(data.msg);
               }
@@ -453,7 +453,7 @@ export default {
         this.$refs[resetFilter].resetFields();
       }
       this.bugList(
-        this.$route.params.id,
+        this.$route.params.projectId,
         this.ps,
         this.cp,
         this.contentFilter.toUserId,
@@ -467,7 +467,7 @@ export default {
     changePage(event) {
       this.cp = event;
       this.bugList(
-        this.$route.params.id,
+        this.$route.params.projectId,
         this.ps,
         this.cp,
         this.contentFilter.toUserId,
@@ -490,7 +490,7 @@ export default {
                 this.dialogContentFormVisible = false;
                 this.resetForm(formName);
                 this.bugList(
-                  this.$route.params.id,
+                  this.$route.params.projectId,
                   this.ps,
                   this.cp,
                   this.contentFilter.toUserId,
@@ -526,7 +526,7 @@ export default {
           let data = response.data;
           if (data.code === 200) {
             this.$message.success("操作成功");
-            this.bugList(this.$route.params.id, this.ps, this.cp);
+            this.bugList(this.$route.params.projectId, this.ps, this.cp);
           } else {
             this.$message.error(data.msg);
           }
@@ -595,7 +595,7 @@ export default {
           .get("/user/list", {
             params: {
               query,
-              projectId: this.$route.params.id,
+              projectId: this.$route.params.projectId,
             },
           })
           .then((response) => {

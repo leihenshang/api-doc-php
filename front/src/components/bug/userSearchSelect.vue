@@ -42,7 +42,7 @@ export default {
           .get("/user/list", {
             params: {
               query,
-              projectId: this.$route.params.id,
+              projectId: this.$route.params.projectId,
             },
           })
           .then((response) => {
