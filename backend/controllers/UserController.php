@@ -209,7 +209,7 @@ class UserController extends BaseController
         }
 
         //只有超级管理员可以设置用户类型
-        if ($this->userInfo->type !== UserInfo::USER_TYPE['superuser'][0]) {
+        if ($userType && $this->userInfo->type !== UserInfo::USER_TYPE['superuser'][0]) {
             return $this->failed('超级管理员才能改变用户类型');
         }
 
