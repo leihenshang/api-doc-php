@@ -61,7 +61,7 @@ const CODE_OK = 200;
 export default {
   name: "detailPage",
   props: {
-    id: String,
+    projectId: String,
   },
   created() {
     this.getDetail();
@@ -113,7 +113,7 @@ export default {
     jump() {
       this.$router.push({
         name: "apiPage",
-        params: { projectId: this.id, groupId: 0 },
+        params: { projectId: this.projectId, groupId: 0 },
       });
     },
     //获取文档

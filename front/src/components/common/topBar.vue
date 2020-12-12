@@ -114,7 +114,6 @@ export default {
       align-items: center;
       color: #eeeeee;
       font-size: 20px;
-      min-width: 12px;
     }
 
     .top-bar-user {
