@@ -1,6 +1,5 @@
 <template>
   <div class="register">
-    <homeHeader />
     <div class="middle">
       <h4>用户注册</h4>
       <ValidationObserver ref="form" vid="form" tag="div">
@@ -66,12 +65,10 @@
         </ul>
       </ValidationObserver>
     </div>
-    <homeFooter />
   </div>
 </template>
 <script>
-import homeHeader from "../../components/common/units/homeHeader";
-import homeFooter from "../../components/common/units/homeFooter";
+
 
 const CODE_OK = 200;
 export default {
@@ -123,8 +120,6 @@ export default {
     },
   },
   components: {
-    homeHeader,
-    homeFooter,
   },
 };
 </script>

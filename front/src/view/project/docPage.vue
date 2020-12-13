@@ -1,6 +1,6 @@
 <template>
   <div class="doc-page">
-    <div class="group-wrapper"  v-show=" $route.name == 'docList'">
+    <div class="group-wrapper" v-show=" $route.name == 'docList'">
       <group :type="type" v-on:change-group="changeGroup" :showIsEdit=" true">全部</group>
     </div>
     <div class="doc-wrapper">
@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import controlShow from "../../mixins/controlShow";
-import group from "../project/group";
+import controlShow from "@/mixins/controlShow";
+import group from "@/components/project/group";
 
 export default {
   name: "docPage",
@@ -69,7 +69,7 @@ export default {
   components: {
     group,
   },
-  mixins:[controlShow]
+  mixins: [controlShow],
 };
 </script>
 

@@ -1,7 +1,6 @@
 
 <template>
   <div class="login-page">
-    <homeHeader />
     <div class="login-page-content">
       <div class="title">
         <span>apiDoc</span>
@@ -34,8 +33,6 @@
 </template>
 
 <script>
-import homeHeader from "../../components/common/units/homeHeader";
-
 const CODE_OK = 200;
 // const NO_ACTIVATE = 3;
 
@@ -106,9 +103,7 @@ export default {
       }
     },
   },
-  components: {
-    homeHeader,
-  },
+  components: {},
 };
 </script>
 <style>

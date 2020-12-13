@@ -11,46 +11,46 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
-    { path: "/register", component: resolve => require(['./page/user/register'], resolve), name: "register" },
-    { path: "/login", name: "userLogin", component: resolve => require(['./page/user/login'], resolve) },
+    { path: "/register", component: resolve => require(['@/view/user/register'], resolve), name: "register" },
+    { path: "/login", name: "userLogin", component: resolve => require(['@/view/user/login'], resolve) },
     {
       path: "/detail/:projectId",
-      component: resolve => require(['./page/project/project'], resolve),
+      component: resolve => require(['@/view/project/project'], resolve),
       props: true,
       children: [
 
         {
           path: "/detail/:projectId",
           name: "detailPage",
-          component: resolve => require(['./components/project/detailPage'], resolve),
+          component: resolve => require(['@/view/project/detailPage'], resolve),
           meta: { requiresAuth: true },
           props: true,
         },
         {
           path: "bugHome",
           name: "bugHome",
-          component: resolve => require(['./components/bug/home'], resolve),
+          component: resolve => require(['@/view/project/bug'], resolve),
           meta: { requiresAuth: true },
           props: true,
         },
         {
           path: "members",
           name: "members",
-          component: resolve => require(['./components/project/members'], resolve),
+          component: resolve => require(['@/view/project/members'], resolve),
           meta: { requiresAuth: true },
           props: true,
         },
         {
           path: "fieldMapping",
           name: "fieldMapping",
-          component: resolve => require(['./components/project/fieldMapping'], resolve),
+          component: resolve => require(['@/view/project/fieldMapping'], resolve),
           meta: { requiresAuth: true },
           props: true,
         },
         {
           path: "apiPage",
           name: "apiPage",
-          component: resolve => require(["./components/api/apiPage"], resolve),
+          component: resolve => require(["@/view/project/apiPage"], resolve),
           meta: { requiresAuth: true },
           redirect: "apiPage/apiList",
           props: true,
@@ -88,7 +88,7 @@ const router = new VueRouter({
         {
           path: "projectDoc",
           name: "projectDoc",
-          component: resolve => require(["./components/doc/docPage"], resolve),
+          component: resolve => require(["@/view/project/docPage"], resolve),
           props: true,
           redirect: "projectDoc/docList",
           children: [
@@ -126,17 +126,17 @@ const router = new VueRouter({
     },
     {
       path: "/projectList",
-      component: resolve => require(['./components/project/projectList'], resolve),
+      component: resolve => require(['@/view/project/projectList'], resolve),
       name: "projectList"
     },
     {
       path: "/userManager",
-      component: resolve => require(['./page/user/userManager'], resolve),
+      component: resolve => require(['@/view/user/userManager'], resolve),
       name: "userManager"
     },
     {
       path: "/myCenter",
-      component: resolve => require(['./page/user/myCenter'], resolve),
+      component: resolve => require(['@/view/user/myCenter'], resolve),
       name: "myCenter"
     },
     {
@@ -145,9 +145,6 @@ const router = new VueRouter({
     },
   ],
 });
-
-
-
 
 
 router.beforeEach((to, from, next) => {

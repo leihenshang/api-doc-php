@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import Message from "./operationLog";
+import Message from "@/components/project/operationLog";
 
 const CODE_OK = 200;
 export default {

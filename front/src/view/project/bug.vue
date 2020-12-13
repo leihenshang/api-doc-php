@@ -27,7 +27,11 @@
         <el-form-item>
           <el-button type="primary" @click="searchBug()">查询?</el-button>
           <el-button type="primary" @click="searchBug('contentFilterRef')">重置x</el-button>
-          <el-button type="primary" @click="dialogFormVisible = true;" :disabled="!controlShow()">新增+</el-button>
+          <el-button
+            type="primary"
+            @click="dialogFormVisible = true;"
+            :disabled="!controlShow()"
+          >新增+</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -245,7 +249,11 @@
         </ul>
         <!-- bug详情展示-结束 -->
         <div class="detail-btn">
-          <el-button type="primary" @click="dialogHandleFormVisible = true" :disabled="!controlShow()">处 理</el-button>
+          <el-button
+            type="primary"
+            @click="dialogHandleFormVisible = true"
+            :disabled="!controlShow()"
+          >处 理</el-button>
           <!-- <el-button type="primary" @click="dialogContentFormVisible = false">取 消</el-button> -->
         </div>
         <!-- 指派列表-开始 -->
@@ -278,11 +286,11 @@
 </template>
 
 <script>
-import UserSearchSelect from "./userSearchSelect.vue";
+import UserSearchSelect from  "../../components/bug/userSearchSelect.vue";
 import controlShow from "../../mixins/controlShow";
 
 export default {
-  name: "bugHome",
+  name: "bug",
   props: {
     id: String,
   },
@@ -611,7 +619,7 @@ export default {
     },
   },
   computed: {},
-  mixins:[controlShow],
+  mixins: [controlShow],
   components: {
     UserSearchSelect,
   },

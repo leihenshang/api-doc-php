@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import group from "../project/group";
-import controlShow from "../../mixins/controlShow";
+import group from "@/components/project/group";
+import controlShow from "@/mixins/controlShow";
 
 export default {
   name: "apiPage",
