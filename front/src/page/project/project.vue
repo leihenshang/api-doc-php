@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <el-row :gutter="20">
+    <el-row :gutter="15">
       <el-col :span="3">
         <el-menu
           :default-active="

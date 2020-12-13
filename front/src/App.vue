@@ -13,7 +13,7 @@
       </el-header>
       <el-main style>
         <div class="app-full">
-          <el-row :gutter="20">
+          <el-row :gutter="15">
             <el-col :span="3" v-show="showMenu" style="padding-right:5px;">
               <el-menu :default-active="$route.path" :router="true" ref="menu" class="el-menu">
                 <el-menu-item :index="item.route" v-for="item in myRoute" :key="item.id">

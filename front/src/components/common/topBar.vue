@@ -116,6 +116,7 @@ export default {
     height: 100%;
     margin: 0 auto;
     position: relative;
+    font-size: 16px;
 
     .return-home {
       text-decoration: none;
@@ -123,8 +124,7 @@ export default {
       height: 100%;
       line-height: 61px;
       color: #fff;
-      font-size: 20px;
-      padding:0 10px;
+      padding: 0 10px;
       &:hover {
         background-color: rgb(87, 148, 240);
       }
@@ -135,7 +135,6 @@ export default {
       display: flex;
       align-items: center;
       color: #eeeeee;
-      font-size: 20px;
     }
 
     .top-bar-user {
