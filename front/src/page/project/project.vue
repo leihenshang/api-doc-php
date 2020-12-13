@@ -1,13 +1,8 @@
 <template>
   <div class="detail">
-    <el-row>
-      <el-col :span="isCollapse ? 1 :3">
-        <el-radio-group v-model="isCollapse" style="margin-bottom: 10px;" size="mini">
-          <el-radio-button :label="false">展开</el-radio-button>
-          <el-radio-button :label="true">收起</el-radio-button>
-        </el-radio-group>
+    <el-row :gutter="20">
+      <el-col :span="3">
         <el-menu
-          :collapse="isCollapse"
           :default-active="
           $route.redirectedFrom ? $route.redirectedFrom : $route.path
         "
@@ -21,7 +16,7 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-      <el-col :span="isCollapse ? 23 :21">
+      <el-col :span="21">
         <transition name="el-fade-in-linear" mode="out-in" appear>
           <router-view></router-view>
         </transition>
@@ -82,7 +77,6 @@ export default {
 
     return {
       projectData: {},
-      isCollapse: false,
       insideRoute: menu,
     };
   },

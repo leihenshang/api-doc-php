@@ -2,7 +2,15 @@
   <div class="top-bar">
     <div class="top-bar-container">
       <div class="top-bar-title">{{projectName ? projectName : 'apiDoc'}}</div>
-      <el-button v-show="showHomeBtn" @click="$router.push('/')" type="text" style="color:#fff">返回首页</el-button>
+      <a
+        href="javascript:void()"
+        @click="$router.push('/')"
+        class="return-home"
+        v-show="showHomeBtn"
+      >
+        <i class="el-icon-top-left"></i>
+        返回首页
+      </a>
       <div class="top-bar-user" v-show="showInfo">
         <el-dropdown @command="handleCommand" style="color:#fff">
           <span class="el-dropdown-link">
@@ -108,6 +116,20 @@ export default {
     height: 100%;
     margin: 0 auto;
     position: relative;
+
+    .return-home {
+      text-decoration: none;
+      display: inline-block;
+      height: 100%;
+      line-height: 61px;
+      color: #fff;
+      font-size: 20px;
+      padding:0 10px;
+      &:hover {
+        background-color: rgb(87, 148, 240);
+      }
+    }
+
     .top-bar-title {
       margin: 0 20px 0 40px;
       display: flex;

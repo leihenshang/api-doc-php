@@ -159,7 +159,7 @@ export default {
 .right-l {
   width: 50%;
   height: 100%;
-  padding: 5px 5px 5px 0;
+  padding: 0 20px 0 0;
   box-sizing: border-box;
   border-radius: 3px;
   overflow: hidden;
@@ -231,7 +231,6 @@ export default {
 }
 
 .right-r {
-  margin-top: 5px;
   box-sizing: border-box;
   width: 50%;
   height: 100%;

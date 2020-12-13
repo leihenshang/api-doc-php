@@ -13,8 +13,8 @@
       </el-header>
       <el-main style>
         <div class="app-full">
-          <el-row>
-            <el-col :span="3" v-show="showMenu">
+          <el-row :gutter="20">
+            <el-col :span="3" v-show="showMenu" style="padding-right:5px;">
               <el-menu :default-active="$route.path" :router="true" ref="menu" class="el-menu">
                 <el-menu-item :index="item.route" v-for="item in myRoute" :key="item.id">
                   <span slot="title">{{ item.title }}</span>
@@ -58,7 +58,11 @@ export default {
         });
       }
 
-      return route;
+      if (this.$store.state.userInfo.id) {
+        return route;
+      }
+
+      return [];
     },
     showMenu: function () {
       if (
