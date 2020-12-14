@@ -14,137 +14,145 @@ const router = new VueRouter({
     { path: "/register", component: resolve => require(['@/view/user/register'], resolve), name: "register" },
     { path: "/login", name: "userLogin", component: resolve => require(['@/view/user/login'], resolve) },
     {
-      path: "/detail/:projectId",
-      component: resolve => require(['@/view/project/project'], resolve),
-      props: true,
-      children: [
-
-        {
-          path: "/detail/:projectId",
-          name: "detailPage",
-          component: resolve => require(['@/view/project/detailPage'], resolve),
-          meta: { requiresAuth: true },
-          props: true,
-        },
-        {
-          path: "bugHome",
-          name: "bugHome",
-          component: resolve => require(['@/view/project/bug'], resolve),
-          meta: { requiresAuth: true },
-          props: true,
-        },
-        {
-          path: "members",
-          name: "members",
-          component: resolve => require(['@/view/project/members'], resolve),
-          meta: { requiresAuth: true },
-          props: true,
-        },
-        {
-          path: "fieldMapping",
-          name: "fieldMapping",
-          component: resolve => require(['@/view/project/fieldMapping'], resolve),
-          meta: { requiresAuth: true },
-          props: true,
-        },
-        {
-          path: "apiPage",
-          name: "apiPage",
-          component: resolve => require(["@/view/project/apiPage"], resolve),
-          meta: { requiresAuth: true },
-          redirect: "apiPage/apiList",
-          props: true,
-          children: [
-            {
-              path: "apiCreate",
-              name: "apiCreate",
-              component: resolve => require(["./components/api/apiCreate"], resolve),
-              meta: { requiresAuth: true },
-              props: true,
-            },
-            {
-              path: "apiList",
-              name: "apiList",
-              component: resolve => require(["./components/api/apiList"], resolve),
-              meta: { requiresAuth: true },
-              props: true,
-            },
-            {
-              path: "apiEdit/:apiId",
-              name: "apiEdit",
-              component: resolve => require(["./components/api/apiEdit"], resolve),
-              meta: { requiresAuth: true },
-              props: true,
-            },
-            {
-              path: "apiDetail/:apiId",
-              name: "apiDetail",
-              component: resolve => require(["./components/api/apiDetail"], resolve),
-              meta: { requiresAuth: true },
-              props: true,
-            },
-          ],
-        },
-        {
-          path: "projectDoc",
-          name: "projectDoc",
-          component: resolve => require(["@/view/project/docPage"], resolve),
-          props: true,
-          redirect: "projectDoc/docList",
-          children: [
-            {
-              path: "docList",
-              name: "docList",
-              component: resolve => require(["./components/doc/docList"], resolve),
-              props: true,
-              meta: { requiresAuth: true },
-            },
-            {
-              path: "docDetail/:docId",
-              name: "docDetail",
-              component: resolve => require(["./components/doc/docDetail"], resolve),
-              props: true,
-              meta: { requiresAuth: true },
-            },
-            {
-              path: "docEdit/:docId",
-              name: "docEdit",
-              component: resolve => require(["./components/doc/docEdit"], resolve),
-              props: true,
-              meta: { requiresAuth: true },
-            },
-            {
-              path: "docCreate",
-              name: "docCreate",
-              component: resolve => require(["./components/doc/docCreate"], resolve),
-              props: true,
-              meta: { requiresAuth: true },
-            },
-          ],
-        },
-      ],
-    },
-
-    {
       path: "/",
       component: resolve => require(['@/view/home'], resolve),
       name: "home",
-      redirect: "projectList",
+      redirect: "manage",
       children: [
         {
-          path: "/projectList",
-          component: resolve => require(['@/view/project/projectList'], resolve),
-          name: "projectList"
+          path: "/manage",
+          component: resolve => require(['@/view/manage'], resolve),
+          name: "manage",
+          redirect: "projectList",
+          children: [
+            {
+              path: "/projectList",
+              component: resolve => require(['@/view/project/projectList'], resolve),
+              name: "projectList"
+            },
+            {
+              path: "/userManager",
+              component: resolve => require(['@/view/user/userManager'], resolve),
+              name: "userManager"
+            },
+            {
+              path: "/myCenter",
+              component: resolve => require(['@/view/user/myCenter'], resolve),
+              name: "myCenter"
+            },
+          ]
         },
         {
-          path: "/userManager",
-          component: resolve => require(['@/view/user/userManager'], resolve),
-          name: "userManager"
-        },
-        {
-          path: "/myCenter",
-          component: resolve => require(['@/view/user/myCenter'], resolve),
-          name: "myCenter"
+          path: "/detail/:projectId",
+          component: resolve => require(['@/view/project/project'], resolve),
+          props: true,
+          redirect: "detailPage",
+          children: [
+
+            {
+              path: "/detail/:projectId",
+              name: "detailPage",
+              component: resolve => require(['@/view/project/detailPage'], resolve),
+              meta: { requiresAuth: true },
+              props: true,
+            },
+            {
+              path: "bugHome",
+              name: "bugHome",
+              component: resolve => require(['@/view/project/bug'], resolve),
+              meta: { requiresAuth: true },
+              props: true,
+            },
+            {
+              path: "members",
+              name: "members",
+              component: resolve => require(['@/view/project/members'], resolve),
+              meta: { requiresAuth: true },
+              props: true,
+            },
+            {
+              path: "fieldMapping",
+              name: "fieldMapping",
+              component: resolve => require(['@/view/project/fieldMapping'], resolve),
+              meta: { requiresAuth: true },
+              props: true,
+            },
+            {
+              path: "apiPage",
+              name: "apiPage",
+              component: resolve => require(["@/view/project/apiPage"], resolve),
+              meta: { requiresAuth: true },
+              redirect: "apiPage/apiList",
+              props: true,
+              children: [
+                {
+                  path: "apiCreate",
+                  name: "apiCreate",
+                  component: resolve => require(["./components/api/apiCreate"], resolve),
+                  meta: { requiresAuth: true },
+                  props: true,
+                },
+                {
+                  path: "apiList",
+                  name: "apiList",
+                  component: resolve => require(["./components/api/apiList"], resolve),
+                  meta: { requiresAuth: true },
+                  props: true,
+                },
+                {
+                  path: "apiEdit/:apiId",
+                  name: "apiEdit",
+                  component: resolve => require(["./components/api/apiEdit"], resolve),
+                  meta: { requiresAuth: true },
+                  props: true,
+                },
+                {
+                  path: "apiDetail/:apiId",
+                  name: "apiDetail",
+                  component: resolve => require(["./components/api/apiDetail"], resolve),
+                  meta: { requiresAuth: true },
+                  props: true,
+                },
+              ],
+            },
+            {
+              path: "projectDoc",
+              name: "projectDoc",
+              component: resolve => require(["@/view/project/docPage"], resolve),
+              props: true,
+              redirect: "projectDoc/docList",
+              children: [
+                {
+                  path: "docList",
+                  name: "docList",
+                  component: resolve => require(["./components/doc/docList"], resolve),
+                  props: true,
+                  meta: { requiresAuth: true },
+                },
+                {
+                  path: "docDetail/:docId",
+                  name: "docDetail",
+                  component: resolve => require(["./components/doc/docDetail"], resolve),
+                  props: true,
+                  meta: { requiresAuth: true },
+                },
+                {
+                  path: "docEdit/:docId",
+                  name: "docEdit",
+                  component: resolve => require(["./components/doc/docEdit"], resolve),
+                  props: true,
+                  meta: { requiresAuth: true },
+                },
+                {
+                  path: "docCreate",
+                  name: "docCreate",
+                  component: resolve => require(["./components/doc/docCreate"], resolve),
+                  props: true,
+                  meta: { requiresAuth: true },
+                },
+              ],
+            },
+          ],
         },
       ]
     },

@@ -91,15 +91,6 @@ export default {
       }
     },
   },
-  data: function () {
-    return {};
-  },
-
-  watch: {
-    nickName: function () {
-      console.log(this.$store.state.userInfo);
-    },
-  },
 };
 </script>
 
@@ -108,7 +99,6 @@ export default {
   width: 100%;
   height: 60px;
   background-color: #409eff;
-  border-bottom: 1px solid #409eff;
 
   .top-bar-container {
     display: flex;
@@ -122,7 +112,8 @@ export default {
       text-decoration: none;
       display: inline-block;
       height: 100%;
-      line-height: 61px;
+      display: flex;
+      align-items: center;
       color: #fff;
       padding: 0 10px;
       &:hover {

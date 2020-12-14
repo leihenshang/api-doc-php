@@ -1,19 +1,24 @@
 <template>
   <div class="home-container">
-    <el-container style="height:100%">
-      <el-header style="padding:0">
-        <topBar />
-      </el-header>
-      <el-main>
-        <router-view></router-view>
-      </el-main>
-    </el-container>
+    <el-row :gutter="10">
+      <el-col :span="3" style="padding-right:5px;">
+        <el-menu :default-active="$route.path" :router="true" ref="menu" class="el-menu">
+          <el-menu-item :index="item.route" v-for="item in myRoute" :key="item.id">
+            <span slot="title">{{ item.title }}</span>
+          </el-menu-item>
+        </el-menu>
+      </el-col>
+      <el-col :span=" 21">
+        <transition name="el-fade-in-linear" mode="out-in" appear>
+          <router-view></router-view>
+        </transition>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
-import TopBar from "@/components/common/topBar";
 export default {
-  name: "home",
+  name: "manage",
   computed: {
     myRoute: function () {
       let route = [
@@ -39,8 +44,10 @@ export default {
       return [];
     },
   },
-  components: { topBar: TopBar },
 };
 </script>
 <style lang="scss" scoped>
+.el-menu  {
+  min-height: 650px;
+}
 </style>

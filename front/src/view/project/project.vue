@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <el-row :gutter="15">
+    <el-row :gutter="10">
       <el-col :span="3">
         <el-menu
           :default-active="
@@ -88,4 +88,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-menu {
+  min-height: 700px;
+}
 </style>
