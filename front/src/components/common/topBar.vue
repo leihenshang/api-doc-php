@@ -3,7 +3,7 @@
     <div class="top-bar-container">
       <div class="top-bar-title">{{projectName ? projectName : 'apiDoc'}}</div>
       <a
-        href="javascript:void();"
+        href="javascript:void(0);"
         @click="$router.push('/')"
         class="return-home"
         v-show="showHomeBtn"

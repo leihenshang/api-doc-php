@@ -84,7 +84,6 @@ export default {
     height: auto;
     border: 1px solid #e5e5e5;
     flex: 0.2;
-    margin: 10px 0 0 0;
   }
 
   .doc-wrapper {

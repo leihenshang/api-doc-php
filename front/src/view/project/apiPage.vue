@@ -72,7 +72,6 @@ export default {
 <style lang="scss" scoped>
 .api-page {
   width: 100%;
-  height: calc(100% - 21px);
   display: flex;
 
   .group-wrapper {
@@ -80,7 +79,6 @@ export default {
     height: auto;
     border: 1px solid #e5e5e5;
     flex: 0.2;
-    margin: 10px 0 0 0;
   }
 
   .api-wrapper {

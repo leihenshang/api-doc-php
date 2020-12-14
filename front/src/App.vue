@@ -7,13 +7,24 @@
  -->
 <template>
   <div id="app">
-    <router-view />
+    <el-container style="height:100%">
+      <el-header style="padding:0">
+        <topBar />
+      </el-header>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
 <script>
+import TopBar from "@/components/common/topBar";
 export default {
   name: "app",
+  components: {
+    topBar: TopBar,
+  },
 };
 </script>
 
