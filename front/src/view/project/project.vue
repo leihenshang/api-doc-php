@@ -1,31 +1,40 @@
 <template>
   <div class="detail">
-    <el-row :gutter="15">
-      <el-col :span="3">
-        <el-menu
-          :default-active="
+    <el-container style="height:100%">
+      <el-header style="padding:0">
+        <topBar />
+      </el-header>
+      <el-main>
+        <el-row :gutter="15">
+          <el-col :span="3">
+            <el-menu
+              :default-active="
           $route.redirectedFrom ? $route.redirectedFrom : $route.path
         "
-          :router="true"
-          ref="menu"
-          class="el-menu"
-        >
-          <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
-            <i :class="item.icon ? item.icon : 'el-icon-setting'"></i>
-            <span slot="title">{{ item.title }}</span>
-          </el-menu-item>
-        </el-menu>
-      </el-col>
-      <el-col :span="21">
-        <transition name="el-fade-in-linear" mode="out-in" appear>
-          <router-view></router-view>
-        </transition>
-      </el-col>
-    </el-row>
+              :router="true"
+              ref="menu"
+              class="el-menu"
+            >
+              <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
+                <i :class="item.icon ? item.icon : 'el-icon-setting'"></i>
+                <span slot="title">{{ item.title }}</span>
+              </el-menu-item>
+            </el-menu>
+          </el-col>
+          <el-col :span="21">
+            <transition name="el-fade-in-linear" mode="out-in" appear>
+              <router-view></router-view>
+            </transition>
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
 <script>
+import TopBar from "@/components/common/topBar";
+
 export default {
   name: "project",
   props: {
@@ -81,7 +90,9 @@ export default {
     };
   },
   methods: {},
-  components: {},
+  components: {
+    TopBar
+  },
 };
 </script>
 

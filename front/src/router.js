@@ -124,24 +124,29 @@ const router = new VueRouter({
         },
       ],
     },
-    {
-      path: "/projectList",
-      component: resolve => require(['@/view/project/projectList'], resolve),
-      name: "projectList"
-    },
-    {
-      path: "/userManager",
-      component: resolve => require(['@/view/user/userManager'], resolve),
-      name: "userManager"
-    },
-    {
-      path: "/myCenter",
-      component: resolve => require(['@/view/user/myCenter'], resolve),
-      name: "myCenter"
-    },
+
     {
       path: "/",
+      component: resolve => require(['@/view/home'], resolve),
+      name: "home",
       redirect: "projectList",
+      children: [
+        {
+          path: "/projectList",
+          component: resolve => require(['@/view/project/projectList'], resolve),
+          name: "projectList"
+        },
+        {
+          path: "/userManager",
+          component: resolve => require(['@/view/user/userManager'], resolve),
+          name: "userManager"
+        },
+        {
+          path: "/myCenter",
+          component: resolve => require(['@/view/user/myCenter'], resolve),
+          name: "myCenter"
+        },
+      ]
     },
   ],
 });
