@@ -2,14 +2,7 @@
   <div class="detail">
     <el-row :gutter="10">
       <el-col :span="3">
-        <el-menu
-          :default-active="
-          $route.redirectedFrom ? $route.redirectedFrom : $route.path
-        "
-          :router="true"
-          ref="menu"
-          class="el-menu"
-        >
+        <el-menu :default-active="$route.path" ref="menu" class="el-menu" @select="menuSelect">
           <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
             <i :class="item.icon ? item.icon : 'el-icon-setting'"></i>
             <span slot="title">{{ item.title }}</span>
@@ -26,7 +19,6 @@
 </template>
 
 <script>
-
 export default {
   name: "project",
   props: {
@@ -81,9 +73,12 @@ export default {
       insideRoute: menu,
     };
   },
-  methods: {},
-  components: {
-  },
+  methods: {
+    menuSelect(index,indexPath){
+        console.log(index,indexPath,this.$refs['menu'])
+        this.$router.push(index);
+    }
+  }
 };
 </script>
 
