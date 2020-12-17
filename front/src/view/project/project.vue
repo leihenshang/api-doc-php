@@ -2,7 +2,7 @@
   <div class="detail">
     <el-row :gutter="10">
       <el-col :span="3">
-        <el-menu :default-active="$route.path" ref="menu" class="el-menu" @select="menuSelect">
+        <el-menu :default-active="selected" ref="menu" class="el-menu" router>
           <el-menu-item :index="item.route" v-for="item in insideRoute" :key="item.id">
             <i :class="item.icon ? item.icon : 'el-icon-setting'"></i>
             <span slot="title">{{ item.title }}</span>
@@ -24,7 +24,14 @@ export default {
   props: {
     id: String,
   },
-  created() {},
+  mounted() {
+    this.getSelectedPath()
+  },
+  watch:{
+    $route() {
+      this.getSelectedPath()
+    }
+  },
   data() {
     let menu = [
       {
@@ -71,12 +78,17 @@ export default {
     return {
       projectData: {},
       insideRoute: menu,
+      selected:''
     };
   },
   methods: {
-    menuSelect(index,indexPath){
-        console.log(index,indexPath,this.$refs['menu'])
-        this.$router.push(index);
+    getSelectedPath(){
+      let parent = this.$route.matched[this.$route.matched.length-1].parent.path
+      let paramsObj = this.$route.params
+      for (let key in paramsObj){
+        parent = parent.replace(`:${key}`,paramsObj[key])
+      }
+      this.$route.matched.length >3? this.selected = parent: this.selected=this.$route.path
     }
   }
 };
