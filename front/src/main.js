@@ -27,6 +27,7 @@ Vue.use(VueClipboard);
 (function () {
   axios.get('/config.json').then((res) => {
     Vue.prototype.BASE_URL = res.data.BASE_URL;
+    // Vue.prototype.BASE_URL = 'api';
 
     //实例化Vue
     new Vue({
