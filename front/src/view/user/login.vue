@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import Qs from 'qs'
 const CODE_OK = 200;
 // const NO_ACTIVATE = 3;
 
@@ -62,9 +61,9 @@ export default {
         if (validate) {
           this.loading = true;
           this.$http
-            .post("/user/login", Qs.stringify({
+            .post("/user/login", {
               ...this.form,
-            }))
+            })
             .then(
               (response) => {
                 response = response.data;
