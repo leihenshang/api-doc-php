@@ -34,7 +34,7 @@
       <!-- 新增用户-结束 -->
     </div>
     <div class="all-user" v-loading="loading">
-      <el-table :data="userList.list" stripe style="width: 100%" border>
+      <el-table :data="userList.items" stripe style="width: 100%" border>
         <el-table-column prop="name" label="账号" width="180"></el-table-column>
         <el-table-column prop="nick_name" label="昵称" width="180"></el-table-column>
 

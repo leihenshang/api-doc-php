@@ -239,7 +239,7 @@ export default {
         .then((response) => {
           response = response.data;
           if (response.code === CODE_OK) {
-            this.searchUserList = response.data;
+            this.searchUserList = response.items;
           }
         });
     },
