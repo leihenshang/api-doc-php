@@ -90,18 +90,18 @@ class ProjectController extends BaseController
             $resCount = $res->count();
         }
 
-        return ['data' => ['count' => $resCount, 'res' => $res->asArray()->all()]];
+        return $this->success( ['count' => $resCount, 'items' => $res->asArray()->all()]);
     }
 
     /**
      * 项目详情
      * @return array
      */
-    public function actionDetail()
+    public function actionDetail(): array
     {
         $id = Yii::$app->request->get('id', null);
         $res = Project::findOne($id);
-        return ['data' => $res];
+        return $this->success($res);
     }
 
     /**

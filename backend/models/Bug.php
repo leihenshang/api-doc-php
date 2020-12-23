@@ -170,7 +170,7 @@ class Bug extends BaseModel
             }
         }
 
-        return ['resCount' => $count, 'resItem' => $res];
+        return ['count' => $count, 'items' => $res];
     }
 
     /**

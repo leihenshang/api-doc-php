@@ -345,7 +345,7 @@ class Api extends BaseModel
         $resCount = $res->count();
         $res = $res->limit($this->ps)->offset($this->offset)->all();
 
-        return ['resCount' => $resCount, 'resItem' => $res];
+        return ['count' => $resCount, 'items' => $res];
     }
 
     /**

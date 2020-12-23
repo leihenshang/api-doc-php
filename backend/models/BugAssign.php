@@ -144,7 +144,7 @@ class BugAssign extends BaseModel
             }
         }
 
-        return ['resCount' => $count, 'resItem' => $res];
+        return ['count' => $count, 'items' => $res];
     }
 
 }

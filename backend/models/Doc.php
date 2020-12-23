@@ -196,9 +196,8 @@ class Doc extends BaseModel
             $query->andWhere(['like', 'a.title', "{$keyword}%", false]);
         }
 
-        $data = ['total' => 0, 'data' => []];
-        $data['total'] = $query->count();
-        $data['data'] = $query
+        $data['count'] = $query->count();
+        $data['items'] = $query
             ->offset(($cp - 1) * $ps)
             ->orderBy('a.id DESC')
             ->limit($ps)
