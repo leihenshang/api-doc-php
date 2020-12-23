@@ -1,22 +1,25 @@
+# API-DOC
 
-#### 介绍
-restful风格api记录工具，方便前后台协作,并支持文档记录功能，适合小型开发团队协作.
+## 概览
+api-doc 是一个简单的api接口文档记录应用,同时支持MD文档记录,方便前后台协作以及小团队前后台沟通。
+## 架构
+该项目为前后台分离项目。
+- php7.2(Yii2框架)提供后端能力
+- vue2.0作为前端开发框架
+- mysql5.7 作为数据库
+  
+## 文件夹
+- front 前端文件夹
+- backend 后端文件夹
 
-#### 软件结构
-- 使用php作为后端程序(Yii2框架)
-- 使用vue作为前台开发框架
-- 该项目为前后台分离项目
-    - front中为前台
-    - backend为后台api
+这两个文件夹下还各包含一个README.MD，为各自的其他说明。
 
-
-#### 预览使用方法
-1. 进入front（前端)文件夹,执行npm install,执行npm run serve
-2. 进入backend（后端)文件夹,执行composer install,执行php yii serve --port=1000
-
+#### 安装使用方法
+1. 进入front（前端)文件夹,首先执行yarn install安装依赖,接着执行yarn serve
+2. 进入backend（后端)文件夹,执行composer install安装依赖,接着执行php yii serve --port=1000
 
 #### 数据库初始化
-- database/mysql.sql 
+- 在mysql中执行 database/mysql.sql 
 
 # 仓库地址
 - github:https://github.com/leihenshang/apiDoc
