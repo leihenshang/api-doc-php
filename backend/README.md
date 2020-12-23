@@ -1,7 +1,7 @@
-#### Description
-This project use Yii2 framework.
+#### 概要
+这个项目使用YII2框架
 
-DIRECTORY STRUCTURE
+目录结构
 -------------------
 
       assets/             contains assets definition
@@ -18,37 +18,23 @@ DIRECTORY STRUCTURE
 
 
 
-REQUIREMENTS
+需求
 ------------
 
-The minimum requirement by this project template that your Web server supports PHP 7.1.
+PHP>=7.2
 
 
-INSTALLATION
+安装依赖
 ------------
 
-### Install via Composer
+```
+composer istall -vv
+```
 
-If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
-at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
-
-You can then install this project template using the following command:
-
-~~~
-composer create-project --prefer-dist yiisoft/yii2-app-basic basic
-~~~
-
-Now you should be able to access the application through the following URL, assuming `basic` is the directory
-directly under the Web root.
-
-~~~
-http://localhost/basic/web/
-~~~
-
-CONFIGURATION
+配置
 -------------
 
-### Database
+### 数据库
 
 Edit the file `config/db.php` with real data, for example:
 
@@ -62,7 +48,32 @@ return [
 ];
 ```
 
-**NOTES:**
-- Yii won't create the database for you, this has to be done manually before you can access it.
-- Check and edit the other files in the `config/` directory to customize your application as required.
-- Refer to the README in the `tests` directory for information specific to basic application tests.
+接口返回参数规定 
+-------------
+
+返回的数据是一个json对象，基本数据结构必含 data,code,msg
+- data 数据是数据对象
+    - `列表返回` `{"count":20,"items":[ itme1... , item2.... , ... ]}`
+- msg 消息
+- code 返回状态代码
+     - 200 成功
+     - 14  参数错误
+     - 34  用户验证相关错误 
+     - 22  数据相关错误 
+
+成功
+```json
+{
+ "data":null,
+ "msg":"success",
+ "code":200
+}
+```
+失败
+```json
+{
+ "data":null,
+ "msg":"failed",
+ "code":14
+}
+```
