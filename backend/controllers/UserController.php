@@ -38,7 +38,9 @@ class UserController extends BaseController
         }
 
         $userInfo = $user->login($user->name, $user->pwd);
+
         if (is_string($userInfo)) {
+
             return $this->failed($userInfo);
         }
 

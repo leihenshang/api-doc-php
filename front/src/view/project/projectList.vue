@@ -92,7 +92,7 @@ export default {
           (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
-              this.projectList = response.data.res;
+              this.projectList = response.data.items;
               this.itemCount = Number(response.data.count);
             }
 

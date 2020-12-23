@@ -48,7 +48,7 @@ export default {
           .then((response) => {
             response = response.data;
             if (response.code === 200) {
-              this.userFilterOptionsData = response.data.list;
+              this.userFilterOptionsData = response.data.items;
             }
             this.userFilterLoading = false;
           });

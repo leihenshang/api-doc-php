@@ -112,7 +112,7 @@ export default {
 
     jump() {
       this.$router.push({
-        name: "apiPage",
+        name: "apiList",
         params: { projectId: this.projectId, groupId: 0 },
       });
     },
@@ -131,8 +131,8 @@ export default {
           (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
-              this.docList = response.data.data;
-              this.count = Number.parseInt(response.data.total);
+              this.docList = response.data.items;
+              this.count = Number.parseInt(response.data.count);
               this.loading = false;
             }
           },

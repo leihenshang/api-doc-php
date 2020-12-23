@@ -416,8 +416,8 @@ export default {
         })
         .then((response) => {
           let data = response.data.data;
-          this.tableData.count = data.resCount;
-          this.tableData.res = data.resItem;
+          this.tableData.count = data.count;
+          this.tableData.res = data.items;
           this.loading = false;
         });
     },
@@ -592,8 +592,8 @@ export default {
         })
         .then((response) => {
           let data = response.data.data;
-          this.assignListData.count = data.resCount;
-          this.assignListData.res = data.resItem;
+          this.assignListData.count = data.count;
+          this.assignListData.res = data.items;
         });
     },
     userFilterSearch(query) {
@@ -609,7 +609,7 @@ export default {
           .then((response) => {
             response = response.data;
             if (response.code === 200) {
-              this.userFilterOptions = response.data.list;
+              this.userFilterOptions = response.data.items;
             }
             this.userFilterLoading = false;
           });

@@ -83,17 +83,15 @@
         <el-table-column prop="description" label="描述"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop label="操作">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-show="!controlShow()">
             <el-button
               slot="reference"
-              v-show="$store.state.userInfo.type == 2"
               @click="del(scope.row.id)"
             >删除</el-button>
             <el-button
               type="warning"
               plain
               @click="updateData = scope.row;dialogFormVisibleUpdate = true; "
-              v-show="$store.state.userInfo.type == 2"
             >编辑</el-button>
           </template>
         </el-table-column>
@@ -103,6 +101,8 @@
 </template>
 
 <script>
+import controlShow from "../../mixins/controlShow";
+
 const CODE_OK = 200;
 
 export default {
@@ -117,6 +117,7 @@ export default {
   },
   data() {
     return {
+      mixins: [controlShow],
       propertyList: [],
       loadding: false,
       showAddWindow: false,
@@ -249,7 +250,7 @@ export default {
       this.$http
         .get("/field-mapping/list", {
           params: {
-            projectId:this.$route.params.projectId
+            projectId: this.$route.params.projectId,
           },
         })
         .then(

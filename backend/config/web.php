@@ -32,15 +32,21 @@ $config = [
                     $event->sender->headers->add("Access-Control-Allow-Headers", "x-requested-with,content-type");
 
                     $response = $event->sender;
+
                     //设置响应状态码为200
                     $response->statusCode = 200;
                     $response->format = Response::FORMAT_JSON;
-                    $code = isset($response->data['code']) ? $response->data['code'] : 200;
-                    $response->data = [
-                        'code' => $code,
-                        'msg' => isset($response->data['msg']) ? $response->data['msg'] : (isset($response->data['message']) ? $response->data['message'] : ""),
-                        'data' => !isset($response->data['data']) ? null : $response->data['data'],
-                    ];
+
+
+                    $code = $response->data['code']?? 200;
+
+                    if($code <= 200) {
+                        $response->data = [
+                            'code' => $code,
+                            'msg' => $response->data['msg'] ?? "",
+                            'data' => $response->data['data'] ?? null,
+                        ];
+                    }
                 }
             }
         ],

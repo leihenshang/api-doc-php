@@ -1,7 +1,7 @@
 <template>
   <div class="api-list">
     <div class="api-box">
-      <el-table :data="apiList.resItem" stripe style="width: 100%" v-loading="loading" border>
+      <el-table :data="apiList.items" stripe style="width: 100%" v-loading="loading" border>
         <el-table-column prop="api_name" label="名称" width="180"></el-table-column>
         <el-table-column label="请求方法" width="80">
           <template slot-scope="scope">
@@ -139,7 +139,7 @@ export default {
           response = response.data;
           if (response.code === CODE_OK) {
             this.apiList = response.data;
-            this.count = parseInt(response.data.resCount);
+            this.count = parseInt(response.data.count);
             this.loading = false;
           }
         });
