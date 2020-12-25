@@ -2,28 +2,30 @@
   <div class="api-list">
     <div class="api-box">
       <el-table :data="apiList.items" stripe style="width: 100%" v-loading="loading" border>
-        <el-table-column prop="api_name" label="名称" width="180"></el-table-column>
-        <el-table-column label="请求方法" width="80">
+        <el-table-column prop="api_name" label="名称"></el-table-column>
+        <el-table-column label="url">
           <template slot-scope="scope">
             <el-tag
+              size="mini"
               type="success"
               v-if="scope.row.http_method_type === 'POST'"
             >{{ scope.row.http_method_type }}</el-tag>
-            <el-tag v-else-if="scope.row.http_method_type === 'GET'">
+            <el-tag size="mini" v-else-if="scope.row.http_method_type === 'GET'">
               {{
               scope.row.http_method_type
               }}
             </el-tag>
-            <el-tag type="warning" v-else>
+            <el-tag size="mini" type="warning" v-else>
               {{
               scope.row.http_method_type
               }}
             </el-tag>
+            <em
+              style="font-style:normal; display:inline-block;margin-left:15px;font-weight:600;"
+            >{{scope.row.url}}</em>
           </template>
         </el-table-column>
-        <el-table-column prop="url" label="url"></el-table-column>
         <el-table-column prop="protocol_type" label="协议" width="80"></el-table-column>
-        <el-table-column prop="develop_language" label="开发语言"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop label="操作" align="center">
           <template slot-scope="scope">
