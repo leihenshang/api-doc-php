@@ -209,11 +209,12 @@ export default {
     $route: function (to) {
       if (to.query.keyword) {
         this.cp = 1;
-        this.getApiList(this.ps, this.cp, to.params.id, 0, to.query.keyword);
+      
+        this.getApiList(this.ps, this.cp, to.params.projectId, 0, to.query.keyword);
         this.loading = true;
       } else {
         this.cp = 1;
-        this.getApiList(this.ps, this.cp, to.params.id, to.query.groupId);
+        this.getApiList(this.ps, this.cp,to.params.projectId, to.query.groupId);
         this.loading = true;
       }
     },

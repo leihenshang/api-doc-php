@@ -212,11 +212,11 @@ export default {
     $route: function (to) {
       if (to.query.keyword) {
         this.cp = 1;
-        this.getDocList(this.ps, this.cp, 0, to.params.id, to.query.keyword);
+        this.getDocList(this.ps, this.cp, 0, to.params.projectId, to.query.keyword);
         this.loading = true;
       } else {
         this.cp = 1;
-        this.getDocList(this.ps, this.cp, to.query.groupId, to.params.id);
+        this.getDocList(this.ps, this.cp, to.query.groupId, to.params.projectId);
         this.loading = true;
       }
     },
