@@ -33,15 +33,16 @@ $config = [
 
                     $response = $event->sender;
 
+                    //todo::重新格式化
                     //设置响应状态码为200
                     $code = $response->data['code'] ?? 200;
-                  if($code === 200) {
-                    $response->data = [
-                        'code' => $code,
-                        'msg' => $response->data['msg'] ?? "",
-                        'data' => $response->data['data'] ?? null,
-                    ];
-                  }
+                    if ($code === 200) {
+                        $response->data = [
+                            'code' => $code,
+                            'msg' => $response->data['msg'] ?? "",
+                            'data' => $response->data['data'] ?? null,
+                        ];
+                    }
                 }
             }
         ],
