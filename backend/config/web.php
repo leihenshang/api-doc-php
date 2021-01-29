@@ -34,19 +34,14 @@ $config = [
                     $response = $event->sender;
 
                     //设置响应状态码为200
-                    $response->statusCode = 200;
-                    $response->format = Response::FORMAT_JSON;
-
-
-                    $code = $response->data['code']?? 200;
-
-                    if($code <= 200) {
-                        $response->data = [
-                            'code' => $code,
-                            'msg' => $response->data['msg'] ?? "",
-                            'data' => $response->data['data'] ?? null,
-                        ];
-                    }
+                    $code = $response->data['code'] ?? 200;
+                  if($code === 200) {
+                    $response->data = [
+                        'code' => $code,
+                        'msg' => $response->data['msg'] ?? "",
+                        'data' => $response->data['data'] ?? null,
+                    ];
+                  }
                 }
             }
         ],

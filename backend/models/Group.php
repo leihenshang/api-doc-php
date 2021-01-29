@@ -40,6 +40,7 @@ class Group extends BaseModel
             ['project_id', 'required'],
             [['id', 'p_id', 'project_id', 'is_deleted', 'type'], 'number'],
             ['title', 'required'],
+            ['p_id','default','value' => 0 ],
             ['type', 'required', 'on' => self::SCENARIO_CREATE],
             ['title', 'string', 'length' => [1, 100]],
         ];
@@ -48,7 +49,7 @@ class Group extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['title', 'project_id', 'type'];
+        $scenarios[self::SCENARIO_CREATE] = ['title', 'project_id', 'type','p_id'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
         $scenarios[self::SCENARIO_UPDATE] = ['title', 'id'];
         return $scenarios;
@@ -75,8 +76,14 @@ class Group extends BaseModel
                 'project_id' => $this->project_id,
                 'type' => $this->type,
                 'title' => $this->title
-            ])
-            ->one();
+            ]);
+
+            if ($this->p_id) {
+                $res->andWhere(['p_id' => $this->p_id]);
+            }
+        
+          $res = $res->one();
+      
         if ($res) {
             return '组名不能重复';
         }

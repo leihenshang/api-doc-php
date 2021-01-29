@@ -62,7 +62,7 @@ class GroupController extends BaseController
      */
     public function actionList()
     {
-        $projectId = Yii::$app->request->get('projectId', 0);
+        $projectId = Yii::$app->request->get('projectId');
         $type = Yii::$app->request->get('type', 0);
 
         if (!is_numeric($projectId)) {
@@ -80,7 +80,24 @@ class GroupController extends BaseController
 
         $where['project_id'] = $projectId;
 
-        $res = Group::findAll($where);
+        $res = Group::find()->where($where)->asArray()->all();
+
+        //查找子分组
+        $pids = array_column($res,'id');
+        $child = Group::find()->where(['IN','p_id',$pids])->indexBy('p_id') ->asArray()->all();
+        
+        foreach ($res as  &$value) {
+                if(!isset($value['childs'])) {
+                    $value['childs'] = [];
+                }
+
+            if(isset($child[$value['id']])) {
+                $value['childs'][] = $child[$value['id']];
+            } else {
+                $value['childs'] = [];
+            }
+        }
+
         return $this->success($res);
     }
 
