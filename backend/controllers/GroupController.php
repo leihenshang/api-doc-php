@@ -7,6 +7,7 @@ use app\models\Group;
 use Throwable;
 use Yii;
 use yii\db\StaleObjectException;
+use yii\helpers\ArrayHelper;
 
 class GroupController extends BaseController
 {
@@ -84,7 +85,8 @@ class GroupController extends BaseController
 
         //查找子分组
         $pids = array_column($res,'id');
-        $child = Group::find()->where(['IN','p_id',$pids])->indexBy('p_id') ->asArray()->all();
+        $child = Group::find()->where(['IN','p_id',$pids]) ->asArray()->all();
+        $child = ArrayHelper::index($child,null,'p_id');
         
         foreach ($res as  &$value) {
                 if(!isset($value['childs'])) {
