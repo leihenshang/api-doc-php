@@ -51,7 +51,7 @@ class Group extends BaseModel
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = ['title', 'project_id', 'type','p_id'];
         $scenarios[self::SCENARIO_DEL] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['title', 'id'];
+        $scenarios[self::SCENARIO_UPDATE] = ['title', 'id','p_id'];
         return $scenarios;
     }
 
@@ -92,7 +92,7 @@ class Group extends BaseModel
             return current($this->getFirstErrors());
         }
 
-        return true;
+        return (int)$this->id;
     }
 
     /**
@@ -137,6 +137,9 @@ class Group extends BaseModel
         if (!$res->save(false)) {
             return current($res->getFirstErrors());
         }
+
+        //清理子分组
+        Group::updateAll(['is_deleted' => self::IS_DELETED['yes']],['p_id' => $res->id]);
 
         if ($res->type === self::GROUP_TYPE['api'][0]) {
             Api::updateAll(['is_deleted' => self::IS_DELETED['yes']], ['group_id' => $res->id]);

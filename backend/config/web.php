@@ -25,24 +25,20 @@ $config = [
             'class' => 'yii\web\Response',
             'format' => Response::FORMAT_JSON,
             'on beforeSend' => function ($event) {
+
+                //跨域
+                $event->sender->headers->add('Access-Control-Allow-Origin', '*');
+                $event->sender->headers->add("Access-Control-Allow-Methods", "POST,GET");
+                $event->sender->headers->add("Access-Control-Allow-Headers", "x-requested-with,content-type");
+
                 //如果是gii 代码生成器则不进行格式化
                 if (strstr(Yii::$app->request->getPathInfo(), 'gii') === false) {
-                    $event->sender->headers->add('Access-Control-Allow-Origin', '*');
-                    $event->sender->headers->add("Access-Control-Allow-Methods", "POST,GET");
-                    $event->sender->headers->add("Access-Control-Allow-Headers", "x-requested-with,content-type");
-
                     $response = $event->sender;
-
-                    //todo::重新格式化
-                    //设置响应状态码为200
-                    $code = $response->data['code'] ?? 200;
-                    if ($code === 200) {
-                        $response->data = [
-                            'code' => $code,
-                            'msg' => $response->data['msg'] ?? "",
-                            'data' => $response->data['data'] ?? null,
-                        ];
-                    }
+                    $response->data = [
+                        'code' =>  $response->data['code'] ?? 200,
+                        'msg' => $response->data['msg'] ?? ($response->data['message'] ?? ''),
+                        'data' => $response->data['data'] ?? null,
+                    ];
                 }
             }
         ],

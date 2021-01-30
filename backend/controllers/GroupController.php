@@ -38,7 +38,7 @@ class GroupController extends BaseController
             return ['msg' => $res, 'code' => 22];
         }
 
-        return ['data' => '成功'];
+        return $this->success($res);
     }
 
     /**
@@ -54,7 +54,7 @@ class GroupController extends BaseController
             return $this->failed($res);
         }
 
-        return ['data' => '成功'];
+        return $this->success();
     }
 
     /**
@@ -80,6 +80,7 @@ class GroupController extends BaseController
         }
 
         $where['project_id'] = $projectId;
+        $where['p_id'] = 0;
 
         $res = Group::find()->where($where)->asArray()->all();
 
