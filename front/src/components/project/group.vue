@@ -8,7 +8,7 @@
           <slot>全 部</slot>
         </a>
       </li>
-      <li @click="showCreateGroupDialog" v-show="controlShow()">
+      <li @click="dialogFormVisible = true" v-show="controlShow()">
         <a href="javascript:;">
           <i class="el-icon-delete"></i> 新增分组
         </a>
@@ -31,6 +31,35 @@
         </div>
       </li>
     </ul>
+
+    <el-dialog title="新增分组" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item>
+          <el-col :span="5">
+            <el-form-item label="上级" :label-width="formLabelWidth">
+              <el-select v-model="form.region" placeholder="请选择上级">
+                <el-option label="无" value></el-option>
+                <el-option
+                  v-for="item in group"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="分组名称" :label-width="formLabelWidth">
+              <el-input v-model="form.name" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -44,6 +73,10 @@ export default {
     showIsEdit: {
       type: Boolean,
       default: false,
+    },
+    formLabelWidth: {
+      type: String,
+      default: "80",
     },
     type: {
       type: Number,
@@ -60,6 +93,18 @@ export default {
       group: [],
       curr: 1,
       pageSize: 100,
+      dialogFormVisible: false,
+
+      form: {
+        name: "",
+        region: "",
+        date1: "",
+        date2: "",
+        delivery: false,
+        type: [],
+        resource: "",
+        desc: "",
+      },
     };
   },
   methods: {
@@ -125,7 +170,11 @@ export default {
               } else {
                 this.$message.error("操作失败");
               }
-              this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
+              this.getGroup(
+                this.pageSize,
+                this.curr,
+                this.$route.params.projectId
+              );
             });
         })
         .catch(() => {
@@ -168,7 +217,11 @@ export default {
                   this.$message.error(response.msg);
                 }
 
-                this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
+                this.getGroup(
+                  this.pageSize,
+                  this.curr,
+                  this.$route.params.projectId
+                );
               },
               (res) => {
                 let response = res.data;
@@ -203,8 +256,11 @@ export default {
                   this.$message.error(response.msg);
                 }
 
-                this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
-                // this.showCreateGroup =
+                this.getGroup(
+                  this.pageSize,
+                  this.curr,
+                  this.$route.params.projectId
+                );
               },
               (res) => {
                 let response = res.data;
