@@ -25,6 +25,8 @@ $config = [
             'class' => 'yii\web\Response',
             'format' => Response::FORMAT_JSON,
             'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                $response->statusCode = 200;
 
                 //跨域
                 $event->sender->headers->add('Access-Control-Allow-Origin', '*');
@@ -33,7 +35,7 @@ $config = [
 
                 //如果是gii 代码生成器则不进行格式化
                 if (strstr(Yii::$app->request->getPathInfo(), 'gii') === false) {
-                    $response = $event->sender;
+
                     $response->data = [
                         'code' =>  $response->data['code'] ?? 200,
                         'msg' => $response->data['msg'] ?? ($response->data['message'] ?? ''),
