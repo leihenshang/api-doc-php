@@ -5,9 +5,27 @@
         <el-form-item>
           <el-col :span="5">
             <el-form-item prop="group_id" label="分组" label-width="80px">
-              <el-select v-model="apiInfo.group_id" placeholder="分组" style="width: 90%">
+              <el-select
+                v-model="apiInfo.group_id"
+                placeholder="分组"
+                style="width: 90%"
+                @change="selectChange"
+              >
                 <el-option
                   v-for="item in groupList"
+                  :key="item.id"
+                  :label="item.title"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="5">
+            <el-form-item label="二级分组(可选)" label-width="110px">
+              <el-select v-model="apiInfo.child_id" placeholder="子分组" style="width: 90%" clearable>
+                <el-option
+                  v-for="item in childGroup"
                   :key="item.id"
                   :label="item.title"
                   :value="item.id"
@@ -41,7 +59,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5"></el-col>
         </el-form-item>
         <el-form-item label="url" prop="url" label-width="80px">
           <el-input v-model="apiInfo.url"></el-input>
@@ -69,7 +86,40 @@ export default {
     apiData: Object,
     groupId: [String, Number],
   },
-  methods: {},
+  methods: {
+    selectChange(value) {
+      if (!value) {
+        return;
+      }
+
+      this.$http
+        .get("/group/list", {
+          params: {
+            cp: 1,
+            type: 0,
+            ps: 1000,
+            projectId: this.$route.params.projectId,
+            pId: value,
+          },
+        })
+        .then(
+          (response) => {
+            response = response.data;
+            if (response.code === 200) {
+              if (response.data) {
+                this.childGroup = response.data;
+              }
+            }
+          },
+          (res) => {
+            let response = res.data;
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
+    },
+  },
 
   data() {
     return {
@@ -90,8 +140,8 @@ export default {
         ],
       },
       apiInfo: {
-        group_id: this.groupId == 0 ? null : this.groupId, //分组
-        project_id: 0, //项目Id
+        group_id: null, //分组
+        project_id: null, //项目Id
         protocol_type: "", //协议
         http_method_type: "", //http请求方法
         http_return_type: "", //返回值类型
@@ -101,15 +151,18 @@ export default {
         function_name: "", //程序内部方法名
         develop_language: "", //接口开发语言
         id: "",
+        child_id: null,
       },
+      childGroup: [],
     };
   },
   watch: {
-    apiData: function () {
-      this.apiInfo = this.apiData;
-    },
     apiInfo: {
       handler: function (newdata) {
+        if (newdata.child_id) {
+          newdata.group_id = newdata.child_id;
+        }
+
         this.$emit("update:apiInfo", newdata);
       },
       deep: true,
@@ -134,9 +187,6 @@ export default {
       }
     },
   },
-
-  components: {},
-  created() {},
 };
 </script>
 

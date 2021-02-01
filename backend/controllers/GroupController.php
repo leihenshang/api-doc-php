@@ -65,6 +65,7 @@ class GroupController extends BaseController
     {
         $projectId = Yii::$app->request->get('projectId');
         $type = Yii::$app->request->get('type', 0);
+        $pId =  Yii::$app->request->get('pId', 0);
 
         if (!is_numeric($projectId)) {
             return $this->failed('projectId错误');
@@ -80,7 +81,7 @@ class GroupController extends BaseController
         }
 
         $where['project_id'] = $projectId;
-        $where['p_id'] = 0;
+        $where['p_id'] = $pId ?: 0;
 
         $res = Group::find()->where($where)->asArray()->all();
 

@@ -51,7 +51,7 @@
         <!-- 子分组-start -->
         <ul v-show="item.childs && item.isClickShowChild === true">
           <li v-for="(child,index) in item.childs" :key="child.id">
-            <a href="javascript:;" @click="clientBtn(child.id,index)">{{child.title}}</a>
+            <a href="javascript:;" @click="clientBtn(child.id,index,true)">{{child.title}}</a>
 
             <el-dropdown
               placement="left-start"
@@ -78,7 +78,7 @@
         <el-form-item>
           <el-col :span="5">
             <el-form-item label="上级" :label-width="formLabelWidth">
-              <el-select v-model="form.p_id" placeholder="请选择上级" :disabled="isFirstUpdate">
+              <el-select v-model="form.p_id" placeholder="请选择上级" :disabled="isFirstUpdate" clearable>
                 <el-option
                   v-for="item in group"
                   :key="item.id"
@@ -232,14 +232,17 @@ export default {
       }
     },
     //点击分组
-    clientBtn(id, index) {
-      for (const key in this.group) {
+    clientBtn(id, index,isChild = false) {
+      if(!isChild) {
+    for (const key in this.group) {
         this.group[key].isClick = false;
       }
       if (index !== null) {
         this.group[index].isClick = true;
         this.group[index].isClickShowChild = true;
       }
+      }
+  
 
       this.$emit("change-group", id);
     },
