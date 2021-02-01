@@ -73,32 +73,22 @@
     <!-- 分组列表-end -->
 
     <!-- 新增分组-start -->
-    <el-dialog title="新增分组" :visible.sync="dialogFormVisible">
+    <el-dialog title="新增分组" :visible.sync="dialogFormVisible" width="40%">
       <el-form :model="form" ref="form">
+        <el-form-item label="上级" :label-width="formLabelWidth">
+          <el-select v-model="form.p_id" placeholder="请选择上级" :disabled="isFirstUpdate" clearable>
+            <el-option v-for="item in group" :key="item.id" :label="item.title" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="组名" :label-width="formLabelWidth">
+          <el-input v-model="form.title" autocomplete="off" style="width:70%"></el-input>
+        </el-form-item>
         <el-form-item>
-          <el-col :span="5">
-            <el-form-item label="上级" :label-width="formLabelWidth">
-              <el-select v-model="form.p_id" placeholder="请选择上级" :disabled="isFirstUpdate" clearable>
-                <el-option
-                  v-for="item in group"
-                  :key="item.id"
-                  :label="item.title"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="10">
-            <el-form-item label="分组名称" :label-width="formLabelWidth">
-              <el-input v-model="form.title" autocomplete="off"></el-input>
-            </el-form-item>
-          </el-col>
+          <el-button type="primary" @click=" updateId > 0 ? updateGroup() : createGroup()">确 定</el-button>
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click=" updateId > 0 ? updateGroup() : createGroup()">确 定</el-button>
-      </div>
     </el-dialog>
     <!-- 新增分组-end -->
   </div>
@@ -232,17 +222,16 @@ export default {
       }
     },
     //点击分组
-    clientBtn(id, index,isChild = false) {
-      if(!isChild) {
-    for (const key in this.group) {
-        this.group[key].isClick = false;
+    clientBtn(id, index, isChild = false) {
+      if (!isChild) {
+        for (const key in this.group) {
+          this.group[key].isClick = false;
+        }
+        if (index !== null) {
+          this.group[index].isClick = true;
+          this.group[index].isClickShowChild = true;
+        }
       }
-      if (index !== null) {
-        this.group[index].isClick = true;
-        this.group[index].isClickShowChild = true;
-      }
-      }
-  
 
       this.$emit("change-group", id);
     },

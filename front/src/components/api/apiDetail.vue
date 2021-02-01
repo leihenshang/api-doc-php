@@ -285,7 +285,7 @@ export default {
     margin: 10px 0;
     padding: 10px 8px;
     box-sizing: border-box;
-    background-color: #f5f6f7;
+    background-color: #d1e7fc;
   }
 }
 </style>
