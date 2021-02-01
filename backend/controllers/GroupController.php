@@ -90,12 +90,8 @@ class GroupController extends BaseController
         $child = ArrayHelper::index($child, null, 'p_id');
 
         foreach ($res as  &$value) {
-            if (!isset($value['childs'])) {
-                $value['childs'] = [];
-            }
-
             if (isset($child[$value['id']])) {
-                $value['childs'][] = $child[$value['id']];
+                $value['childs'] = $child[$value['id']];
             } else {
                 $value['childs'] = [];
             }

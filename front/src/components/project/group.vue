@@ -1,7 +1,8 @@
 
 <template>
   <div class="group">
-    <ul v-show="group">
+    <!-- 分组操作-start -->
+    <ul v-show="group" class="operator">
       <li>
         <a href="javascript:;" @click="clientBtn(null,null)">
           <i class="el-icon-s-order"></i>
@@ -18,10 +19,27 @@
           <i class="el-icon-delete"></i> 回 收 站
         </a>
       </li>
-      <li v-for="(item,index) in group" :key="item.id" :class="{'li-click' : item.isClick }">
-        <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
-        <div class="btn-group" v-show="controlShow()">
-          <el-dropdown placement="left-start" @command="handleCommand" trigger="click">
+    </ul>
+    <!-- 分组操作-end -->
+
+    <!-- 分组列表-start -->
+    <div class="list">
+      <div v-for="(item,index) in group" :key="item.id" class="list-item">
+        <div class="list-item-one">
+          <div>
+            <i
+              :class=" item.isClickShowChild ? 'el-icon-arrow-down' : 'el-icon-arrow-right'"
+              @click="clickFoldBtn(index)"
+              v-show="item.childs.length > 0"
+            ></i>
+            <a href="javascript:;" @click="clientBtn(item.id,index)">{{item.title}}</a>
+          </div>
+          <el-dropdown
+            placement="left-start"
+            @command="handleCommand"
+            trigger="click"
+            v-show="controlShow()"
+          >
             <span class="el-icon-s-unfold"></span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item :command="{action:'del',data:item}">删除</el-dropdown-item>
@@ -29,16 +47,38 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-      </li>
-    </ul>
 
+        <!-- 子分组-start -->
+        <ul v-show="item.childs && item.isClickShowChild === true">
+          <li v-for="(child,index) in item.childs" :key="child.id">
+            <a href="javascript:;" @click="clientBtn(child.id,index)">{{child.title}}</a>
+
+            <el-dropdown
+              placement="left-start"
+              @command="handleCommand"
+              trigger="click"
+              v-show="controlShow()"
+            >
+              <span class="el-icon-s-unfold"></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command="{action:'del',data:child,parent:item}">删除</el-dropdown-item>
+                <el-dropdown-item :command="{action:'edit',data:child,parent:item}">编辑</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </li>
+        </ul>
+        <!-- 子分组-end -->
+      </div>
+    </div>
+    <!-- 分组列表-end -->
+
+    <!-- 新增分组-start -->
     <el-dialog title="新增分组" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
+      <el-form :model="form" ref="groupForm">
         <el-form-item>
           <el-col :span="5">
             <el-form-item label="上级" :label-width="formLabelWidth">
-              <el-select v-model="form.region" placeholder="请选择上级">
-                <el-option label="无" value></el-option>
+              <el-select v-model="form.p_id" placeholder="请选择上级" :disabled="isFirstUpdate">
                 <el-option
                   v-for="item in group"
                   :key="item.id"
@@ -50,16 +90,17 @@
           </el-col>
           <el-col :span="10">
             <el-form-item label="分组名称" :label-width="formLabelWidth">
-              <el-input v-model="form.name" autocomplete="off"></el-input>
+              <el-input v-model="form.title" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="createGroup()">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 新增分组-end -->
   </div>
 </template>
 
@@ -94,25 +135,20 @@ export default {
       curr: 1,
       pageSize: 100,
       dialogFormVisible: false,
-
+      isFirstUpdate: false,
       form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
+        p_id: null,
+        title: "",
       },
     };
   },
   methods: {
     handleCommand(command) {
+      console.log(command);
       if (command.action === "del") {
-        this.del(command.data.id);
+        this.delete(command.data.id);
       } else if (command.action === "edit") {
-        this.editGroup(command.data);
+        this.updateGroup(command.data);
       }
     },
     //获取分组列表
@@ -130,9 +166,14 @@ export default {
           (response) => {
             response = response.data;
             if (response.code === CODE_OK) {
+              //添加点击状态默认值
               if (response.data) {
                 for (const key in response.data) {
                   response.data[key].isClick = false;
+                  response.data[key].isClickShowChild = false;
+                  for (const childKey in response.data[key]["childs"]) {
+                    response.data[key]["childs"][childKey].isClick = false;
+                  }
                 }
                 this.group = response.data;
               }
@@ -147,7 +188,7 @@ export default {
         );
     },
     //删除分组
-    del(id) {
+    delete(id) {
       if (!id) {
         this.$message.error("id错误");
         return;
@@ -181,6 +222,14 @@ export default {
           this.showCreateGroup = false;
         });
     },
+    //点击折叠按钮
+    clickFoldBtn(index) {
+      if (index !== null) {
+        this.group[index].isClickShowChild = this.group[index].isClickShowChild
+          ? false
+          : true;
+      }
+    },
     //点击分组
     clientBtn(id, index) {
       for (const key in this.group) {
@@ -188,12 +237,13 @@ export default {
       }
       if (index !== null) {
         this.group[index].isClick = true;
+        this.group[index].isClickShowChild = true;
       }
 
       this.$emit("change-group", id);
     },
     //更新数据
-    editGroup(data) {
+    updateGroup(data, parent = null) {
       this.$prompt("请修改分组名", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -233,46 +283,43 @@ export default {
         })
         .catch(() => {});
     },
-    showCreateGroupDialog() {
-      this.$prompt("请输入分组名", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputPattern: /.{2,100}/,
-        inputErrorMessage: "组名格式不正确",
-      })
-        .then(({ value }) => {
-          this.$http
-            .post("/group/create", {
-              title: value,
-              project_id: this.$route.params.projectId,
-              type: this.type,
-            })
-            .then(
-              (response) => {
-                response = response.data;
-                if (response.code === CODE_OK) {
-                  this.$message.success("创建成功!");
-                } else {
-                  this.$message.error(response.msg);
-                }
+    createGroup() {
+      if (this.form.title.length < 1) {
+        this.$message.error("分组标题不能为空");
+        return;
+      }
 
-                this.getGroup(
-                  this.pageSize,
-                  this.curr,
-                  this.$route.params.projectId
-                );
-              },
-              (res) => {
-                let response = res.data;
-                this.$message.error(
-                  "获取数据-操作失败!" + !response.msg ? response.msg : ""
-                );
-              }
-            );
+      this.$http
+        .post("/group/create", {
+          project_id: this.$route.params.projectId,
+          type: this.type,
+          ...this.form,
         })
-        .catch(() => {
-          this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
-        });
+        .then(
+          (response) => {
+            response = response.data;
+            if (response.code === CODE_OK) {
+              this.$message.success("创建成功!");
+            } else {
+              this.$message.error(response.msg);
+            }
+
+            this.getGroup(
+              this.pageSize,
+              this.curr,
+              this.$route.params.projectId
+            );
+
+            this.dialogFormVisible = false;
+          },
+          (res) => {
+            let response = res.data;
+            this.dialogFormVisible = false;
+            this.$message.error(
+              "操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
     },
   },
   watch: {
@@ -292,69 +339,95 @@ export default {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: 2px;
   background-color: #fff;
   overflow-y: auto;
-}
+  ul.operator {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 
-.group ul {
-  margin: 0;
-  padding: 0;
-}
+    li {
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      margin: 8px 0;
+      height: 32px;
+      line-height: 32px;
+      &:last-child {
+        border-bottom: 1px solid rgb(228, 219, 219);
+        padding-bottom: 6px;
+      }
 
-.group ul li {
-  width: 100%;
-  overflow: hidden;
-  display: flex;
-  margin: 8px 0;
-  height: 32px;
-  line-height: 32px;
-}
+      i {
+        margin-right: 5px;
+      }
 
-.group ul li.last-item {
-  border-bottom: 1px solid rgb(228, 219, 219);
-  padding-bottom: 6px;
-}
+      a {
+        display: inline-block;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 14px;
+        height: 28px;
+        color: rgb(75, 74, 74);
+        margin-left: 8px;
+        padding-left: 10px;
+        height: 100%;
+        text-decoration: none;
+      }
 
-.btn-group {
-  overflow: hidden;
-  width: 120px;
-  line-height: 32px;
-  text-align: center;
-}
+      &:hover {
+        background-color: rgb(125, 195, 241);
+        a {
+          color: white;
+        }
+      }
+    }
+  }
 
-.group ul li a {
-  display: inline-block;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 14px;
-  height: 28px;
-  color: rgb(75, 74, 74);
-  margin-left: 8px;
-  padding-left: 10px;
-  height: 100%;
-  text-decoration: none;
-}
+  .list {
+    a {
+      text-decoration: none;
+      font-size: 14px;
+    }
 
-.group ul li i {
-  margin-right: 5px;
-}
+    .list-item {
+      .list-item-one {
+        height: 40px;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px 0 10px;
+        align-items: center;
+        i {
+          box-sizing: border-box;
+          margin-right: 5px;
+          font-weight: bold;
+        }
+      }
 
-.group ul li:hover {
-  background-color: #e3f1e5;
-}
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
 
-.group ul li:hover a {
-  color: black;
-}
+        li {
+          position: relative;
+          height: 40px;
+          line-height: 40px;
+          a {
+            position: absolute;
+            display: inline-block;
+            left: 45px;
+          }
 
-.li-click {
-  background-color: rgba(24, 173, 49, 0.603);
-}
-
-ul li.li-click a {
-  color: #fff;
+          .el-dropdown {
+            position: absolute;
+            right: 20px;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
