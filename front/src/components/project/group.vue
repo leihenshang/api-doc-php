@@ -74,7 +74,7 @@
 
     <!-- 新增分组-start -->
     <el-dialog title="新增分组" :visible.sync="dialogFormVisible">
-      <el-form :model="form" ref="groupForm">
+      <el-form :model="form" ref="form">
         <el-form-item>
           <el-col :span="5">
             <el-form-item label="上级" :label-width="formLabelWidth">
@@ -97,7 +97,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="createGroup()">确 定</el-button>
+        <el-button type="primary" @click=" updateId > 0 ? updateGroup() : createGroup()">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 新增分组-end -->
@@ -140,6 +140,7 @@ export default {
         p_id: null,
         title: "",
       },
+      updateId: 0,
     };
   },
   methods: {
@@ -148,7 +149,7 @@ export default {
       if (command.action === "del") {
         this.delete(command.data.id);
       } else if (command.action === "edit") {
-        this.updateGroup(command.data);
+        this.showUpdateDiglog(command.data, command.parent);
       }
     },
     //获取分组列表
@@ -242,46 +243,58 @@ export default {
 
       this.$emit("change-group", id);
     },
-    //更新数据
-    updateGroup(data, parent = null) {
-      this.$prompt("请修改分组名", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputPattern: /.{2,100}/,
-        inputValue: data.title,
-        inputErrorMessage: "组名格式不正确",
-      })
-        .then(({ value }) => {
-          this.$http
-            .post("/group/update", {
-              title: value,
-              id: data.id,
-              type: this.type,
-            })
-            .then(
-              (response) => {
-                response = response.data;
-                if (response.code === CODE_OK) {
-                  this.$message.success("更新成功!");
-                } else {
-                  this.$message.error(response.msg);
-                }
+    showUpdateDiglog(data, parent = null) {
+      this.isFirstUpdate = true;
+      this.form.title = data.title;
+      if (parent) {
+        this.form.p_id = parent.id;
+        this.isFirstUpdate = false;
+      }
+      this.updateId = data.id;
+      this.dialogFormVisible = true;
+    },
 
-                this.getGroup(
-                  this.pageSize,
-                  this.curr,
-                  this.$route.params.projectId
-                );
-              },
-              (res) => {
-                let response = res.data;
-                this.$message.error(
-                  "获取数据-操作失败!" + !response.msg ? response.msg : ""
-                );
-              }
-            );
+    //更新数据
+    updateGroup() {
+      if (this.updateId <= 0) {
+        return;
+      }
+
+      this.$http
+        .post("/group/update", {
+          title: this.form.title,
+          p_id: this.form.p_id,
+          id: this.updateId,
+          type: this.type,
         })
-        .catch(() => {});
+        .then(
+          (response) => {
+            response = response.data;
+            if (response.code === CODE_OK) {
+              this.$message.success("更新成功!");
+            } else {
+              this.$message.error(response.msg);
+            }
+
+            this.getGroup(
+              this.pageSize,
+              this.curr,
+              this.$route.params.projectId
+            );
+            this.dialogFormVisible = false;
+
+            this.updateId = 0;
+            this.form.title = "";
+            this.form.p_id = 0;
+            this.isFirstUpdate = false;
+          },
+          (res) => {
+            let response = res.data;
+            this.$message.error(
+              "获取数据-操作失败!" + !response.msg ? response.msg : ""
+            );
+          }
+        );
     },
     createGroup() {
       if (this.form.title.length < 1) {
