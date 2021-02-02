@@ -135,7 +135,6 @@ export default {
   },
   methods: {
     handleCommand(command) {
-      console.log(command);
       if (command.action === "del") {
         this.delete(command.data.id);
       } else if (command.action === "edit") {
