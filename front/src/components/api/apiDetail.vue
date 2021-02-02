@@ -9,14 +9,10 @@
     </div>
     <!-- api信息 -->
     <div class="api-detail-info">
-      <i>{{apiData.url ? apiData.url : 'unknown'}}</i>
-      <el-divider direction="vertical"></el-divider>
-
-      <i>{{apiData.api_name ? apiData.api_name : 'unknown'}}</i>
       <el-divider direction="vertical"></el-divider>
       <em>
         分组:
-        <i>{{groupName ? groupName : 'unknown'}}</i>
+        <i>{{apiData.group_name}}</i>
       </em>
       <el-divider direction="vertical"></el-divider>
       <em>
@@ -28,26 +24,34 @@
         请求方式:
         <i>{{apiData.http_method_type ? apiData.http_method_type : 'unknown'}}</i>
       </em>
-      <el-divider content-position="left">备注</el-divider>
-      <p style="font-size:14px;">{{apiData.description ? apiData.description :"无" }}</p>
+      <el-divider direction="vertical"></el-divider>
+      <i>{{apiData.url ? apiData.url : 'unknown'}}</i>
+      <el-divider direction="vertical"></el-divider>
+
+      <i>{{apiData.api_name ? apiData.api_name : 'unknown'}}</i>
+
+      <p
+        style="font-size:14px;"
+        v-show="apiData.description"
+      >{{apiData.description ? apiData.description :"无" }}</p>
     </div>
     <!-- api信息-结束 -->
-    <el-divider content-position="center">请求头</el-divider>
     <!-- 请求头信息 -->
-    <div class="content-item" v-show="apiData.http_request_header">
+    <div class="content-item" v-show="apiData.http_request_header && apiData.http_request_header.length > 0">
       <el-table :data="apiData.http_request_header" style="width: 100%" border stripe>
-        <el-table-column prop="name" label="请求头"></el-table-column>
-        <el-table-column prop="content" label="值"></el-table-column>
+        <el-table-column label="请求头" align="center">
+          <el-table-column prop="name" label="请求头"></el-table-column>
+          <el-table-column prop="content" label="值"></el-table-column>
+        </el-table-column>
       </el-table>
     </div>
     <!-- 请求头信息-结束 -->
-    <el-divider content-position="center">参数</el-divider>
-    <!-- 参数 -->
+    <!-- 参数信息-start -->
     <div class="content-item">
       <div @click="copyAsPostman()" style="margin:5px 0;">
         <el-button size="mini">生成调试参数</el-button>
       </div>
-
+      <!-- 对话框 -->
       <el-dialog title="复制到剪贴板" :visible.sync="dialogFormVisible" width="30%">
         <el-form>
           <el-form-item label="分隔符">
@@ -67,27 +71,31 @@
       </el-dialog>
 
       <el-table :data="apiData.http_request_params" style="width: 100%" stripe border>
-        <el-table-column prop="name" label="参数" width="180"></el-table-column>
-        <el-table-column prop="desc" label="说明" width="180"></el-table-column>
-        <el-table-column prop="required" label="必填">
-          <template slot-scope="scope">{{scope.row.required }}</template>
+        <el-table-column label="参数" align="center">
+          <el-table-column prop="name" label="参数" width="180"></el-table-column>
+          <el-table-column prop="desc" label="说明" width="180"></el-table-column>
+          <el-table-column prop="required" label="必填">
+            <template slot-scope="scope">{{scope.row.required }}</template>
+          </el-table-column>
+          <el-table-column prop="type" label="类型"></el-table-column>
+          <el-table-column prop="example" label="示例"></el-table-column>
         </el-table-column>
-        <el-table-column prop="type" label="类型"></el-table-column>
-        <el-table-column prop="example" label="示例"></el-table-column>
       </el-table>
     </div>
-    <!-- 参数-结束 -->
-    <el-divider content-position="center">响应</el-divider>
+    <!-- 参数信息-end -->
+
     <!-- 响应 -->
     <div class="content-item" v-show="apiData.http_return_params ">
       <el-table :data="apiData.http_return_params" style="width: 100%" stripe border>
-        <el-table-column prop="fieldName" label="字段" width="180"></el-table-column>
-        <el-table-column prop="objectName" label="类名" width="180"></el-table-column>
-        <el-table-column prop="description" label="说明"></el-table-column>
-        <el-table-column prop="required" label="必含">
-          <template slot-scope="scope">{{scope.row.required }}</template>
+        <el-table-column label="响应信息" align="center">
+          <el-table-column prop="fieldName" label="字段" width="180"></el-table-column>
+          <el-table-column prop="objectName" label="类名" width="180"></el-table-column>
+          <el-table-column prop="description" label="说明"></el-table-column>
+          <el-table-column prop="required" label="必含">
+            <template slot-scope="scope">{{scope.row.required }}</template>
+          </el-table-column>
+          <el-table-column prop="type" label="类型"></el-table-column>
         </el-table-column>
-        <el-table-column prop="type" label="类型"></el-table-column>
       </el-table>
     </div>
     <!-- 响应-结束 -->
@@ -103,7 +111,6 @@ export default {
   },
   created() {
     this.getApiDetail();
-    this.getGroup();
   },
   data() {
     return {
@@ -111,7 +118,6 @@ export default {
       dialogFormVisible: false,
       copyStr: "",
       loading: true,
-      groupList: [],
       apiData: {},
     };
   },
@@ -173,26 +179,6 @@ export default {
           }
         );
     },
-    //获取分组信息
-    getGroup() {
-      this.$http
-        .get("/group/list", {
-          params: {
-            projectId: this.$route.params.projectId,
-          },
-        })
-        .then(
-          (response) => {
-            response = response.data;
-            if (response.code === CODE_OK) {
-              this.groupList = response.data;
-            }
-          },
-          () => {
-            this.$message.error("获取数据失败");
-          }
-        );
-    },
     copyApi() {
       this.$router
         .push({
@@ -202,20 +188,6 @@ export default {
         .catch(() => {});
     },
   },
-  computed: {
-    groupName() {
-      let groupName = "unknown";
-      for (let item of this.groupList) {
-        if (item.id == this.apiData.group_id) {
-          groupName = item.title;
-        }
-      }
-
-      return groupName;
-    },
-  },
-
-  components: {},
 };
 </script>
 
@@ -285,7 +257,7 @@ export default {
     margin: 10px 0;
     padding: 10px 8px;
     box-sizing: border-box;
-    background-color: #d1e7fc;
+    border-radius: 6px;
   }
 }
 </style>

@@ -184,8 +184,8 @@ class Api extends BaseModel
             }
         }
 
-        if(is_array($httpReturnParams)){
-            $httpReturnParams = json_encode($httpReturnParams,JSON_UNESCAPED_UNICODE);
+        if (is_array($httpReturnParams)) {
+            $httpReturnParams = json_encode($httpReturnParams, JSON_UNESCAPED_UNICODE);
         }
 
         $tmp['http_return_params'] = $httpReturnParams;
@@ -350,17 +350,41 @@ class Api extends BaseModel
 
     /**
      * api详情
-     * @return Api|null
+     * @return array
      */
     public function detail()
     {
-        $res = self::findOne($this->id);
+        $res = self::findOne($this->id)->toArray();
+        $res['group_name'] = "";
         if ($res) {
             $res['http_request_params'] = json_decode($res['http_request_params'], JSON_UNESCAPED_UNICODE);
             $res['http_return_params'] = json_decode($res['http_return_params'], JSON_UNESCAPED_UNICODE);
             $res['http_return_sample'] = json_decode($res['http_return_sample'], JSON_UNESCAPED_UNICODE);
             $res['http_request_header'] = json_decode($res['http_request_header'], JSON_UNESCAPED_UNICODE);
         }
+
+        //获取分组信息
+        $groupId = $res['group_id'] ?? 0;
+        if ($groupId) {
+            $group = Group::find()->where(['id' => $groupId])->one();
+            if ($group && $group['p_id']) {
+                $groupParent = Group::find()->where(['id' => $group['p_id']])->one();
+                if ($groupParent) {
+                    $res['group_name'] .= $groupParent['title'] . ' / ';
+                }
+
+
+            }
+//            var_dump($group->toArray());
+            if ($group) {
+                $res['group_name'] .= $group['title'];
+            }
+        }
+
+        if( empty($res['group_name'])) {
+            $res['group_name'] = '无';
+        }
+
         return $res;
     }
 }
