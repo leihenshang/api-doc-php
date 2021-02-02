@@ -180,6 +180,10 @@ export default {
   watch: {
     apiData: function () {
       this.apiInfo = this.apiData;
+      if (this.apiData.group_id_second == 0) {
+        this.apiInfo.group_id_second = null;
+      }
+
       if (this.isUpdate && this.groupList.length > 0) {
         this.updateChildGroup(this.groupList);
       }
