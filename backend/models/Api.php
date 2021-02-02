@@ -363,19 +363,22 @@ class Api extends BaseModel
             $res['http_request_header'] = json_decode($res['http_request_header'], JSON_UNESCAPED_UNICODE);
         }
 
+        //对调 group_id 为最顶级分组 group_id_second 为子分组
+
         //获取分组信息
         $groupId = $res['group_id'] ?? 0;
         if ($groupId) {
             $group = Group::find()->where(['id' => $groupId])->one();
             if ($group && $group['p_id']) {
+                $res['group_id_second'] = $res['group_id'];
+                $res['group_id'] = $group['p_id'];
+
                 $groupParent = Group::find()->where(['id' => $group['p_id']])->one();
                 if ($groupParent) {
                     $res['group_name'] .= $groupParent['title'] . ' / ';
                 }
 
-
             }
-//            var_dump($group->toArray());
             if ($group) {
                 $res['group_name'] .= $group['title'];
             }
@@ -384,6 +387,8 @@ class Api extends BaseModel
         if( empty($res['group_name'])) {
             $res['group_name'] = '无';
         }
+
+
 
         return $res;
     }

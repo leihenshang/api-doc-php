@@ -23,7 +23,12 @@
 
           <el-col :span="5">
             <el-form-item label="二级分组(可选)" label-width="110px">
-              <el-select v-model="apiInfo.child_id" placeholder="子分组" style="width: 90%" clearable>
+              <el-select
+                v-model="apiInfo.group_id_second"
+                placeholder="子分组"
+                style="width: 90%"
+                clearable
+              >
                 <el-option
                   v-for="item in childGroup"
                   :key="item.id"
@@ -85,6 +90,10 @@ export default {
     propertyList: [Array, Object],
     apiData: Object,
     groupId: [String, Number],
+    isUpdate: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     selectChange(value) {
@@ -119,6 +128,17 @@ export default {
           }
         );
     },
+    updateChildGroup(val) {
+      for (const key in val) {
+        if (Object.hasOwnProperty.call(val, key)) {
+          const element = val[key];
+          if (element.id == this.apiData.group_id) {
+            this.childGroup = element.childs;
+            break;
+          }
+        }
+      }
+    },
   },
 
   data() {
@@ -151,7 +171,8 @@ export default {
         function_name: "", //程序内部方法名
         develop_language: "", //接口开发语言
         id: "",
-        child_id: null,
+        group_id_second: null,
+        realGroupId: null,
       },
       childGroup: [],
     };
@@ -159,13 +180,12 @@ export default {
   watch: {
     apiData: function () {
       this.apiInfo = this.apiData;
+      if (this.isUpdate && this.groupList.length > 0) {
+        this.updateChildGroup(this.groupList);
+      }
     },
     apiInfo: {
       handler: function (newdata) {
-        if (newdata.child_id) {
-          newdata.group_id = newdata.child_id;
-        }
-
         this.$emit("update:apiInfo", newdata);
       },
       deep: true,
@@ -187,6 +207,12 @@ export default {
               break;
           }
         }
+      }
+    },
+    groupList: function (val) {
+      if (this.isUpdate && this.childGroup.length < 1) {
+        // childGroup  group_id_second
+        this.updateChildGroup(val);
       }
     },
   },

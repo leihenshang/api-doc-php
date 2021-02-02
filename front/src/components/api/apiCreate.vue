@@ -83,6 +83,10 @@ export default {
           let data = Object.assign(this.finalData, this.apiInfo);
           data = Object.assign(data, this.apiData);
 
+          if (data.group_id_second) {
+            data.group_id = data.group_id_second;
+          }
+
           this.$http
             .post("/api/create", {
               group_id: data.group_id,

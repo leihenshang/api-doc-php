@@ -12,6 +12,7 @@
           :groupList="groupList"
           :propertyList="propertyList"
           :apiData="apiData"
+          :isUpdate="true"
           ref="apiInfo"
         />
       </el-tab-pane>
@@ -109,12 +110,19 @@ export default {
       let url = this.isCopy ? "/api/create" : "/api/update";
       this.$refs.apiInfo.$refs.form.validate((validate) => {
         if (validate) {
+          let data = JSON.stringify(this.apiData);
+          data = JSON.parse(data);
+
+          if (data.group_id_second) {
+            data.group_id = data.group_id_second;
+          }
+
           this.$http
             .post(url, {
               id: this.apiId,
               group_id: this.apiData.group_id,
               project_id: this.$route.params.projectId,
-              data: JSON.stringify(this.apiData),
+              data: JSON.stringify(data),
             })
             .then((response) => {
               response = response.data;
