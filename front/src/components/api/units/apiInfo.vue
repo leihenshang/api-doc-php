@@ -157,6 +157,9 @@ export default {
     };
   },
   watch: {
+    apiData: function () {
+      this.apiInfo = this.apiData;
+    },
     apiInfo: {
       handler: function (newdata) {
         if (newdata.child_id) {
