@@ -5,7 +5,12 @@
       <el-button type="success" plain @click="updateDoc()">保 存</el-button>
     </div>
     <div class="doc-wrapper">
-      <DocInfo :doc="doc" :groupList="this.groupList" v-on:update-info="updateInfo($event)" />
+      <DocInfo
+        :doc="doc"
+        :isUpdate="true"
+        :groupList="this.groupList"
+        v-on:update-info="updateInfo($event)"
+      />
       <div class="doc-content">
         <mavon-editor v-model="doc.content" ref="md" />
       </div>
@@ -36,6 +41,7 @@ export default {
     updateInfo(val) {
       this.doc.title = val.title;
       this.doc.group_id = val.groupId;
+      this.doc.group_id_second = val.groupIdSecond;
     },
     //获取分组列表
     getGroup(pageSize = 10, curr = 1, projectId) {
@@ -81,24 +87,28 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-      }).then(() => {
-        this.$http
-          .post("/doc/update", {
-            title: this.doc.title,
-            content: this.doc.content,
-            group_id: this.doc.group_id,
-            id: this.docId,
-          })
-          .then((res) => {
-            res = res.data;
-            if (res.code === CODE_OK) {
-              this.$message.success("更新成功!");
-              this.$router.go(-1);
-            } else {
-              this.$message.error(res.msg);
-            }
-          });
-      });
+      })
+        .then(() => {
+          this.$http
+            .post("/doc/update", {
+              title: this.doc.title,
+              content: this.doc.content,
+              group_id: this.doc.group_id_second
+                ? this.doc.group_id_second
+                : this.doc.group_id,
+              id: this.docId,
+            })
+            .then((res) => {
+              res = res.data;
+              if (res.code === CODE_OK) {
+                this.$message.success("更新成功!");
+                this.$router.go(-1);
+              } else {
+                this.$message.error(res.msg);
+              }
+            });
+        })
+        .catch(() => {});
     },
     //获取文档详情
     getDocDetail() {
@@ -157,7 +167,7 @@ export default {
   .btn {
     width: 100%;
     display: flex;
-     justify-content: space-between;
+    justify-content: space-between;
   }
 }
 </style>

@@ -144,6 +144,17 @@ class Doc extends BaseModel
             ->where(['a.id' => $this->id])
             ->asArray()
             ->one();
+
+        //获取分组信息
+        $groupId = $res['group_id'] ?? 0;
+        if ($groupId) {
+            $group = Group::find()->where(['id' => $groupId])->one();
+            if ($group && $group['p_id']) {
+                $res['group_id_second'] = $res['group_id'];
+                $res['group_id'] = $group['p_id'];
+            }
+        }
+
         if (!$res) {
             return '没有找到数据';
         }

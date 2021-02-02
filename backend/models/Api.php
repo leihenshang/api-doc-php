@@ -388,8 +388,6 @@ class Api extends BaseModel
             $res['group_name'] = '无';
         }
 
-
-
         return $res;
     }
 }

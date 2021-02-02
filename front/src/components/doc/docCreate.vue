@@ -31,6 +31,7 @@ export default {
       content: "",
       description: "",
       groupId: null,
+      groupIdSecond:null,
       groupList: [],
     };
   },
@@ -38,6 +39,7 @@ export default {
     updateInfo(val) {
       this.title = val.title;
       this.groupId = val.groupId;
+      this.groupIdSecond = val.groupIdSecond;
     },
     initDocCreate() {
       this.title = this.content = this.groupId = "";
@@ -91,7 +93,7 @@ export default {
           .post("/doc/create", {
             title: this.title,
             content: this.content,
-            group_id: this.groupId,
+            group_id: this.groupIdSecond ?  this.groupIdSecond : this.groupId,
             project_id: this.$route.params.projectId,
           })
           .then((res) => {

@@ -6,7 +6,6 @@
     <div class="doc-wrapper">
       <div class="btn-wrapper" v-show=" $route.name == 'docList' ">
         <div class="input" style="display:inline-block;">
-          <el-button @click="addDoc()" style="margin-right:5px" :disabled="!controlShow()">创 建</el-button>
           <el-input
             placeholder="请输入标题"
             v-model="keyword"
@@ -15,6 +14,12 @@
             clearable
           ></el-input>
           <el-button icon="el-icon-search" @click="searchDoc()" style="margin-left:5px;">搜索</el-button>
+          <el-button
+            icon="el-icon-plus"
+            @click="addDoc()"
+            style="margin-right:5px"
+            :disabled="!controlShow()"
+          >创 建</el-button>
         </div>
       </div>
       <router-view />
