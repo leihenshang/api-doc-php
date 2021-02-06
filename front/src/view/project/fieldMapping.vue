@@ -66,7 +66,7 @@
               :rows="4"
               v-model="updateData.description"
               autocomplete="off"
-              placeholder="版本号"
+              placeholder="描述"
             ></el-input>
           </el-form-item>
         </el-form>
