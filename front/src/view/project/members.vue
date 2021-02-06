@@ -3,7 +3,7 @@
     <!-- 用户选择 -->
     <div class="user-search">
       <el-select
-        v-model="keywords"
+        v-model="keyword"
         filterable
         remote
         placeholder="输入昵称或邮箱"
@@ -13,7 +13,7 @@
         clearable
       >
         <el-option
-          v-for="item in searchUserList.list"
+          v-for="item in searchUserList"
           :key="item.id"
           :label="item.nick_name"
           :value="item"
@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       loading: false,
-      keywords: "",
+      keyword: "",
       searchUserList: [],
       userList: [],
     };
@@ -224,22 +224,22 @@ export default {
         .catch(() => {});
     },
     //获取用户列表
-    getUserList(keywords) {
-      if (keywords && keywords.length < 2) {
+    getUserList(keyword) {
+      if (keyword && keyword.length < 2) {
         return;
       }
 
       this.$http
         .get("/user/list", {
           params: {
-            keywords,
+            keyword,
             notProjectId: true,
           },
         })
         .then((response) => {
           response = response.data;
           if (response.code === CODE_OK) {
-            this.searchUserList = response.items;
+            this.searchUserList = response.data.items;
           }
         });
     },
