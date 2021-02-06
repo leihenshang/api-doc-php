@@ -1,5 +1,5 @@
 # apidoc
-
+this is a front.use Vue.
 ## install package
 yarn  or yarn install
 
