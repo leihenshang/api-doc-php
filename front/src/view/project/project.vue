@@ -68,6 +68,11 @@ export default {
         route: "/detail/" + this.$route.params.projectId + "/members",
         icon: "el-icon-user",
       },
+        {
+        title: "数据字典",
+        route: "/detail/" + this.$route.params.projectId + "/dataDict",
+        icon: "el-icon-setting",
+      },
     ];
 
     //如果不是普通用户，加入管理菜单

@@ -78,6 +78,13 @@ const router = new VueRouter({
               props: true,
             },
             {
+              path: "dataDict",
+              name: "dataDict",
+              component: resolve => require(['@/view/project/dataDict'], resolve),
+              meta: { requiresAuth: true },
+              props: true,
+            },
+            {
               path: "apiPage",
               name: "apiPage",
               component: resolve => require(["@/view/project/apiPage"], resolve),
