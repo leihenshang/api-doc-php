@@ -148,8 +148,8 @@ class UserController extends BaseController
          * 4.邮箱
          */
 
-        if ($this->userInfo->type != UserInfo::USER_TYPE['admin'][0]) {
-            return $this->failed('普通用户不能进行用户创建');
+        if (false === in_array($this->userInfo->type, [UserInfo::USER_TYPE['admin'][0], UserInfo::USER_TYPE['superuser'][0]])) {
+            return $this->failed('没有权限创建用户');
         }
 
         $params = Yii::$app->request->post();
