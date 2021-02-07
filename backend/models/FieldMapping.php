@@ -45,7 +45,7 @@ class FieldMapping extends BaseModel
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = ['field', 'type', 'description', 'project_id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['field', 'type', 'description', 'id'];
+        $scenarios[self::SCENARIO_UPDATE] = ['field', 'type', 'description', 'id','project_id'];
         $scenarios[self::SCENARIO_DELETE] = ['id'];
         return $scenarios;
     }
@@ -72,7 +72,7 @@ class FieldMapping extends BaseModel
     public function createData()
     {
         //判断field不能够重复
-        $field = $this->findOne(['field' => $this->field]);
+        $field = $this->findOne(['field' => $this->field,'project_id' => $this->project_id]);
         if ($field) {
             return '字段重复';
         }
@@ -86,6 +86,7 @@ class FieldMapping extends BaseModel
 
     /**
      * 列表
+     * @param int $projectId 项目id
      * @return array|ActiveRecord[]
      * @throws
      */
@@ -106,6 +107,13 @@ class FieldMapping extends BaseModel
         if (!$res) {
             return '没有找到可更新数据';
         }
+
+        //判断field不能够重复
+        $field = $this->findOne(['field' => $this->field,'project_id' => $this->project_id]);
+        if ($field) {
+            return '字段重复';
+        }
+
         $res->attributes = $this->toArray();
         return $res->update(false, ['field', 'type', 'description']);
     }

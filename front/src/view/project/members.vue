@@ -3,10 +3,11 @@
     <!-- 用户选择 -->
     <div class="user-search">
       <el-select
+        size="medium"
         v-model="keyword"
         filterable
         remote
-        placeholder="输入昵称或邮箱"
+        placeholder="输入昵称/邮箱搜索用户"
         :remote-method="getUserList"
         :loading="loading"
         @change="addProjectUser($event)"
@@ -17,10 +18,15 @@
           :key="item.id"
           :label="item.nick_name"
           :value="item"
-        ></el-option>
+        >
+          <span style="float: right">添加</span>
+          <span style="float: left; color: #8492a6; font-size: 13px">{{ item.nick_name }}</span>
+        </el-option>
       </el-select>
+         <el-divider></el-divider>
     </div>
     <!-- 用户选择-结束 -->
+
     <!-- 项目用户 -->
     <div class="all-user" v-loading="loading">
       <el-table :data="userList" stripe style="width: 100%" border>
@@ -250,5 +256,8 @@ export default {
 <style lang="scss" scope>
 .user-search {
   margin: 10px 0;
+  .el-select {
+    width: 400px;
+  }
 }
 </style>

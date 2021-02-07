@@ -37,8 +37,11 @@
     </div>
     <!-- api信息-结束 -->
     <!-- 请求头信息 -->
-    <div class="content-item" v-show="apiData.http_request_header && apiData.http_request_header.length > 0">
-      <el-table :data="apiData.http_request_header" style="width: 100%" border stripe>
+    <div
+      class="content-item"
+      v-show="apiData.http_request_header && apiData.http_request_header.length > 0"
+    >
+      <el-table :data="apiData.http_request_header" size="medium">
         <el-table-column label="请求头" align="center">
           <el-table-column prop="name" label="请求头"></el-table-column>
           <el-table-column prop="content" label="值"></el-table-column>
@@ -70,7 +73,7 @@
         </el-form>
       </el-dialog>
 
-      <el-table :data="apiData.http_request_params" style="width: 100%" stripe border>
+      <el-table :data="apiData.http_request_params" size="medium">
         <el-table-column label="参数" align="center">
           <el-table-column prop="name" label="参数" width="180"></el-table-column>
           <el-table-column prop="desc" label="说明" width="180"></el-table-column>
@@ -86,7 +89,7 @@
 
     <!-- 响应 -->
     <div class="content-item" v-show="apiData.http_return_params ">
-      <el-table :data="apiData.http_return_params" style="width: 100%" stripe border>
+      <el-table :data="apiData.http_return_params" size="medium">
         <el-table-column label="响应信息" align="center">
           <el-table-column prop="fieldName" label="字段" width="180"></el-table-column>
           <el-table-column prop="objectName" label="类名" width="180"></el-table-column>

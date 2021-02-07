@@ -5,25 +5,32 @@
     </div>
     <!-- 项目列表-开始 -->
     <div class="project-list-content">
-      <el-table border :data="projectList" stripe v-loading="loading" @cell-click="detail">
-        <el-table-column prop="title" label="项目名称" width="180"></el-table-column>
+      <el-table
+        :data="projectList"
+        v-loading="loading"
+        @cell-click="detail"
+        size="medium"
+      >
+        <el-table-column prop="title" label="项目名称"></el-table-column>
         <el-table-column prop="version" label="版本号" width="180"></el-table-column>
-        <el-table-column prop="type" label="类型"></el-table-column>
+        <el-table-column prop="type" label="类型" width="180"></el-table-column>
         <el-table-column prop="create_time" label="创建时间"></el-table-column>
         <el-table-column prop label="操作">
           <template slot-scope="scope">
             <el-button
+              type="text"
               slot="reference"
               @click.stop="deleteData(scope.row.id)"
               :disabled="$store.state.userInfo.type == 1"
             >删除</el-button>
+            <el-divider direction="vertical"></el-divider>
             <el-button
-              type="warning"
-              plain
+              type="text"
               @click.stop="form = scope.row;dialogFormVisible = true; isUpdate = true;"
               :disabled="$store.state.userInfo.type == 1"
             >编辑</el-button>
-            <el-button type="success" plain @click.stop="detail(scope.row);">详情</el-button>
+            <el-divider direction="vertical"></el-divider>
+            <el-button type="text" @click.stop="detail(scope.row);">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
