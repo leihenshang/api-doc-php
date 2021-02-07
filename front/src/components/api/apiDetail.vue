@@ -9,7 +9,6 @@
     </div>
     <!-- api信息 -->
     <div class="api-detail-info">
-      <el-divider direction="vertical"></el-divider>
       <em>
         分组:
         <i>{{apiData.group_name}}</i>
@@ -29,24 +28,31 @@
       <el-divider direction="vertical"></el-divider>
 
       <i>{{apiData.api_name ? apiData.api_name : 'unknown'}}</i>
-
-      <p
-        style="font-size:14px;"
-        v-show="apiData.description"
-      >{{apiData.description ? apiData.description :"无" }}</p>
     </div>
     <!-- api信息-结束 -->
+    <p style="font-size:14px;">{{apiData.description ? apiData.description :"没有描述" }}</p>
     <!-- 请求头信息 -->
-    <div
-      class="content-item"
-      v-show="apiData.http_request_header && apiData.http_request_header.length > 0"
-    >
-      <el-table :data="apiData.http_request_header" size="medium">
-        <el-table-column label="请求头" align="center">
-          <el-table-column prop="name" label="请求头"></el-table-column>
-          <el-table-column prop="content" label="值"></el-table-column>
-        </el-table-column>
-      </el-table>
+    <div class="content-item">
+      <table>
+        <tr>
+          <td colspan="2" style="text-align:center;">请求头</td>
+        </tr>
+        <tr>
+          <th>头</th>
+          <th>值</th>
+        </tr>
+        <tbody v-if="apiData.http_request_header[0]">
+          <tr v-for="(item,index) in apiData.http_request_header" :key="index">
+            <td>{{item.name}}</td>
+            <td>{{item.content}}</td>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr>
+            <td colspan="2">无</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <!-- 请求头信息-结束 -->
     <!-- 参数信息-start -->
@@ -73,35 +79,81 @@
         </el-form>
       </el-dialog>
 
-      <el-table :data="apiData.http_request_params" size="medium">
-        <el-table-column label="参数" align="center">
-          <el-table-column prop="name" label="参数" width="180"></el-table-column>
-          <el-table-column prop="desc" label="说明" width="180"></el-table-column>
-          <el-table-column prop="required" label="必填">
-            <template slot-scope="scope">{{scope.row.required }}</template>
-          </el-table-column>
-          <el-table-column prop="type" label="类型"></el-table-column>
-          <el-table-column prop="example" label="示例"></el-table-column>
-        </el-table-column>
-      </el-table>
+      <table>
+        <tr>
+          <td colspan="5" style="text-align:center;">请求参数</td>
+        </tr>
+        <tr>
+          <th>参数</th>
+          <th>说明</th>
+          <th>必填</th>
+          <th>类型</th>
+          <th>示例</th>
+        </tr>
+        <tbody v-if="apiData.http_request_params[0]">
+          <tr v-for="(item,index) in apiData.http_request_params" :key="index">
+            <td>{{item.name}}</td>
+            <td>{{item.desc}}</td>
+            <td>{{item.required}}</td>
+            <td>{{item.type}}</td>
+            <td>{{item.example}}</td>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr>
+            <td colspan="5">无</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <!-- 参数信息-end -->
 
     <!-- 响应 -->
-    <div class="content-item" v-show="apiData.http_return_params ">
-      <el-table :data="apiData.http_return_params" size="medium">
-        <el-table-column label="响应信息" align="center">
-          <el-table-column prop="fieldName" label="字段" width="180"></el-table-column>
-          <el-table-column prop="objectName" label="类名" width="180"></el-table-column>
-          <el-table-column prop="description" label="说明"></el-table-column>
-          <el-table-column prop="required" label="必含">
-            <template slot-scope="scope">{{scope.row.required }}</template>
-          </el-table-column>
-          <el-table-column prop="type" label="类型"></el-table-column>
-        </el-table-column>
-      </el-table>
+    <div class="content-item" v-show="apiData.http_return_params[0] ">
+      <table>
+        <tr>
+          <td colspan="5" style="text-align:center;">响应信息</td>
+        </tr>
+        <tr>
+          <th>字段</th>
+          <th>类名</th>
+          <th>说明</th>
+          <th>必含</th>
+          <th>类型</th>
+        </tr>
+        <tbody v-if="apiData.http_return_params[0]">
+          <tr v-for="(item,index) in apiData.http_return_params" :key="index">
+            <td>{{item.fieldName}}</td>
+            <td>{{item.objectName}}</td>
+            <td>{{item.description}}</td>
+            <td>{{item.required}}</td>
+            <td>{{item.type}}</td>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr>
+            <td colspan="5">无</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <!-- 响应-结束 -->
+
+    <div class="content-item">
+      <h5>响应数据示例</h5>
+      <h5 v-show="apiData.http_return_sample.returnDataSuccess">成功</h5>
+      <pre v-show="apiData.http_return_sample.returnDataSuccess">
+    <code>
+   {{ apiData.http_return_sample.returnDataSuccess}}
+    </code>
+  </pre>
+      <h5 v-show="apiData.http_return_sample.returnDataFailed">失败</h5>
+      <pre v-show="apiData.http_return_sample.returnDataFailed">
+    <code>
+   {{ apiData.http_return_sample.returnDataFailed}}
+    </code>
+  </pre>
+    </div>
   </div>
 </template>
 
@@ -261,6 +313,28 @@ export default {
     padding: 10px 8px;
     box-sizing: border-box;
     border-radius: 6px;
+
+    table {
+      border-collapse: collapse;
+      font-size: 14px;
+      th,
+      td {
+        border: 1px solid black;
+        padding: 5px 15px;
+        max-width: 500px;
+        word-break: break-all;
+      }
+
+      th {
+        background: gray;
+        color: #fff;
+      }
+    }
+
+    pre {
+      border-radius: 10px;
+      background-color: rgba(128, 128, 128, 0.473);
+    }
   }
 }
 </style>
