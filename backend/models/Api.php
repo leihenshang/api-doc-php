@@ -206,8 +206,6 @@ class Api extends BaseModel
      */
     public function updateData($request)
     {
-
-
         if (!isset($request['data'])) {
             return '缺少data';
         }
@@ -275,6 +273,10 @@ class Api extends BaseModel
         //        }, $tmp);
         //
         $res->attributes = $request;
+        if(!$res->group_id_second) {
+            $res->group_id_second = 0;
+        }
+
         if (!$res->save()) {
             return current($this->getFirstErrors());
         }
