@@ -19,7 +19,9 @@
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="updateData(scope.row)">编辑</el-button>
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text">字典</el-button>
+          <el-button type="text" @click="showDictWindow = true">字典</el-button>
+          <el-divider direction="vertical"></el-divider>
+          <el-button type="text">导出</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -70,6 +72,273 @@
       </div>
     </el-dialog>
     <!-- 表单-结束 -->
+
+    <!-- 字典-开始 -->
+    <el-dialog title="数据字典" :visible.sync="showDictWindow">
+      <div class="dictItem">
+        <h4>user_info(用户表)</h4>
+        <p>用于记录用户信息,用于记录用户信息</p>
+        <table class="dictTable">
+          <tr>
+            <th>字段名</th>
+            <th>类型</th>
+            <th>非空</th>
+            <th>自增</th>
+            <th>主键</th>
+            <th>描述</th>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+        </table>
+        <hr />
+      </div>
+      <div class="dictItem">
+        <h4>user_info(用户表)</h4>
+        <p>用于记录用户信息,用于记录用户信息</p>
+        <table class="dictTable">
+          <tr>
+            <th>字段名</th>
+            <th>类型</th>
+            <th>非空</th>
+            <th>自增</th>
+            <th>主键</th>
+            <th>描述</th>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+        </table>
+        <hr />
+      </div>
+
+      <div class="dictItem">
+        <h4>user_info(用户表)</h4>
+        <p>用于记录用户信息,用于记录用户信息</p>
+        <table class="dictTable">
+          <tr>
+            <th>字段名</th>
+            <th>类型</th>
+            <th>非空</th>
+            <th>自增</th>
+            <th>主键</th>
+            <th>描述</th>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+        </table>
+        <hr />
+      </div>
+
+      <div class="dictItem">
+        <h4>user_info(用户表)</h4>
+        <p>用于记录用户信息,用于记录用户信息</p>
+        <table class="dictTable">
+          <tr>
+            <th>字段名</th>
+            <th>类型</th>
+            <th>非空</th>
+            <th>自增</th>
+            <th>主键</th>
+            <th>描述</th>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+        </table>
+        <hr />
+      </div>
+
+      <div class="dictItem">
+        <h4>user_info(用户表)</h4>
+        <p>用于记录用户信息,用于记录用户信息</p>
+        <table class="dictTable">
+          <tr>
+            <th>字段名</th>
+            <th>类型</th>
+            <th>非空</th>
+            <th>自增</th>
+            <th>主键</th>
+            <th>描述</th>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+        </table>
+        <hr />
+      </div>
+
+      <div class="dictItem">
+        <h4>user_info(用户表)</h4>
+        <p>用于记录用户信息,用于记录用户信息</p>
+        <table class="dictTable">
+          <tr>
+            <th>字段名</th>
+            <th>类型</th>
+            <th>非空</th>
+            <th>自增</th>
+            <th>主键</th>
+            <th>描述</th>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>int</td>
+            <td>true</td>
+            <td>true</td>
+            <td>true</td>
+            <td>用户id是用于记录一个流水号的</td>
+          </tr>
+        </table>
+        <hr />
+      </div>
+    </el-dialog>
+    <!-- 字典-结束 -->
   </div>
 </template>
 
@@ -82,11 +351,12 @@ export default {
     return {
       loading: false,
       showAddWindow: false,
+      showDictWindow: false,
       rules: {},
       dataConnForm: {},
       dataArr: [
         {
-          id:3,
+          id: 3,
           address: "测试地址",
           type: "mysql",
           port: 1000,
@@ -97,7 +367,7 @@ export default {
           create_user: "tangzq",
         },
         {
-          id:1,
+          id: 1,
           address: "测试地址2",
           type: "mysql",
           port: 1000,
@@ -108,7 +378,7 @@ export default {
           create_user: "tangzq",
         },
         {
-          id:2,
+          id: 2,
           address: "测试地址",
           type: "mysql",
           port: 1000,
@@ -130,16 +400,31 @@ export default {
       this.dataConnForm = data;
       this.showAddWindow = true;
     },
-    formCancel(){
+    formCancel() {
       this.showAddWindow = false;
       this.dataConnForm = {};
-    }
+    },
   },
 };
 </script>
 
 <style lang="scss" scope>
-.user-search {
-  margin: 10px 0;
+.dictItem {
+  h4,
+  p {
+    margin: 10px 0;
+    padding: 0;
+  }
+
+  .dictTable {
+    border: 1px solid black;
+    border-collapse: collapse;
+    td,
+    th {
+      border: 1px solid black;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+  }
 }
 </style>
