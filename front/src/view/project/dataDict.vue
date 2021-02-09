@@ -6,7 +6,9 @@
     <el-divider></el-divider>
     <!-- 数据-开始 -->
     <el-table :data="dataArr" stripe style="width: 100%" border v-loading="loading">
-      <el-table-column prop="type" label="类型" width="180"></el-table-column>
+      <el-table-column prop="type" label="类型" width="180">
+        <template slot-scope="scope">{{(scope.row.type < 2 )? 'mysql': 'other'}}</template>
+      </el-table-column>
       <el-table-column prop="address" label="地址" width="180"></el-table-column>
       <el-table-column prop="port" label="端口" width="180"></el-table-column>
       <el-table-column prop="username" label="用户名"></el-table-column>
@@ -19,9 +21,7 @@
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="updateData(scope.row)">编辑</el-button>
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="showDictWindow = true">字典</el-button>
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text">导出</el-button>
+          <el-button type="text" @click="showDictWindow = true;getSchemas(scope.row.id)">字典</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,10 +74,11 @@
     <!-- 表单-结束 -->
 
     <!-- 字典-开始 -->
-    <el-dialog title="数据字典" :visible.sync="showDictWindow">
-      <div class="dictItem">
-        <h4>user_info(用户表)</h4>
-        <p>用于记录用户信息,用于记录用户信息</p>
+    <el-dialog title="数据字典" :visible.sync="showDictWindow" v-loading="dictLoading" width="70%">
+      <el-button>导出</el-button>
+      <div class="dictItem" v-for="(item,index) in currentSchemas" :key="index">
+        <h4>{{item.name}}</h4>
+        <p>{{item.fullName}}</p>
         <table class="dictTable">
           <tr>
             <th>字段名</th>
@@ -87,255 +88,15 @@
             <th>主键</th>
             <th>描述</th>
           </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
+          <tr v-for="(item1,index1) in item.columns" :key="index1">
+            <td>{{item1.name}}</td>
+            <td>{{item1.dbType}}</td>
+            <td>{{item1.allowNull}}</td>
+            <td>{{item1.autoIncrement}}</td>
+            <td>{{item1.isPrimaryKey}}</td>
+            <td>{{item1.comment}}</td>
           </tr>
         </table>
-        <hr />
-      </div>
-      <div class="dictItem">
-        <h4>user_info(用户表)</h4>
-        <p>用于记录用户信息,用于记录用户信息</p>
-        <table class="dictTable">
-          <tr>
-            <th>字段名</th>
-            <th>类型</th>
-            <th>非空</th>
-            <th>自增</th>
-            <th>主键</th>
-            <th>描述</th>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-        </table>
-        <hr />
-      </div>
-
-      <div class="dictItem">
-        <h4>user_info(用户表)</h4>
-        <p>用于记录用户信息,用于记录用户信息</p>
-        <table class="dictTable">
-          <tr>
-            <th>字段名</th>
-            <th>类型</th>
-            <th>非空</th>
-            <th>自增</th>
-            <th>主键</th>
-            <th>描述</th>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-        </table>
-        <hr />
-      </div>
-
-      <div class="dictItem">
-        <h4>user_info(用户表)</h4>
-        <p>用于记录用户信息,用于记录用户信息</p>
-        <table class="dictTable">
-          <tr>
-            <th>字段名</th>
-            <th>类型</th>
-            <th>非空</th>
-            <th>自增</th>
-            <th>主键</th>
-            <th>描述</th>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-        </table>
-        <hr />
-      </div>
-
-      <div class="dictItem">
-        <h4>user_info(用户表)</h4>
-        <p>用于记录用户信息,用于记录用户信息</p>
-        <table class="dictTable">
-          <tr>
-            <th>字段名</th>
-            <th>类型</th>
-            <th>非空</th>
-            <th>自增</th>
-            <th>主键</th>
-            <th>描述</th>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-        </table>
-        <hr />
-      </div>
-
-      <div class="dictItem">
-        <h4>user_info(用户表)</h4>
-        <p>用于记录用户信息,用于记录用户信息</p>
-        <table class="dictTable">
-          <tr>
-            <th>字段名</th>
-            <th>类型</th>
-            <th>非空</th>
-            <th>自增</th>
-            <th>主键</th>
-            <th>描述</th>
-          </tr>
-          <tr>
-            <td>id</td>
-            <td>int</td>
-            <td>true</td>
-            <td>true</td>
-            <td>true</td>
-            <td>用户id是用于记录一个流水号的</td>
-          </tr>
-        </table>
-        <hr />
       </div>
     </el-dialog>
     <!-- 字典-结束 -->
@@ -352,7 +113,10 @@ export default {
   },
   data() {
     return {
+      pageSize: 15,
+      currentPage: 1,
       loading: false,
+      dictLoading: false,
       showAddWindow: false,
       showDictWindow: false,
       rules: {
@@ -407,55 +171,37 @@ export default {
           },
         ],
       },
-      dataConnForm: {
-        // username:'',
-        // port:0,
-        // password:'',
-        // description:'',
-        // database_name:'',
-        // address:'',
-      },
-      dataArr: [
-        {
-          id: 3,
-          address: "测试地址",
-          type: "mysql",
-          port: 1000,
-          username: "测试用户1",
-          password: "*********",
-          database_name: "test1",
-          create_time: "2020-20-20",
-          create_user: "tangzq",
-        },
-        {
-          id: 1,
-          address: "测试地址2",
-          type: "mysql",
-          port: 1000,
-          username: "测试用户1",
-          password: "*********",
-          database_name: "test1",
-          create_time: "2020-20-20",
-          create_user: "tangzq",
-        },
-        {
-          id: 2,
-          address: "测试地址",
-          type: "mysql",
-          port: 1000,
-          username: "测试用户1",
-          password: "*********",
-          database_name: "test1",
-          create_time: "2020-20-20",
-          create_user: "tangzq",
-        },
-      ],
+      dataConnForm: {},
+      dataArr: [],
+      currentSchemas: [],
     };
   },
-  created() {},
+  created() {
+    this.getList();
+  },
   methods: {
     deleteData(data) {
-      console.log(data);
+      this.$confirm("此操作将删除该记录, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$http
+            .post("/data-base/delete", {
+              id: data.id,
+            })
+            .then((res) => {
+              let response = res.data;
+              if (response.code === CODE_OK) {
+                this.$message.success("操作成功!");
+                this.getList();
+              } else {
+                this.$message.error(response.msg);
+              }
+            });
+        })
+        .catch(() => {});
     },
     updateData(data) {
       this.dataConnForm = data;
@@ -472,7 +218,6 @@ export default {
 
       this.$refs.form.validate((valid) => {
         if (!valid) {
-          console.log(valid);
           return;
         }
 
@@ -485,6 +230,7 @@ export default {
             let response = res.data;
             if (response.code === CODE_OK) {
               this.$message.success("操作成功!");
+              this.getList();
               this.formCancel();
               this.$refs.form.resetFields();
             } else {
@@ -493,6 +239,45 @@ export default {
             }
           });
       });
+    },
+    getList() {
+      this.$http
+        .get("/data-base/list", {
+          params: {
+            ps: this.pageSize,
+            cp: this.currentPage,
+            projectId: this.projectId,
+          },
+        })
+        .then((res) => {
+          let response = res.data;
+          if (response.code === CODE_OK) {
+            this.dataArr = response.data.items;
+          } else {
+            this.$message.error("失败:" + response.msg);
+          }
+        });
+    },
+    getSchemas(id) {
+      this.currentSchemas = [];
+      this.dictLoading = true;
+      this.$http
+        .get("/data-base/schemas", {
+          params: {
+            id,
+            projectId: this.projectId,
+          },
+        })
+        .then((res) => {
+          let response = res.data;
+
+          if (response.code === CODE_OK) {
+            this.currentSchemas = response.data;
+          } else {
+            this.$message.error("失败:" + response.msg);
+          }
+          this.dictLoading = false;
+        });
     },
   },
 };
