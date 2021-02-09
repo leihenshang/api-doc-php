@@ -36,8 +36,9 @@ class Database extends BaseModel
     public function rules()
     {
         return [
-            [['address', 'port', 'username', 'password', 'database_name', 'project_id','user_id','type'], 'required'],
-            [['port', 'project_id', 'is_deleted','user_id','type'], 'integer'],
+            ['type', 'default', 'value' => 0],
+            [['address', 'port', 'username', 'password', 'database_name', 'project_id', 'user_id', 'type'], 'required'],
+            [['port', 'project_id', 'is_deleted', 'user_id', 'type'], 'integer'],
             [['address', 'username', 'password', 'database_name'], 'string', 'max' => 50],
         ];
     }
@@ -69,9 +70,9 @@ class Database extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['address', 'port', 'username', 'password','database_name','project_id','type'];
+        $scenarios[self::SCENARIO_CREATE] = ['address', 'port', 'username', 'password', 'database_name', 'project_id', 'type', 'user_id'];
         $scenarios[self::SCENARIO_DELETE] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['id','address', 'port', 'username', 'password', 'database_name', 'project_id','is_deleted','type'];
+        $scenarios[self::SCENARIO_UPDATE] = ['id', 'address', 'port', 'username', 'password', 'database_name', 'project_id', 'is_deleted', 'type'];
         $scenarios[self::SCENARIO_LIST] = [];
         return $scenarios;
     }
@@ -85,10 +86,10 @@ class Database extends BaseModel
      * @param $database_name
      * @return Yii\db\Connection
      */
-    public static function connectDb($address,$port,$username,$password,$database_name)
+    public static function connectDb($address, $port, $username, $password, $database_name)
     {
         $db = new yii\db\Connection([
-            'dsn' => 'mysql:host='.$address.';port='.$port.';dbname='.$database_name,
+            'dsn' => 'mysql:host=' . $address . ';port=' . $port . ';dbname=' . $database_name,
             'username' => $username,
             'password' => $password,
             'charset' => 'utf8',
@@ -97,7 +98,7 @@ class Database extends BaseModel
     }
 
 
-    /**创建方法
+    /**创建
      * @return array|string
      */
     public function createData()
@@ -110,27 +111,30 @@ class Database extends BaseModel
             'is_deleted' => self::IS_DELETED['no']
         ])->one();
 
-        if($database){
+        if ($database) {
             return '同地址下数据库不能重复';
         }
 
         //测试是否能连接成功
-        $db = $this::connectDb($this->address,$this->port,$this->username,$this->password,$this->database_name);
+        $db = $this::connectDb($this->address, $this->port, $this->username, $this->password, $this->database_name);
 
-        try{
+        try {
             $db->open();
-        }catch (\Exception $exception){
-            return '数据库连接失败：'.$exception->getMessage();
+        } catch (\Exception $exception) {
+            return '数据库连接失败：' . $exception->getMessage();
         }
 
+        $db->close();
+
         $this->user_id = UserInfo::$staticUserInfo->id;
+        $this->type = $this->type ?: 0;
+        $this->password = md5($this->password).time();
 
         if (!$this->save()) {
             return '保存数据失败:' . current($this->getFirstErrors());
         }
-        $db->close();
 
-        return $this->toArray();
+        return [$this->database_name];
     }
 
 
@@ -152,23 +156,23 @@ class Database extends BaseModel
             'is_deleted' => self::IS_DELETED['no']
         ])->one();
 
-        if($database){
+        if ($database) {
             return '同地址下数据库不能重复';
         }
 
         //测试是否能连接成功
-        $db = $this::connectDb($this->address,$this->port,$this->username,$this->password,$this->database_name);
+        $db = $this::connectDb($this->address, $this->port, $this->username, $this->password, $this->database_name);
 
-        try{
+        try {
             $db->open();
-        }catch (\Exception $exception){
-            return '数据库连接失败：'.$exception->getMessage();
+        } catch (\Exception $exception) {
+            return '数据库连接失败：' . $exception->getMessage();
         }
 
         $db->close();
 
         $res->attributes = $request;
-        $res->update_time = date('Y-m-d H:i:s',time());
+        $res->update_time = date('Y-m-d H:i:s', time());
 
         if (!$res->save()) {
             return current($this->getFirstErrors());
@@ -186,7 +190,7 @@ class Database extends BaseModel
      * @param string $keyword
      * @return Database[]|array
      */
-    public function dataList($projectId, $ps, $cp,$isDeleted = 0, $keyword = '')
+    public function dataList($projectId, $ps, $cp, $isDeleted = 0, $keyword = '')
     {
         $this->ps = $ps;
         $this->cp = $cp;
@@ -202,7 +206,7 @@ class Database extends BaseModel
 
         if ($keyword) {
             $keyword = trim($keyword);
-            $res->andWhere(['like','database_name','%'.$keyword.'%']);
+            $res->andWhere(['like', 'database_name', '%' . $keyword . '%']);
         }
 
         $resCount = $res->count();
@@ -216,14 +220,14 @@ class Database extends BaseModel
     {
         $database = self::findOne(intval($id));
 
-        if(!$database) {
+        if (!$database) {
             return '数据不存在';
         }
 
-        $db = self::connectDb($database->address,$database->port,$database->username,$database->password,$database->database_name);
+        $db = self::connectDb($database->address, $database->port, $database->username, $database->password, $database->database_name);
         $tables = $db->getSchema()->getTableNames();
         $data = [];
-        if($tables) {
+        if ($tables) {
             foreach ($tables as $table) {
                 $data[] = ['title' => $table];
             }

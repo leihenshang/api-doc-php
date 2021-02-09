@@ -40,7 +40,7 @@
           <el-input v-model="dataConnForm.address" autocomplete="off" placeholder="地址"></el-input>
         </el-form-item>
         <el-form-item label="端口" prop="port">
-          <el-input v-model="dataConnForm.port" autocomplete="off" placeholder="端口"></el-input>
+          <el-input v-model.number="dataConnForm.port" autocomplete="off" placeholder="端口"></el-input>
         </el-form-item>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="dataConnForm.username" autocomplete="off" placeholder="用户名"></el-input>
@@ -68,7 +68,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="formCancel">取 消</el-button>
-        <el-button type="primary" @click="savedataConnForm()">确 定</el-button>
+        <el-button type="primary" @click="saveDataConnForm()">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 表单-结束 -->
@@ -347,13 +347,74 @@ const CODE_OK = 200;
 
 export default {
   name: "dataDict",
+  props: {
+    projectId: 0,
+  },
   data() {
     return {
       loading: false,
       showAddWindow: false,
       showDictWindow: false,
-      rules: {},
-      dataConnForm: {},
+      rules: {
+        address: [
+          { required: true, message: "请输入数据库地址", trigger: "blur" },
+          {
+            min: 1,
+            max: 500,
+            message: "长度在 1 到 500 个字符",
+            trigger: "blur",
+          },
+        ],
+        port: [
+          {
+            required: true,
+            message: "请输入端口",
+            trigger: "blur",
+          },
+          { type: "number", message: "端口必须为数字" },
+        ],
+
+        username: [
+          {
+            required: true,
+            message: "请输入用户名",
+            trigger: "blur",
+          },
+        ],
+
+        password: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur",
+          },
+        ],
+
+        database_name: [
+          {
+            required: true,
+            message: "请输入数据库名",
+            trigger: "blur",
+          },
+        ],
+
+        description: [
+          {
+            min: 1,
+            max: 200,
+            message: "长度在 1 到 200 个字符",
+            trigger: "blur",
+          },
+        ],
+      },
+      dataConnForm: {
+        // username:'',
+        // port:0,
+        // password:'',
+        // description:'',
+        // database_name:'',
+        // address:'',
+      },
       dataArr: [
         {
           id: 3,
@@ -403,6 +464,35 @@ export default {
     formCancel() {
       this.showAddWindow = false;
       this.dataConnForm = {};
+    },
+    saveDataConnForm() {
+      let url = this.dataConnForm.id
+        ? "/data-base/update"
+        : "/data-base/create";
+
+      this.$refs.form.validate((valid) => {
+        if (!valid) {
+          console.log(valid);
+          return;
+        }
+
+        this.$http
+          .post(url, {
+            ...this.dataConnForm,
+            project_id: this.projectId,
+          })
+          .then((res) => {
+            let response = res.data;
+            if (response.code === CODE_OK) {
+              this.$message.success("操作成功!");
+              this.formCancel();
+              this.$refs.form.resetFields();
+            } else {
+              this.$message.error(response.msg);
+              this.formCancel();
+            }
+          });
+      });
     },
   },
 };

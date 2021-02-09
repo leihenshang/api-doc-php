@@ -92,7 +92,7 @@ class DataBaseController extends BaseController
      * 删除数据
      * @return array
      */
-    public function actionDel()
+    public function actionDelete()
     {
         $dataBase = new Database(['scenario' => Database::SCENARIO_DELETE]);
         $dataBase->attributes = Yii::$app->request->post();
@@ -101,7 +101,7 @@ class DataBaseController extends BaseController
             return $this->failed($res);
         }
 
-        return $this->success(null);
+        return $this->success();
     }
 
 
