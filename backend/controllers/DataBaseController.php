@@ -125,5 +125,21 @@ class DataBaseController extends BaseController
 
     }
 
+    /**
+     * 返回表结构
+     * @return array
+     * @throws \yii\base\NotSupportedException
+     */
+    public function actionSchemas()
+    {
+        $id = Yii::$app->request->get('id', 0);
+        if (!$id) {
+            return ['code' => 22, 'msg' => '参数不全'];
+        }
+
+        $res = Database::getSchemas($id);
+        return $this->success($res);
+    }
+
 
 }

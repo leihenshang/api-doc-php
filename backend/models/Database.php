@@ -128,7 +128,7 @@ class Database extends BaseModel
 
         $this->user_id = UserInfo::$staticUserInfo->id;
         $this->type = $this->type ?: 0;
-        $this->password = md5($this->password).time();
+        $this->password = md5($this->password) . time();
 
         if (!$this->save()) {
             return '保存数据失败:' . current($this->getFirstErrors());
@@ -234,6 +234,23 @@ class Database extends BaseModel
         }
 
         return $data;
+    }
+
+    /**
+     * @param $id
+     * @return string|\yii\db\TableSchema[]
+     * @throws \yii\base\NotSupportedException
+     */
+    public static function getSchemas($id)
+    {
+        $database = self::findOne(intval($id));
+
+        if (!$database) {
+            return '数据不存在';
+        }
+
+        $db = self::connectDb($database->address, $database->port, $database->username, $database->password, $database->database_name);
+        return $db->getSchema()->getTableSchemas();
     }
 
 
