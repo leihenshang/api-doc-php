@@ -134,12 +134,39 @@ class DataBaseController extends BaseController
     {
         $id = Yii::$app->request->get('id', 0);
         if (!$id) {
-            return ['code' => 22, 'msg' => '参数不全'];
+            return ['code' => 22, 'msg' => 'id不正确'];
         }
 
-        $res = Database::getSchemas($id);
+        $res = Yii::$app->cache->getOrSet($this->schemasFileCacheName($id), function () use ($id) {
+            return Database::getSchemas($id);
+        }, 300);
         return $this->success($res);
     }
 
+    /**
+     * 返回表结构缓存名
+     * @param $id
+     * @return string
+     */
+    private function schemasFileCacheName($id):string
+    {
+        return 'data-schemas-' . $id;
+    }
+
+    public function actionSchemasExport()
+    {
+        $id = Yii::$app->request->get('id', 0);
+        if (!$id) {
+            return ['code' => 22, 'msg' => 'id不正确'];
+        }
+
+        $res = Yii::$app->cache->getOrSet($this->schemasFileCacheName($id), function () use ($id) {
+            return Database::getSchemas($id);
+        }, 300);
+
+
+
+        return $this->success($res);
+    }
 
 }
