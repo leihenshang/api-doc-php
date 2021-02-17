@@ -2,6 +2,16 @@
 
 ## 概览
 api-doc 是一个简单高效的api接口文档和项目文档记录应用。支持markdown记录项目文档,极大的方便了前后台对于接口文档和项目文档的查看、使用。后端采用PHP编写，前端使用VUE编写。
+
+## 鸣谢列表
+
+
+ <img src="./jetbrains.png" width = "200" height = "218.6" alt="图片名称" align=center />
+
+
+- 感谢 `JetBrains` 提供的免费IDE支持！
+- 相关: [JetBrains网站](https://www.jetbrains.com/?from=apiDoc)
+
 ### 架构
 该项目为前后台分离项目。
 - php7.2(Yii2框架)提供后端能力
@@ -30,10 +40,6 @@ api-doc 是一个简单高效的api接口文档和项目文档记录应用。支
 在backend目录下执行  php yii init/user
 超级管理员忘记密码 php yii init/user true
 
-
-## 鸣谢列表
-- 感谢 `JetBrains` 提供的免费IDE支持！
-- 相关: [JetBrains](https://www.jetbrains.com/?from=apiDoc)
 
 ## 项目图片
 ![登录](https://images.gitee.com/uploads/images/2020/0531/222925_7c0239aa_1719135.png "start.png")
