@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\behaviors\UserVerify;
 use app\models\Database;
 use Yii;
+use yii\web\RangeNotSatisfiableHttpException;
 
 class DataBaseController extends BaseController
 {
@@ -75,7 +76,7 @@ class DataBaseController extends BaseController
         $isDeleted = Yii::$app->request->get('isDeleted', 0);
         $keyword = Yii::$app->request->get('keyword', 0);
         if (!$projectId) {
-            return ['code' => 22, 'msg' => '没有projectId'];
+            return $this->failed('没有projectId', 22);
         }
 
         if (!is_numeric($isDeleted)) {
@@ -112,7 +113,7 @@ class DataBaseController extends BaseController
     {
         $id = Yii::$app->request->get('id', 0);
         if (!$id) {
-            return ['code' => 22, 'msg' => '参数不全'];
+            return $this->failed('id不正确', 22);
         }
 
         $res = Database::getTables($id);
@@ -134,7 +135,7 @@ class DataBaseController extends BaseController
     {
         $id = Yii::$app->request->get('id', 0);
         if (!$id) {
-            return ['code' => 22, 'msg' => 'id不正确'];
+            return $this->failed('id不正确', 22);
         }
 
         $res = Yii::$app->cache->getOrSet($this->schemasFileCacheName($id), function () use ($id) {
@@ -148,25 +149,60 @@ class DataBaseController extends BaseController
      * @param $id
      * @return string
      */
-    private function schemasFileCacheName($id):string
+    private function schemasFileCacheName($id): string
     {
         return 'data-schemas-' . $id;
     }
 
+    /**
+     * 导出表结构
+     * @retrun file
+     */
     public function actionSchemasExport()
     {
         $id = Yii::$app->request->get('id', 0);
         if (!$id) {
-            return ['code' => 22, 'msg' => 'id不正确'];
+            return $this->failed('id不正确', 22);
         }
 
         $res = Yii::$app->cache->getOrSet($this->schemasFileCacheName($id), function () use ($id) {
             return Database::getSchemas($id);
         }, 300);
 
+        $databaseInfo = Database::findOne($id);
+        if (!$databaseInfo) {
+            return $this->failed('获取数据库信息失败', 22);
+        }
 
+        $fileName = $databaseInfo->database_name . date('YmdHis', time());
+        $response = Yii::$app->response;
+        $response->headers->add('Content-Type', 'text/csv');
+        $response->headers->add("Content-Disposition", "attachment;filename=" . $fileName . ".csv");
+        $response->headers->add('Cache-Control', 'max-age=0');
 
-        return $this->success($res);
+        $fp = fopen('php://temp', 'a');
+        fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
+        $tableHeader = ['字段名', '类型', '是否自增', '是否主键', '描述'];
+
+        foreach ($res as $item) {
+            fputcsv($fp, [$item->name, '', '', '', '']);
+            fputcsv($fp, ['描述: ' . $item->name, '', '', '', '']);
+            if ($item->columns) {
+                fputcsv($fp, $tableHeader);
+            }
+            foreach ($item->columns as $v) {
+                fputcsv($fp, [$v->name, $v->dbType, $v->autoIncrement ? 'true' : '', $v->isPrimaryKey ? 'true' : '', $v->comment ?? '无']);
+            }
+
+            fputcsv($fp, ['', '', '', '', '']);
+        }
+
+        try {
+            return $response->sendStreamAsFile($fp, $fileName);
+        } catch (RangeNotSatisfiableHttpException $e) {
+        }
+
+        return $this->success();
     }
 
 }
