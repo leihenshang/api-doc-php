@@ -139,7 +139,7 @@ export default {
             message: "请输入端口",
             trigger: "blur",
           },
-          { type: "number", message: "端口必须为数字" },
+          // { type: "number", message: "端口必须为数字" },
         ],
 
         username: [

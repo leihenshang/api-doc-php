@@ -40,6 +40,7 @@ class Database extends BaseModel
             [['address', 'port', 'username', 'password', 'database_name', 'project_id', 'user_id', 'type'], 'required'],
             [['port', 'project_id', 'is_deleted', 'user_id', 'type'], 'integer'],
             [['address', 'username', 'password', 'database_name'], 'string', 'max' => 50],
+            [['description'], 'string', 'max' => 500],
         ];
     }
 
@@ -70,9 +71,28 @@ class Database extends BaseModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_CREATE] = ['address', 'port', 'username', 'password', 'database_name', 'project_id', 'type', 'user_id'];
+        $scenarios[self::SCENARIO_CREATE] = [
+            'address',
+            'port',
+            'username',
+            'password',
+            'database_name',
+            'project_id',
+            'type',
+            'user_id'
+        ];
         $scenarios[self::SCENARIO_DELETE] = ['id'];
-        $scenarios[self::SCENARIO_UPDATE] = ['id', 'address', 'port', 'username', 'password', 'database_name', 'project_id', 'is_deleted', 'type'];
+        $scenarios[self::SCENARIO_UPDATE] = [
+            'id',
+            'address',
+            'port',
+            'username',
+            'password',
+            'database_name',
+            'project_id',
+            'is_deleted',
+            'type'
+        ];
         $scenarios[self::SCENARIO_LIST] = [];
         return $scenarios;
     }
@@ -88,12 +108,14 @@ class Database extends BaseModel
      */
     public static function connectDb($address, $port, $username, $password, $database_name)
     {
-        $db = new yii\db\Connection([
-            'dsn' => 'mysql:host=' . $address . ';port=' . $port . ';dbname=' . $database_name,
-            'username' => $username,
-            'password' => $password,
-            'charset' => 'utf8',
-        ]);
+        $db = new yii\db\Connection(
+            [
+                'dsn' => 'mysql:host=' . $address . ';port=' . $port . ';dbname=' . $database_name,
+                'username' => $username,
+                'password' => $password,
+                'charset' => 'utf8',
+            ]
+        );
         return $db;
     }
 
@@ -104,12 +126,14 @@ class Database extends BaseModel
     public function createData()
     {
         //同地址数据库是否重复
-        $database = self::find()->where([
-            'address' => $this->address,
-            'port' => $this->port,
-            'database_name' => $this->database_name,
-            'is_deleted' => self::IS_DELETED['no']
-        ])->one();
+        $database = self::find()->where(
+            [
+                'address' => $this->address,
+                'port' => $this->port,
+                'database_name' => $this->database_name,
+                'is_deleted' => self::IS_DELETED['no']
+            ]
+        )->one();
 
         if ($database) {
             return '同地址下数据库不能重复';
@@ -128,7 +152,7 @@ class Database extends BaseModel
 
         $this->user_id = UserInfo::$staticUserInfo->id;
         $this->type = $this->type ?: 0;
-        $this->password = md5($this->password) . time();
+        $this->password = $this->myEncrypt($this->password);
 
         if (!$this->save()) {
             return '保存数据失败:' . current($this->getFirstErrors());
@@ -137,39 +161,58 @@ class Database extends BaseModel
         return [$this->database_name];
     }
 
-
+    /**
+     * 更新数据
+     * @param $request
+     * @return bool|mixed|string
+     */
     public function updateData($request)
     {
         $this->attributes = $request;
-
         $res = self::findOne($this->id);
         if (!$res) {
             return '没有找到数据';
         }
         $this->scenario = self::SCENARIO_UPDATE;
 
-        //同地址数据库是否重复
-        $database = self::find()->where([
-            'address' => $this->address,
-            'port' => $this->port,
-            'database_name' => $this->database_name,
-            'is_deleted' => self::IS_DELETED['no']
-        ])->one();
+        if (isset($request['password']) && $request['password'] == $res->password) {
+            $this->password = null;
+        } else {
+            try {
+                //测试是否能连接成功
+                $db = $this::connectDb(
+                    $this->address,
+                    $this->port,
+                    $this->username,
+                    $this->password,
+                    $this->database_name
+                );
+                $db->open();
+            } catch (\Exception $exception) {
+                return '数据库连接失败：' . $exception->getMessage();
+            }
 
-        if ($database) {
+            $db->close();
+        }
+
+        //同地址数据库是否重复
+        $database = self::find()->where(
+            [
+                'address' => $this->address,
+                'port' => $this->port,
+                'database_name' => $this->database_name,
+                'is_deleted' => self::IS_DELETED['no']
+            ]
+        )->one();
+
+        if ($database && $database->id != $request['id']) {
             return '同地址下数据库不能重复';
         }
 
-        //测试是否能连接成功
-        $db = $this::connectDb($this->address, $this->port, $this->username, $this->password, $this->database_name);
 
-        try {
-            $db->open();
-        } catch (\Exception $exception) {
-            return '数据库连接失败：' . $exception->getMessage();
+        if (isset($dirtyData['password'])) {
+            $this->password = $this->myEncrypt($this->password);
         }
-
-        $db->close();
 
         $res->attributes = $request;
         $res->update_time = date('Y-m-d H:i:s', time());
@@ -210,13 +253,13 @@ class Database extends BaseModel
         }
 
         $resCount = $res->count();
-        $res = $res->limit($this->ps)->offset($this->offset)->all();
+        $res = $res->limit($this->ps)->offset($this->offset)->asArray()->all();
 
         return ['count' => $resCount, 'items' => $res];
     }
 
 
-    public static function getTables($id)
+    public function getTables($id)
     {
         $database = self::findOne(intval($id));
 
@@ -224,7 +267,13 @@ class Database extends BaseModel
             return '数据不存在';
         }
 
-        $db = self::connectDb($database->address, $database->port, $database->username, $database->password, $database->database_name);
+        $db = self::connectDb(
+            $database->address,
+            $database->port,
+            $database->username,
+            $this->myDecrypt($database->password),
+            $database->database_name
+        );
         $tables = $db->getSchema()->getTableNames();
         $data = [];
         if ($tables) {
@@ -237,11 +286,12 @@ class Database extends BaseModel
     }
 
     /**
+     * 获取表结构
      * @param $id
      * @return string|\yii\db\TableSchema[]
      * @throws \yii\base\NotSupportedException
      */
-    public static function getSchemas($id)
+    public function getSchemas($id)
     {
         $database = self::findOne(intval($id));
 
@@ -249,7 +299,14 @@ class Database extends BaseModel
             return '数据不存在';
         }
 
-        $db = self::connectDb($database->address, $database->port, $database->username, $database->password, $database->database_name);
+        $pwdStr =
+        $db = self::connectDb(
+            $database->address,
+            $database->port,
+            $database->username,
+            $this->myDecrypt($database->password),
+            $database->database_name
+        );
         return $db->getSchema()->getTableSchemas();
     }
 
@@ -271,5 +328,53 @@ class Database extends BaseModel
         }
 
         return true;
+    }
+
+    /**
+     * 加密
+     * @param $string
+     * @param string $key
+     * @return string
+     */
+    private function myEncrypt($string, $key = 'apiDoc')
+    {
+        srand((double)microtime() * 1000000);
+        $encrypt_key = md5(rand(0, 32000));
+        $ctr = 0;
+        $tmp = '';
+        for ($i = 0; $i < strlen($string); $i++) {
+            $ctr = $ctr == strlen($encrypt_key) ? 0 : $ctr;
+            $tmp .= $encrypt_key[$ctr] . ($string[$i] ^ $encrypt_key[$ctr++]);
+        }
+        return urlencode(base64_encode($this->passportKey($tmp, $key)));
+    }
+
+    /**
+     * 解密
+     * @param $string
+     * @param string $key
+     * @return string
+     */
+    private function myDecrypt($string, $key = 'apiDoc')
+    {
+        $txt = $this->passportKey(base64_decode(urldecode($string)), $key);
+        $tmp = '';
+        for ($i = 0; $i < strlen($txt); $i++) {
+            $md5 = $txt[$i];
+            $tmp .= $txt[++$i] ^ $md5;
+        }
+        return $tmp;
+    }
+
+    private function passportKey($txt, $encrypt_key)
+    {
+        $encrypt_key = md5($encrypt_key);
+        $ctr = 0;
+        $tmp = '';
+        for ($i = 0; $i < strlen($txt); $i++) {
+            $ctr = $ctr == strlen($encrypt_key) ? 0 : $ctr;
+            $tmp .= $txt[$i] ^ $encrypt_key[$ctr++];
+        }
+        return $tmp;
     }
 }

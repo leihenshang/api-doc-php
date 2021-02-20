@@ -116,7 +116,7 @@ class DataBaseController extends BaseController
             return $this->failed('id不正确', 22);
         }
 
-        $res = Database::getTables($id);
+        $res = (new Database())->getTables($id);
 
         if (is_string($res)) {
             return $this->failed($res);
@@ -139,7 +139,7 @@ class DataBaseController extends BaseController
         }
 
         $res = Yii::$app->cache->getOrSet($this->schemasFileCacheName($id), function () use ($id) {
-            return Database::getSchemas($id);
+            return (new Database())->getSchemas($id);
         }, 300);
         return $this->success($res);
     }
@@ -166,7 +166,7 @@ class DataBaseController extends BaseController
         }
 
         $res = Yii::$app->cache->getOrSet($this->schemasFileCacheName($id), function () use ($id) {
-            return Database::getSchemas($id);
+            return (new Database())->getSchemas($id);
         }, 300);
 
         $databaseInfo = Database::findOne($id);
