@@ -21,7 +21,10 @@
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="updateData(scope.row)">编辑</el-button>
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="showDictWindow = true;getSchemas(scope.row.id)">字典</el-button>
+          <el-button
+            type="text"
+            @click="showDictWindow = true;getSchemas(scope.row.id);currentRow=scope.row"
+          >字典</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -75,7 +78,7 @@
 
     <!-- 字典-开始 -->
     <el-dialog title="数据字典" :visible.sync="showDictWindow" v-loading="dictLoading" width="70%">
-      <el-button>导出</el-button>
+      <el-button @click="exportCsv">导出</el-button>
       <div class="dictItem" v-for="(item,index) in currentSchemas" :key="index">
         <h4>{{item.name}}</h4>
         <p>{{item.fullName}}</p>
@@ -113,6 +116,7 @@ export default {
   },
   data() {
     return {
+      currentRow: null,
       pageSize: 15,
       currentPage: 1,
       loading: false,
@@ -278,6 +282,15 @@ export default {
           }
           this.dictLoading = false;
         });
+    },
+    exportCsv() {
+      window.open(
+        this.BASE_URL +
+          "/data-base/schemas-export?id=" +
+          this.currentRow.id +
+          "&token=" +
+          this.$store.state.userInfo.token
+      );
     },
   },
 };
