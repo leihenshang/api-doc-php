@@ -41,7 +41,7 @@
           <th>头</th>
           <th>值</th>
         </tr>
-        <tbody v-if="apiData.http_request_header[0]">
+        <tbody v-if="apiData.http_request_header && apiData.http_request_header[0]">
           <tr v-for="(item,index) in apiData.http_request_header" :key="index">
             <td>{{item.name}}</td>
             <td>{{item.content}}</td>
@@ -90,7 +90,7 @@
           <th>类型</th>
           <th>示例</th>
         </tr>
-        <tbody v-if="apiData.http_request_params[0]">
+        <tbody v-if="apiData.http_request_params && apiData.http_request_params[0]">
           <tr v-for="(item,index) in apiData.http_request_params" :key="index">
             <td>{{item.name}}</td>
             <td>{{item.desc}}</td>
@@ -109,7 +109,7 @@
     <!-- 参数信息-end -->
 
     <!-- 响应 -->
-    <div class="content-item" v-show="apiData.http_return_params[0] ">
+    <div class="content-item" v-show="apiData.http_return_params && apiData.http_return_params[0] ">
       <table>
         <tr>
           <td colspan="5" style="text-align:center;">响应信息</td>
@@ -121,7 +121,7 @@
           <th>必含</th>
           <th>类型</th>
         </tr>
-        <tbody v-if="apiData.http_return_params[0]">
+        <tbody v-if=" apiData.http_return_params && apiData.http_return_params[0]">
           <tr v-for="(item,index) in apiData.http_return_params" :key="index">
             <td>{{item.fieldName}}</td>
             <td>{{item.objectName}}</td>
@@ -140,19 +140,26 @@
     <!-- 响应-结束 -->
 
     <div class="content-item">
-      <h5>响应数据示例</h5>
-      <h5 v-show="apiData.http_return_sample.returnDataSuccess">成功</h5>
-      <pre v-show="apiData.http_return_sample.returnDataSuccess">
+      <div v-if="apiData.http_return_sample">
+        <h5>响应数据示例</h5>
+
+        <h5 v-show=" apiData.http_return_sample.returnDataSuccess">成功</h5>
+        <pre v-show="apiData.http_return_sample.returnDataSuccess">
+      
     <code>
    {{ apiData.http_return_sample.returnDataSuccess}}
     </code>
   </pre>
-      <h5 v-show="apiData.http_return_sample.returnDataFailed">失败</h5>
-      <pre v-show="apiData.http_return_sample.returnDataFailed">
+
+        <div>
+          <h5 v-show="apiData.http_return_sample.returnDataFailed">失败</h5>
+          <pre v-show="apiData.http_return_sample.returnDataFailed">
     <code>
    {{ apiData.http_return_sample.returnDataFailed}}
     </code>
   </pre>
+        </div>
+      </div>
     </div>
   </div>
 </template>

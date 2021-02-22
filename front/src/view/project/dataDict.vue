@@ -7,10 +7,11 @@
     <!-- 数据-开始 -->
     <el-table :data="dataArr" stripe style="width: 100%" border v-loading="loading">
       <el-table-column prop="type" label="类型" width="180">
-        <template slot-scope="scope">{{(scope.row.type < 2 )? 'mysql': 'other'}}</template>
+        <template slot-scope="scope">{{showDbType(scope.row.type)}}</template>
       </el-table-column>
       <el-table-column prop="address" label="地址" width="180"></el-table-column>
       <el-table-column prop="port" label="端口" width="180"></el-table-column>
+      <el-table-column prop="description" label="描述"></el-table-column>
       <el-table-column prop="username" label="用户名"></el-table-column>
       <el-table-column prop="database_name" label="数据库名"></el-table-column>
       <el-table-column prop="create_time" label="创建时间"></el-table-column>
@@ -39,6 +40,16 @@
       @close="formCancel"
     >
       <el-form :model="dataConnForm" label-width="80px" ref="form" :rules="rules">
+        <el-form-item label="类型" prop="type">
+          <el-select v-model="dataConnForm.type" placeholder="请选择">
+            <el-option
+              v-for="item in dbTypeSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="地址" prop="address">
           <el-input v-model="dataConnForm.address" autocomplete="off" placeholder="地址"></el-input>
         </el-form-item>
@@ -78,7 +89,7 @@
 
     <!-- 字典-开始 -->
     <el-dialog title="数据字典" :visible.sync="showDictWindow" v-loading="dictLoading" width="70%">
-      <el-button @click="exportCsv">导出</el-button>
+      <el-button @click="exportCsv">导出为 CSV</el-button>
       <div class="dictItem" v-for="(item,index) in currentSchemas" :key="index">
         <h4>{{item.name}}</h4>
         <p>{{item.fullName}}</p>
@@ -174,10 +185,19 @@ export default {
             trigger: "blur",
           },
         ],
+        type: [
+          { required: true, message: "请选择数据库类型", trigger: "blur" },
+        ],
       },
       dataConnForm: {},
       dataArr: [],
       currentSchemas: [],
+      dbTypeSelect: [
+        {
+          value: "1",
+          label: "mysql",
+        },
+      ],
     };
   },
   created() {
@@ -241,7 +261,8 @@ export default {
               this.$message.error(response.msg);
               this.formCancel();
             }
-          });
+          })
+          .catch();
       });
     },
     getList() {
@@ -291,6 +312,17 @@ export default {
           "&token=" +
           this.$store.state.userInfo.token
       );
+    },
+    showDbType(type) {
+      switch (type) {
+        case "1":
+          return "mysql";
+          break;
+
+        default:
+          return "other";
+          break;
+      }
     },
   },
 };

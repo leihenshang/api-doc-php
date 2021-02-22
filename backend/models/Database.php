@@ -138,7 +138,7 @@ class Database extends BaseModel
         if ($database) {
             return '同地址下数据库不能重复';
         }
-
+       
         //测试是否能连接成功
         $db = $this::connectDb($this->address, $this->port, $this->username, $this->password, $this->database_name);
 
