@@ -1,0 +1,21 @@
+* {
+    margin:0;
+    padding:0;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.default-green {
+    background-color: #4caf50!important;
+    color:#fff;
+}
+
+button {
+ cursor: pointer;
+}
