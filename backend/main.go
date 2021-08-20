@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"fastduck/apidoc/global"
-	"fastduck/apidoc/route"
+	"fastduck/apidoc/router"
 	"fmt"
 	"net/http"
 	"time"
@@ -42,7 +42,7 @@ func main() {
 	r.Use(ginzap.RecoveryWithZap(global.ZAP, true))
 
 	//初始化路由
-	route.InitRoute(r)
+	router.InitRoute(r)
 
 	addr := fmt.Sprintf(":%d", global.CONFIG.App.Port)
 	//设置服务

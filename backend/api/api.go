@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//ApiList api列表
-func ApiList(c *gin.Context) {
+// List  api列表
+func List(c *gin.Context) {
 	var req request.ApiListRequest
 	err := c.ShouldBindQuery(&req)
 	if err != nil {
@@ -20,8 +20,8 @@ func ApiList(c *gin.Context) {
 	response.OkWithData(response.ListResponse{Total: total, List: list}, c)
 }
 
-//ApiDetailById api详情
-func ApiDetailById(c *gin.Context) {
+// DetailById  api详情
+func DetailById(c *gin.Context) {
 	var req request.IdRequest
 	err := c.ShouldBindQuery(&req)
 	if err != nil {
@@ -32,8 +32,8 @@ func ApiDetailById(c *gin.Context) {
 	response.OkWithData(a, c)
 }
 
-//ApiDelete 删除api
-func ApiDelete(c *gin.Context) {
+// Delete  删除api
+func Delete(c *gin.Context) {
 	var req request.IdRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
@@ -44,12 +44,12 @@ func ApiDelete(c *gin.Context) {
 	response.OkWithData(a, c)
 }
 
-//ApiCreate 创建api
-func ApiCreate(c *gin.Context) {
+//Create 创建api
+func Create(c *gin.Context) {
 
 }
 
-//ApiUpdate 更新api
-func ApiUpdate(c *gin.Context) {
+//Update 更新api
+func Update(c *gin.Context) {
 
 }

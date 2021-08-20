@@ -10,7 +10,6 @@ import (
 
 //UserRegister 用户注册
 func UserRegister(c *gin.Context) {
-
 	var reg request.UserRegisterRequest
 	err := c.ShouldBindJSON(&reg)
 	if err != nil {

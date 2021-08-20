@@ -9,14 +9,14 @@ import (
 
 //UserRegister 用户注册
 func UserRegister(r request.UserRegisterRequest) (err error, u model.User) {
-	if r.Pwd != r.RePwd {
+	if r.Password != r.RepeatPassword {
 		return errors.New("两次输入的密码不一致"), u
 	}
 
-	u.NickName = ""
+	u.Nickname = ""
 	u.Account = r.Account
 	u.Email = r.Email
-	u.Password = r.Pwd
+	u.Password = r.Password
 	err = global.DB.Debug().Create(&u).Error
 	return err, u
 }
