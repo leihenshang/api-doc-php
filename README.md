@@ -5,7 +5,7 @@ api-doc 是一个轻量化的api接口文档工具。支持markdown编写文档,
 
 ## 鸣谢
 
- <img src="./jetbrains.png" width = "200" height = "218.6" alt="图片名称" align=center />
+ <img src="jetbrains.png" width = "200" height = "218.6" alt="图片名称" align=center />
 
 - 感谢 `JetBrains` 提供的IDE支持！
 - 相关: [JetBrains网站](https://www.jetbrains.com/?from=apiDoc)
