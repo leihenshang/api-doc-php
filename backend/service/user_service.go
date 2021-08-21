@@ -13,10 +13,24 @@ func UserRegister(r request.UserRegisterRequest) (err error, u model.User) {
 		return errors.New("两次输入的密码不一致"), u
 	}
 
-	u.Nickname = ""
+	//检查账号是否重复
+	if checkAccountIsDuplicate(r.Account) {
+		return errors.New("账号重复"), u
+	}
+
+	if u.Nickname == "" {
+		u.Nickname = r.Account
+	}
+
 	u.Account = r.Account
 	u.Email = r.Email
 	u.Password = r.Password
-	err = global.DB.Debug().Create(&u).Error
+	err = global.DB.Create(&u).Error
 	return err, u
+}
+
+//checkAccountIsDuplicate 检查账号是否重复
+func checkAccountIsDuplicate(account string) bool {
+
+	return false
 }
