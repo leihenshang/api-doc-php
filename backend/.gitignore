@@ -6,3 +6,7 @@ log
 # 配置
 config.yaml
 .air.toml
+
+# ide
+.vscode
+.idea
