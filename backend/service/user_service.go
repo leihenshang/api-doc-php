@@ -31,6 +31,11 @@ func UserRegister(r request.UserRegisterRequest) (err error, u model.User) {
 
 //checkAccountIsDuplicate 检查账号是否重复
 func checkAccountIsDuplicate(account string) bool {
+	var user *model.User
+	result := global.DB.Where("account = ?", account).First(&user)
+	if result.RowsAffected > 0 {
+		return true
+	}
 
 	return false
 }
