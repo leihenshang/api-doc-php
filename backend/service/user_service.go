@@ -29,6 +29,11 @@ func UserRegister(r request.UserRegisterRequest) (u model.User, err error) {
 		return u, errors.New("账号重复")
 	}
 
+	//检查邮箱是否重复
+	if checkEmailIsDuplicate(r.Email) {
+		return u, errors.New("邮箱重复")
+	}
+
 	if u.Nickname == "" {
 		u.Nickname = r.Account
 	}
