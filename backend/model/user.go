@@ -8,7 +8,7 @@ const UserStatusNotActivated = 3
 // User 用户表
 type User struct {
 	BasicModel
-	Nickname      string      `gorm:"column:nickname;type:varchar(50);NOT NULL;comment:昵称"`
+	Nickname      string      `gorm:"column:nickname;type:varchar(50);NOT NULL;comment:昵称;AUTO_INCREMENT"`
 	Account       string      `gorm:"column:account;type:varchar(100);NOT NULL;comment:账号"`
 	Email         string      `gorm:"column:email;type:varchar(100);comment:邮箱"`
 	Password      string      `gorm:"column:password;type:varchar(100);NOT NULL;comment:密码';"`
