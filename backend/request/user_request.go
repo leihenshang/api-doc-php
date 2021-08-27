@@ -11,7 +11,7 @@ type UserRegisterRequest struct {
 
 //UserLoginRequest 用户登录请求
 type UserLoginRequest struct {
-	Password   string `json:"password"`
-	Account    string `json:"account"`
-	VerifyCode string `json:"verifyCode"`
+	Password   string `json:"password" binding:"required,min=6,max=100"`
+	Account    string `json:"account" binding:"required,min=6,max=100"`
+	VerifyCode string `json:"verifyCode" binding:"required,min=4,max=100"`
 }

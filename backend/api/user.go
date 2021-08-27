@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fastduck/apidoc/global"
 	"fastduck/apidoc/request"
 	"fastduck/apidoc/response"
 	"fastduck/apidoc/service"
@@ -29,11 +30,9 @@ func UserLogin(c *gin.Context) {
 	var login request.UserLoginRequest
 	err := c.ShouldBindJSON(&login)
 	if err != nil {
-		response.FailWithMessage(err.Error(), c)
+		response.FailWithMessage(global.ErrResp(err), c)
 		return
 	}
-
-	
 
 	if u, ok := service.UserLogin(login, c.ClientIP()); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
