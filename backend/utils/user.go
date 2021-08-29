@@ -1,6 +1,12 @@
 package utils
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"crypto/md5"
+	"fmt"
+	"strconv"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 //PasswordEncrypt 对密码使用bcrypt进行加密，返回一个加密字符串
 func PasswordEncrypt(password string) (encrypted string, err error) {
@@ -20,4 +26,12 @@ func PasswordCompare(encryptedPassword string, inputPassword string) bool {
 	}
 
 	return false
+}
+
+func GenerateLoginToken(userId uint64) string {
+	str := "apiDocGo" + strconv.FormatUint(userId, 2)
+	data := []byte(str)
+	has := md5.Sum(data)
+
+	return fmt.Sprintf("%x", has)
 }

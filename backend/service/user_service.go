@@ -103,7 +103,7 @@ func UserLogin(r request.UserLoginRequest, clientIp string) (u model.User, err e
 	}
 
 	//下发token以及设置token过期时间
-	u.Token = "hhhhhh123456789"
+	u.Token = utils.GenerateLoginToken(u.Id)
 	tokenExpire := model.CustomTime(time.Now().Add(time.Hour * 36))
 	u.TokenExpire = &tokenExpire
 
@@ -111,7 +111,7 @@ func UserLogin(r request.UserLoginRequest, clientIp string) (u model.User, err e
 	u.LastLoginIp = clientIp
 	customTime := model.CustomTime(time.Now())
 	u.LastLoginTime = &customTime
-	if err := global.DB.Select("LastLoginIp", "LastLoginTime").Save(&u).Error; err != nil {
+	if err := global.DB.Select("LastLoginIp", "LastLoginTime", "Token", "TokenExpire").Save(&u).Error; err != nil {
 		return u, errors.New("登录失败: 更新登录状态发生错误")
 	}
 
