@@ -23,7 +23,7 @@ func InitRoute(r *gin.Engine) {
 	{
 		userRoute.POST("/register", api.UserRegister)
 		userRoute.POST("/login", api.UserLogin)
-		userRoute.POST("/logout", api.Create)
+		userRoute.POST("/logout", api.UserLogout)
 		userRoute.POST("/create", api.Delete)
 		userRoute.POST("/update", api.Update)
 		userRoute.GET("/list", api.Update)

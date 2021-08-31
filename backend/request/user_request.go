@@ -15,3 +15,7 @@ type UserLoginRequest struct {
 	Account    string `json:"account" binding:"required,min=6,max=100"`
 	VerifyCode string `json:"verifyCode" binding:"required,min=4,max=100"`
 }
+
+type UserLoginOutRequest struct {
+	UserId uint64 `json:"userId" binding:"required"`
+}

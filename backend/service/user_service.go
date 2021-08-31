@@ -8,6 +8,9 @@ import (
 	"fastduck/apidoc/utils"
 	"fmt"
 	"time"
+
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 //UserRegister 用户注册
@@ -118,4 +121,22 @@ func UserLogin(r request.UserLoginRequest, clientIp string) (u model.User, err e
 	//密码置空
 	u.Password = ""
 	return u, err
+}
+
+//UserLogout 用户退出登陆
+func UserLogout(userId uint64) error {
+	var user model.User
+	if errors.Is(global.DB.Where("id = ?", userId).First(&user).Error, gorm.ErrRecordNotFound) {
+		return nil
+	}
+
+	user.Token = ""
+	user.TokenExpire = nil
+
+	if err := global.DB.Save(&user).Error; err != nil {
+		global.ZAP.Error("退出登陆，更新信息失败", zap.Any("dbErr", err))
+		return errors.New("更新信息失败")
+	}
+
+	return nil
 }

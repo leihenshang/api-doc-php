@@ -40,3 +40,20 @@ func UserLogin(c *gin.Context) {
 		response.OkWithData(u, c)
 	}
 }
+
+//UserLogout 用户退出登陆
+func UserLogout(c *gin.Context) {
+	var loginOut request.UserLoginOutRequest
+	err := c.ShouldBindJSON(&loginOut)
+	if err != nil {
+		response.FailWithMessage(global.ErrResp(err), c)
+		return
+	}
+
+	if err := service.UserLogout(loginOut.UserId); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	response.Ok(c)
+}
