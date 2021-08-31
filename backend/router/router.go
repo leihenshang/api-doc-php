@@ -26,6 +26,7 @@ func InitRoute(r *gin.Engine) {
 		userRoute.POST("/logout", api.UserLogout)
 		userRoute.POST("/create", api.Delete)
 		userRoute.POST("/update", api.Update)
+		userRoute.POST("/updateProfile", api.UserProfileUpdate)
 		userRoute.GET("/list", api.Update)
 		userRoute.GET("/detail", api.Update)
 	}

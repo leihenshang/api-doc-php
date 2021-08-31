@@ -43,7 +43,7 @@ func UserLogin(c *gin.Context) {
 
 //UserLogout 用户退出登陆
 func UserLogout(c *gin.Context) {
-	var loginOut request.UserLoginOutRequest
+	var loginOut request.UserLogoutRequest
 	err := c.ShouldBindJSON(&loginOut)
 	if err != nil {
 		response.FailWithMessage(global.ErrResp(err), c)
@@ -56,4 +56,21 @@ func UserLogout(c *gin.Context) {
 	}
 
 	response.Ok(c)
+}
+
+//UserProfileUpdate 更新用户个人资料
+func UserProfileUpdate(c *gin.Context) {
+	var profile request.UserProfileUpdateRequest
+	if err := c.ShouldBindJSON(&profile); err != nil {
+		response.FailWithMessage(global.ErrResp(err), c)
+		return
+	}
+
+	if _, err := service.UserProfileUpdate(profile); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	} else {
+		response.Ok(c)
+	}
+
 }

@@ -140,3 +140,9 @@ func UserLogout(userId uint64) error {
 
 	return nil
 }
+
+//UserProfileUpdate 更新用户个人资料
+func UserProfileUpdate(profile request.UserProfileUpdateRequest) (u model.User, err error) {
+
+	return u, nil
+}
