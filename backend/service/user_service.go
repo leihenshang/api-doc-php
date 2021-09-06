@@ -143,6 +143,21 @@ func UserLogout(userId uint64) error {
 
 //UserProfileUpdate 更新用户个人资料
 func UserProfileUpdate(profile request.UserProfileUpdateRequest) (u model.User, err error) {
+	if errors.Is(global.DB.Where("id = ?", profile.UserId).First(&u).Error, gorm.ErrRecordNotFound) {
+		return u, errors.New("用户没有找到")
+	}
+
+	if err := global.DB.Model(&u).
+		Select("NickName", "IconPath", "Bio", "Mobile").
+		Updates(model.User{
+			Nickname: profile.NickName,
+			IconPath: profile.NickName,
+			Bio:      profile.Bio,
+			Mobile:   profile.Mobile,
+		}).
+		Error; err != nil {
+		return u, errors.New("更新个人资料失败")
+	}
 
 	return u, nil
 }

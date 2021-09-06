@@ -23,9 +23,9 @@ type UserLogoutRequest struct {
 
 //UserProfileUpdateRequest 个人资料更新
 type UserProfileUpdateRequest struct {
-	UserId   uint64 `json:"userId" binding:""`
-	NickName string `json:"nickName" binding:""`
-	IconPath string `json:"iconPath" binding:""`
-	Bio      string `json:"bio" binding:""`
-	Mobile   string `json:"mobile" binding:""`
+	UserId   uint64 `json:"userId" binding:"required,gt=0"`
+	NickName string `json:"nickName" binding:"max=40"`
+	IconPath string `json:"iconPath" binding:"max=100"`
+	Bio      string `json:"bio" binding:"max=200"`
+	Mobile   string `json:"mobile" binding:"len=11"`
 }
