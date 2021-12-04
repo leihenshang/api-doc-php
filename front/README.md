@@ -1,16 +1,30 @@
-# apidoc
-this is a front.use Vue.
-## install package
-yarn  or yarn install
+# record-money-1
+## 预览
 
-## run 
-yarn serve 
 
-## build 
-yarn build
+## Project setup
+```
+yarn install
+```
 
-## package image
-yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
-yarn config set registry https://registry.npm.taobao.org -g
-### look config
-yarn config get registry
+### Compiles and hot-reloads for development
+```
+yarn dev
+```
+
+### Compiles and minifies for production
+```
+
+```
+
+### Run your unit tests
+```
+
+```
+
+### Lints and fixes files
+```
+
+```
+
+### Customize configuration
