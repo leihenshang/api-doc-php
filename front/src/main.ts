@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import './index.css'
+import './index.scss'
 import Layui from '@layui/layui-vue'
 import '@layui/layui-vue/lib/index.css'
 import {router} from './router';
