@@ -5,33 +5,44 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 ul,
 ol {
   list-style: none;
 }
+
 a {
   text-decoration: none;
   color: inherit;
-&:hover {
- //border-bottom: 1px solid;
-   cursor: pointer;
- }
+
+  &:hover {
+    //border-bottom: 1px solid;
+    cursor: pointer;
+  }
 }
-h1,h2,h3,h4,h5,h6{
+
+h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
 
 
 body {
   font-size: 16px;
-// 为什么这样写 font-family
-// 答案见 https://github.com/zenozeng/fonts.css/
-font-family: $font-hei;
+  color: rgba(0, 0, 0, 0.85);
+  // 为什么这样写 font-family
+  // 答案见 https://github.com/zenozeng/fonts.css/
+  font-family: $font-hei;
 }
+
 //以下几行为了消除按钮按下时有阴影和border
-  button:focus{  //电脑端
+button:focus { //电脑端
   outline: none;
-  }
-*{
-  -webkit-tap-highlight-color: transparent;   //手机端
+}
+
+* {
+  -webkit-tap-highlight-color: transparent; //手机端
+}
+
+#app {
+  height: 100vh;
 }
