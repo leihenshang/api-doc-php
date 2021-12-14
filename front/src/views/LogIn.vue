@@ -3,11 +3,11 @@
     <div class="log-in">
       <h3>用户登录</h3>
       <n-form :model="userInfo" ref="formRef" label-placement="left" class="long-in-form">
-        <n-form-item path="age">
+        <n-form-item path="username" :rule="getRules('用户名')">
           <n-input v-model:value="userInfo.username" placeholder="用户名" />
         </n-form-item>
-        <n-form-item path="password">
-          <n-input v-model:value="userInfo.password" @input="longIn" type="password" placeholder="密码"/>
+        <n-form-item path="password" :rule="getRules('密码')">
+          <n-input v-model:value="userInfo.password" type="password" placeholder="密码"/>
         </n-form-item>
         <n-form-item>
           <n-button attr-type="button" @click="longIn">登录</n-button>
@@ -25,16 +25,23 @@ export default {
   name: 'LogIn',
   setup() {
     const userInfo = ref({
-      username: 'admin',
-      password: 'admin'
+      username: '',
+      password: ''
     });
+    const formRef = ref(null)
     const router = useRouter()
-    const longIn = ()=>{
-      console.log(userInfo.value);
-      // router.push({name:'HomePage'})
+    const longIn = (e)=>{
+      e.preventDefault()
+      formRef.value.validate((errors) => {
+        if (!errors) {
+          router.push({name:'HomePage'})
+        }
+      })
     }
-
-    return {userInfo,longIn};
+    const getRules = (name)=>{
+      return {required: true, trigger: ['blur', 'input'], message: '请输入' + name}
+    }
+    return {userInfo,longIn,formRef,getRules};
   }
 };
 </script>
