@@ -27,7 +27,8 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-$menuWidth:256px;
+@import "src/assets/style/helper.scss";
+
 header {
   width: 100%;
   height: 60px;
@@ -38,7 +39,7 @@ header {
   padding: 0 32px;
   > .left{
     display: flex;
-    width: $menuWidth;
+    width: calc(#{$menuWidth} - 32px);
     > h3{
       font-size: 24px;
       margin-left: 8px;
