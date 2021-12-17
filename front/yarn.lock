@@ -343,6 +343,11 @@
   dependencies:
     "@types/yargs-parser" "*"
 
+"@vicons/ionicons5@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.nlark.com/@vicons/ionicons5/download/@vicons/ionicons5-0.11.0.tgz#54185bfa572a09df70094db1954f28bfbf1363ed"
+  integrity sha1-VBhb+lcqCd9wCU2xlU8ov78TY+0=
+
 "@vue/compiler-core@3.2.24":
   version "3.2.24"
   resolved "https://registry.npmmirror.com/@vue/compiler-core/download/@vue/compiler-core-3.2.24.tgz#cadcda0e026e7f1cd453ce87160be51a5f313fe0"
