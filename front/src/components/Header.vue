@@ -32,7 +32,7 @@ export default {
 header {
   width: 100%;
   height: 60px;
-  background: #00acc1;
+  background: $mainColor;
   color: #ffffff;
   display: flex;
   align-items: center;
