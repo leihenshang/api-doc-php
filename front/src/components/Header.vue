@@ -31,7 +31,7 @@ export default {
 
 header {
   width: 100%;
-  height: 60px;
+  height: $headerHeight;
   background: $mainColor;
   color: #ffffff;
   display: flex;
