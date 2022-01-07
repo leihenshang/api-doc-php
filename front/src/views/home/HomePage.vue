@@ -8,7 +8,7 @@
                 :options="menuOptions" :indent="24" :render-label="renderMenuLabel" :default-value="route.path"
                 :render-icon="renderMenuIcon"/>
       </n-layout-sider>
-      <n-layout>
+      <n-layout class="right">
         <router-view></router-view>
       </n-layout>
     </n-layout>
@@ -110,6 +110,9 @@ export default {
         }
 
       }
+    }
+    .right{
+      padding: 16px;
     }
   }
 }
