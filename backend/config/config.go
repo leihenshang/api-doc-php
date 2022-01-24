@@ -1,5 +1,7 @@
 package config
 
+const ConfigFile = "config.toml"
+
 type Config struct {
 	App   App
 	Mysql Mysql

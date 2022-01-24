@@ -61,7 +61,7 @@ func init() {
 
 func initConf() {
 	//读取配置
-	configFile := "config.yaml"
+	configFile := config.ConfigFile
 	fmt.Println("读取配置文件", path.Join(".", configFile))
 
 	VIPER = viper.New()
