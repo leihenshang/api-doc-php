@@ -2,8 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"fastduck/apidoc/global"
-	"fastduck/apidoc/router"
+	"fastduck/apidoc/admin/global"
+	"fastduck/apidoc/admin/router"
 	"fmt"
 	"net/http"
 	"time"

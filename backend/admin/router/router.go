@@ -1,7 +1,7 @@
 package router
 
 import (
-	"fastduck/apidoc/api"
+	"fastduck/apidoc/admin/api"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

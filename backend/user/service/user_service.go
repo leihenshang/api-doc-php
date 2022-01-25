@@ -2,10 +2,10 @@ package service
 
 import (
 	"errors"
-	"fastduck/apidoc/global"
-	"fastduck/apidoc/model"
-	"fastduck/apidoc/request"
-	"fastduck/apidoc/utils"
+	"fastduck/apidoc/user/global"
+	"fastduck/apidoc/user/model"
+	"fastduck/apidoc/user/request"
+	"fastduck/apidoc/user/utils"
 	"fmt"
 	"regexp"
 	"time"

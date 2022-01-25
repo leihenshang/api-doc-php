@@ -1,7 +1,7 @@
 package global
 
 import (
-	"fastduck/apidoc/config"
+	"fastduck/apidoc/user/config"
 	"fmt"
 	"log"
 	"os"

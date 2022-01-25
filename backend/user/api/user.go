@@ -1,10 +1,10 @@
 package api
 
 import (
-	"fastduck/apidoc/global"
-	"fastduck/apidoc/request"
-	"fastduck/apidoc/response"
-	"fastduck/apidoc/service"
+	"fastduck/apidoc/user/global"
+	"fastduck/apidoc/user/request"
+	"fastduck/apidoc/user/response"
+	"fastduck/apidoc/user/service"
 
 	"github.com/gin-gonic/gin"
 )

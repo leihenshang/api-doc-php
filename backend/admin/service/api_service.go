@@ -1,8 +1,8 @@
 package service
 
 import (
-	"fastduck/apidoc/global"
-	"fastduck/apidoc/model"
+	"fastduck/apidoc/admin/global"
+	"fastduck/apidoc/admin/model"
 )
 
 //ApiList api列表
