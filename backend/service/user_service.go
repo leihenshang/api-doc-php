@@ -7,6 +7,7 @@ import (
 	"fastduck/apidoc/request"
 	"fastduck/apidoc/utils"
 	"fmt"
+	"regexp"
 	"time"
 
 	"go.uber.org/zap"
@@ -16,7 +17,7 @@ import (
 //UserRegister 用户注册
 func UserRegister(r request.UserRegisterRequest) (u model.User, err error) {
 
-	pwd, err := checkPasswordRule(r.Password, r.RepeatPassword)
+	pwd, err := checkPasswordRule(r.Password, r.RePassword)
 	if err != nil {
 		return u, err
 	}
@@ -25,6 +26,11 @@ func UserRegister(r request.UserRegisterRequest) (u model.User, err error) {
 	encryptedPwd, err := utils.PasswordEncrypt(pwd)
 	if err != nil {
 		return u, errors.New("加密密码失败")
+	}
+
+	//检查账号格式
+	if err := checkAccountRule(r.Account, 8); err != nil {
+		return u, err
 	}
 
 	//检查账号是否重复
@@ -59,6 +65,26 @@ func checkAccountIsDuplicate(account string) bool {
 	}
 
 	return false
+}
+
+//checkAccountRule 检查账号规则
+func checkAccountRule(account string, accountLen int) (err error) {
+	if accountLen == 0 {
+		global.ZAPSUGAR.Fatal("accountLen is zero.")
+		return errors.New("accountLen 设置错误")
+	}
+
+	if len(account) < accountLen {
+		return errors.New(fmt.Sprintf("账号长度不能小于%d", accountLen))
+	}
+
+	//需要检查一下账号只能使用英文和数字
+	reg := regexp.MustCompile(`^[a-zA-Z\d]*$`)
+	if isAccord := reg.MatchString(account); !isAccord {
+		return errors.New("账号必须为数字或英文")
+	}
+
+	return
 }
 
 //checkEmailIsDuplicate 检查邮箱是否重复
@@ -151,7 +177,7 @@ func UserProfileUpdate(profile request.UserProfileUpdateRequest) (u model.User, 
 		Select("NickName", "IconPath", "Bio", "Mobile").
 		Updates(model.User{
 			Nickname: profile.NickName,
-			Avatar: profile.NickName,
+			Avatar:   profile.NickName,
 			Bio:      profile.Bio,
 			Mobile:   profile.Mobile,
 		}).

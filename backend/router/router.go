@@ -21,7 +21,7 @@ func InitRoute(r *gin.Engine) {
 	//user
 	userRoute := r.Group("user")
 	{
-		userRoute.POST("/register", api.UserRegister)
+		userRoute.POST("/reg", api.UserRegister)
 		userRoute.POST("/login", api.UserLogin)
 		userRoute.POST("/logout", api.UserLogout)
 		userRoute.POST("/create", api.Delete)

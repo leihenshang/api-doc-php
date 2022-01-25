@@ -14,10 +14,10 @@ type CustomTime time.Time
 const TimeFormat = "2006-01-02 15:04:05"
 
 type BasicModel struct {
-	Id         uint64         `json:"id"  gorm:"column:id;type:bigint(20) unsigned;primary_key;AUTO_INCREMENT"`
-	UpdatedAt  *CustomTime     `json:"createTime" gorm:"column:updated_at;type:datetime"`
-	CreatedAt  *CustomTime     `json:"updateTime" gorm:"column:created_at;type:datetime"`
-	DeleteTime gorm.DeletedAt `json:"deleteTime" gorm:"column:deleted_at;type:datetime"`
+	Id        uint64         `json:"id"  gorm:"column:id;type:bigint(20) unsigned;primary_key;AUTO_INCREMENT"`
+	UpdatedAt *CustomTime    `json:"createAt" gorm:"column:updated_at;type:datetime"`
+	CreatedAt *CustomTime    `json:"updateAt" gorm:"column:created_at;type:datetime"`
+	DeleteAt  gorm.DeletedAt `json:"deleteAt" gorm:"column:deleted_at;type:datetime"`
 }
 
 func (t *CustomTime) UnmarshalJSON(data []byte) (err error) {
