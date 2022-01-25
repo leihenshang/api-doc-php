@@ -32,12 +32,12 @@ func InitRoute(r *gin.Engine) {
 	}
 
 	//api
-	apiRoute := r.Group("api")
-	{
-		apiRoute.GET("/list", api.List)
-		apiRoute.GET("/detail", api.DetailById)
-		apiRoute.POST("/create", api.Create)
-		apiRoute.POST("/delete", api.Delete)
-		apiRoute.POST("/update", api.Update)
-	}
+	// apiRoute := r.Group("api")
+	// {
+	// 	apiRoute.GET("/list", api.List)
+	// 	apiRoute.GET("/detail", api.DetailById)
+	// 	apiRoute.POST("/create", api.Create)
+	// 	apiRoute.POST("/delete", api.Delete)
+	// 	apiRoute.POST("/update", api.Update)
+	// }
 }

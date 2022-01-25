@@ -4,7 +4,7 @@ rumtime
 log
 
 # 配置
-config.yaml
+config.toml
 .air.toml
 
 # ide

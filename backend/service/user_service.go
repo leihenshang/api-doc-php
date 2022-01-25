@@ -97,7 +97,7 @@ func UserLogin(r request.UserLoginRequest, clientIp string) (u model.User, err e
 	}
 
 	//检查账号状态
-	if u.Status != model.UserStatusAvaliable {
+	if u.UserStatus != model.UserStatusAvaliable {
 		return u, errors.New("账号不可用或未激活")
 	}
 
@@ -151,7 +151,7 @@ func UserProfileUpdate(profile request.UserProfileUpdateRequest) (u model.User, 
 		Select("NickName", "IconPath", "Bio", "Mobile").
 		Updates(model.User{
 			Nickname: profile.NickName,
-			IconPath: profile.NickName,
+			Avatar: profile.NickName,
 			Bio:      profile.Bio,
 			Mobile:   profile.Mobile,
 		}).

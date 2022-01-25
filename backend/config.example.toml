@@ -1,7 +1,7 @@
 [app]
 host = "localhost"
 port = 2021
-name = "apiDoc-go"
+name = "doc"
 runMode = "release" # dev-开发模式 release-生产(正式)模式
 
 [mysql]
@@ -10,7 +10,7 @@ port = 3306
 user = "root"
 password = "root"
 charset = "utf8mb4"
-dbName = "api-doc"
+dbName = "doc_go"
 
 [log]
 directory = "log"
