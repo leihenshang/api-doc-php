@@ -27,4 +27,14 @@ func InitRoute(r *gin.Engine) {
 		userRoute.POST("/updateProfile", api.UserProfileUpdate)
 	}
 
+	//doc
+	docRoute := r.Group("doc")
+	{
+		docRoute.POST("/create", api.DocCreate)
+		docRoute.POST("/detail", api.DocDetail)
+		docRoute.POST("/list", api.DocList)
+		docRoute.POST("/update", api.DocUpdate)
+		docRoute.POST("/delete", api.DocDelete)
+	}
+
 }

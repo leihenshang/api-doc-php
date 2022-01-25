@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fastduck/apidoc/user/global"
 	"fastduck/apidoc/user/model"
-	"fastduck/apidoc/user/request"
+	"fastduck/apidoc/user/request/user"
 	"fastduck/apidoc/user/utils"
 	"fmt"
 	"regexp"
@@ -15,7 +15,7 @@ import (
 )
 
 //UserRegister 用户注册
-func UserRegister(r request.UserRegisterRequest) (u model.User, err error) {
+func UserRegister(r user.UserRegisterRequest) (u model.User, err error) {
 
 	pwd, err := checkPasswordRule(r.Password, r.RePassword)
 	if err != nil {
@@ -112,7 +112,7 @@ func checkPasswordRule(password string, repeatPassword string) (string, error) {
 }
 
 //UserLogin 用户登录
-func UserLogin(r request.UserLoginRequest, clientIp string) (u model.User, err error) {
+func UserLogin(r user.UserLoginRequest, clientIp string) (u model.User, err error) {
 	if len(r.Password) == 0 || len(r.Account) == 0 {
 		return u, errors.New("密码或账号(邮箱)不能为空")
 	}
@@ -168,7 +168,7 @@ func UserLogout(userId uint64) error {
 }
 
 //UserProfileUpdate 更新用户个人资料
-func UserProfileUpdate(profile request.UserProfileUpdateRequest) (u model.User, err error) {
+func UserProfileUpdate(profile user.UserProfileUpdateRequest) (u model.User, err error) {
 	if errors.Is(global.DB.Where("id = ?", profile.UserId).First(&u).Error, gorm.ErrRecordNotFound) {
 		return u, errors.New("用户没有找到")
 	}
