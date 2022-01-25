@@ -43,7 +43,7 @@ func init() {
 	initLog()
 	fmt.Println("初始化日志完成")
 
-	if CONFIG.Redis.Enabled {
+	if CONFIG.Redis.Enable {
 		initRedis()
 		fmt.Println("初始化redis完成")
 	}

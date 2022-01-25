@@ -1,7 +1,7 @@
 package config
 
 type Redis struct {
-	Enabled  bool
+	Enable  bool
 	Host     string
 	Port     int
 	User     string
