@@ -70,11 +70,22 @@ func DocUpdate(c *gin.Context) {
 	if ok := service.DocUpdate(req, userId); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
-		response.OkWithMessage("更新成功", c)
+		response.Ok(c)
 	}
 }
 
 //DocDelete 文档删除
 func DocDelete(c *gin.Context) {
+	var req doc.UpdateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
 
+	var userId uint64 = 0
+	if ok := service.DocDelete(req, userId); ok != nil {
+		response.FailWithMessage(ok.Error(), c)
+	} else {
+		response.Ok(c)
+	}
 }

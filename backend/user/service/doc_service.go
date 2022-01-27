@@ -85,17 +85,35 @@ func DocList(r request.ListRequest, userId uint64) (res response.ListResponse, e
 //DocUpdate 文档更新
 func DocUpdate(r doc.UpdateRequest, userId uint64) (err error) {
 	if r.Id <= 0 {
-		errMsg := fmt.Sprintf("更新文档，id 为 %d 的数据没有找到", r.Id)
+		errMsg := fmt.Sprintf("id 为 %d 的数据没有找到", r.Id)
 		global.ZAPSUGAR.Error(errMsg)
 		return errors.New(errMsg)
 	}
 
-	q := global.DB.Debug().Model(&model.Doc{}).Where("id = ? AND user_id = ?", r.Id, userId)
+	q := global.DB.Model(&model.Doc{}).Where("id = ? AND user_id = ?", r.Id, userId)
 	u := map[string]interface{}{"Title": r.Title, "Content": r.Content, "GroupId": r.GroupId}
 	if err = q.Updates(u).Error; err != nil {
-		errMsg := fmt.Sprintf("更新文档，id 为 %d 的数据失败 %v ", r.Id, err)
+		errMsg := fmt.Sprintf("修改id 为 %d 的数据失败 %v ", r.Id, err)
 		global.ZAPSUGAR.Error(errMsg)
-		return errors.New("更新文档失败")
+		return errors.New("操作失败")
+	}
+
+	return
+}
+
+//DocDelete 文档更新
+func DocDelete(r doc.UpdateRequest, userId uint64) (err error) {
+	if r.Id <= 0 {
+		errMsg := fmt.Sprintf("id 为 %d 的数据没有找到", r.Id)
+		global.ZAPSUGAR.Error(errMsg)
+		return errors.New(errMsg)
+	}
+
+	q := global.DB.Debug().Where("id = ? AND user_id = ?", r.Id, userId)
+	if err = q.Delete(&model.Doc{}).Error; err != nil {
+		errMsg := fmt.Sprintf("删除id 为 %d 的数据失败 %v ", r.Id, err)
+		global.ZAPSUGAR.Error(errMsg)
+		return errors.New("操作失败")
 	}
 
 	return
