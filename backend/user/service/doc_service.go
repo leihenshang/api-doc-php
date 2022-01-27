@@ -7,6 +7,7 @@ import (
 	"fastduck/apidoc/user/model"
 	"fastduck/apidoc/user/request"
 	"fastduck/apidoc/user/request/doc"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -64,7 +65,6 @@ func DocDetail(r request.IdRequest, userId uint64) (d *model.Doc, err error) {
 
 //DocList 文档列表
 func DocList(r request.ListRequest, userId uint64) (res response.ListResponse, err error) {
-
 	offset := (r.Page - 1) * r.PageSize
 	if offset < 0 {
 		offset = 1
@@ -79,5 +79,24 @@ func DocList(r request.ListRequest, userId uint64) (res response.ListResponse, e
 		Find(&list).
 		Error
 	res.List = list
+	return
+}
+
+//DocUpdate 文档更新
+func DocUpdate(r doc.UpdateRequest, userId uint64) (err error) {
+	if r.Id <= 0 {
+		errMsg := fmt.Sprintf("更新文档，id 为 %d 的数据没有找到", r.Id)
+		global.ZAPSUGAR.Error(errMsg)
+		return errors.New(errMsg)
+	}
+
+	q := global.DB.Debug().Model(&model.Doc{}).Where("id = ? AND user_id = ?", r.Id, userId)
+	u := map[string]interface{}{"Title": r.Title, "Content": r.Content, "GroupId": r.GroupId}
+	if err = q.Updates(u).Error; err != nil {
+		errMsg := fmt.Sprintf("更新文档，id 为 %d 的数据失败 %v ", r.Id, err)
+		global.ZAPSUGAR.Error(errMsg)
+		return errors.New("更新文档失败")
+	}
+
 	return
 }

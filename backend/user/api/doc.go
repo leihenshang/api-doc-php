@@ -42,6 +42,7 @@ func DocDetail(c *gin.Context) {
 
 }
 
+//DocList 文档列表
 func DocList(c *gin.Context) {
 	var req request.ListRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -55,13 +56,25 @@ func DocList(c *gin.Context) {
 	} else {
 		response.OkWithData(d, c)
 	}
-
 }
 
+//DocUpdate 文档更新
 func DocUpdate(c *gin.Context) {
+	var req doc.UpdateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
 
+	var userId uint64 = 0
+	if ok := service.DocUpdate(req, userId); ok != nil {
+		response.FailWithMessage(ok.Error(), c)
+	} else {
+		response.OkWithMessage("更新成功", c)
+	}
 }
 
+//DocDelete 文档删除
 func DocDelete(c *gin.Context) {
 
 }
