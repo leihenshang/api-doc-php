@@ -187,3 +187,18 @@ func UserProfileUpdate(profile user.UserProfileUpdateRequest) (u model.User, err
 
 	return u, nil
 }
+
+//GetUserByToken 通过token获取用户
+func GetUserByToken(token string) (u *model.User, err error) {
+	now := time.Now().Format("2006-01-02 15:04:05")
+	err = global.DB.Model(&model.User{}).
+		Where("token = ? AND token_expire > ?", token, now).
+		First(&u).
+		Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		global.ZAPSUGAR.Errorf("用户 token : %s ,expire_time: %s \n", token, now)
+		return nil, errors.New("用户信息没有找到")
+	}
+
+	return
+}

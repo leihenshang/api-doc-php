@@ -2,6 +2,7 @@ package router
 
 import (
 	"fastduck/apidoc/user/api"
+	"fastduck/apidoc/user/middleware"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,15 +21,20 @@ func InitRoute(r *gin.Engine) {
 
 	//user
 	userRoute := r.Group("user")
+	//不需要验证登录参数
 	{
 		userRoute.POST("/reg", api.UserRegister)
 		userRoute.POST("/login", api.UserLogin)
+	}
+	//需要验证登录参数
+	userRoute.Use(middleware.Auth())
+	{
 		userRoute.POST("/logout", api.UserLogout)
 		userRoute.POST("/updateProfile", api.UserProfileUpdate)
 	}
 
 	//doc
-	docRoute := r.Group("doc")
+	docRoute := r.Group("doc").Use(middleware.Auth())
 	{
 		docRoute.POST("/create", api.DocCreate)
 		docRoute.POST("/detail", api.DocDetail)
