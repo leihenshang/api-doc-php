@@ -109,7 +109,7 @@ func DocDelete(r doc.UpdateRequest, userId uint64) (err error) {
 		return errors.New(errMsg)
 	}
 
-	q := global.DB.Debug().Where("id = ? AND user_id = ?", r.Id, userId)
+	q := global.DB.Where("id = ? AND user_id = ?", r.Id, userId)
 	if err = q.Delete(&model.Doc{}).Error; err != nil {
 		errMsg := fmt.Sprintf("删除id 为 %d 的数据失败 %v ", r.Id, err)
 		global.ZAPSUGAR.Error(errMsg)
