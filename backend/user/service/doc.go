@@ -44,7 +44,7 @@ func checkDocTitleRepeat(title string, userId uint64) (doc *model.Doc, err error
 	q := global.DB.Model(&model.Doc{}).Where("title = ? AND user_id = ?", title, userId)
 	if err = q.First(&doc).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			err = nil
+			return nil, nil
 		}
 	}
 

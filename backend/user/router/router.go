@@ -43,4 +43,12 @@ func InitRoute(r *gin.Engine) {
 		docRoute.POST("/delete", api.DocDelete)
 	}
 
+	//doc group
+	docGroupRoute := r.Group("doc-group").Use(auth.Auth())
+	{
+		docGroupRoute.POST("/create", api.DocGroupCreate)
+		docGroupRoute.POST("/list", api.DocGroupList)
+		docGroupRoute.POST("/update", api.DocGroupUpdate)
+		docGroupRoute.POST("/delete", api.DocGroupDelete)
+	}
 }

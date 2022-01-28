@@ -13,7 +13,7 @@ import (
 )
 
 //DocGroupCreate 创建文档分组
-func DocGroupCreate(r doc.CreateDocGroupRequest, userId uint64) (d *model.DocGroup, err error) {
+func DocGroupCreate(r doc.CreateDocGroupRequest, userId uint64) (dg *model.DocGroup, err error) {
 	insertData := &model.DocGroup{
 		Title:  r.Title,
 		Icon:   r.Icon,
@@ -25,6 +25,7 @@ func DocGroupCreate(r doc.CreateDocGroupRequest, userId uint64) (d *model.DocGro
 		global.ZAPSUGAR.Error(r, userId, "检查文档分组标题失败")
 		return nil, errors.New("检查文档分组标题失败")
 	} else {
+		fmt.Println(existed)
 		if existed != nil {
 			return nil, errors.New("文档分组标题已存在")
 		}
@@ -39,11 +40,11 @@ func DocGroupCreate(r doc.CreateDocGroupRequest, userId uint64) (d *model.DocGro
 }
 
 //checkDocGroupTitleRepeat 查询数据库检查文档分组标题是否重复
-func checkDocGroupTitleRepeat(title string, userId uint64) (doc *model.DocGroup, err error) {
+func checkDocGroupTitleRepeat(title string, userId uint64) (dg *model.DocGroup, err error) {
 	q := global.DB.Model(&model.DocGroup{}).Where("title = ? AND user_id = ?", title, userId)
-	if err = q.First(&doc).Error; err != nil {
+	if err = q.First(&dg).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			err = nil
+			return nil, nil
 		}
 	}
 
