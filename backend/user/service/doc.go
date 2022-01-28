@@ -96,7 +96,7 @@ func DocUpdate(r doc.UpdateDocRequest, userId uint64) (err error) {
 	return
 }
 
-//DocDelete 文档更新
+//DocDelete 文档删除
 func DocDelete(r doc.UpdateDocRequest, userId uint64) (err error) {
 	if r.Id <= 0 {
 		errMsg := fmt.Sprintf("id 为 %d 的数据没有找到", r.Id)

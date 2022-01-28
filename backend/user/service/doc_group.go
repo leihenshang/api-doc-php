@@ -12,39 +12,33 @@ import (
 	"gorm.io/gorm"
 )
 
-//DocGroupCreate 创建文档
+//DocGroupCreate 创建文档分组
 func DocGroupCreate(r doc.CreateDocGroupRequest, userId uint64) (d *model.DocGroup, err error) {
 	insertData := &model.DocGroup{
-		BasicModel: model.BasicModel{},
-		Title:      "",
-		Icon:       "",
-		PId:        0,
-		Priority:   0,
+		Title:  r.Title,
+		Icon:   r.Icon,
+		PId:    uint64(r.PId),
+		UserId: userId,
 	}
 
 	if existed, checkErr := checkDocGroupTitleRepeat(insertData.Title, userId); checkErr != nil {
-		global.ZAPSUGAR.Error(r, userId, "检查文档标题失败")
-		return nil, errors.New("检查文档标题失败")
+		global.ZAPSUGAR.Error(r, userId, "检查文档分组标题失败")
+		return nil, errors.New("检查文档分组标题失败")
 	} else {
 		if existed != nil {
-			return nil, errors.New("文档标题已存在")
+			return nil, errors.New("文档分组标题已存在")
 		}
 	}
 
 	if err = global.DB.Create(insertData).Error; err != nil {
 		global.ZAPSUGAR.Error(r, err)
-		return nil, errors.New("创建文档失败")
+		return nil, errors.New("创建文档分组失败")
 	}
 
 	return
 }
 
-func checkDocGroupTitleRule(title string) (err error) {
-
-	return
-}
-
-//checkDocGroupTitleRepeat 查询数据库检查文档标题是否重复
+//checkDocGroupTitleRepeat 查询数据库检查文档分组标题是否重复
 func checkDocGroupTitleRepeat(title string, userId uint64) (doc *model.DocGroup, err error) {
 	q := global.DB.Model(&model.DocGroup{}).Where("title = ? AND user_id = ?", title, userId)
 	if err = q.First(&doc).Error; err != nil {
@@ -56,7 +50,7 @@ func checkDocGroupTitleRepeat(title string, userId uint64) (doc *model.DocGroup,
 	return
 }
 
-//DocGroupList 文档列表
+//DocGroupList 文档分组列表
 func DocGroupList(r request.ListRequest, userId uint64) (res response.ListResponse, err error) {
 	offset := (r.Page - 1) * r.PageSize
 	if offset < 0 {
@@ -75,7 +69,7 @@ func DocGroupList(r request.ListRequest, userId uint64) (res response.ListRespon
 	return
 }
 
-//DocGroupUpdate 文档更新
+//DocGroupUpdate 文档分组更新
 func DocGroupUpdate(r doc.UpdateDocGroupRequest, userId uint64) (err error) {
 	if r.Id <= 0 {
 		errMsg := fmt.Sprintf("id 为 %d 的数据没有找到", r.Id)
@@ -84,7 +78,7 @@ func DocGroupUpdate(r doc.UpdateDocGroupRequest, userId uint64) (err error) {
 	}
 
 	q := global.DB.Model(&model.DocGroup{}).Where("id = ? AND user_id = ?", r.Id, userId)
-	u := map[string]interface{}{"Title": r.Title}
+	u := map[string]interface{}{"Title": r.Title, "PId": r.PId, "Icon": r.Icon}
 	if err = q.Updates(u).Error; err != nil {
 		errMsg := fmt.Sprintf("修改id 为 %d 的数据失败 %v ", r.Id, err)
 		global.ZAPSUGAR.Error(errMsg)
@@ -94,7 +88,7 @@ func DocGroupUpdate(r doc.UpdateDocGroupRequest, userId uint64) (err error) {
 	return
 }
 
-//DocGroupDelete 文档更新
+//DocGroupDelete 文档分组删除u
 func DocGroupDelete(r doc.UpdateDocGroupRequest, userId uint64) (err error) {
 	if r.Id <= 0 {
 		errMsg := fmt.Sprintf("id 为 %d 的数据没有找到", r.Id)
