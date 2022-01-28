@@ -168,8 +168,8 @@ func UserLogout(userId uint64) error {
 }
 
 //UserProfileUpdate 更新用户个人资料
-func UserProfileUpdate(profile user.UserProfileUpdateRequest) (u model.User, err error) {
-	if errors.Is(global.DB.Where("id = ?", profile.UserId).First(&u).Error, gorm.ErrRecordNotFound) {
+func UserProfileUpdate(profile user.UserProfileUpdateRequest, userId uint64) (u model.User, err error) {
+	if errors.Is(global.DB.Where("id = ?", userId).First(&u).Error, gorm.ErrRecordNotFound) {
 		return u, errors.New("用户没有找到")
 	}
 
@@ -190,8 +190,21 @@ func UserProfileUpdate(profile user.UserProfileUpdateRequest) (u model.User, err
 
 //GetUserByToken 通过token获取用户
 func GetUserByToken(token string) (u *model.User, err error) {
+
 	now := time.Now().Format("2006-01-02 15:04:05")
-	err = global.DB.Model(&model.User{}).
+	err = global.DB.Model(&model.User{}).Select(
+		"user_type",
+		"user_status",
+		"token_expire",
+		"token",
+		"nickname",
+		"mobile",
+		"id",
+		"email",
+		"bio",
+		"avatar",
+		"account",
+	).
 		Where("token = ? AND token_expire > ?", token, now).
 		First(&u).
 		Error

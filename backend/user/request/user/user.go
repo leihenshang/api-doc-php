@@ -16,14 +16,8 @@ type UserLoginRequest struct {
 	VerifyCode string `json:"verifyCode" binding:"required,min=4,max=100"`
 }
 
-//UserLogoutRequest 用户退出登陆
-type UserLogoutRequest struct {
-	UserId uint64 `json:"userId" binding:"required"`
-}
-
 //UserProfileUpdateRequest 个人资料更新
 type UserProfileUpdateRequest struct {
-	UserId   uint64 `json:"userId" binding:"required,gt=0"`
 	NickName string `json:"nickName" binding:"max=40"`
 	IconPath string `json:"iconPath" binding:"max=100"`
 	Bio      string `json:"bio" binding:"max=200"`

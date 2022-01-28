@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fastduck/apidoc/user/global"
+	"fastduck/apidoc/user/middleware/auth"
 	"fastduck/apidoc/user/request"
 	"fastduck/apidoc/user/request/doc"
 	"fastduck/apidoc/user/response"
@@ -14,11 +16,17 @@ func DocCreate(c *gin.Context) {
 	var req doc.CreateRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
+		response.FailWithMessage(global.ErrResp(err), c)
+		return
+	}
+
+	u, err := auth.GetUserInfoByCtx(c)
+	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	var userId uint64 = 0
-	if d, ok := service.DocCreate(req, userId); ok != nil {
+
+	if d, ok := service.DocCreate(req, u.Id); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
 		response.OkWithData(d, c)
@@ -30,11 +38,15 @@ func DocDetail(c *gin.Context) {
 	req := request.IdRequest{}
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
+		response.FailWithMessage(global.ErrResp(err), c)
+		return
+	}
+	u, err := auth.GetUserInfoByCtx(c)
+	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	var userId uint64 = 0
-	if d, ok := service.DocDetail(req, userId); ok != nil {
+	if d, ok := service.DocDetail(req, u.Id); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
 		response.OkWithData(d, c)
@@ -46,12 +58,16 @@ func DocDetail(c *gin.Context) {
 func DocList(c *gin.Context) {
 	var req request.ListRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		response.FailWithMessage(err.Error(), c)
+		response.FailWithMessage(global.ErrResp(err), c)
 		return
 	}
 
-	var userId uint64 = 0
-	if d, ok := service.DocList(req, userId); ok != nil {
+	u, err := auth.GetUserInfoByCtx(c)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if d, ok := service.DocList(req, u.Id); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
 		response.OkWithData(d, c)
@@ -62,12 +78,15 @@ func DocList(c *gin.Context) {
 func DocUpdate(c *gin.Context) {
 	var req doc.UpdateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
+		response.FailWithMessage(global.ErrResp(err), c)
+		return
+	}
+	u, err := auth.GetUserInfoByCtx(c)
+	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-
-	var userId uint64 = 0
-	if ok := service.DocUpdate(req, userId); ok != nil {
+	if ok := service.DocUpdate(req, u.Id); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
 		response.Ok(c)
@@ -78,12 +97,15 @@ func DocUpdate(c *gin.Context) {
 func DocDelete(c *gin.Context) {
 	var req doc.UpdateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
+		response.FailWithMessage(global.ErrResp(err), c)
+		return
+	}
+	u, err := auth.GetUserInfoByCtx(c)
+	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-
-	var userId uint64 = 0
-	if ok := service.DocDelete(req, userId); ok != nil {
+	if ok := service.DocDelete(req, u.Id); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
 		response.Ok(c)

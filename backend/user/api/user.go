@@ -2,6 +2,7 @@ package api
 
 import (
 	"fastduck/apidoc/user/global"
+	"fastduck/apidoc/user/middleware/auth"
 	"fastduck/apidoc/user/request/user"
 	"fastduck/apidoc/user/response"
 	"fastduck/apidoc/user/service"
@@ -43,14 +44,12 @@ func UserLogin(c *gin.Context) {
 
 //UserLogout 用户退出登陆
 func UserLogout(c *gin.Context) {
-	var loginOut user.UserLogoutRequest
-	err := c.ShouldBindJSON(&loginOut)
+	u, err := auth.GetUserInfoByCtx(c)
 	if err != nil {
-		response.FailWithMessage(global.ErrResp(err), c)
+		response.FailWithMessage(err.Error(), c)
 		return
 	}
-
-	if err := service.UserLogout(loginOut.UserId); err != nil {
+	if err := service.UserLogout(u.Id); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
@@ -66,7 +65,12 @@ func UserProfileUpdate(c *gin.Context) {
 		return
 	}
 
-	if _, err := service.UserProfileUpdate(profile); err != nil {
+	u, err := auth.GetUserInfoByCtx(c)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if _, err := service.UserProfileUpdate(profile, u.Id); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	} else {
