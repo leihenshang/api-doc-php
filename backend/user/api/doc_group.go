@@ -11,9 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//DocCreate 创建文档
-func DocCreate(c *gin.Context) {
-	var req doc.CreateDocRequest
+//DocGroupCreate 创建文档分组
+func DocGroupCreate(c *gin.Context) {
+	var req doc.CreateDocGroupRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(global.ErrResp(err), c)
@@ -26,36 +26,15 @@ func DocCreate(c *gin.Context) {
 		return
 	}
 
-	if d, ok := service.DocCreate(req, u.Id); ok != nil {
+	if d, ok := service.DocGroupCreate(req, u.Id); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
 		response.OkWithData(d, c)
 	}
 }
 
-//DocDetail 文档详情
-func DocDetail(c *gin.Context) {
-	req := request.IdRequest{}
-	err := c.ShouldBindJSON(&req)
-	if err != nil {
-		response.FailWithMessage(global.ErrResp(err), c)
-		return
-	}
-	u, err := auth.GetUserInfoByCtx(c)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	if d, ok := service.DocDetail(req, u.Id); ok != nil {
-		response.FailWithMessage(ok.Error(), c)
-	} else {
-		response.OkWithData(d, c)
-	}
-
-}
-
-//DocList 文档列表
-func DocList(c *gin.Context) {
+//DocGroupList 文档分组列表
+func DocGroupList(c *gin.Context) {
 	var req request.ListRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.FailWithMessage(global.ErrResp(err), c)
@@ -67,16 +46,16 @@ func DocList(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if d, ok := service.DocList(req, u.Id); ok != nil {
+	if d, ok := service.DocGroupList(req, u.Id); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
 		response.OkWithData(d, c)
 	}
 }
 
-//DocUpdate 文档更新
-func DocUpdate(c *gin.Context) {
-	var req doc.UpdateDocRequest
+//DocGroupUpdate 文档分组更新
+func DocGroupUpdate(c *gin.Context) {
+	var req doc.UpdateDocGroupRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.FailWithMessage(global.ErrResp(err), c)
 		return
@@ -86,16 +65,16 @@ func DocUpdate(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if ok := service.DocUpdate(req, u.Id); ok != nil {
+	if ok := service.DocGroupUpdate(req, u.Id); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
 		response.Ok(c)
 	}
 }
 
-//DocDelete 文档删除
-func DocDelete(c *gin.Context) {
-	var req doc.UpdateDocRequest
+//DocGroupDelete 文档分组删除
+func DocGroupDelete(c *gin.Context) {
+	var req doc.UpdateDocGroupRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.FailWithMessage(global.ErrResp(err), c)
 		return
@@ -105,7 +84,7 @@ func DocDelete(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if ok := service.DocDelete(req, u.Id); ok != nil {
+	if ok := service.DocGroupDelete(req, u.Id); ok != nil {
 		response.FailWithMessage(ok.Error(), c)
 	} else {
 		response.Ok(c)
