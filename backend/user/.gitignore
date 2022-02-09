@@ -1,0 +1,12 @@
+# 目录
+tmp
+rumtime
+log
+
+# 配置
+config.toml
+.air.toml
+
+# ide
+.vscode
+.idea
