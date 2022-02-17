@@ -46,3 +46,13 @@ root
   - [x] 添加日志库 `zap` [github地址](https://github.com/uber-go/zap)
   - [x] 添加orm库 `gorm` [github地址](https://github.com/go-gorm/gorm) 
   - [x] 添加redis库 `go-redis` [github地址](https://github.com/go-redis/redis)
+
+### 其他
+```sh
+docker run  --rm \
+    -w "/app" \
+    --mount type=bind,source="D:\my-project\api-doc-go\backend",target=/app  \
+    -p 2021:2021  \
+    golang:alpine \
+    sh -c  "go env -w GO111MODULE=on && go env -w GOPROXY=https://goproxy.cn,direct && cd /app/user && go run main.go"
+```
