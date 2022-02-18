@@ -14,7 +14,7 @@ func InitRoute(r *gin.Engine) {
 	{
 		base.GET("/ping", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
-				"msg": "pong",
+				"msg": "pong!",
 			})
 		})
 	}

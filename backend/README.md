@@ -56,3 +56,10 @@ docker run  --rm \
     golang:alpine \
     sh -c  "go env -w GO111MODULE=on && go env -w GOPROXY=https://goproxy.cn,direct && cd /app/user && go run main.go"
 ```
+
+使用air热重载
+
+```sh
+docker run -it  --rm  -w "/app/user"    -e "GO111MODULE=on"     -e "GOPROXY=https://goproxy.cn,direct"     --mount type=bind,source="D:\my-project\api-doc-go\backend",target=/app      -p 2021:2021       cosmtrek/air     -c /app/user/.air.toml
+```
+

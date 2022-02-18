@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//TeamCreate 创建文档
+//TeamCreate 创建团队
 func TeamCreate(c *gin.Context) {
 	var req team.CreateTeamRequest
 	err := c.ShouldBindJSON(&req)
@@ -33,7 +33,7 @@ func TeamCreate(c *gin.Context) {
 	}
 }
 
-//TeamDetail 文档详情
+//TeamDetail 团队详情
 func TeamDetail(c *gin.Context) {
 	req := request.IdRequest{}
 	err := c.ShouldBindJSON(&req)
@@ -54,7 +54,7 @@ func TeamDetail(c *gin.Context) {
 
 }
 
-//TeamList 文档列表
+//TeamList 团队列表
 func TeamList(c *gin.Context) {
 	var req request.ListRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -74,7 +74,7 @@ func TeamList(c *gin.Context) {
 	}
 }
 
-//TeamUpdate 文档更新
+//TeamUpdate 团队更新
 func TeamUpdate(c *gin.Context) {
 	var req team.UpdateTeamRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -93,7 +93,7 @@ func TeamUpdate(c *gin.Context) {
 	}
 }
 
-//TeamDelete 文档删除
+//TeamDelete 团队删除
 func TeamDelete(c *gin.Context) {
 	var req team.UpdateTeamRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
