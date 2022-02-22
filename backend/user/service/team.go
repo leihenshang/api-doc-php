@@ -13,7 +13,7 @@ import (
 )
 
 //TeamCreate 创建文档
-func TeamCreate(r team.CreateTeamRequest, userId uint64) (d *model.Team, err error) {
+func TeamCreate(r team.CreateOrUpdateTeamRequest, userId uint64) (d *model.Team, err error) {
 	insertData := &model.Team{}
 
 	if existed, checkErr := checkTeamTitleRepeat(insertData.Name, userId); checkErr != nil {
@@ -72,7 +72,7 @@ func TeamList(r request.ListRequest, userId uint64) (res response.ListResponse, 
 }
 
 //TeamUpdate 文档更新
-func TeamUpdate(r team.UpdateTeamRequest, userId uint64) (err error) {
+func TeamUpdate(r team.CreateOrUpdateTeamRequest, userId uint64) (err error) {
 	if r.Id <= 0 {
 		errMsg := fmt.Sprintf("id 为 %d 的数据没有找到", r.Id)
 		global.ZAPSUGAR.Error(errMsg)
@@ -80,7 +80,7 @@ func TeamUpdate(r team.UpdateTeamRequest, userId uint64) (err error) {
 	}
 
 	q := global.DB.Model(&model.Team{}).Where("id = ? AND user_id = ?", r.Id, userId)
-	u := map[string]interface{}{"Title": r.Title, "Content": r.Content, "GroupId": r.GroupId}
+	u := map[string]interface{}{"Name": r.Name}
 	if err = q.Updates(u).Error; err != nil {
 		errMsg := fmt.Sprintf("修改id 为 %d 的数据失败 %v ", r.Id, err)
 		global.ZAPSUGAR.Error(errMsg)
@@ -91,7 +91,7 @@ func TeamUpdate(r team.UpdateTeamRequest, userId uint64) (err error) {
 }
 
 //TeamDelete 文档删除
-func TeamDelete(r team.UpdateTeamRequest, userId uint64) (err error) {
+func TeamDelete(r team.CreateOrUpdateTeamRequest, userId uint64) (err error) {
 	if r.Id <= 0 {
 		errMsg := fmt.Sprintf("id 为 %d 的数据没有找到", r.Id)
 		global.ZAPSUGAR.Error(errMsg)

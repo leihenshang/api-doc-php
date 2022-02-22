@@ -13,7 +13,7 @@ import (
 
 //TeamCreate 创建团队
 func TeamCreate(c *gin.Context) {
-	var req team.CreateTeamRequest
+	var req team.CreateOrUpdateTeamRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.FailWithMessage(global.ErrResp(err), c)
@@ -76,7 +76,7 @@ func TeamList(c *gin.Context) {
 
 //TeamUpdate 团队更新
 func TeamUpdate(c *gin.Context) {
-	var req team.UpdateTeamRequest
+	var req team.CreateOrUpdateTeamRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.FailWithMessage(global.ErrResp(err), c)
 		return
@@ -95,7 +95,7 @@ func TeamUpdate(c *gin.Context) {
 
 //TeamDelete 团队删除
 func TeamDelete(c *gin.Context) {
-	var req team.UpdateTeamRequest
+	var req team.CreateOrUpdateTeamRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.FailWithMessage(global.ErrResp(err), c)
 		return
