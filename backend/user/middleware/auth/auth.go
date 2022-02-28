@@ -17,13 +17,13 @@ const (
 //Auth 身份验证
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		xToken := c.GetHeader("X-Token")
-		if xToken == "" {
+		authKey := c.GetHeader("X-Token")
+		if authKey == "" {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, "参数错误")
 			return
 		}
 
-		u, err := service.GetUserByToken(xToken)
+		u, err := service.GetUserByToken(authKey)
 		if err != nil {
 			global.ZAPSUGAR.Error(err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, "查询用户信息失败")
