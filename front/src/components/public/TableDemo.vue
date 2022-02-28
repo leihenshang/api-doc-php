@@ -140,22 +140,22 @@ export default defineComponent({
 $striped-color:#f2f2f2;
 $table-border-color:#DBDBDB;
 
-::v-deep(.n-data-table-tr th){
+:deep(.n-data-table-tr th){
   background: $striped-color !important;
   border-top: 1px solid $table-border-color  !important;
   border-bottom: 1px solid $table-border-color  !important;
 }
-::v-deep(.n-data-table-tr td){
+:deep(.n-data-table-tr td){
   border-bottom: 1px solid $table-border-color  !important;
 }
-::v-deep(.head){
+:deep(.head){
   border-right: 1px solid $table-border-color;
 }
-::v-deep(.first){
+:deep(.first){
   border-left: 1px solid $table-border-color;
   border-right: 1px solid $table-border-color;
 }
-::v-deep(.xxx td) {
+:deep(.xxx td) {
   background: $striped-color !important;
 }
 </style>

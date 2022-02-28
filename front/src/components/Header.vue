@@ -5,7 +5,6 @@
       <h3>apiDoc</h3>
     </section>
     <section class="right">
-      <div class="breadcrumb">项目列表</div>
       <div class="avatar-wrapper">
         <n-avatar class="avatar" round size="medium" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"/>
         <n-icon size="18">

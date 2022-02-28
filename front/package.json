@@ -8,6 +8,7 @@
   "dependencies": {
     "@vicons/ionicons5": "^0.11.0",
     "vue": "^3.0.4",
+    "vue-axios-plugin": "^1.3.0",
     "vue-router": "4.0.0-beta.3"
   },
   "devDependencies": {
