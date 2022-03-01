@@ -4,7 +4,8 @@ FROM golang:alpine as builder
 WORKDIR /app
 
 # set enviroment to enable the go module mode
-RUN go env -w GO111MODULE=on
+RUN go env -w GO111MODULE=on \
+&& go env -w GOPROXY="https://goproxy.cn, direct"
 
 # copy project files from "context".
 COPY . /app/
@@ -13,7 +14,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /app/main /app/
 
 
 # ---------------------------------------------------------------
-# setp 2 build
+# setup 2 build
 FROM alpine:latest as prod
 
 #RUN apk --no-cache add ca-certificates
