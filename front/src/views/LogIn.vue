@@ -34,11 +34,6 @@ export default {
       e.preventDefault()
       formRef.value.validate((errors) => {
         if (!errors) {
-          //登录逻辑
-          this.$http.get("http://www.baidu.com").then((response) => {
-            console.log(response)
-          })
-
           router.push({ name: 'HomePage' })
         }
       })
