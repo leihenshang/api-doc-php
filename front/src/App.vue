@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import "./assets/style/reset.scss";
 import HelloWorld from './components/HomePage.vue'
 
 export default {

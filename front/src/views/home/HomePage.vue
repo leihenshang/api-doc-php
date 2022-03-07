@@ -46,6 +46,7 @@ const menuOptions = [
   }, {
     label: '收藏',
     key: 'like',
+    pathName: 'ProjectList',
     iconName: BookmarkOutline,
   },
   {
@@ -68,12 +69,12 @@ export default {
       renderMenuLabel(option) {
         if ('pathName' in option) {
           return h(RouterLink,
-            {
-              to: {
-                name: option.pathName,
-              }
-            },
-            { default: () => option.label });
+              {
+                to: {
+                  name: option.pathName,
+                }
+              },
+              { default: () => option.label });
 
         }
         return option.label;
@@ -103,14 +104,12 @@ export default {
     .menu-sider {
       background: $menuBackground;
 
-      :deep(.menu-menu) {
-        .n-menu-item.n-menu-item--selected {
+      .menu-menu ::v-deep(.n-menu-item.n-menu-item--selected) {
           .n-menu-item-content {
             .n-menu-item-content__icon,
             .n-menu-item-content-header {
               color: darken($mainColor, 0.5);
             }
-          }
         }
 
         .n-menu-item > .n-menu-item-content:hover {
@@ -119,9 +118,10 @@ export default {
             color: darken($mainColor, 0.5);
           }
         }
+
       }
     }
-    .right {
+    .right{
       padding: 16px;
     }
   }

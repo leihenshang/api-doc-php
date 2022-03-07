@@ -1,0 +1,24 @@
+$striped-color:#f2f2f2;
+$table-border-color:#DBDBDB;
+
+.custom-table{
+  border-left: 1px solid $table-border-color  !important;;
+}
+.n-data-table-tr th{
+  background: darken($striped-color,5%) !important;
+  //background: darken(#00acc1,3%) !important;
+  //color: #ffffff !important;
+  //font-weight: bold !important;
+  border-top: 1px solid $table-border-color  !important;
+  border-bottom: 1px solid $table-border-color  !important;
+  border-right: 1px solid $table-border-color  !important;
+}
+.n-data-table-tr td{
+  border-bottom: 1px solid $table-border-color  !important;
+  border-right: 1px solid $table-border-color  !important;
+}
+.n-data-table-tr:nth-child(2n){
+  >td{
+    background: $striped-color !important;
+  }
+}
