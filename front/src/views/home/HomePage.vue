@@ -51,8 +51,8 @@ const menuOptions = [
   },
   {
     label: '我的笔记',
-    pathName: 'ProjectList',
-    key: '/ProjectList',
+    pathName: 'MyNote',
+    key: '/MyNote',
     iconName: BookmarkOutline,
   },
 ];
