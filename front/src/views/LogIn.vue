@@ -24,6 +24,7 @@
 </template>
 
 <script lang="ts">
+import { FormInst } from 'naive-ui';
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -34,12 +35,11 @@ export default {
       username: '',
       password: ''
     });
-    const formRef = ref(null)
+    const formRef = ref<FormInst | null>(null)
     const router = useRouter()
-    const longIn = (e: { preventDefault: () => void; }) => {
+    const longIn = (e: MouseEvent) => {
       e.preventDefault()
-      formRef.value.validate((errors) => {
-        console.log(errors);
+      formRef.value?.validate((errors) => {
         if (!errors) {
           router.push({ name: 'HomePage' })
         }
