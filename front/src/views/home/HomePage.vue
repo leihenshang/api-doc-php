@@ -42,35 +42,39 @@ const menuOptions = [
   {
     label: '收藏',
     key: 'like',
-    pathName: 'ProjectList',
+    pathName: 'Collection',
     iconName: 'collect',
   }, {
     label: '我的笔记',
-    pathName: 'MyNote',
-    key: '/MyNote',
+    key: 'notes',
     iconName: 'notes',
     children: [
       {
         label: '工作',
         key: 'work',
+        pathName: 'Work',
         iconName: 'work',
       }, {
         label: '生活',
+        pathName: 'Life',
         key: 'life',
         iconName: 'life',
       }, {
         label: '经验',
         key: 'experience',
+        pathName: 'Experience',
         iconName: 'experience',
       }
     ]
   }, {
     label: '日常计划',
-    key: 'node',
+    key: 'plan',
+    pathName: 'Plane',
     iconName: 'plan',
   }, {
     label: '我的日记本',
-    key: 'node',
+    key: 'diary',
+    pathName: 'Diary',
     iconName: 'diary',
   },
 ];
