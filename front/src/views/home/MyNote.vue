@@ -2,17 +2,20 @@
   <div class="my-note-wrapper">
     <div id="markdown-container"></div>
     <p>xxxx</p>
-    <svg class="icon" aria-hidden="true">
-      <use xlink:href="#icon-shoucang"></use>
-    </svg>
+    <SvgIcon icon-name="shoucang"></SvgIcon>
+<!--    <svg class="icon">-->
+<!--      <use xlink:href="#icon-shoucang"></use>-->
+<!--    </svg>-->
   </div>
 </template>
 <script>
 import Cherry from 'cherry-markdown'
 import {onMounted} from 'vue'
+import SvgIcon from '../../components/public/SvgIcon.vue'
 
 export default {
   name: 'MyNote',
+  components:{SvgIcon},
   setup() {
     // onMounted(()=>{
     //   const cherryInstance = new Cherry({
