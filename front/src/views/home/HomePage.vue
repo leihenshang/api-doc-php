@@ -138,10 +138,6 @@ export default {
 
       }
     }
-
-    .right {
-      padding: 16px;
-    }
   }
 }
 </style>
