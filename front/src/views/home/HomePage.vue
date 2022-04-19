@@ -36,44 +36,42 @@ import Header from '../../components/Header.vue';
 import {h, ref, Component } from 'vue';
 import type {MenuOption} from 'naive-ui';
 import {useRoute, RouterLink} from 'vue-router';
-import {NIcon} from 'naive-ui';
-import {BookmarkOutline} from '@vicons/ionicons5';
-import {ComponentOptions} from '@vue/runtime-core';
+import SvgIcon from '../../components/public/SvgIcon.vue';
 
 const menuOptions = [
   {
     label: '收藏',
     key: 'like',
     pathName: 'ProjectList',
-    iconName: BookmarkOutline,
+    iconName: 'collect',
   }, {
     label: '我的笔记',
     pathName: 'MyNote',
     key: '/MyNote',
-    iconName: BookmarkOutline,
+    iconName: 'notes',
     children: [
       {
         label: '工作',
         key: 'work',
-        iconName: BookmarkOutline,
+        iconName: 'work',
       }, {
         label: '生活',
         key: 'life',
-        iconName: BookmarkOutline,
+        iconName: 'life',
       }, {
         label: '经验',
         key: 'experience',
-        iconName: BookmarkOutline,
+        iconName: 'experience',
       }
     ]
   }, {
     label: '日常计划',
     key: 'node',
-    iconName: BookmarkOutline,
+    iconName: 'plan',
   }, {
     label: '我的日记本',
     key: 'node',
-    iconName: BookmarkOutline,
+    iconName: 'diary',
   },
 ];
 
@@ -100,7 +98,7 @@ export default {
         return option.label as string;
       },
       renderMenuIcon(option: MenuOption) {
-        return option.iconName && h(NIcon, null, {default: () => h(option.iconName as Component)});
+        return option.iconName && h(SvgIcon, {iconName:option.iconName});
       },
     };
   }
