@@ -95,14 +95,15 @@ export default {
     const collectionList = [{title: '全部', type: 'all', count: 100, id: '1'}
       , {title: 'javaScript', type: '', count: 50, id: '2'}, {title: '好看的花花们', type: '', count: 50, id: '3'},]
     const searchData = ref<search>({})
+    const selectedCollectionId = ref('1')
 //选中收藏的某个分类，并保存分类的id
-    let selectedCollectionId = '1'
+//     let selectedCollectionId = '1'
     const viewCollectionList = (collectionId:string) => {
-      selectedCollectionId = collectionId
+      selectedCollectionId.value = collectionId
     }
 //获取右侧表格的标题
     const selectedTitle = computed(()=>{
-      return collectionList.filter((item)=>item.id === selectedCollectionId)[0]?.title
+      return collectionList.filter((item)=>item.id === selectedCollectionId.value)[0]?.title
     })
 //渲染右侧表格
     const message = useMessage()
