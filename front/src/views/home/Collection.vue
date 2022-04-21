@@ -11,7 +11,14 @@
             @click="viewCollectionList(item.id)">
           <p class="title">
             <span>{{ item.title }}</span>
-            <SvgIcon icon-name="more" v-if="item.type!=='all'"></SvgIcon>
+            <n-popselect v-model:value="handleType" :options="collectionHandleOptions" trigger="click">
+              <template>
+                <SvgIcon icon-name="more" v-if="item.type!=='all'"></SvgIcon>
+              </template>
+              <template #action>
+              <SvgIcon icon-name="more" v-if="item.type!=='all'"></SvgIcon>
+              </template>
+            </n-popselect>
           </p>
           <p class="content">{{ item.count }}条内容</p>
         </li>
@@ -97,17 +104,19 @@ export default {
     const searchData = ref<search>({})
     const selectedCollectionId = ref('1')
 //选中收藏的某个分类，并保存分类的id
-//     let selectedCollectionId = '1'
     const viewCollectionList = (collectionId:string) => {
       selectedCollectionId.value = collectionId
     }
+//左侧收藏分类的编辑删除操作
+    const handleType = ref('update')
+    const collectionHandleOptions = [{label: '编辑', value: 'update'},{label: '删除', value: 'delete'}]
 //获取右侧表格的标题
     const selectedTitle = computed(()=>{
       return collectionList.filter((item)=>item.id === selectedCollectionId.value)[0]?.title
     })
 //渲染右侧表格
     const message = useMessage()
-    return {collectionList, viewCollectionList, selectedCollectionId,selectedTitle,data,searchData,
+    return {collectionList, viewCollectionList,handleType,collectionHandleOptions,selectedCollectionId,selectedTitle,data,searchData,
       columns: createColumns({
         play (row: Song) {
           message.info(`Play ${row.title}`)
@@ -178,7 +187,7 @@ $grey-background: #eff0f0;
 
   > .right {
     width: calc(100% - 204px);
-    padding: 20px 24px;
+    padding: 10px 24px 20px;
     > .title{
       display: flex;
       color: #262626;
