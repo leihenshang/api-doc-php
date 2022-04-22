@@ -22,3 +22,17 @@ $table-border-color:#DBDBDB;
 //    background: $striped-color !important;
 //  }
 //}
+.n-base-select-menu .n-base-select-option.n-base-select-option--selected {
+  color: #262626;
+  background-color: #ffffff;
+}
+.n-base-select-menu .n-base-select-option.n-base-select-option--pending {
+  background-color: #ffffff;
+}
+.n-base-select-menu .n-base-select-option:hover{
+  background-color: #eff0f0;
+}
+.n-base-select-menu .n-base-select-option{
+  min-width: 104px;
+}
+

@@ -11,13 +11,9 @@
             @click="viewCollectionList(item.id)">
           <p class="title">
             <span>{{ item.title }}</span>
-            <n-popselect v-model:value="handleType" :options="collectionHandleOptions" trigger="click">
-              <template>
-                <SvgIcon icon-name="more" v-if="item.type!=='all'"></SvgIcon>
-              </template>
-              <template #action>
-              <SvgIcon icon-name="more" v-if="item.type!=='all'"></SvgIcon>
-              </template>
+            <n-popselect v-model:value="handleType" :options="collectionHandleOptions" trigger="hover"
+                         :on-update:value="changeHandleType">
+              <div><SvgIcon icon-name="more" v-if="item.type!=='all'"></SvgIcon></div>
             </n-popselect>
           </p>
           <p class="content">{{ item.count }}条内容</p>
@@ -26,7 +22,7 @@
     </div>
     <div class="right">
       <div class="title">
-        <h3>{{selectedTitle}}</h3>
+        <h3>{{ selectedTitle }}</h3>
         <div class="search">
           <n-input v-model:value="searchData.data1" type="text" size="small" placeholder="基本的 Input">
             <template #prefix>
@@ -42,9 +38,9 @@
 </template>
 
 <script lang="ts">
-import SvgIcon from '../../components/public/SvgIcon.vue'
-import { h, defineComponent,computed,ref } from 'vue'
-import { NButton, useMessage, DataTableColumns } from 'naive-ui'
+import SvgIcon from '../../components/public/SvgIcon.vue';
+import {h, defineComponent, computed, ref} from 'vue';
+import {NButton, useMessage, DataTableColumns} from 'naive-ui';
 
 type Song = {
   no: number
@@ -73,7 +69,7 @@ const createColumns = ({play}: { play: (row: Song) => void }): DataTableColumns<
     {
       title: 'Action',
       key: 'actions',
-      render (row) {
+      render(row) {
         return h(
             NButton,
             {
@@ -82,54 +78,78 @@ const createColumns = ({play}: { play: (row: Song) => void }): DataTableColumns<
               size: 'small',
               onClick: () => play(row)
             },
-            { default: () => 'Play' }
-        )
+            {default: () => 'Play'}
+        );
       }
     }
-  ]
-}
+  ];
+};
 
 const data: Song[] = [
-  { no: 3, title: 'Wonderwall', length: '4:18' },
-  { no: 4, title: "Don't Look Back in Anger", length: '4:48' },
-  { no: 12, title: 'Champagne Supernova', length: '7:27' }
-]
+  {no: 3, title: 'Wonderwall', length: '4:18'},
+  {no: 4, title: 'Don\'t Look Back in Anger', length: '4:48'},
+  {no: 12, title: 'Champagne Supernova', length: '7:27'}
+];
 
 export default {
   name: 'Collection',
   components: {SvgIcon},
   setup() {
     const collectionList = [{title: '全部', type: 'all', count: 100, id: '1'}
-      , {title: 'javaScript', type: '', count: 50, id: '2'}, {title: '好看的花花们', type: '', count: 50, id: '3'},]
-    const searchData = ref<search>({})
-    const selectedCollectionId = ref('1')
+      , {title: 'javaScript', type: '', count: 50, id: '2'}, {title: '好看的花花们', type: '', count: 50, id: '3'},];
+    const searchData = ref<search>({});
+    const selectedCollectionId = ref('1');
 //选中收藏的某个分类，并保存分类的id
-    const viewCollectionList = (collectionId:string) => {
-      selectedCollectionId.value = collectionId
-    }
+    const viewCollectionList = (collectionId: string) => {
+      selectedCollectionId.value = collectionId;
+    };
 //左侧收藏分类的编辑删除操作
-    const handleType = ref('update')
-    const collectionHandleOptions = [{label: '编辑', value: 'update'},{label: '删除', value: 'delete'}]
+    const handleType = ref('update');
+    const collectionHandleOptions = [{label: '编辑', value: 'update'}, {label: '删除', value: 'delete'}];
+    const changeHandleType = (value: any)=>{
+      console.log(value);
+    }
 //获取右侧表格的标题
-    const selectedTitle = computed(()=>{
-      return collectionList.filter((item)=>item.id === selectedCollectionId.value)[0]?.title
-    })
+    const selectedTitle = computed(() => {
+      return collectionList.filter((item) => item.id === selectedCollectionId.value)[0]?.title;
+    });
 //渲染右侧表格
-    const message = useMessage()
-    return {collectionList, viewCollectionList,handleType,collectionHandleOptions,selectedCollectionId,selectedTitle,data,searchData,
+    const message = useMessage();
+    return {
+      collectionList,
+      viewCollectionList,
+      handleType,
+      collectionHandleOptions,
+      changeHandleType,
+      selectedCollectionId,
+      selectedTitle,
+      data,
+      searchData,
       columns: createColumns({
-        play (row: Song) {
-          message.info(`Play ${row.title}`)
+        play(row: Song) {
+          message.info(`Play ${row.title}`);
         }
       }),
-      pagination: false as const}
+      pagination: false as const
+    };
   }
-}
+};
 </script>
 
 <style scoped lang='scss'>
 $grey-color: #8A8F8D;
 $grey-background: #eff0f0;
+//.pop-select-options{
+//  margin-left: -20px;
+//  margin-right: -32px;
+//  > li{
+//    padding: 4px 0;
+//
+//    &:hover{
+//      background: $grey-background;
+//    }
+//  }
+//}
 .collect-wrapper {
   display: flex;
   height: 100%;
@@ -145,7 +165,6 @@ $grey-background: #eff0f0;
       cursor: pointer;
     }
   }
-
   > .left {
     width: 204px;
     padding: 20px 12px;
@@ -153,7 +172,6 @@ $grey-background: #eff0f0;
 
     > .title {
       margin-bottom: 20px;
-
       > .icon {
         margin-right: 12px;
       }
@@ -188,27 +206,34 @@ $grey-background: #eff0f0;
   > .right {
     width: calc(100% - 204px);
     padding: 10px 24px 20px;
-    > .title{
+
+    > .title {
       display: flex;
       color: #262626;
       padding: 10px 0;
       align-items: center;
-      h3{
+
+      h3 {
         font-size: 16px;
       }
-      > .search{
+
+      > .search {
         display: flex;
         align-items: center;
+
         > .n-input {
           background: #fafafa;
-          &::v-deep(.n-input__border),&::v-deep(.n-input__state-border) {
+
+          &::v-deep(.n-input__border), &::v-deep(.n-input__state-border) {
             display: none;
           }
-          &.n-input--focus{
+
+          &.n-input--focus {
             border: none;
           }
         }
-        > .icon{
+
+        > .icon {
           color: #585A5A;
           font-size: 18px;
           margin-left: 4px;
