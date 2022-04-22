@@ -35,4 +35,25 @@ $table-border-color:#DBDBDB;
 .n-base-select-menu .n-base-select-option{
   min-width: 104px;
 }
-
+//全局设置input组件的样式
+.n-input {
+  &:not(.n-input--disabled).n-input--focus .n-input__state-border{
+    box-shadow: none;
+  }
+}
+//全局设置dialog样式
+.modal-dialog{
+  padding: 0;
+  > .n-dialog__title{
+    padding: 16px 24px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  > .n-dialog__content{
+    padding: 24px;
+    margin: 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  > .n-dialog__action{
+    padding: 10px 16px;
+  }
+}

@@ -13,7 +13,9 @@
             <span>{{ item.title }}</span>
             <n-popselect v-model:value="handleType" :options="collectionHandleOptions" trigger="hover"
                          :on-update:value="changeHandleType">
-              <div><SvgIcon icon-name="more" v-if="item.type!=='all'"></SvgIcon></div>
+              <div>
+                <SvgIcon icon-name="more" v-if="item.type!=='all'"></SvgIcon>
+              </div>
             </n-popselect>
           </p>
           <p class="content">{{ item.count }}条内容</p>
@@ -22,7 +24,7 @@
     </div>
     <div class="right">
       <div class="title">
-        <h3>{{ selectedTitle }}</h3>
+        <h3>{{ selectedGroupName }}</h3>
         <div class="search">
           <n-input v-model:value="searchData.data1" type="text" size="small" placeholder="基本的 Input">
             <template #prefix>
@@ -35,6 +37,20 @@
       <n-data-table :columns="columns" :data="data" :pagination="pagination" :bordered="false"/>
     </div>
   </div>
+  <n-modal v-model:show="showModal" preset="dialog" title="Dialog" :show-icon="false" class="modal-dialog"
+           :mask-closable=false style="position: fixed; left: 50%;transform: translateX(-50%);top: 100px">
+    <template #header>
+      <div>编辑分组</div>
+    </template>
+    <div class="dialog-content">
+      <label>分组名称</label>
+      <n-input v-model:value="newGroupName" type="text" placeholder="分组名称"></n-input>
+    </div>
+    <template #action>
+      <n-button type="primary">确定</n-button>
+      <n-button>取消</n-button>
+    </template>
+  </n-modal>
 </template>
 
 <script lang="ts">
@@ -99,6 +115,8 @@ export default {
       , {title: 'javaScript', type: '', count: 50, id: '2'}, {title: '好看的花花们', type: '', count: 50, id: '3'},];
     const searchData = ref<search>({});
     const selectedCollectionId = ref('1');
+    const showModal = ref(false);
+    const newGroupName = ref('');
 //选中收藏的某个分类，并保存分类的id
     const viewCollectionList = (collectionId: string) => {
       selectedCollectionId.value = collectionId;
@@ -106,11 +124,17 @@ export default {
 //左侧收藏分类的编辑删除操作
     const handleType = ref('update');
     const collectionHandleOptions = [{label: '编辑', value: 'update'}, {label: '删除', value: 'delete'}];
-    const changeHandleType = (value: any)=>{
+    const changeHandleType = (value: string) => {
       console.log(value);
-    }
+      if (value === 'update') {
+        newGroupName.value = ''
+        showModal.value = true;
+      }
+    };
+    //弹出编辑对话框
+
 //获取右侧表格的标题
-    const selectedTitle = computed(() => {
+    const selectedGroupName = computed(() => {
       return collectionList.filter((item) => item.id === selectedCollectionId.value)[0]?.title;
     });
 //渲染右侧表格
@@ -121,8 +145,10 @@ export default {
       handleType,
       collectionHandleOptions,
       changeHandleType,
+      showModal,
+      newGroupName,
       selectedCollectionId,
-      selectedTitle,
+      selectedGroupName,
       data,
       searchData,
       columns: createColumns({
@@ -165,6 +191,7 @@ $grey-background: #eff0f0;
       cursor: pointer;
     }
   }
+
   > .left {
     width: 204px;
     padding: 20px 12px;
@@ -172,6 +199,7 @@ $grey-background: #eff0f0;
 
     > .title {
       margin-bottom: 20px;
+
       > .icon {
         margin-right: 12px;
       }
@@ -240,6 +268,13 @@ $grey-background: #eff0f0;
         }
       }
     }
+  }
+}
+
+.dialog-content {
+  > label {
+    display: inline-flex;
+    margin-bottom: 4px;
   }
 }
 </style>
