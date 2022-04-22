@@ -22,19 +22,25 @@ $table-border-color:#DBDBDB;
 //    background: $striped-color !important;
 //  }
 //}
-.n-base-select-menu .n-base-select-option.n-base-select-option--selected {
-  color: #262626;
-  background-color: #ffffff;
+//全局设置selectPop的样式
+.n-base-select-menu .n-base-select-menu__empty {
+  padding: 8px 0;
 }
-.n-base-select-menu .n-base-select-option.n-base-select-option--pending {
-  background-color: #ffffff;
-}
-.n-base-select-menu .n-base-select-option:hover{
-  background-color: #eff0f0;
-}
-.n-base-select-menu .n-base-select-option{
-  min-width: 104px;
-}
+
+//.n-base-select-menu .n-base-select-option.n-base-select-option--selected {
+//  color: #262626;
+//  background-color: #ffffff;
+//}
+//.n-base-select-menu .n-base-select-option.n-base-select-option--pending {
+//  background-color: #ffffff;
+//}
+//.n-base-select-menu .n-base-select-option:hover{
+//  background-color: #eff0f0;
+//}
+//.n-base-select-menu .n-base-select-option{
+//  min-width: 104px;
+//}
+
 //全局设置input组件的样式
 .n-input {
   &:not(.n-input--disabled).n-input--focus .n-input__state-border{

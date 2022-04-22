@@ -6,16 +6,21 @@
         <SvgIcon icon-name="add"></SvgIcon>
       </div>
       <ul class="list">
-        <li v-for="item in collectionList" :key="item.id"
+        <li v-for="item in groupList" :key="item.id"
             :class="{'selectedCollection':selectedCollectionId === item.id}"
             @click="viewCollectionList(item.id)">
           <p class="title">
             <span>{{ item.title }}</span>
-            <n-popselect v-model:value="handleType" :options="collectionHandleOptions" trigger="hover"
-                         :on-update:value="changeHandleType">
+            <n-popselect :options="[]" trigger="hover">
               <div>
                 <SvgIcon icon-name="more" v-if="item.type!=='all'"></SvgIcon>
               </div>
+              <template #empty>
+                <ul class="handle-pop-select-options">
+                  <li @click="changeHandleType('update',item)">编辑</li>
+                  <li @click="changeHandleType('delete',item)">删除</li>
+                </ul>
+              </template>
             </n-popselect>
           </p>
           <p class="content">{{ item.count }}条内容</p>
@@ -47,8 +52,8 @@
       <n-input v-model:value="newGroupName" type="text" placeholder="分组名称"></n-input>
     </div>
     <template #action>
-      <n-button type="primary">确定</n-button>
-      <n-button>取消</n-button>
+      <n-button type="primary" @click="updateGroupName">确定</n-button>
+      <n-button @click="showModal = false">取消</n-button>
     </template>
   </n-modal>
 </template>
@@ -66,6 +71,12 @@ type Song = {
 type search = {
   data1?: string
   data2?: string
+}
+type Group = {
+  title: string
+  type: string
+  id: string
+  count: number | string
 }
 
 const createColumns = ({play}: { play: (row: Song) => void }): DataTableColumns<Song> => {
@@ -111,40 +122,45 @@ export default {
   name: 'Collection',
   components: {SvgIcon},
   setup() {
-    const collectionList = [{title: '全部', type: 'all', count: 100, id: '1'}
+    const groupList: Group[] = [{title: '全部', type: 'all', count: 100, id: '1'}
       , {title: 'javaScript', type: '', count: 50, id: '2'}, {title: '好看的花花们', type: '', count: 50, id: '3'},];
     const searchData = ref<search>({});
     const selectedCollectionId = ref('1');
     const showModal = ref(false);
     const newGroupName = ref('');
+    const updateGroup = ref({})
 //选中收藏的某个分类，并保存分类的id
     const viewCollectionList = (collectionId: string) => {
       selectedCollectionId.value = collectionId;
     };
 //左侧收藏分类的编辑删除操作
-    const handleType = ref('update');
-    const collectionHandleOptions = [{label: '编辑', value: 'update'}, {label: '删除', value: 'delete'}];
-    const changeHandleType = (value: string) => {
-      console.log(value);
-      if (value === 'update') {
-        newGroupName.value = ''
+    const changeHandleType = (type: string, group: Group) => {
+      if (type === 'update') {
+        updateGroup.value = group
+        newGroupName.value = group.title;
         showModal.value = true;
+      }else {
+        //调用删除接口后，再次调用分组接口刷新页面的分组信息
       }
     };
-    //弹出编辑对话框
+    //更新分组名字
+    const updateGroupName = () => {
+      //调用保存接口后，再次调用分组接口刷新页面的分组信息
+      //然后关闭弹窗
+      showModal.value = false;
+    };
 
 //获取右侧表格的标题
     const selectedGroupName = computed(() => {
-      return collectionList.filter((item) => item.id === selectedCollectionId.value)[0]?.title;
+      return groupList.filter((item) => item.id === selectedCollectionId.value)[0]?.title;
     });
 //渲染右侧表格
     const message = useMessage();
     return {
-      collectionList,
+      groupList,
       viewCollectionList,
-      handleType,
-      collectionHandleOptions,
       changeHandleType,
+      updateGroupName,
       showModal,
       newGroupName,
       selectedCollectionId,
@@ -165,17 +181,19 @@ export default {
 <style scoped lang='scss'>
 $grey-color: #8A8F8D;
 $grey-background: #eff0f0;
-//.pop-select-options{
-//  margin-left: -20px;
-//  margin-right: -32px;
-//  > li{
-//    padding: 4px 0;
-//
-//    &:hover{
-//      background: $grey-background;
-//    }
-//  }
-//}
+.handle-pop-select-options {
+  min-width: 104px;
+
+  > li {
+    padding: 8px 16px;
+    cursor: pointer;
+
+    &:hover {
+      background: $grey-background;
+    }
+  }
+}
+
 .collect-wrapper {
   display: flex;
   height: 100%;
